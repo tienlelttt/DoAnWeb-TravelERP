@@ -124,7 +124,7 @@ class TourThucTeService
             $ttt->TrangThai = $trangThai;
             $ttt->save();
 
-            // Ignore Dịch vụ thêm & Hành động xanh in phase 3.1
+            // Bỏ qua Dịch vụ thêm & Hành động xanh trong giai đoạn 3.1
             
             $ttt->load('tourMau');
             return new TourThucTeResource($ttt);
@@ -156,7 +156,7 @@ class TourThucTeService
             }
             if (isset($data['trangThai'])) {
                 $this->validateTrangThaiTourThucTe($data['trangThai']);
-                // Bỏ qua check phân công HDV trong phase này
+                // Bỏ qua kiểm tra phân công HDV trong giai đoạn này
                 $ttt->TrangThai = $data['trangThai'];
             }
 
@@ -179,7 +179,7 @@ class TourThucTeService
                 throw AppException::badRequest("Chỉ có thể xóa tour thực tế ở trạng thái CHO_KICH_HOAT hoặc MO_BAN");
             }
 
-            // Check if there are any bookings (ignore for Phase 3.1 since DonDatTour is Phase 4, but let's implement basic check)
+            // Kiểm tra xem có đơn đặt tour nào không (bỏ qua cho Giai đoạn 3.1 vì DonDatTour thuộc Giai đoạn 4, nhưng tạm thời cài đặt kiểm tra cơ bản)
             if (DonDatTour::where('MaTourThucTe', $id)->whereNotIn('TrangThai', ['DA_HUY'])->exists()) {
                 throw AppException::badRequest("Không thể xóa tour thực tế đã phát sinh đơn đặt tour");
             }
