@@ -138,6 +138,34 @@ class MaTuDongService
         return $this->taoMa('YEUCAUHOTRO', 'MaYeuCauHoTro', 'YCHT');
     }
 
+    /**
+     * Tạo mã phân công tour
+     */
+    public function taoMaPhanCongTour(): string
+    {
+        return $this->taoMa('PHANCONGTOUR', 'MaPhanCongTour', 'PCT');
+    }
+
+    public function taoMaDiemDanh(): string
+    {
+        return $this->taoMa('DIEMDANH', 'MaDiemDanh', 'DD');
+    }
+
+    public function taoMaGhiNhanHanhDong(): string
+    {
+        return $this->taoMa('HANHDONG', 'MaGhiNhanHanhDong', 'HDX');
+    }
+
+    public function taoMaNhatKySuCo(): string
+    {
+        return $this->taoMa('NHATKYSUCO', 'MaNhatKySuCo', 'SC');
+    }
+
+    public function taoMaChiPhiThucTe(): string
+    {
+        return $this->taoMa('CHIPHITHUCTE', 'MaChiPhiThucTe', 'CP');
+    }
+
 
     /**
      * Hàm dùng chung tạo 1 mã

@@ -245,6 +245,7 @@ return new class extends Migration
             $table->string('MaNhanVien', 50);
             $table->dateTime('NgayPhanCong');
             $table->dateTime('NgayPhanHoi')->nullable();
+            $table->string('TrangThaiChapNhan', 20)->default('CHO_PHAN_HOI');
             $table->timestamps();
         });
 
