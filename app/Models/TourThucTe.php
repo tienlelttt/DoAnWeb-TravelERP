@@ -17,11 +17,11 @@ class TourThucTe extends BaseModel
 
     public function dichVuThems()
     {
-        return $this->belongsToMany(DichVuThem::class, 'DICHVU_TOURTHUCTE', 'MaTourThucTe', 'MaDichVuThem');
+        return $this->belongsToMany(DichVuThem::class, 'DICHVU_TOURTHUCTE', 'MaTourThucTe', 'MaDichVuThem')->withTimestamps();
     }
 
     public function hanhDongXanhs()
     {
-        return $this->belongsToMany(HanhDongXanh::class, 'HDX_TOURTHUCTE', 'MaTourThucTe', 'MaHanhDongXanh');
+        return $this->belongsToMany(HanhDongXanh::class, 'HDX_TOURTHUCTE', 'MaTourThucTe', 'MaHanhDongXanh')->withTimestamps();
     }
 }
