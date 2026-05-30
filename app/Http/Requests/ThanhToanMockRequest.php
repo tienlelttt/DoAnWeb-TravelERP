@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class ThanhToanMockRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    public function rules(): array
+    {
+        return [
+            'maDatTour' => 'required|string|exists:DONDATTOUR,MaDatTour',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'maDatTour.required' => 'Mã đặt tour không được để trống',
+            'maDatTour.exists' => 'Đơn đặt tour không tồn tại',
+        ];
+    }
+}

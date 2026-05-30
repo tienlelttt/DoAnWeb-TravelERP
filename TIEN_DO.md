@@ -30,11 +30,11 @@ Tài liệu này dùng để theo dõi toàn bộ lộ trình và tiến độ �
 - [x] Chuyển đổi API Dịch vụ thêm & Hành động xanh (Bổ trợ Tour).
 - [x] API Đánh giá & Bình luận (Rating).
 
-## 🟡 GIAI ĐOẠN 4: PHÂN HỆ BOOKING & THANH TOÁN (Đang xử lý)
-- [ ] Chuyển đổi quy trình Đặt Tour (Giữ chỗ, khóa luồng chống quá tải).
-- [ ] Quản lý Voucher / Mã giảm giá.
-- [ ] Chuyển đổi logic Thanh Toán (Mock Payment).
-- [ ] API duyệt đơn, hủy đơn, hoàn tiền.
+## 🟢 GIAI ĐOẠN 4: PHÂN HỆ BOOKING & THANH TOÁN (Hoàn thành 100%)
+- [x] Chuyển đổi quy trình Đặt Tour (Giữ chỗ, khóa luồng chống quá tải).
+- [x] Quản lý Voucher / Mã giảm giá. (Hoàn thành - Mô hình Controller-Service-Repository-Model)
+- [x] Chuyển đổi logic Thanh Toán (Mock Payment). (Hoàn thành - Mô hình Controller-Service-Repository-Model)
+- [x] API duyệt đơn, hủy đơn, hoàn tiền. (Hoàn thành - Quy trình Khách hàng - Sales - Kế toán)
 
 ## ⚪ GIAI ĐOẠN 5: PHÂN HỆ ĐIỀU HÀNH & HDV (Chưa bắt đầu)
 - [ ] Phân công Hướng Dẫn Viên.

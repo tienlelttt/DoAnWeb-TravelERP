@@ -14,8 +14,9 @@ class DatTourRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'maTourThucTe' => 'required|string',
+            'maTourThucTe' => 'required|string|exists:TOURTHUCTE,MaTourThucTe',
             'ghiChu' => 'nullable|string',
+            'maVoucher' => 'nullable|string',
             
             // Người đồng hành
             'danhSachNguoiDongHanh' => 'nullable|array',

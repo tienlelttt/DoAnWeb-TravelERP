@@ -14,6 +14,8 @@ use App\Models\LichSuTour;
 use App\Models\GiaoDich;
 use App\Exceptions\AppException;
 use App\Http\Resources\DonDatTourResource;
+use App\Services\MaTuDongService;
+use App\Services\VoucherService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -22,6 +24,15 @@ class DatTourService
 {
     const TUOI_TOI_DA_TRE_EM = 11;
     const MA_GD_DA_BAO_CHUYEN_KHOAN = "KHXN:";
+
+    protected $maTuDongService;
+    protected $voucherService;
+
+    public function __construct(MaTuDongService $maTuDongService, VoucherService $voucherService)
+    {
+        $this->maTuDongService = $maTuDongService;
+        $this->voucherService = $voucherService;
+    }
 
     public function datTour($maTaiKhoan, array $data)
     {
@@ -42,6 +53,13 @@ class DatTourService
             if ($tour->TrangThai !== 'MO_BAN') {
                 throw AppException::badRequest("Tour không ở trạng thái 'Mở bán', không thể đặt");
             }
+
+            // Kiểm tra biên lợi nhuận (GiaHienHanh >= GiaSan)
+            $tour->load('tourMau');
+            if ($tour->tourMau && $tour->GiaHienHanh < $tour->tourMau->GiaSan) {
+                throw AppException::badRequest("Giá hiện hành của tour thực tế không được thấp hơn giá sàn của tour mẫu");
+            }
+
             if ($tour->ChoConLai < $soKhach) {
                 throw AppException::badRequest("Tour đã hết chỗ");
             }
@@ -94,7 +112,7 @@ class DatTourService
 
             // 5. Tạo Đơn
             $don = new DonDatTour();
-            $don->MaDatTour = 'DDT_' . strtoupper(substr(Str::uuid()->toString(), 0, 8));
+            $don->MaDatTour = $this->maTuDongService->taoMaDonDatTour();
             $don->MaTourThucTe = $tour->MaTourThucTe;
             $don->MaKhachHang = $khachHang->MaKhachHang;
             $don->NgayDat = Carbon::now();
@@ -105,9 +123,16 @@ class DatTourService
             $don->HanhDongXanh = $chuoiHanhDongXanh;
             $don->save();
 
+            // Áp dụng voucher ngay khi đặt tour (nếu có truyền maVoucher)
+            if (!empty($data['maVoucher'])) {
+                $tienGiam = $this->voucherService->apDungVoucher($data['maVoucher'], $don, $tongTien);
+                $don->TongTien = $tongTien - $tienGiam;
+                $don->save();
+            }
+
             // 6. Tạo Chi tiết Người đặt
             $ctNguoiDat = new ChiTietDatTour();
-            $ctNguoiDat->MaChiTietDat = 'CTDT_' . strtoupper(substr(Str::uuid()->toString(), 0, 8));
+            $ctNguoiDat->MaChiTietDat = $this->maTuDongService->taoMaChiTietDatTour();
             $ctNguoiDat->MaDatTour = $don->MaDatTour;
             $ctNguoiDat->MaKhachHang = $khachHang->MaKhachHang;
             $ctNguoiDat->LoaiKhach = 'NGUOI_DAT';
@@ -117,7 +142,7 @@ class DatTourService
             // 7. Tạo Chi tiết Đồng hành
             foreach ($dsNguoiDongHanh as $nguoiReq) {
                 $ndh = new DsNguoiDongHanh();
-                $ndh->MaNguoiDongHanh = 'NDH_' . strtoupper(substr(Str::uuid()->toString(), 0, 8));
+                $ndh->MaNguoiDongHanh = $this->maTuDongService->taoMaNguoiDongHanh();
                 $ndh->MaDatTour = $don->MaDatTour;
                 $ndh->HoTen = $nguoiReq['hoTen'];
                 $ndh->Cccd = $nguoiReq['cccd'] ?? null;
@@ -128,7 +153,7 @@ class DatTourService
                 $ndh->save();
 
                 $ctNguoiDongHanh = new ChiTietDatTour();
-                $ctNguoiDongHanh->MaChiTietDat = 'CTDT_' . strtoupper(substr(Str::uuid()->toString(), 0, 8));
+                $ctNguoiDongHanh->MaChiTietDat = $this->maTuDongService->taoMaChiTietDatTour();
                 $ctNguoiDongHanh->MaDatTour = $don->MaDatTour;
                 $ctNguoiDongHanh->MaNguoiDongHanh = $ndh->MaNguoiDongHanh;
                 $ctNguoiDongHanh->LoaiKhach = 'NGUOI_DONG_HANH';
@@ -139,7 +164,7 @@ class DatTourService
             // 8. Lưu Dịch vụ chi tiết
             foreach ($dsDichVu as $dvItem) {
                 $ctdv = new ChiTietDichVu();
-                $ctdv->MaChiTietDichVu = 'CTDV_' . strtoupper(substr(Str::uuid()->toString(), 0, 8));
+                $ctdv->MaChiTietDichVu = $this->maTuDongService->taoMaChiTietDichVu();
                 $ctdv->MaDatTour = $don->MaDatTour;
                 $ctdv->MaDichVuThem = $dvItem['dichVu']->MaDichVuThem;
                 $ctdv->SoLuong = $dvItem['soLuong'];
@@ -147,6 +172,10 @@ class DatTourService
                 $ctdv->ThanhTien = $dvItem['thanhTien'];
                 $ctdv->save();
             }
+
+            // 9. Giảm ChoConLai của TourThucTe
+            $tour->ChoConLai -= $soKhach;
+            $tour->save();
 
             $don->load(['tourThucTe.tourMau', 'khachHang.taiKhoan', 'chiTietDatTours.khachHang.taiKhoan', 'chiTietDatTours.nguoiDongHanh', 'chiTietDichVus.dichVuThem']);
             return new DonDatTourResource($don);

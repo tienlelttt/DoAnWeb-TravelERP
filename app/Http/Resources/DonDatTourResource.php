@@ -20,6 +20,12 @@ class DonDatTourResource extends JsonResource
 
         $ngayTinhTuoi = $ttt->NgayKhoiHanh ? Carbon::parse($ttt->NgayKhoiHanh) : Carbon::now();
 
+        // ── 0. Lấy thông tin Voucher ưu đãi ──────────────────────────────────
+        $soTienUuDai = $this->datTourUuDai ? (float) $this->datTourUuDai->SoTienUuDai : 0.0;
+        $tongTienGoc = (float) $this->TongTien + $soTienUuDai;
+        $maVoucher = $this->datTourUuDai ? $this->datTourUuDai->MaVoucher : null;
+        $maCodeVoucher = ($this->datTourUuDai && $this->datTourUuDai->voucher) ? $this->datTourUuDai->voucher->MaCode : null;
+
         // ── 1. Đếm Trẻ em / Người lớn ────────────────────────────────────────
         $soTreEm    = 0;
         $soNguoiLon = 0;
@@ -127,10 +133,10 @@ class DonDatTourResource extends JsonResource
                                             ? Carbon::parse($this->NgayDat)->format('Y-m-d H:i:s')
                                             : null,
             'tongTien'                => (float) $this->TongTien,
-            'tongTienGoc'             => (float) $this->TongTien, // Chưa có voucher
-            'soTienUuDai'             => 0,
-            'maVoucher'               => null,
-            'maCodeVoucher'           => null,
+            'tongTienGoc'             => (float) $tongTienGoc,
+            'soTienUuDai'             => (float) $soTienUuDai,
+            'maVoucher'               => $maVoucher,
+            'maCodeVoucher'           => $maCodeVoucher,
             'diemXanhDuKien'          => $diemXanhDuKien,
             'trangThai'               => $this->TrangThai,
             'daBaoChuyenKhoan'        => $daBaoChuyenKhoan,
