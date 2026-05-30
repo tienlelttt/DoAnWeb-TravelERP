@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class HanhDongXanhRequest extends FormRequest
+class TaoYeuCauHoTroRequest extends FormRequest
 {
     public function authorize()
     {
@@ -14,9 +14,9 @@ class HanhDongXanhRequest extends FormRequest
     public function rules()
     {
         return [
-            "maKhachHang" => "required|string",
-            "maHanhDongXanh" => "required|string",
-            "minhChung" => "nullable|string"
+            "maDatTour" => "nullable|string",
+            "loaiYeuCau" => "required|string|max:100",
+            "noiDung" => "required|string|max:255"
         ];
     }
 }
