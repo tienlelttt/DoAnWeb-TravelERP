@@ -5,7 +5,8 @@ namespace App\Models;
 class KhuyenMaiKh extends BaseModel
 {
     protected $table = 'KHUYENMAI_KH';
-    protected $primaryKey = 'id';
+    protected $primaryKey = null;
+    public $incrementing = false;
     protected $guarded = [];
 
     public function khachHang() {

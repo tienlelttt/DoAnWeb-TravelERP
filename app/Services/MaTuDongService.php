@@ -83,6 +83,63 @@ class MaTuDongService
     }
 
     /**
+     * Tạo mã đơn đặt tour
+     */
+    public function taoMaDonDatTour(): string
+    {
+        return $this->taoMa('DONDATTOUR', 'MaDatTour', 'DDT');
+    }
+
+    /**
+     * Tạo mã chi tiết đặt tour
+     */
+    public function taoMaChiTietDatTour(): string
+    {
+        return $this->taoMa('CHITIETDATTOUR', 'MaChiTietDat', 'CTD');
+    }
+
+    /**
+     * Tạo mã danh sách người đồng hành
+     */
+    public function taoMaNguoiDongHanh(): string
+    {
+        return $this->taoMa('DSNGUOIDONGHANH', 'MaNguoiDongHanh', 'NDH');
+    }
+
+    /**
+     * Tạo mã chi tiết dịch vụ thêm
+     */
+    public function taoMaChiTietDichVu(): string
+    {
+        return $this->taoMa('CHITIETDICHVU', 'MaChiTietDichVu', 'CTDV');
+    }
+
+    /**
+     * Tạo mã giao dịch
+     */
+    public function taoMaGiaoDich(): string
+    {
+        return $this->taoMa('GIAODICH', 'MaGiaoDich', 'GD');
+    }
+
+    /**
+     * Tạo mã lịch sử tour
+     */
+    public function taoMaLichSuTour(): string
+    {
+        return $this->taoMa('LICHSUTOUR', 'MaLichSuTour', 'LST');
+    }
+
+    /**
+     * Tạo mã yêu cầu hỗ trợ
+     */
+    public function taoMaYeuCauHoTro(): string
+    {
+        return $this->taoMa('YEUCAUHOTRO', 'MaYeuCauHoTro', 'YCHT');
+    }
+
+
+    /**
      * Hàm dùng chung tạo 1 mã
      */
     private function taoMa(string $tenBang, string $tenCot, string $tienTo): string

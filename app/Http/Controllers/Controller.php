@@ -11,7 +11,7 @@ abstract class Controller
             'success' => true,
             'message' => $message,
             'data'    => $data,
-        ], $status, [], JSON_UNESCAPED_UNICODE);
+        ], $status, [], JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION);
     }
 
     protected function errorResponse(string $message, int $status = 400, string $error = 'ERROR')

@@ -59,6 +59,32 @@ Route::group(['prefix' => 'khach-hang', 'middleware' => ['auth:api', 'role:KHACH
     Route::get('don-dat-tour', [DatTourController::class, 'danhSachCuaToi']);
     Route::get('don-dat-tour/{id}', [DatTourController::class, 'chiTietCuaToi']);
     Route::put('don-dat-tour/{id}/huy', [DatTourController::class, 'huyDatTour']);
+    Route::post('huy-don', [\App\Http\Controllers\HuyDonController::class, 'yeuCauHuyDon']);
+    
+    // Voucher
+    Route::post('don-dat-tour/ap-dung-voucher', [\App\Http\Controllers\VoucherController::class, 'apDungVoucher']); // Deprecated: Vui lòng sử dụng /api/dat-tour/ap-dung-voucher
+    Route::get('voucher', [\App\Http\Controllers\VoucherController::class, 'danhSachVoucher']);
+});
+
+// Hỗ trợ route alias áp dụng voucher theo yêu cầu Task 4.2
+Route::group(['middleware' => ['auth:api', 'role:KHACHHANG']], function () {
+    Route::post('dat-tour/ap-dung-voucher', [\App\Http\Controllers\VoucherController::class, 'apDungVoucher']);
+});
+
+// UC: Các API liên quan đến Thanh Toán (Task 4.3)
+Route::group(['prefix' => 'thanh-toan', 'middleware' => ['auth:api', 'role:KHACHHANG']], function () {
+    Route::post('mock', [\App\Http\Controllers\ThanhToanController::class, 'thanhToanMock']);
+    Route::post('bao-chuyen-khoan', [\App\Http\Controllers\ThanhToanController::class, 'baoChuyenKhoan']);
+});
+
+Route::group(['prefix' => 'kinh-doanh', 'middleware' => ['auth:api', 'role:KINHDOANH']], function () {
+    Route::post('xac-nhan-thanh-toan', [\App\Http\Controllers\KinhDoanhController::class, 'xacNhanThanhToan']);
+    Route::post('duyet-don/{maDon}', [\App\Http\Controllers\XuLyHuyController::class, 'duyetDonVip']);
+    Route::post('xu-ly-huy', [\App\Http\Controllers\XuLyHuyController::class, 'xuLyHuy']);
+});
+
+Route::group(['prefix' => 'ke-toan', 'middleware' => ['auth:api', 'role:KETOAN']], function () {
+    Route::post('hoan-tien', [\App\Http\Controllers\HoanTienController::class, 'hoanTien']);
 });
 
 Route::prefix('san-pham')->group(function () {

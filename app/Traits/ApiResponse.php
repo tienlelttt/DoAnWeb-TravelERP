@@ -17,7 +17,7 @@ trait ApiResponse
             'message' => $message,
             'data' => $data,
             'error' => $error
-        ], $status, [], JSON_UNESCAPED_UNICODE);
+        ], $status, [], JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION);
     }
 
     public function ok(string $message = "Thành công", $data = null): JsonResponse

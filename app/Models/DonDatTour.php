@@ -25,4 +25,8 @@ class DonDatTour extends BaseModel
     public function chiTietDichVus() {
         return $this->hasMany(ChiTietDichVu::class, 'MaDatTour', 'MaDatTour');
     }
+
+    public function datTourUuDai() {
+        return $this->hasOne(DatTourUuDai::class, 'MaDatTour', 'MaDatTour');
+    }
 }

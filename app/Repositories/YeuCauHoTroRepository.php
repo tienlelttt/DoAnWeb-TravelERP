@@ -1,0 +1,47 @@
+<?php
+
+namespace App\Repositories;
+
+use App\Models\YeuCauHoTro;
+
+class YeuCauHoTroRepository
+{
+    /**
+     * Tạo mới một bản ghi yêu cầu hỗ trợ (ticket)
+     *
+     * @param array $data
+     * @return YeuCauHoTro
+     */
+    public function taoYeuCau(array $data): YeuCauHoTro
+    {
+        return YeuCauHoTro::create($data);
+    }
+
+    /**
+     * Tìm ticket yêu cầu hủy tour đang chờ duyệt của đơn đặt tour
+     *
+     * @param string $maDatTour
+     * @return YeuCauHoTro|null
+     */
+    public function timTicketHuyTourChoDuyet(string $maDatTour): ?YeuCauHoTro
+    {
+        return YeuCauHoTro::where('MaDatTour', $maDatTour)
+            ->where('LoaiYeuCau', 'HUY_TOUR')
+            ->where('TrangThai', 'CHUA_XU_LY')
+            ->first();
+    }
+
+    /**
+     * Tìm ticket yêu cầu hủy tour đã được Sales duyệt để Kế toán hoàn tiền
+     *
+     * @param string $maDatTour
+     * @return YeuCauHoTro|null
+     */
+    public function timTicketHuyTourDaDuyet(string $maDatTour): ?YeuCauHoTro
+    {
+        return YeuCauHoTro::where('MaDatTour', $maDatTour)
+            ->where('LoaiYeuCau', 'HUY_TOUR')
+            ->where('TrangThai', 'DA_XU_LY')
+            ->first();
+    }
+}

@@ -5,7 +5,8 @@ namespace App\Models;
 class DatTourUuDai extends BaseModel
 {
     protected $table = 'DATTOUR_UUDAI';
-    protected $primaryKey = 'id';
+    protected $primaryKey = null;
+    public $incrementing = false;
     protected $guarded = [];
 
     public function donDatTour() {
