@@ -166,6 +166,21 @@ class MaTuDongService
         return $this->taoMa('CHIPHITHUCTE', 'MaChiPhiThucTe', 'CP');
     }
 
+    public function taoMaNhatKyHeThong(): string
+    {
+        return $this->taoMa('NHATKYHETHONG', 'MaNhatKyHeThong', 'NK');
+    }
+
+    public function taoMaQuyetToan(): string
+    {
+        return $this->taoMa('QUYETTOAN', 'MaQuyetToan', 'QT');
+    }
+
+    public function taoMaVoucher(): string
+    {
+        return $this->taoMa('VOUCHER', 'MaVoucher', 'VC');
+    }
+
 
     /**
      * Hàm dùng chung tạo 1 mã

@@ -11,8 +11,11 @@ use App\Http\Controllers\DatTourController;
 Route::prefix('auth')->group(function () {
     Route::post('/dang-ky', [AuthController::class, 'dangKy']);
     Route::post('/dang-nhap', [AuthController::class, 'dangNhap']);
+    Route::post('/quen-mat-khau', [AuthController::class, 'quenMatKhau']);
+    Route::post('/dat-lai-mat-khau', [AuthController::class, 'datLaiMatKhau']);
     
     Route::middleware('auth:api')->group(function () {
+        Route::post('/kiem-tra-mat-khau', [AuthController::class, 'kiemTraMatKhau']);
         Route::post('/doi-mat-khau', [AuthController::class, 'doiMatKhau']);
         Route::post('/dang-xuat', [AuthController::class, 'dangXuat']);
     });
@@ -72,10 +75,38 @@ Route::group(['prefix' => 'kinh-doanh', 'middleware' => ['auth:api', 'role:KINHD
     Route::post('xac-nhan-thanh-toan', [\App\Http\Controllers\KinhDoanhController::class, 'xacNhanThanhToan']);
     Route::post('duyet-don/{maDon}', [\App\Http\Controllers\XuLyHuyController::class, 'duyetDonVip']);
     Route::post('xu-ly-huy', [\App\Http\Controllers\XuLyHuyController::class, 'xuLyHuy']);
+
+    // Quản trị Voucher
+    Route::get('voucher', [\App\Http\Controllers\Admin\VoucherAdminController::class, 'danhSach']);
+    Route::post('voucher', [\App\Http\Controllers\Admin\VoucherAdminController::class, 'taoVoucher']);
+    Route::put('voucher/{maVoucher}', [\App\Http\Controllers\Admin\VoucherAdminController::class, 'capNhatVoucher']);
+    Route::put('voucher/{maVoucher}/vo-hieu-hoa', [\App\Http\Controllers\Admin\VoucherAdminController::class, 'voHieuHoaVoucher']);
+    Route::post('voucher/{maVoucher}/phat-hanh', [\App\Http\Controllers\Admin\VoucherAdminController::class, 'phatHanh']);
 });
 
 Route::group(['prefix' => 'ke-toan', 'middleware' => ['auth:api', 'role:KETOAN']], function () {
     Route::post('hoan-tien', [\App\Http\Controllers\HoanTienController::class, 'hoanTien']);
+    
+    // Quản lý hoàn tiền
+    Route::get('giao-dich-hoan', [\App\Http\Controllers\KeToanHoanTienController::class, 'danhSachChoHoanTien']);
+    Route::put('giao-dich-hoan/{maGiaoDich}/xac-nhan', [\App\Http\Controllers\KeToanHoanTienController::class, 'xacNhanHoanTien']);
+    Route::put('giao-dich-hoan/{maGiaoDich}/tu-choi', [\App\Http\Controllers\KeToanHoanTienController::class, 'tuChoiHoanTien']);
+
+    // Quyết toán Tour
+    Route::get('tour-can-quyet-toan', [\App\Http\Controllers\QuyetToanController::class, 'tourCanQuyetToan']);
+    Route::get('quyet-toan', [\App\Http\Controllers\QuyetToanController::class, 'danhSach']);
+    Route::get('quyet-toan/{maQuyetToan}', [\App\Http\Controllers\QuyetToanController::class, 'chiTiet']);
+    Route::get('tinh-toan/{maTour}', [\App\Http\Controllers\QuyetToanController::class, 'tinhToan']);
+    Route::post('quyet-toan/{maTour}', [\App\Http\Controllers\QuyetToanController::class, 'taoQuyetToan']);
+    Route::put('quyet-toan/{maQuyetToan}/chot', [\App\Http\Controllers\QuyetToanController::class, 'chotQuyetToan']);
+    Route::post('quyet-toan/{maQuyetToan}/yeu-cau-bo-sung', [\App\Http\Controllers\QuyetToanController::class, 'yeuCauBoSung']);
+
+    // Tích hợp Power BI
+    Route::prefix('power-bi')->group(function () {
+        Route::get('kho-du-lieu', [\App\Http\Controllers\PowerBiController::class, 'danhSachKhoDuLieu']);
+        Route::get('ket-noi', [\App\Http\Controllers\PowerBiController::class, 'layThongTinKetNoi']);
+        Route::post('xuat-du-lieu', [\App\Http\Controllers\PowerBiController::class, 'xuatDuLieu']);
+    });
 });
 
 Route::prefix('san-pham')->group(function () {
@@ -115,6 +146,9 @@ Route::prefix('san-pham')->group(function () {
 // ==========================================
 Route::group(['prefix' => 'dieu-hanh', 'middleware' => ['auth:api', 'role:DIEUHANH']], function () {
     Route::post('/phan-cong-tour', [\App\Http\Controllers\DieuHanhController::class, 'phanCongTour']);
+    Route::get('/tour-can-phan-cong', [\App\Http\Controllers\DieuHanhController::class, 'tourCanPhanCong']);
+    Route::get('/hdv-kha-dung', [\App\Http\Controllers\DieuHanhController::class, 'hdvKhaDung']);
+    Route::delete('/phan-cong/{id}', [\App\Http\Controllers\DieuHanhController::class, 'huyPhanCong']);
 });
 
 Route::group(['prefix' => 'hdv', 'middleware' => ['auth:api', 'role:HDV']], function () {
@@ -152,7 +186,12 @@ Route::group(['prefix' => 'khach-hang', 'middleware' => ['auth:api', 'role:KHACH
     Route::put('/ho-so', [\App\Http\Controllers\KhachHangController::class, 'capNhatHoSo']);
     Route::get('/dat-tour', [\App\Http\Controllers\KhachHangController::class, 'danhSachDatTour']);
     Route::get('/lich-su-tour', [\App\Http\Controllers\KhachHangController::class, 'lichSuTour']);
+    
+    // Yêu cầu hỗ trợ
     Route::post('/yeu-cau-ho-tro', [\App\Http\Controllers\KhachHangController::class, 'taoYeuCauHoTro']);
+    Route::get('/yeu-cau-ho-tro/can-bo-sung', [\App\Http\Controllers\KhachHangController::class, 'yeuCauHoTroCanBoSung']);
+    Route::put('/yeu-cau-ho-tro/{maYeuCau}/bo-sung', [\App\Http\Controllers\KhachHangController::class, 'boSungYeuCauHoTro']);
+    
     Route::post('/dat-tour/{maDatTour}/huy', [\App\Http\Controllers\KhachHangController::class, 'yeuCauHuyTour']);
 });
 
@@ -170,4 +209,23 @@ Route::group(['prefix' => 'nhan-vien', 'middleware' => ['auth:api', 'role:KINHDO
     Route::get('/ho-so', [\App\Http\Controllers\NhanVienController::class, 'layHoSo']);
     Route::get('/lich-cong-tac', [\App\Http\Controllers\NhanVienController::class, 'layLichCongTac']);
     Route::get('/nang-luc', [\App\Http\Controllers\NhanVienController::class, 'layNangLuc']);
+});
+
+// ==========================================
+// Giai doan 6: Admin & Báo cáo
+// ==========================================
+Route::group(['prefix' => 'admin', 'middleware' => ['auth:api', 'role:ADMIN', 'audit_log']], function () {
+    // Dashboard
+    Route::get('/dashboard/overview', [\App\Http\Controllers\Admin\DashboardController::class, 'overview']);
+    Route::get('/dashboard/revenue-chart', [\App\Http\Controllers\Admin\DashboardController::class, 'revenueChart']);
+
+    // Quan ly User (TaiKhoan)
+    Route::get('/users', [\App\Http\Controllers\Admin\UserController::class, 'index']);
+    Route::post('/users', [\App\Http\Controllers\Admin\UserController::class, 'store']);
+    Route::get('/users/{id}', [\App\Http\Controllers\Admin\UserController::class, 'show']);
+    Route::put('/users/{id}', [\App\Http\Controllers\Admin\UserController::class, 'update']);
+    Route::delete('/users/{id}', [\App\Http\Controllers\Admin\UserController::class, 'destroy']);
+    
+    // Nhat ky he thong
+    Route::get('/nhat-ky-he-thong', [\App\Http\Controllers\Admin\NhatKyHeThongController::class, 'danhSach']);
 });

@@ -221,6 +221,7 @@ return new class extends Migration
             $table->string('HanhDong', 100);
             $table->string('DoiTuong', 100)->nullable();
             $table->string('MaDoiTuong', 50)->nullable();
+            $table->string('GhiChu', 255)->nullable();
             $table->dateTime('ThoiGian');
             $table->timestamps();
         });

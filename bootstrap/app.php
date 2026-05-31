@@ -23,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Đăng ký middleware alias cho toàn ứng dụng
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
+            'audit_log' => \App\Http\Middleware\AuditLogMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
