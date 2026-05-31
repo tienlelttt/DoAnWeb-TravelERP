@@ -21,7 +21,7 @@ class KhachHangService
 
     private function getHoChieuSo(string $maTaiKhoan): HoChieuSo
     {
-        $hcs = HoChieuSo::with("taiKhoan")->where("MaTaiKhoan", $maTaiKhoan)->first();
+        $hcs = HoChieuSo::with("taiKhoan")->where("ma_tai_khoan", $maTaiKhoan)->first();
         if (!$hcs) {
             throw AppException::notFound("Không tìm thấy hồ sơ khách hàng");
         }
@@ -33,16 +33,16 @@ class KhachHangService
         $hcs = $this->getHoChieuSo($maTaiKhoan);
         
         return [
-            "maKhachHang" => $hcs->MaKhachHang,
-            "hoTen" => $hcs->taiKhoan->HoTen,
-            "email" => $hcs->taiKhoan->Email,
-            "soDienThoai" => $hcs->taiKhoan->SoDienThoai,
-            "cccd" => $hcs->taiKhoan->CCCD,
-            "ngaySinh" => $hcs->taiKhoan->NgaySinh,
-            "ghiChuYTe" => $hcs->GhiChuYTe,
-            "diUng" => $hcs->DiUng,
-            "hangThanhVien" => $hcs->HangThanhVien,
-            "diemXanh" => $hcs->DiemXanh
+            "maKhachHang" => $hcs->ma_khach_hang,
+            "hoTen" => $hcs->taiKhoan->ho_ten,
+            "email" => $hcs->taiKhoan->email,
+            "soDienThoai" => $hcs->taiKhoan->so_dien_thoai,
+            "cccd" => $hcs->taiKhoan->cccd,
+            "ngaySinh" => $hcs->taiKhoan->ngay_sinh,
+            "ghiChuYTe" => $hcs->ghi_chu_y_te,
+            "diUng" => $hcs->di_ung,
+            "hangThanhVien" => $hcs->hang_thanh_vien,
+            "diemXanh" => $hcs->diem_xanh
         ];
     }
 
@@ -54,35 +54,35 @@ class KhachHangService
             $taiKhoan = $hcs->taiKhoan;
 
             if (isset($data["cccd"])) {
-                $exists = TaiKhoan::where("CCCD", $data["cccd"])
-                    ->where("MaTaiKhoan", "!=", $taiKhoan->MaTaiKhoan)
+                $exists = TaiKhoan::where("cccd", $data["cccd"])
+                    ->where("ma_tai_khoan", "!=", $taiKhoan->ma_tai_khoan)
                     ->exists();
                 if ($exists) {
-                    throw AppException::badRequest("CCCD đã được sử dụng");
+                    throw AppException::badRequest("cccd đã được sử dụng");
                 }
-                $taiKhoan->CCCD = $data["cccd"];
+                $taiKhoan->cccd = $data["cccd"];
             }
 
             if (isset($data["hoTen"])) {
-                $taiKhoan->HoTen = $data["hoTen"];
+                $taiKhoan->ho_ten = $data["hoTen"];
             }
 
             if (isset($data["soDienThoai"])) {
-                $taiKhoan->SoDienThoai = $data["soDienThoai"];
+                $taiKhoan->so_dien_thoai = $data["soDienThoai"];
             }
 
             if (isset($data["ngaySinh"])) {
-                $taiKhoan->NgaySinh = $data["ngaySinh"];
+                $taiKhoan->ngay_sinh = $data["ngaySinh"];
             }
 
             $taiKhoan->save();
 
             if (isset($data["ghiChuYTe"])) {
-                $hcs->GhiChuYTe = $data["ghiChuYTe"];
+                $hcs->ghi_chu_y_te = $data["ghiChuYTe"];
             }
 
             if (isset($data["diUng"])) {
-                $hcs->DiUng = $data["diUng"];
+                $hcs->di_ung = $data["diUng"];
             }
 
             $hcs->save();
@@ -96,9 +96,9 @@ class KhachHangService
         $hcs = $this->getHoChieuSo($maTaiKhoan);
         // Lấy các tour đã đặt và đã thanh toán
         return DonDatTour::with(["tourThucTe.tourMau", "chiTietDatTours"])
-            ->where("MaKhachHang", $hcs->MaKhachHang)
-            ->where("TrangThai", "DA_THANH_TOAN")
-            ->orderBy("NgayDat", "desc")
+            ->where("ma_khach_hang", $hcs->ma_khach_hang)
+            ->where("trang_thai", "DA_THANH_TOAN")
+            ->orderBy("ngay_dat", "desc")
             ->paginate(15);
     }
 
@@ -106,8 +106,8 @@ class KhachHangService
     {
         $hcs = $this->getHoChieuSo($maTaiKhoan);
         return DonDatTour::with(["tourThucTe.tourMau"])
-            ->where("MaKhachHang", $hcs->MaKhachHang)
-            ->orderBy("NgayDat", "desc")
+            ->where("ma_khach_hang", $hcs->ma_khach_hang)
+            ->orderBy("ngay_dat", "desc")
             ->paginate(15);
     }
 
@@ -117,12 +117,12 @@ class KhachHangService
 
         $maYeuCau = $this->maTuDongService->taoMaYeuCauHoTro();
         $yeuCau = new YeuCauHoTro();
-        $yeuCau->MaYeuCauHoTro = $maYeuCau;
-        $yeuCau->MaDatTour = $data["maDatTour"] ?? null;
-        $yeuCau->MaKhachHang = $hcs->MaKhachHang;
-        $yeuCau->LoaiYeuCau = $data["loaiYeuCau"]; // TU_VAN, KIEU_NAI, HUY_TOUR, KHAC
-        $yeuCau->NoiDung = $data["noiDung"];
-        $yeuCau->TrangThai = "CHO_XU_LY";
+        $yeuCau->ma_yeu_cau_ho_tro = $maYeuCau;
+        $yeuCau->ma_dat_tour = $data["maDatTour"] ?? null;
+        $yeuCau->ma_khach_hang = $hcs->ma_khach_hang;
+        $yeuCau->loai_yeu_cau = $data["loaiYeuCau"]; // TU_VAN, KIEU_NAI, HUY_TOUR, KHAC
+        $yeuCau->noi_dung = $data["noiDung"];
+        $yeuCau->trang_thai = "CHO_XU_LY";
         $yeuCau->save();
 
         return $yeuCau;
@@ -132,26 +132,26 @@ class KhachHangService
     {
         $hcs = $this->getHoChieuSo($maTaiKhoan);
         
-        $don = DonDatTour::where("MaDatTour", $maDatTour)
-            ->where("MaKhachHang", $hcs->MaKhachHang)
+        $don = DonDatTour::where("ma_dat_tour", $maDatTour)
+            ->where("ma_khach_hang", $hcs->ma_khach_hang)
             ->first();
 
         if (!$don) {
             throw AppException::notFound("Không tìm thấy đơn đặt tour này của bạn");
         }
 
-        if (in_array($don->TrangThai, ["DA_HUY", "CHO_HOAN_TIEN", "DA_HOAN_TIEN"])) {
+        if (in_array($don->trang_thai, ["DA_HUY", "CHO_HOAN_TIEN", "DA_HOAN_TIEN"])) {
             throw AppException::badRequest("Đơn đặt tour đã ở trạng thái hủy");
         }
 
         $maYeuCau = $this->maTuDongService->taoMaYeuCauHoTro();
         $yeuCau = new YeuCauHoTro();
-        $yeuCau->MaYeuCauHoTro = $maYeuCau;
-        $yeuCau->MaDatTour = $maDatTour;
-        $yeuCau->MaKhachHang = $hcs->MaKhachHang;
-        $yeuCau->LoaiYeuCau = "HUY_TOUR";
-        $yeuCau->NoiDung = $data["lyDoHuy"] ?? "Khách hàng yêu cầu hủy tour";
-        $yeuCau->TrangThai = "CHO_XU_LY";
+        $yeuCau->ma_yeu_cau_ho_tro = $maYeuCau;
+        $yeuCau->ma_dat_tour = $maDatTour;
+        $yeuCau->ma_khach_hang = $hcs->ma_khach_hang;
+        $yeuCau->loai_yeu_cau = "HUY_TOUR";
+        $yeuCau->noi_dung = $data["lyDoHuy"] ?? "Khách hàng yêu cầu hủy tour";
+        $yeuCau->trang_thai = "CHO_XU_LY";
         $yeuCau->save();
 
         return $yeuCau;
@@ -160,8 +160,8 @@ class KhachHangService
     public function yeuCauHoTroCanBoSung(string $maTaiKhoan)
     {
         $hcs = $this->getHoChieuSo($maTaiKhoan);
-        return YeuCauHoTro::where("MaKhachHang", $hcs->MaKhachHang)
-            ->where("TrangThai", "CAN_BO_SUNG")
+        return YeuCauHoTro::where("ma_khach_hang", $hcs->ma_khach_hang)
+            ->where("trang_thai", "CAN_BO_SUNG")
             ->orderBy("updated_at", "desc")
             ->paginate(15);
     }
@@ -170,20 +170,20 @@ class KhachHangService
     {
         $hcs = $this->getHoChieuSo($maTaiKhoan);
         
-        $yeuCau = YeuCauHoTro::where("MaYeuCauHoTro", $maYeuCau)
-            ->where("MaKhachHang", $hcs->MaKhachHang)
+        $yeuCau = YeuCauHoTro::where("ma_yeu_cau_ho_tro", $maYeuCau)
+            ->where("ma_khach_hang", $hcs->ma_khach_hang)
             ->first();
 
         if (!$yeuCau) {
             throw AppException::notFound("Không tìm thấy yêu cầu hỗ trợ này");
         }
 
-        if ($yeuCau->TrangThai !== "CAN_BO_SUNG") {
+        if ($yeuCau->trang_thai !== "CAN_BO_SUNG") {
             throw AppException::badRequest("Yêu cầu này không ở trạng thái cần bổ sung thông tin");
         }
 
-        $yeuCau->NoiDung = $yeuCau->NoiDung . "\n\n[KHÁCH HÀNG BỔ SUNG]: " . $data["noiDungBoSung"];
-        $yeuCau->TrangThai = "CHO_XU_LY";
+        $yeuCau->noi_dung = $yeuCau->noi_dung . "\n\n[KHÁCH HÀNG BỔ SUNG]: " . $data["noiDungBoSung"];
+        $yeuCau->trang_thai = "CHO_XU_LY";
         $yeuCau->save();
 
         return $yeuCau;

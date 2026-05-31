@@ -4,16 +4,16 @@ namespace App\Models;
 
 class DatTourUuDai extends BaseModel
 {
-    protected $table = 'DATTOUR_UUDAI';
+    protected $table = 'dat_tour_uu_dais';
     protected $primaryKey = null;
     public $incrementing = false;
     protected $guarded = [];
 
     public function donDatTour() {
-        return $this->belongsTo(DonDatTour::class, 'MaDatTour', 'MaDatTour'); 
+        return $this->belongsTo(DonDatTour::class, 'ma_dat_tour', 'ma_dat_tour'); 
     }
 
     public function voucher() {
-        return $this->belongsTo(Voucher::class, 'MaVoucher', 'MaVoucher'); 
+        return $this->belongsTo(Voucher::class, 'ma_voucher', 'ma_voucher'); 
     }
 }

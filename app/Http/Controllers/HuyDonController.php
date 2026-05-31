@@ -26,7 +26,7 @@ class HuyDonController extends Controller
     {
         $user = auth()->user();
         $data = $request->validated();
-        $donDatTour = $this->huyDonService->yeuCauHuyDon($data['maDatTour'], $data['lyDo'], $user->MaTaiKhoan);
+        $donDatTour = $this->huyDonService->yeuCauHuyDon($data['maDatTour'], $data['lyDo'], $user->ma_tai_khoan);
 
         // Load các relation để trả về response chuẩn
         $donDatTour->load(['tourThucTe.tourMau', 'khachHang.taiKhoan', 'chiTietDatTours.khachHang.taiKhoan', 'chiTietDatTours.nguoiDongHanh', 'chiTietDichVus.dichVuThem', 'datTourUuDai.voucher']);

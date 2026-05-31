@@ -16,15 +16,15 @@ class PowerBiTest extends TestCase
     {
         parent::setUp();
 
-        VaiTro::create(['MaVaiTro' => 'KETOAN', 'TenHienThi' => 'Kế Toán']);
+        VaiTro::create(['ma_vai_tro' => 'KETOAN', 'ten_hien_thi' => 'Kế Toán']);
 
         $this->keToanUser = TaiKhoan::create([
-            'MaTaiKhoan' => 'TK_KETOAN',
-            'TenDangNhap' => 'ketoan_test',
-            'MatKhau' => Hash::make('password123'),
-            'HoTen' => 'Ke Toan Test',
-            'VaiTro' => 'KETOAN',
-            'TrangThai' => 'HOAT_DONG'
+            'ma_tai_khoan' => 'TK_KETOAN',
+            'ten_dang_nhap' => 'ketoan_test',
+            'mat_khau' => Hash::make('password123'),
+            'ho_ten' => 'Ke Toan Test',
+            'vai_tro' => 'KETOAN',
+            'trang_thai' => 'HOAT_DONG'
         ]);
     }
 
@@ -55,11 +55,11 @@ class PowerBiTest extends TestCase
                  ]);
                  
         // Kiểm tra audit log
-        $this->assertDatabaseHas('NHATKYHETHONG', [
-            'MaTaiKhoan' => 'TK_KETOAN',
-            'DoiTuong' => 'XUAT_DU_LIEU_POWERBI',
-            'HanhDong' => 'POWER_BI_KET_NOI',
-            'GhiChu' => 'DOANH_THU'
+        $this->assertDatabaseHas('nhat_ky_he_thongs', [
+            'ma_tai_khoan' => 'TK_KETOAN',
+            'doi_tuong' => 'XUAT_DU_LIEU_POWERBI',
+            'hanh_dong' => 'POWER_BI_KET_NOI',
+            'ghi_chu' => 'DOANH_THU'
         ]);
     }
 

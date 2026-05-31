@@ -12,29 +12,29 @@ class KeToanChiPhiService
         $query = ChiPhiThucTe::with(["tourThucTe", "nhanVien"]);
 
         if (!empty($filters["maTour"])) {
-            $query->where("MaTourThucTe", $filters["maTour"]);
+            $query->where("ma_tour_thuc_te", $filters["maTour"]);
         }
 
         if (!empty($filters["trangThaiDuyet"])) {
-            $query->where("TrangThaiDuyet", $filters["trangThaiDuyet"]);
+            $query->where("trang_thai_duyet", $filters["trangThaiDuyet"]);
         }
 
-        return $query->orderBy("NgayKhai", "desc")->paginate(15);
+        return $query->orderBy("ngay_khai", "desc")->paginate(15);
     }
 
     private function setTrangThaiChiPhi(string $maChiPhi, string $trangThaiMoi): ChiPhiThucTe
     {
-        $chiPhi = ChiPhiThucTe::where("MaChiPhiThucTe", $maChiPhi)->first();
+        $chiPhi = ChiPhiThucTe::where("ma_chi_phi_thuc_te", $maChiPhi)->first();
         
         if (!$chiPhi) {
             throw AppException::notFound("Không tìm thấy thông tin chi phí");
         }
 
-        if ($chiPhi->TrangThaiDuyet === "DA_DUYET") {
+        if ($chiPhi->trang_thai_duyet === "DA_DUYET") {
             throw AppException::badRequest("Không thể thay đổi trạng thái của khoản chi phí đã được duyệt");
         }
 
-        $chiPhi->TrangThaiDuyet = $trangThaiMoi;
+        $chiPhi->trang_thai_duyet = $trangThaiMoi;
         $chiPhi->save();
 
         return $chiPhi;

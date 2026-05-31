@@ -21,44 +21,44 @@ class TourCongKhaiTest extends TestCase
         parent::setUp();
 
         $this->tourMau = TourMau::create([
-            "MaTourMau" => "TM_CK",
-            "TieuDe" => "Tour Công Khai",
-            "ThoiLuong" => 3,
-            "GiaSan" => 1000000
+            "ma_tour_mau" => "TM_CK",
+            "tieu_de" => "Tour Công Khai",
+            "thoi_luong" => 3,
+            "gia_san" => 1000000
         ]);
 
         $this->tourThucTe = TourThucTe::create([
-            "MaTourThucTe" => "TTT_CK",
-            "MaTourMau" => "TM_CK",
-            "NgayKhoiHanh" => Carbon::now()->addDays(5),
-            "GiaHienHanh" => 1500000,
-            "SoKhachToiDa" => 20,
-            "SoKhachToiThieu" => 10,
-            "ChoConLai" => 20,
-            "TrangThai" => "MO_BAN"
+            "ma_tour_thuc_te" => "TTT_CK",
+            "ma_tour_mau" => "TM_CK",
+            "ngay_khoi_hanh" => Carbon::now()->addDays(5),
+            "gia_hien_hanh" => 1500000,
+            "so_khach_toi_da" => 20,
+            "so_khach_toi_thieu" => 10,
+            "cho_con_lai" => 20,
+            "trang_thai" => "MO_BAN"
         ]);
 
         DanhGiaKh::create([
-            "MaDanhGiaKhachHang" => "DG_01",
-            "MaTourThucTe" => "TTT_CK",
-            "MaKhachHang" => "KH_01",
-            "SoSao" => 5,
-            "NhanXet" => "Tuyệt vời",
-            "NgayDanhGia" => Carbon::now()
+            "ma_danh_gia_khach_hang" => "DG_01",
+            "ma_tour_thuc_te" => "TTT_CK",
+            "ma_khach_hang" => "KH_01",
+            "so_sao" => 5,
+            "nhan_xet" => "Tuyệt vời",
+            "ngay_danh_gia" => Carbon::now()
         ]);
 
         $hdx = HanhDongXanh::create([
-            "MaHanhDongXanh" => "HDX_01",
-            "TenHanhDong" => "Dọn rác",
-            "DiemCong" => 10
+            "ma_hanh_dong_xanh" => "HDX_01",
+            "ten_hanh_dong" => "Dọn rác",
+            "diem_cong" => 10
         ]);
 
         $this->tourThucTe->hanhDongXanhs()->attach("HDX_01");
 
         $dichVu = DichVuThem::create([
-            "MaDichVuThem" => "DV_01",
-            "Ten" => "Thuê lều",
-            "DonGia" => 100000
+            "ma_dich_vu_them" => "DV_01",
+            "ten" => "Thuê lều",
+            "don_gia" => 100000
         ]);
 
         $this->tourThucTe->dichVuThems()->attach("DV_01");

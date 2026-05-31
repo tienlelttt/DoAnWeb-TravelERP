@@ -23,31 +23,31 @@ class QuyetToanService
 
     public function tourCanQuyetToan($perPage = 10)
     {
-        // Danh sách tour KET_THUC nhưng chưa có trong QUYETTOAN
-        $daQuyetToan = QuyetToan::pluck('MaTourThucTe')->toArray();
+        // Danh sách tour KET_THUC nhưng chưa có trong quyet_toans
+        $daQuyetToan = QuyetToan::pluck('ma_tour_thuc_te')->toArray();
 
-        $tours = TourThucTe::whereIn('TrangThai', ['KET_THUC', 'DA_QUYET_TOAN'])
-            ->whereNotIn('MaTourThucTe', $daQuyetToan)
+        $tours = TourThucTe::whereIn('trang_thai', ['KET_THUC', 'DA_QUYET_TOAN'])
+            ->whereNotIn('ma_tour_thuc_te', $daQuyetToan)
             ->paginate($perPage);
 
         // Map data để trả về cấu trúc giống QuyetToanResource (XEM_TRUOC)
         $tours->getCollection()->transform(function ($tour) {
-            $doanhThu = $this->tinhDoanhThu($tour->MaTourThucTe);
-            $chiPhi = $this->tinhChiPhi($tour->MaTourThucTe);
+            $doanhThu = $this->tinhDoanhThu($tour->ma_tour_thuc_te);
+            $chiPhi = $this->tinhChiPhi($tour->ma_tour_thuc_te);
             
             return (object) [
-                'MaQuyetToan' => null,
-                'MaTourThucTe' => $tour->MaTourThucTe,
+                'ma_quyet_toan' => null,
+                'ma_tour_thuc_te' => $tour->ma_tour_thuc_te,
                 'tourThucTe' => $tour,
-                'TongDoanhThu' => $doanhThu,
-                'TongChiPhi' => $chiPhi,
-                'GiaCamKet' => null,
-                'LoiNhuan' => $doanhThu - $chiPhi,
-                'TrangThai' => 'CHUA_QUYET_TOAN',
-                'NgayQuyetToan' => $tour->NgayKhoiHanh,
-                'GhiChu' => null,
-                'HoaDonAnh' => null,
-                'MaNhanVien' => null,
+                'tong_doanh_thu' => $doanhThu,
+                'tong_chi_phi' => $chiPhi,
+                'gia_cam_ket' => null,
+                'loi_nhuan' => $doanhThu - $chiPhi,
+                'trang_thai' => 'CHUA_QUYET_TOAN',
+                'ngay_quyet_toan' => $tour->ngay_khoi_hanh,
+                'ghi_chu' => null,
+                'hoa_don_anh' => null,
+                'ma_nhan_vien' => null,
                 'nhanVien' => null
             ];
         });
@@ -62,18 +62,18 @@ class QuyetToanService
         $chiPhi = $this->tinhChiPhi($maTour);
 
         return (object) [
-            'MaQuyetToan' => null,
-            'MaTourThucTe' => $maTour,
+            'ma_quyet_toan' => null,
+            'ma_tour_thuc_te' => $maTour,
             'tourThucTe' => $tour,
-            'TongDoanhThu' => $doanhThu,
-            'TongChiPhi' => $chiPhi,
-            'GiaCamKet' => null,
-            'LoiNhuan' => $doanhThu - $chiPhi,
-            'TrangThai' => 'XEM_TRUOC',
-            'NgayQuyetToan' => null,
-            'GhiChu' => null,
-            'HoaDonAnh' => null,
-            'MaNhanVien' => null,
+            'tong_doanh_thu' => $doanhThu,
+            'tong_chi_phi' => $chiPhi,
+            'gia_cam_ket' => null,
+            'loi_nhuan' => $doanhThu - $chiPhi,
+            'trang_thai' => 'XEM_TRUOC',
+            'ngay_quyet_toan' => null,
+            'ghi_chu' => null,
+            'hoa_don_anh' => null,
+            'ma_nhan_vien' => null,
             'nhanVien' => null
         ];
     }
@@ -82,17 +82,17 @@ class QuyetToanService
     {
         $this->getKetThucTour($maTour);
 
-        $existing = QuyetToan::where('MaTourThucTe', $maTour)->first();
+        $existing = QuyetToan::where('ma_tour_thuc_te', $maTour)->first();
         if ($existing) {
-            if ($existing->TrangThai === 'DA_QUYET_TOAN') {
+            if ($existing->trang_thai === 'DA_QUYET_TOAN') {
                 throw AppException::badRequest("Quyết toán đã bị chốt, không thể sửa.");
             }
             return $this->capNhatQT($existing, $maTour, $req, $maTaiKhoan);
         }
 
-        $nv = NhanVien::where('MaTaiKhoan', $maTaiKhoan)->first();
+        $nv = NhanVien::where('ma_tai_khoan', $maTaiKhoan)->first();
         if (!$nv) {
-            $nv = NhanVien::whereIn('LoaiNhanVien', ['KETOAN', 'ADMIN'])->first();
+            $nv = NhanVien::whereIn('loai_nhan_vien', ['KETOAN', 'ADMIN'])->first();
             if (!$nv) throw AppException::notFound("Không tìm thấy hồ sơ nhân viên");
         }
 
@@ -100,17 +100,17 @@ class QuyetToanService
         $chiPhi = $this->tinhChiPhi($maTour);
 
         $qt = new QuyetToan();
-        $qt->MaQuyetToan = $this->maTuDongService->taoMaQuyetToan();
-        $qt->MaTourThucTe = $maTour;
-        $qt->MaNhanVien = $nv->MaNhanVien;
-        $qt->TongDoanhThu = $doanhThu;
-        $qt->TongChiPhi = $chiPhi;
-        $qt->GiaCamKet = $req['giaCamKet'] ?? null;
-        $qt->LoiNhuan = $doanhThu - $chiPhi;
-        $qt->NgayQuyetToan = Carbon::now();
-        $qt->TrangThai = 'CHUA_QUYET_TOAN';
-        $qt->GhiChu = $req['ghiChu'] ?? null;
-        $qt->HoaDonAnh = $req['hoaDonAnh'] ?? null;
+        $qt->ma_quyet_toan = $this->maTuDongService->taoMaQuyetToan();
+        $qt->ma_tour_thuc_te = $maTour;
+        $qt->ma_nhan_vien = $nv->ma_nhan_vien;
+        $qt->tong_doanh_thu = $doanhThu;
+        $qt->tong_chi_phi = $chiPhi;
+        $qt->gia_cam_ket = $req['giaCamKet'] ?? null;
+        $qt->loi_nhuan = $doanhThu - $chiPhi;
+        $qt->ngay_quyet_toan = Carbon::now();
+        $qt->trang_thai = 'CHUA_QUYET_TOAN';
+        $qt->ghi_chu = $req['ghiChu'] ?? null;
+        $qt->hoa_don_anh = $req['hoaDonAnh'] ?? null;
         
         $qt->save();
 
@@ -122,16 +122,16 @@ class QuyetToanService
         $qt = QuyetToan::find($maQuyetToan);
         if (!$qt) throw AppException::notFound("Không tìm thấy quyết toán: " . $maQuyetToan);
 
-        if ($qt->TrangThai !== 'CHUA_QUYET_TOAN') {
+        if ($qt->trang_thai !== 'CHUA_QUYET_TOAN') {
             throw AppException::badRequest("Chỉ có thể chốt quyết toán ở trạng thái CHUA_QUYET_TOAN.");
         }
 
         DB::transaction(function() use ($qt) {
-            $qt->TrangThai = 'DA_QUYET_TOAN';
+            $qt->trang_thai = 'DA_QUYET_TOAN';
             $qt->save();
 
             $tour = $qt->tourThucTe;
-            $tour->TrangThai = 'DA_QUYET_TOAN';
+            $tour->trang_thai = 'DA_QUYET_TOAN';
             $tour->save();
         });
 
@@ -143,12 +143,12 @@ class QuyetToanService
         $qt = QuyetToan::find($maQuyetToan);
         if (!$qt) throw AppException::notFound("Không tìm thấy quyết toán: " . $maQuyetToan);
 
-        if ($qt->TrangThai === 'DA_QUYET_TOAN') {
+        if ($qt->trang_thai === 'DA_QUYET_TOAN') {
             throw AppException::badRequest("Quyết toán đã bị chốt, không thể yêu cầu bổ sung.");
         }
 
-        $qt->GhiChu = $this->noiGhiChuMoi($qt->GhiChu, self::YEU_CAU_BO_SUNG_MARKER, $noiDung);
-        $qt->NgayQuyetToan = Carbon::now();
+        $qt->ghi_chu = $this->noiGhiChuMoi($qt->ghi_chu, self::YEU_CAU_BO_SUNG_MARKER, $noiDung);
+        $qt->ngay_quyet_toan = Carbon::now();
         $qt->save();
 
         return $qt;
@@ -158,7 +158,7 @@ class QuyetToanService
     {
         $query = QuyetToan::query()->with(['tourThucTe', 'nhanVien.taiKhoan']);
         if ($trangThai) {
-            $query->where('TrangThai', $trangThai);
+            $query->where('trang_thai', $trangThai);
         }
         return $query->paginate($perPage);
     }
@@ -174,8 +174,8 @@ class QuyetToanService
 
     public function danhSachChoHoanTien($perPage = 10)
     {
-        return GiaoDich::where('LoaiGiaoDich', 'HOAN_TIEN')
-            ->where('TrangThai', 'CHO_THANH_TOAN')
+        return GiaoDich::where('loai_giao_dich', 'HOAN_TIEN')
+            ->where('trang_thai', 'CHO_THANH_TOAN')
             ->paginate($perPage);
     }
 
@@ -185,23 +185,23 @@ class QuyetToanService
             $gd = GiaoDich::lockForUpdate()->find($maGiaoDich);
             if (!$gd) throw AppException::notFound("Không tìm thấy giao dịch: " . $maGiaoDich);
 
-            if ($gd->LoaiGiaoDich !== 'HOAN_TIEN') throw AppException::badRequest("Giao dịch này không phải hoàn tiền");
-            if ($gd->TrangThai === 'DA_HOAN_TIEN') throw AppException::badRequest("Giao dịch này đã được xác nhận hoàn tiền rồi");
-            if ($gd->TrangThai !== 'CHO_THANH_TOAN') throw AppException::badRequest("Chỉ có thể xác nhận giao dịch ở trạng thái CHO_THANH_TOAN");
+            if ($gd->loai_giao_dich !== 'HOAN_TIEN') throw AppException::badRequest("Giao dịch này không phải hoàn tiền");
+            if ($gd->trang_thai === 'DA_HOAN_TIEN') throw AppException::badRequest("Giao dịch này đã được xác nhận hoàn tiền rồi");
+            if ($gd->trang_thai !== 'CHO_THANH_TOAN') throw AppException::badRequest("Chỉ có thể xác nhận giao dịch ở trạng thái CHO_THANH_TOAN");
 
-            $don = DonDatTour::lockForUpdate()->find($gd->MaDatTour);
-            if ($don->TrangThai !== 'CHO_HUY') throw AppException::badRequest("Chỉ có thể xác nhận hoàn tiền cho đơn ở trạng thái CHO_HUY. Trạng thái hiện tại: " . $don->TrangThai);
+            $don = DonDatTour::lockForUpdate()->find($gd->ma_dat_tour);
+            if ($don->trang_thai !== 'CHO_HUY') throw AppException::badRequest("Chỉ có thể xác nhận hoàn tiền cho đơn ở trạng thái CHO_HUY. Trạng thái hiện tại: " . $don->trang_thai);
 
-            $gd->TrangThai = 'DA_HOAN_TIEN';
-            $gd->NgayThanhToan = Carbon::now();
+            $gd->trang_thai = 'DA_HOAN_TIEN';
+            $gd->ngay_thanh_toan = Carbon::now();
             $gd->save();
 
-            $tour = TourThucTe::lockForUpdate()->find($don->MaTourThucTe);
-            $soKhach = DB::table('CHITIETDATTOUR')->where('MaDatTour', $don->MaDatTour)->count();
-            $tour->ChoConLai = min($tour->ChoConLai + $soKhach, $tour->SoKhachToiDa);
+            $tour = TourThucTe::lockForUpdate()->find($don->ma_tour_thuc_te);
+            $soKhach = DB::table('chi_tiet_dat_tours')->where('ma_dat_tour', $don->ma_dat_tour)->count();
+            $tour->cho_con_lai = min($tour->cho_con_lai + $soKhach, $tour->so_khach_toi_da);
             $tour->save();
 
-            $don->TrangThai = 'DA_HUY';
+            $don->trang_thai = 'DA_HUY';
             $don->save();
 
             return $gd;
@@ -214,17 +214,17 @@ class QuyetToanService
             $gd = GiaoDich::lockForUpdate()->find($maGiaoDich);
             if (!$gd) throw AppException::notFound("Không tìm thấy giao dịch: " . $maGiaoDich);
 
-            if ($gd->LoaiGiaoDich !== 'HOAN_TIEN') throw AppException::badRequest("Giao dịch này không phải hoàn tiền");
-            if ($gd->TrangThai !== 'CHO_THANH_TOAN') throw AppException::badRequest("Chỉ có thể từ chối giao dịch hoàn tiền ở trạng thái CHO_THANH_TOAN");
+            if ($gd->loai_giao_dich !== 'HOAN_TIEN') throw AppException::badRequest("Giao dịch này không phải hoàn tiền");
+            if ($gd->trang_thai !== 'CHO_THANH_TOAN') throw AppException::badRequest("Chỉ có thể từ chối giao dịch hoàn tiền ở trạng thái CHO_THANH_TOAN");
 
-            $don = DonDatTour::lockForUpdate()->find($gd->MaDatTour);
-            if ($don->TrangThai !== 'CHO_HUY') throw AppException::badRequest("Chỉ có thể từ chối hoàn tiền cho đơn ở trạng thái CHO_HUY. Trạng thái hiện tại: " . $don->TrangThai);
+            $don = DonDatTour::lockForUpdate()->find($gd->ma_dat_tour);
+            if ($don->trang_thai !== 'CHO_HUY') throw AppException::badRequest("Chỉ có thể từ chối hoàn tiền cho đơn ở trạng thái CHO_HUY. Trạng thái hiện tại: " . $don->trang_thai);
 
-            $gd->TrangThai = 'THAT_BAI';
-            $gd->NgayThanhToan = Carbon::now();
+            $gd->trang_thai = 'THAT_BAI';
+            $gd->ngay_thanh_toan = Carbon::now();
             $gd->save();
 
-            $don->TrangThai = 'TU_CHOI_HOAN_TIEN';
+            $don->trang_thai = 'TU_CHOI_HOAN_TIEN';
             $don->save();
 
             return $gd;
@@ -238,13 +238,13 @@ class QuyetToanService
         $doanhThu = $this->tinhDoanhThu($maTour);
         $chiPhi = $this->tinhChiPhi($maTour);
 
-        $qt->TongDoanhThu = $doanhThu;
-        $qt->TongChiPhi = $chiPhi;
-        if (isset($req['giaCamKet'])) $qt->GiaCamKet = $req['giaCamKet'];
-        $qt->LoiNhuan = $doanhThu - $chiPhi;
-        $qt->NgayQuyetToan = Carbon::now();
-        if (isset($req['ghiChu'])) $qt->GhiChu = $req['ghiChu'];
-        if (isset($req['hoaDonAnh'])) $qt->HoaDonAnh = $req['hoaDonAnh'];
+        $qt->tong_doanh_thu = $doanhThu;
+        $qt->tong_chi_phi = $chiPhi;
+        if (isset($req['giaCamKet'])) $qt->gia_cam_ket = $req['giaCamKet'];
+        $qt->loi_nhuan = $doanhThu - $chiPhi;
+        $qt->ngay_quyet_toan = Carbon::now();
+        if (isset($req['ghiChu'])) $qt->ghi_chu = $req['ghiChu'];
+        if (isset($req['hoaDonAnh'])) $qt->hoa_don_anh = $req['hoaDonAnh'];
         
         $qt->save();
         return $qt;
@@ -255,7 +255,7 @@ class QuyetToanService
         $tour = TourThucTe::find($maTour);
         if (!$tour) throw AppException::notFound("Không tìm thấy tour: " . $maTour);
 
-        if (!in_array($tour->TrangThai, ['KET_THUC', 'DA_QUYET_TOAN'])) {
+        if (!in_array($tour->trang_thai, ['KET_THUC', 'DA_QUYET_TOAN'])) {
             throw AppException::badRequest("Tour chưa kết thúc, không thể quyết toán.");
         }
         return $tour;
@@ -263,16 +263,16 @@ class QuyetToanService
 
     private function tinhDoanhThu($maTour)
     {
-        return DonDatTour::where('MaTourThucTe', $maTour)
-            ->whereIn('TrangThai', ['DA_XAC_NHAN', 'CHO_HUY', 'CHO_HOAN_TIEN', 'TU_CHOI_HOAN_TIEN', 'HOAN_THANH'])
-            ->sum('TongTien');
+        return DonDatTour::where('ma_tour_thuc_te', $maTour)
+            ->whereIn('trang_thai', ['DA_XAC_NHAN', 'CHO_HUY', 'CHO_HOAN_TIEN', 'TU_CHOI_HOAN_TIEN', 'HOAN_THANH'])
+            ->sum('tong_tien');
     }
 
     private function tinhChiPhi($maTour)
     {
-        return ChiPhiThucTe::where('MaTourThucTe', $maTour)
-            ->where('TrangThaiDuyet', 'DA_DUYET')
-            ->sum('ThanhTien');
+        return ChiPhiThucTe::where('ma_tour_thuc_te', $maTour)
+            ->where('trang_thai_duyet', 'DA_DUYET')
+            ->sum('thanh_tien');
     }
 
     private function noiGhiChuMoi($ghiChuHienTai, $marker, $noiDung)

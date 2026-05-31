@@ -31,62 +31,62 @@ class DatTourTest extends TestCase
         // TAIKHOAN: TenDangNhap (NOT NULL), HoTen (NOT NULL), MatKhau (NOT NULL), TrangThai (NOT NULL)
         // VaiTro là FK -> bảng VAITRO nên ta cần dùng đúng giá trị tồn tại trong DB
         $this->tkKh = TaiKhoan::create([
-            'MaTaiKhoan'   => 'TEST_TK_DATTOUR',
-            'TenDangNhap'  => 'test_dat_tour',
-            'MatKhau'      => bcrypt('123456'),
-            'HoTen'        => 'Người Lớn Test',
-            'Email'        => 'dat_tour_' . time() . '@test.com',
-            'SoDienThoai'  => '0987111222',
-            'VaiTro'       => 'KHACHHANG',
-            'TrangThai'    => 'HOAT_DONG',
-            'NgaySinh'     => '1990-01-01', // Người lớn
+            'ma_tai_khoan'   => 'TEST_TK_DATTOUR',
+            'ten_dang_nhap'  => 'test_dat_tour',
+            'mat_khau'      => bcrypt('123456'),
+            'ho_ten'        => 'Người Lớn Test',
+            'email'        => 'dat_tour_' . time() . '@test.com',
+            'so_dien_thoai'  => '0987111222',
+            'vai_tro'       => 'KHACHHANG',
+            'trang_thai'    => 'HOAT_DONG',
+            'ngay_sinh'     => '1990-01-01', // Người lớn
         ]);
 
         // HOCHIEUSO: MaKhachHang (PK), MaTaiKhoan (NOT NULL, FK), HangThanhVien (NOT NULL), DiemXanh (NOT NULL)
         $this->hcs = HoChieuSo::create([
-            'MaKhachHang'   => 'TEST_KH_DT',
-            'MaTaiKhoan'    => 'TEST_TK_DATTOUR',
-            'HangThanhVien' => 'THANH_VIEN',
-            'DiemXanh'      => 0,
+            'ma_khach_hang'   => 'TEST_KH_DT',
+            'ma_tai_khoan'    => 'TEST_TK_DATTOUR',
+            'hang_thanh_vien' => 'THANH_VIEN',
+            'diem_xanh'      => 0,
         ]);
 
         $this->token = JWTAuth::fromUser($this->tkKh);
 
         // TOURMAU: MaTourMau (PK), TieuDe (NOT NULL), ThoiLuong (NOT NULL), GiaSan (NOT NULL)
         TourMau::create([
-            'MaTourMau' => 'TEST_TM_DT',
-            'TieuDe'    => 'Tour Test Đặt',
-            'ThoiLuong' => 3,
-            'GiaSan'    => 1000000,
+            'ma_tour_mau' => 'TEST_TM_DT',
+            'tieu_de'    => 'Tour Test Đặt',
+            'thoi_luong' => 3,
+            'gia_san'    => 1000000,
         ]);
 
         // TOURTHUCTE: MaTourThucTe (PK), MaTourMau (FK NOT NULL), NgayKhoiHanh (NOT NULL),
         //             GiaHienHanh (NOT NULL), SoKhachToiDa (NOT NULL), SoKhachToiThieu (NOT NULL),
         //             ChoConLai (NOT NULL), TrangThai (NOT NULL)
         $this->tourThucTe = TourThucTe::create([
-            'MaTourThucTe'   => 'TEST_TTT_DT',
-            'MaTourMau'      => 'TEST_TM_DT',
-            'NgayKhoiHanh'   => Carbon::now()->addDays(10)->format('Y-m-d'),
-            'GiaHienHanh'    => 2000000,
-            'SoKhachToiThieu'=> 2,
-            'SoKhachToiDa'   => 20,
-            'ChoConLai'      => 10,
-            'TrangThai'      => 'MO_BAN',
+            'ma_tour_thuc_te'   => 'TEST_TTT_DT',
+            'ma_tour_mau'      => 'TEST_TM_DT',
+            'ngay_khoi_hanh'   => Carbon::now()->addDays(10)->format('Y-m-d'),
+            'gia_hien_hanh'    => 2000000,
+            'so_khach_toi_thieu'=> 2,
+            'so_khach_toi_da'   => 20,
+            'cho_con_lai'      => 10,
+            'trang_thai'      => 'MO_BAN',
         ]);
 
         // DICHVUTHEM: MaDichVuThem (PK), Ten (NOT NULL), DonGia (NOT NULL)
         $this->dichVuThem = DichVuThem::create([
-            'MaDichVuThem' => 'TEST_DV_DT',
-            'Ten'          => 'Bảo hiểm VIP',
-            'DonGia'       => 500000,
-            'DonViTinh'    => 'Gói',
+            'ma_dich_vu_them' => 'TEST_DV_DT',
+            'ten'          => 'Bảo hiểm VIP',
+            'don_gia'       => 500000,
+            'don_vi_tinh'    => 'Gói',
         ]);
 
         // HANHDONGXANH: MaHanhDongXanh (PK), TenHanhDong (NOT NULL), DiemCong (NOT NULL)
         $this->hanhDongXanh = HanhDongXanh::create([
-            'MaHanhDongXanh' => 'TEST_HDX_DT',
-            'TenHanhDong'    => 'Dọn rác',
-            'DiemCong'       => 10,
+            'ma_hanh_dong_xanh' => 'TEST_HDX_DT',
+            'ten_hanh_dong'    => 'Dọn rác',
+            'diem_cong'       => 10,
         ]);
     }
 
@@ -99,7 +99,7 @@ class DatTourTest extends TestCase
      */
     public function test_dat_tour_thanh_cong_co_tre_em()
     {
-        $ngayKhoiHanh    = Carbon::parse($this->tourThucTe->NgayKhoiHanh);
+        $ngayKhoiHanh    = Carbon::parse($this->tourThucTe->ngay_khoi_hanh);
         $ngaySinhTreEm   = $ngayKhoiHanh->copy()->subYears(5)->format('Y-m-d');
 
         $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
@@ -136,16 +136,16 @@ class DatTourTest extends TestCase
         $maDatTour = $response->json('data.maDatTour');
         $this->assertNotNull($maDatTour);
 
-        $this->assertDatabaseHas('DONDATTOUR', [
-            'MaDatTour' => $maDatTour,
-            'TrangThai' => 'CHO_XAC_NHAN',
+        $this->assertDatabaseHas('don_dat_tours', [
+            'ma_dat_tour' => $maDatTour,
+            'trang_thai' => 'CHO_XAC_NHAN',
         ]);
 
         // 2 chi tiết: người đặt + người đồng hành
-        $this->assertDatabaseHas('CHITIETDATTOUR', ['MaDatTour' => $maDatTour, 'LoaiKhach' => 'NGUOI_DAT']);
-        $this->assertDatabaseHas('CHITIETDATTOUR', ['MaDatTour' => $maDatTour, 'LoaiKhach' => 'NGUOI_DONG_HANH']);
+        $this->assertDatabaseHas('chi_tiet_dat_tours', ['ma_dat_tour' => $maDatTour, 'loai_khach' => 'NGUOI_DAT']);
+        $this->assertDatabaseHas('chi_tiet_dat_tours', ['ma_dat_tour' => $maDatTour, 'loai_khach' => 'NGUOI_DONG_HANH']);
         // 1 chi tiết dịch vụ
-        $this->assertDatabaseHas('CHITIETDICHVU', ['MaDatTour' => $maDatTour, 'MaDichVuThem' => 'TEST_DV_DT']);
+        $this->assertDatabaseHas('chi_tiet_dich_vus', ['ma_dat_tour' => $maDatTour, 'ma_dich_vu_them' => 'TEST_DV_DT']);
     }
 
     /**
@@ -154,7 +154,7 @@ class DatTourTest extends TestCase
     public function test_dat_tour_that_bai_khi_het_cho()
     {
         // Chỉ còn 1 chỗ, nhưng muốn đặt 2 người (1 + 1 đồng hành)
-        $this->tourThucTe->update(['ChoConLai' => 1]);
+        $this->tourThucTe->update(['cho_con_lai' => 1]);
 
         $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
             ->postJson('/api/khach-hang/dat-tour', [
@@ -191,9 +191,9 @@ class DatTourTest extends TestCase
         $resHuy->assertStatus(200);
 
         // 3. Kiểm tra trạng thái trong DB
-        $this->assertDatabaseHas('DONDATTOUR', [
-            'MaDatTour' => $maDatTour,
-            'TrangThai' => 'DA_HUY',
+        $this->assertDatabaseHas('don_dat_tours', [
+            'ma_dat_tour' => $maDatTour,
+            'trang_thai' => 'DA_HUY',
         ]);
     }
 
@@ -202,7 +202,7 @@ class DatTourTest extends TestCase
      */
     public function test_dat_tour_that_bai_khi_tour_khong_mo_ban()
     {
-        $this->tourThucTe->update(['TrangThai' => 'KET_THUC']);
+        $this->tourThucTe->update(['trang_thai' => 'KET_THUC']);
 
         $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
             ->postJson('/api/khach-hang/dat-tour', [

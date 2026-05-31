@@ -23,13 +23,13 @@ class KeToanHoanTienController extends Controller
         // Map data để giống ThanhToanResponse
         $list->getCollection()->transform(function($gd) {
             return (object) [
-                'maGiaoDich' => $gd->MaGiaoDich,
-                'maDatTour' => $gd->MaDatTour,
-                'soTien' => (float) $gd->SoTien,
-                'phuongThuc' => $gd->PhuongThuc,
-                'loaiGiaoDich' => $gd->LoaiGiaoDich,
-                'trangThai' => $gd->TrangThai,
-                'ngayThanhToan' => $gd->NgayThanhToan
+                'maGiaoDich' => $gd->ma_giao_dich,
+                'maDatTour' => $gd->ma_dat_tour,
+                'soTien' => (float) $gd->so_tien,
+                'phuongThuc' => $gd->phuong_thuc,
+                'loaiGiaoDich' => $gd->loai_giao_dich,
+                'trangThai' => $gd->trang_thai,
+                'ngayThanhToan' => $gd->ngay_thanh_toan
             ];
         });
 
@@ -52,13 +52,13 @@ class KeToanHoanTienController extends Controller
             'success' => true,
             'message' => 'Xác nhận hoàn tiền thành công',
             'data' => (object) [
-                'maGiaoDich' => $gd->MaGiaoDich,
-                'maDatTour' => $gd->MaDatTour,
-                'soTien' => (float) $gd->SoTien,
-                'phuongThuc' => $gd->PhuongThuc,
-                'loaiGiaoDich' => $gd->LoaiGiaoDich,
-                'trangThai' => $gd->TrangThai,
-                'ngayThanhToan' => $gd->NgayThanhToan
+                'maGiaoDich' => $gd->ma_giao_dich,
+                'maDatTour' => $gd->ma_dat_tour,
+                'soTien' => (float) $gd->so_tien,
+                'phuongThuc' => $gd->phuong_thuc,
+                'loaiGiaoDich' => $gd->loai_giao_dich,
+                'trangThai' => $gd->trang_thai,
+                'ngayThanhToan' => $gd->ngay_thanh_toan
             ]
         ]);
     }
@@ -74,13 +74,13 @@ class KeToanHoanTienController extends Controller
             'success' => true,
             'message' => 'Từ chối hoàn tiền thành công',
             'data' => (object) [
-                'maGiaoDich' => $gd->MaGiaoDich,
-                'maDatTour' => $gd->MaDatTour,
-                'soTien' => (float) $gd->SoTien,
-                'phuongThuc' => $gd->PhuongThuc,
-                'loaiGiaoDich' => $gd->LoaiGiaoDich,
-                'trangThai' => $gd->TrangThai,
-                'ngayThanhToan' => $gd->NgayThanhToan
+                'maGiaoDich' => $gd->ma_giao_dich,
+                'maDatTour' => $gd->ma_dat_tour,
+                'soTien' => (float) $gd->so_tien,
+                'phuongThuc' => $gd->phuong_thuc,
+                'loaiGiaoDich' => $gd->loai_giao_dich,
+                'trangThai' => $gd->trang_thai,
+                'ngayThanhToan' => $gd->ngay_thanh_toan
             ]
         ]);
     }

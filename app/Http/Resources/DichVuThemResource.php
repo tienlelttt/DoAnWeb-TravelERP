@@ -10,10 +10,10 @@ class DichVuThemResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'maDichVuThem' => $this->MaDichVuThem,
-            'ten' => $this->Ten,
-            'donViTinh' => $this->DonViTinh,
-            'donGia' => (float) $this->DonGia,
+            'maDichVuThem' => $this->ma_dich_vu_them,
+            'ten' => $this->ten,
+            'donViTinh' => $this->don_vi_tinh,
+            'donGia' => (float) $this->don_gia,
         ];
     }
 }

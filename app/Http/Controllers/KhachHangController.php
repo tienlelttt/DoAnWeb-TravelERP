@@ -19,7 +19,7 @@ class KhachHangController extends Controller
 
     private function getMaTaiKhoan(): string
     {
-        return auth()->user()->MaTaiKhoan;
+        return auth()->user()->ma_tai_khoan;
     }
 
     public function layHoSo(): JsonResponse

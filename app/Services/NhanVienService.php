@@ -18,7 +18,7 @@ class NhanVienService
      */
     public function layHoSoNhanVien(string $maTaiKhoan): NhanVien
     {
-        $nhanVien = NhanVien::with('taiKhoan')->where('MaTaiKhoan', $maTaiKhoan)->first();
+        $nhanVien = NhanVien::with('taiKhoan')->where('ma_tai_khoan', $maTaiKhoan)->first();
 
         if (!$nhanVien) {
             throw AppException::notFound("Không tìm thấy hồ sơ nhân viên cho tài khoản này.");
@@ -36,8 +36,8 @@ class NhanVienService
     public function layLichCongTac(string $maNhanVien): Collection
     {
         return PhanCongTour::with('tourThucTe')
-            ->where('MaNhanVien', $maNhanVien)
-            ->orderBy('NgayPhanCong', 'desc')
+            ->where('ma_nhan_vien', $maNhanVien)
+            ->orderBy('ngay_phan_cong', 'desc')
             ->get();
     }
 
@@ -49,6 +49,6 @@ class NhanVienService
      */
     public function layNangLuc(string $maNhanVien): ?NangLucNhanVien
     {
-        return NangLucNhanVien::where('MaNhanVien', $maNhanVien)->first();
+        return NangLucNhanVien::where('ma_nhan_vien', $maNhanVien)->first();
     }
 }

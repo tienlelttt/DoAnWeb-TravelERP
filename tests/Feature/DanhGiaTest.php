@@ -30,55 +30,55 @@ class DanhGiaTest extends TestCase
 
         // TAIKHOAN: TenDangNhap (NOT NULL), HoTen (NOT NULL), MatKhau (NOT NULL), TrangThai (NOT NULL)
         $tkKh = TaiKhoan::create([
-            'MaTaiKhoan'   => 'TEST_TK_KH_DG',
-            'TenDangNhap'  => 'test_kh_dg',
-            'MatKhau'      => bcrypt('123456'),
-            'HoTen'        => 'Khách Đánh Giá',
-            'Email'        => 'kh_dg_' . time() . '@test.com',
-            'SoDienThoai'  => '0987654321',
-            'VaiTro'       => 'KHACHHANG',
-            'TrangThai'    => 'HOAT_DONG',
+            'ma_tai_khoan'   => 'TEST_TK_KH_DG',
+            'ten_dang_nhap'  => 'test_kh_dg',
+            'mat_khau'      => bcrypt('123456'),
+            'ho_ten'        => 'Khách Đánh Giá',
+            'email'        => 'kh_dg_' . time() . '@test.com',
+            'so_dien_thoai'  => '0987654321',
+            'vai_tro'       => 'KHACHHANG',
+            'trang_thai'    => 'HOAT_DONG',
         ]);
 
         // HOCHIEUSO: HangThanhVien (NOT NULL), DiemXanh (NOT NULL)
         $this->hcs = HoChieuSo::create([
-            'MaKhachHang'   => 'TEST_KH_DG',
-            'MaTaiKhoan'    => 'TEST_TK_KH_DG',
-            'HangThanhVien' => 'THANH_VIEN',
-            'DiemXanh'      => 0,
+            'ma_khach_hang'   => 'TEST_KH_DG',
+            'ma_tai_khoan'    => 'TEST_TK_KH_DG',
+            'hang_thanh_vien' => 'THANH_VIEN',
+            'diem_xanh'      => 0,
         ]);
 
         $this->token = JWTAuth::fromUser($tkKh);
 
         // TOURMAU
         $this->tourMau = TourMau::create([
-            'MaTourMau' => 'TEST_TM_DG',
-            'TieuDe'    => 'Tour Test Đánh Giá',
-            'ThoiLuong' => 3,
-            'GiaSan'    => 1000000,
+            'ma_tour_mau' => 'TEST_TM_DG',
+            'tieu_de'    => 'Tour Test Đánh Giá',
+            'thoi_luong' => 3,
+            'gia_san'    => 1000000,
         ]);
 
         // TOURTHUCTE: trạng thái KET_THUC để cho phép đánh giá
         $this->tourThucTe = TourThucTe::create([
-            'MaTourThucTe'    => 'TEST_TTT_DG',
-            'MaTourMau'       => 'TEST_TM_DG',
-            'NgayKhoiHanh'    => Carbon::now()->subDays(5)->format('Y-m-d'),
-            'GiaHienHanh'     => 1200000,
-            'SoKhachToiThieu' => 2,
-            'SoKhachToiDa'    => 20,
-            'ChoConLai'       => 10,
-            'TrangThai'       => 'KET_THUC',
+            'ma_tour_thuc_te'    => 'TEST_TTT_DG',
+            'ma_tour_mau'       => 'TEST_TM_DG',
+            'ngay_khoi_hanh'    => Carbon::now()->subDays(5)->format('Y-m-d'),
+            'gia_hien_hanh'     => 1200000,
+            'so_khach_toi_thieu' => 2,
+            'so_khach_toi_da'    => 20,
+            'cho_con_lai'       => 10,
+            'trang_thai'       => 'KET_THUC',
         ]);
 
         // DONDATTOUR để phục vụ test khiếu nại
         // NgayDat (NOT NULL), TongTien (NOT NULL), TrangThai (NOT NULL)
         $this->donDatTour = DonDatTour::create([
-            'MaDatTour'   => 'TEST_DDT_DG',
-            'MaTourThucTe'=> 'TEST_TTT_DG',
-            'MaKhachHang' => 'TEST_KH_DG',
-            'TongTien'    => 1200000,
-            'TrangThai'   => 'DA_XAC_NHAN',
-            'NgayDat'     => Carbon::now(),
+            'ma_dat_tour'   => 'TEST_DDT_DG',
+            'ma_tour_thuc_te'=> 'TEST_TTT_DG',
+            'ma_khach_hang' => 'TEST_KH_DG',
+            'tong_tien'    => 1200000,
+            'trang_thai'   => 'DA_XAC_NHAN',
+            'ngay_dat'     => Carbon::now(),
         ]);
     }
 
@@ -87,9 +87,9 @@ class DanhGiaTest extends TestCase
     {
         // LICHSUTOUR cần MaLichSuTour (PK), MaKhachHang (FK), MaTourThucTe (FK)
         LichSuTour::create([
-            'MaLichSuTour'  => 'TEST_LST_DG',
-            'MaKhachHang'   => 'TEST_KH_DG',
-            'MaTourThucTe'  => 'TEST_TTT_DG',
+            'ma_lich_su_tour'  => 'TEST_LST_DG',
+            'ma_khach_hang'   => 'TEST_KH_DG',
+            'ma_tour_thuc_te'  => 'TEST_TTT_DG',
         ]);
 
         $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
@@ -104,21 +104,21 @@ class DanhGiaTest extends TestCase
         $response->assertJsonPath('data.nhanXet', 'Tour tuyệt vời quá!');
 
         // Điểm trung bình TourMau phải được cập nhật
-        $this->assertDatabaseHas('TOURMAU', [
-            'MaTourMau' => 'TEST_TM_DG',
-            'SoDanhGia' => 1,
+        $this->assertDatabaseHas('tour_maus', [
+            'ma_tour_mau' => 'TEST_TM_DG',
+            'so_danh_gia' => 1,
         ]);
     }
 
     /** Tour chưa kết thúc -> không được đánh giá */
     public function test_khong_the_danh_gia_tour_chua_ket_thuc()
     {
-        $this->tourThucTe->update(['TrangThai' => 'MO_BAN']);
+        $this->tourThucTe->update(['trang_thai' => 'MO_BAN']);
 
         LichSuTour::create([
-            'MaLichSuTour'  => 'TEST_LST_DG_2',
-            'MaKhachHang'   => 'TEST_KH_DG',
-            'MaTourThucTe'  => 'TEST_TTT_DG',
+            'ma_lich_su_tour'  => 'TEST_LST_DG_2',
+            'ma_khach_hang'   => 'TEST_KH_DG',
+            'ma_tour_thuc_te'  => 'TEST_TTT_DG',
         ]);
 
         $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
@@ -148,20 +148,20 @@ class DanhGiaTest extends TestCase
     public function test_khong_the_danh_gia_neu_co_khieu_nai_chua_xu_ly()
     {
         LichSuTour::create([
-            'MaLichSuTour'  => 'TEST_LST_DG_3',
-            'MaKhachHang'   => 'TEST_KH_DG',
-            'MaTourThucTe'  => 'TEST_TTT_DG',
+            'ma_lich_su_tour'  => 'TEST_LST_DG_3',
+            'ma_khach_hang'   => 'TEST_KH_DG',
+            'ma_tour_thuc_te'  => 'TEST_TTT_DG',
         ]);
 
         // TrangThai hop le: CHUA_XU_LY | CHO_BO_SUNG | CHO_GIAI_TRINH | CHO_DUYET | DA_XU_LY | TU_CHOI
         // YEUCAUHOTRO: NoiDung (NOT NULL CLOB), LoaiYeuCau (NOT NULL), TrangThai (NOT NULL), MaKhachHang (FK NOT NULL)
         YeuCauHoTro::create([
-            'MaYeuCauHoTro' => 'TEST_YC_DG',
-            'MaDatTour'     => 'TEST_DDT_DG',
-            'MaKhachHang'   => 'TEST_KH_DG',
-            'LoaiYeuCau'    => 'KHIEU_NAI',
-            'NoiDung'       => 'Tour quá tệ',
-            'TrangThai'     => 'CHUA_XU_LY',
+            'ma_yeu_cau_ho_tro' => 'TEST_YC_DG',
+            'ma_dat_tour'     => 'TEST_DDT_DG',
+            'ma_khach_hang'   => 'TEST_KH_DG',
+            'loai_yeu_cau'    => 'KHIEU_NAI',
+            'noi_dung'       => 'Tour quá tệ',
+            'trang_thai'     => 'CHUA_XU_LY',
         ]);
 
         $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)

@@ -10,20 +10,20 @@ class TourThucTeResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'maTourThucTe' => $this->MaTourThucTe,
-            'maTourMau' => $this->MaTourMau,
-            'tieuDeTour' => $this->tourMau ? $this->tourMau->TieuDe : null,
-            'ngayKhoiHanh' => \Carbon\Carbon::parse($this->NgayKhoiHanh)->format('Y-m-d'),
-            // NgayKetThuc = NgayKhoiHanh + ThoiLuong (của TourMau)
-            'ngayKetThuc' => $this->tourMau ? \Carbon\Carbon::parse($this->NgayKhoiHanh)->addDays($this->tourMau->ThoiLuong - 1)->format('Y-m-d') : null,
-            'giaHienHanh' => (float) $this->GiaHienHanh,
-            'soKhachToiDa' => (int) $this->SoKhachToiDa,
-            'soKhachToiThieu' => (int) $this->SoKhachToiThieu,
-            'choConLai' => (int) $this->ChoConLai,
-            'trangThai' => $this->TrangThai,
-            'thoiLuong' => $this->tourMau ? (int) $this->tourMau->ThoiLuong : null,
-            'diemDanhGia' => $this->tourMau ? ($this->tourMau->DanhGia ? (float) $this->tourMau->DanhGia : null) : null,
-            'soDanhGia' => $this->tourMau ? ($this->tourMau->SoDanhGia ? (int) $this->tourMau->SoDanhGia : null) : null,
+            'maTourThucTe' => $this->ma_tour_thuc_te,
+            'maTourMau' => $this->ma_tour_mau,
+            'tieuDeTour' => $this->tourMau ? $this->tourMau->tieu_de : null,
+            'ngayKhoiHanh' => \Carbon\Carbon::parse($this->ngay_khoi_hanh)->format('Y-m-d'),
+            // NgayKetThuc = ngay_khoi_hanh + thoi_luong (của TourMau)
+            'ngayKetThuc' => $this->tourMau ? \Carbon\Carbon::parse($this->ngay_khoi_hanh)->addDays($this->tourMau->thoi_luong - 1)->format('Y-m-d') : null,
+            'giaHienHanh' => (float) $this->gia_hien_hanh,
+            'soKhachToiDa' => (int) $this->so_khach_toi_da,
+            'soKhachToiThieu' => (int) $this->so_khach_toi_thieu,
+            'choConLai' => (int) $this->cho_con_lai,
+            'trangThai' => $this->trang_thai,
+            'thoiLuong' => $this->tourMau ? (int) $this->tourMau->thoi_luong : null,
+            'diemDanhGia' => $this->tourMau ? ($this->tourMau->danh_gia ? (float) $this->tourMau->danh_gia : null) : null,
+            'soDanhGia' => $this->tourMau ? ($this->tourMau->so_danh_gia ? (int) $this->tourMau->so_danh_gia : null) : null,
             // Skip dichVu and hanhDongXanh for now
             'dichVu' => [],
             'hanhDongXanh' => [],

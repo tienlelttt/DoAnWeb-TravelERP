@@ -14,13 +14,13 @@ class DangKyNhanVienRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tenDangNhap' => 'required|string|max:100|unique:TAIKHOAN,TenDangNhap',
+            'tenDangNhap' => 'required|string|max:100|unique:tai_khoans,ten_dang_nhap',
             'matKhau' => 'required|string|min:6',
             'hoTen' => 'required|string|max:200',
-            'email' => 'nullable|email|max:200|unique:TAIKHOAN,Email',
+            'email' => 'nullable|email|max:200|unique:tai_khoans,email',
             'soDienThoai' => 'nullable|string|max:20',
-            'maVaiTro' => 'required_without:vaiTro|string|exists:VAITRO,MaVaiTro',
-            'vaiTro' => 'required_without:maVaiTro|string|exists:VAITRO,MaVaiTro',
+            'maVaiTro' => 'required_without:vaiTro|string|exists:vai_tros,ma_vai_tro',
+            'vaiTro' => 'required_without:maVaiTro|string|exists:vai_tros,ma_vai_tro',
         ];
     }
 
@@ -31,7 +31,7 @@ class DangKyNhanVienRequest extends FormRequest
             'tenDangNhap.unique' => 'Tên đăng nhập đã tồn tại',
             'matKhau.required' => 'Mật khẩu không được để trống',
             'hoTen.required' => 'Họ tên không được để trống',
-            'email.unique' => 'Email đã được sử dụng',
+            'email.unique' => 'email đã được sử dụng',
             'maVaiTro.required_without' => 'Vai trò không được để trống',
             'vaiTro.required_without' => 'Vai trò không được để trống',
         ];

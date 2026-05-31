@@ -4,17 +4,17 @@ namespace App\Models;
 
 class ChiPhiThucTe extends BaseModel
 {
-    protected $table = 'CHIPHITHUCTE';
-    protected $primaryKey = 'MaChiPhiThucTe';
+    protected $table = 'chi_phi_thuc_tes';
+    protected $primaryKey = 'ma_chi_phi_thuc_te';
     public $incrementing = false;
     protected $keyType = 'string';
     protected $guarded = [];
 
     public function tourThucTe() {
-        return $this->belongsTo(TourThucTe::class, 'MaTourThucTe', 'MaTourThucTe'); 
+        return $this->belongsTo(TourThucTe::class, 'ma_tour_thuc_te', 'ma_tour_thuc_te'); 
     }
 
     public function nhanVien() {
-        return $this->belongsTo(NhanVien::class, 'MaNhanVien', 'MaNhanVien'); 
+        return $this->belongsTo(NhanVien::class, 'ma_nhan_vien', 'ma_nhan_vien'); 
     }
 }

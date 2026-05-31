@@ -16,8 +16,8 @@ class KhuyenMaiKHRepository
     public function timVoucherTrongViCoKhoa(string $maKhachHang, string $maVoucher): ?KhuyenMaiKh
     {
         return KhuyenMaiKh::lockForUpdate()
-            ->where('MaKhachHang', $maKhachHang)
-            ->where('MaVoucher', $maVoucher)
+            ->where('ma_khach_hang', $maKhachHang)
+            ->where('ma_voucher', $maVoucher)
             ->first();
     }
 
@@ -31,10 +31,10 @@ class KhuyenMaiKHRepository
     public function capNhatTrangThaiDaSuDung(string $maKhachHang, string $maVoucher): void
     {
         // Sử dụng query builder với composite key thay vì gọi save() trên model instance để tránh lỗi không có primary key
-        KhuyenMaiKh::where('MaKhachHang', $maKhachHang)
-            ->where('MaVoucher', $maVoucher)
+        KhuyenMaiKh::where('ma_khach_hang', $maKhachHang)
+            ->where('ma_voucher', $maVoucher)
             ->update([
-                'TrangThai' => 'DA_SU_DUNG',
+                'trang_thai' => 'DA_SU_DUNG',
                 'updated_at' => now(),
             ]);
     }
@@ -49,7 +49,7 @@ class KhuyenMaiKHRepository
     public function danhSachVoucherCuaKhach(string $maKhachHang, int $perPage = 10)
     {
         return KhuyenMaiKh::with(['voucher', 'khachHang.taiKhoan'])
-            ->where('MaKhachHang', $maKhachHang)
+            ->where('ma_khach_hang', $maKhachHang)
             ->paginate($perPage);
     }
 }

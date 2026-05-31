@@ -25,9 +25,9 @@ class YeuCauHoTroRepository
      */
     public function timTicketHuyTourChoDuyet(string $maDatTour): ?YeuCauHoTro
     {
-        return YeuCauHoTro::where('MaDatTour', $maDatTour)
-            ->where('LoaiYeuCau', 'HUY_TOUR')
-            ->where('TrangThai', 'CHUA_XU_LY')
+        return YeuCauHoTro::where('ma_dat_tour', $maDatTour)
+            ->where('loai_yeu_cau', 'HUY_TOUR')
+            ->where('trang_thai', 'CHUA_XU_LY')
             ->first();
     }
 
@@ -39,9 +39,9 @@ class YeuCauHoTroRepository
      */
     public function timTicketHuyTourDaDuyet(string $maDatTour): ?YeuCauHoTro
     {
-        return YeuCauHoTro::where('MaDatTour', $maDatTour)
-            ->where('LoaiYeuCau', 'HUY_TOUR')
-            ->where('TrangThai', 'DA_XU_LY')
+        return YeuCauHoTro::where('ma_dat_tour', $maDatTour)
+            ->where('loai_yeu_cau', 'HUY_TOUR')
+            ->where('trang_thai', 'DA_XU_LY')
             ->first();
     }
 }

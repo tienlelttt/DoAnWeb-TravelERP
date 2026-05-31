@@ -20,56 +20,56 @@ class KeToanHoanTienTest extends TestCase
     {
         parent::setUp();
 
-        VaiTro::create(['MaVaiTro' => 'KETOAN', 'TenHienThi' => 'Kế Toán']);
+        VaiTro::create(['ma_vai_tro' => 'KETOAN', 'ten_hien_thi' => 'Kế Toán']);
 
         $this->keToanUser = TaiKhoan::create([
-            'MaTaiKhoan' => 'TK_KETOAN',
-            'TenDangNhap' => 'ketoan_test',
-            'MatKhau' => Hash::make('password123'),
-            'HoTen' => 'Ke Toan Test',
-            'VaiTro' => 'KETOAN',
-            'TrangThai' => 'HOAT_DONG'
+            'ma_tai_khoan' => 'TK_KETOAN',
+            'ten_dang_nhap' => 'ketoan_test',
+            'mat_khau' => Hash::make('password123'),
+            'ho_ten' => 'Ke Toan Test',
+            'vai_tro' => 'KETOAN',
+            'trang_thai' => 'HOAT_DONG'
         ]);
 
         $tourMau = \App\Models\TourMau::create([
-            'MaTourMau' => 'TM_01',
-            'TieuDe' => 'Tour Test',
-            'ThoiLuong' => 3,
-            'GiaSan' => 1000000
+            'ma_tour_mau' => 'TM_01',
+            'tieu_de' => 'Tour Test',
+            'thoi_luong' => 3,
+            'gia_san' => 1000000
         ]);
 
         $this->tourThucTe = TourThucTe::create([
-            'MaTourThucTe' => 'TT_01',
-            'MaTourMau' => 'TM_01',
-            'NgayKhoiHanh' => now()->addDays(5),
-            'GiaHienHanh' => 1000000,
-            'SoKhachToiDa' => 20,
-            'SoKhachToiThieu' => 10,
-            'ChoConLai' => 18, // Còn trống 18 chỗ, đã đặt 2 chỗ
-            'TrangThai' => 'CHUA_KHOI_HANH'
+            'ma_tour_thuc_te' => 'TT_01',
+            'ma_tour_mau' => 'TM_01',
+            'ngay_khoi_hanh' => now()->addDays(5),
+            'gia_hien_hanh' => 1000000,
+            'so_khach_toi_da' => 20,
+            'so_khach_toi_thieu' => 10,
+            'cho_con_lai' => 18, // Còn trống 18 chỗ, đã đặt 2 chỗ
+            'trang_thai' => 'CHUA_KHOI_HANH'
         ]);
 
         $this->donDatTour = DonDatTour::create([
-            'MaDatTour' => 'DT_01',
-            'MaTourThucTe' => 'TT_01',
-            'MaKhachHang' => 'KH_01',
-            'NgayDat' => now(),
-            'TongTien' => 2000000,
-            'TrangThai' => 'CHO_HUY'
+            'ma_dat_tour' => 'DT_01',
+            'ma_tour_thuc_te' => 'TT_01',
+            'ma_khach_hang' => 'KH_01',
+            'ngay_dat' => now(),
+            'tong_tien' => 2000000,
+            'trang_thai' => 'CHO_HUY'
         ]);
 
         // Tạo 2 khách hàng trong ChiTietDatTour
-        ChiTietDatTour::create(['MaChiTietDat' => 'CT_01', 'MaDatTour' => 'DT_01', 'LoaiKhach' => 'NGUOI_LON', 'GiaTaiThoiDiemDat' => 1000000]);
-        ChiTietDatTour::create(['MaChiTietDat' => 'CT_02', 'MaDatTour' => 'DT_01', 'LoaiKhach' => 'NGUOI_LON', 'GiaTaiThoiDiemDat' => 1000000]);
+        ChiTietDatTour::create(['ma_chi_tiet_dat' => 'CT_01', 'ma_dat_tour' => 'DT_01', 'loai_khach' => 'NGUOI_LON', 'gia_tai_thoi_diem_dat' => 1000000]);
+        ChiTietDatTour::create(['ma_chi_tiet_dat' => 'CT_02', 'ma_dat_tour' => 'DT_01', 'loai_khach' => 'NGUOI_LON', 'gia_tai_thoi_diem_dat' => 1000000]);
 
         $this->giaoDich = GiaoDich::create([
-            'MaGiaoDich' => 'GD_01',
-            'MaDatTour' => 'DT_01',
-            'LoaiGiaoDich' => 'HOAN_TIEN',
-            'PhuongThuc' => 'CHUYEN_KHOAN',
-            'SoTien' => 2000000,
-            'NgayThanhToan' => now(),
-            'TrangThai' => 'CHO_THANH_TOAN'
+            'ma_giao_dich' => 'GD_01',
+            'ma_dat_tour' => 'DT_01',
+            'loai_giao_dich' => 'HOAN_TIEN',
+            'phuong_thuc' => 'CHUYEN_KHOAN',
+            'so_tien' => 2000000,
+            'ngay_thanh_toan' => now(),
+            'trang_thai' => 'CHO_THANH_TOAN'
         ]);
     }
 
@@ -96,21 +96,21 @@ class KeToanHoanTienTest extends TestCase
                  ]);
 
         // Kiểm tra db: giao dịch thành công
-        $this->assertDatabaseHas('GIAODICH', [
-            'MaGiaoDich' => 'GD_01',
-            'TrangThai' => 'DA_HOAN_TIEN'
+        $this->assertDatabaseHas('giao_diches', [
+            'ma_giao_dich' => 'GD_01',
+            'trang_thai' => 'DA_HOAN_TIEN'
         ]);
 
         // Kiểm tra db: đơn hàng đã hủy
-        $this->assertDatabaseHas('DONDATTOUR', [
-            'MaDatTour' => 'DT_01',
-            'TrangThai' => 'DA_HUY'
+        $this->assertDatabaseHas('don_dat_tours', [
+            'ma_dat_tour' => 'DT_01',
+            'trang_thai' => 'DA_HUY'
         ]);
 
         // Kiểm tra chỗ còn lại: 18 + 2 = 20
-        $this->assertDatabaseHas('TOURTHUCTE', [
-            'MaTourThucTe' => 'TT_01',
-            'ChoConLai' => 20
+        $this->assertDatabaseHas('tour_thuc_tes', [
+            'ma_tour_thuc_te' => 'TT_01',
+            'cho_con_lai' => 20
         ]);
     }
 
@@ -121,14 +121,14 @@ class KeToanHoanTienTest extends TestCase
 
         $response->assertStatus(200);
 
-        $this->assertDatabaseHas('GIAODICH', [
-            'MaGiaoDich' => 'GD_01',
-            'TrangThai' => 'THAT_BAI'
+        $this->assertDatabaseHas('giao_diches', [
+            'ma_giao_dich' => 'GD_01',
+            'trang_thai' => 'THAT_BAI'
         ]);
 
-        $this->assertDatabaseHas('DONDATTOUR', [
-            'MaDatTour' => 'DT_01',
-            'TrangThai' => 'TU_CHOI_HOAN_TIEN' // Tranh chấp
+        $this->assertDatabaseHas('don_dat_tours', [
+            'ma_dat_tour' => 'DT_01',
+            'trang_thai' => 'TU_CHOI_HOAN_TIEN' // Tranh chấp
         ]);
     }
 }

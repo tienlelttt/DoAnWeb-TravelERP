@@ -28,11 +28,11 @@ class HdvController extends Controller
     private function getHdvId(): string
     {
         $user = auth()->user();
-        $hdv = NhanVien::where("MaTaiKhoan", $user->MaTaiKhoan)->first();
+        $hdv = NhanVien::where("ma_tai_khoan", $user->ma_tai_khoan)->first();
         if (!$hdv) {
             throw AppException::forbidden("Tài khoản của bạn không được liên kết với hồ sơ nhân viên hướng dẫn");
         }
-        return $hdv->MaNhanVien;
+        return $hdv->ma_nhan_vien;
     }
 
     public function traLoiPhanCong(string $maPhanCong, TraLoiPhanCongRequest $request): JsonResponse

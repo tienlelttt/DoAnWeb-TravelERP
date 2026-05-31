@@ -11,11 +11,11 @@ class LichSuTourResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'maLichSuTour' => $this->MaLichSuTour,
-            'maKhachHang' => $this->MaKhachHang,
-            'maTourThucTe' => $this->MaTourThucTe,
-            'maChiTietDat' => $this->MaChiTietDat,
-            'ngayThamGia' => $this->NgayThamGia ? Carbon::parse($this->NgayThamGia)->format('Y-m-d H:i:s') : null,
+            'maLichSuTour' => $this->ma_lich_su_tour,
+            'maKhachHang' => $this->ma_khach_hang,
+            'maTourThucTe' => $this->ma_tour_thuc_te,
+            'maChiTietDat' => $this->ma_chi_tiet_dat,
+            'ngayThamGia' => $this->ngay_tham_gia ? Carbon::parse($this->ngay_tham_gia)->format('Y-m-d H:i:s') : null,
         ];
     }
 }

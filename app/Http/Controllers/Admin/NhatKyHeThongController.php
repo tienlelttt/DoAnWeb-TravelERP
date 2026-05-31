@@ -20,30 +20,30 @@ class NhatKyHeThongController extends Controller
         $query = NhatKyHeThong::query();
 
         if ($request->has('maTaiKhoan')) {
-            $query->where('MaTaiKhoan', $request->maTaiKhoan);
+            $query->where('ma_tai_khoan', $request->maTaiKhoan);
         }
 
         if ($request->has('hanhDong')) {
-            $query->where('HanhDong', 'like', '%' . $request->hanhDong . '%');
+            $query->where('hanh_dong', 'like', '%' . $request->hanhDong . '%');
         }
 
         if ($request->has('doiTuong')) {
-            $query->where('DoiTuong', 'like', '%' . $request->doiTuong . '%');
+            $query->where('doi_tuong', 'like', '%' . $request->doiTuong . '%');
         }
         
         if ($request->has('maDoiTuong')) {
-            $query->where('MaDoiTuong', $request->maDoiTuong);
+            $query->where('ma_doi_tuong', $request->maDoiTuong);
         }
 
         if ($request->has('tuThoiGian')) {
-            $query->where('ThoiGian', '>=', $request->tuThoiGian);
+            $query->where('thoi_gian', '>=', $request->tuThoiGian);
         }
 
         if ($request->has('denThoiGian')) {
-            $query->where('ThoiGian', '<=', $request->denThoiGian);
+            $query->where('thoi_gian', '<=', $request->denThoiGian);
         }
 
-        $logs = $query->orderBy('ThoiGian', 'desc')->paginate($request->get('size', 20));
+        $logs = $query->orderBy('thoi_gian', 'desc')->paginate($request->get('size', 20));
 
         return $this->successResponse($logs);
     }

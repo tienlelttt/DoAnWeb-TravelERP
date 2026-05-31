@@ -23,49 +23,49 @@ class KhachHangTest extends TestCase
     {
         parent::setUp();
 
-        VaiTro::create(["MaVaiTro" => "KHACHHANG", "TenHienThi" => "Khách hàng"]);
+        VaiTro::create(["ma_vai_tro" => "KHACHHANG", "ten_hien_thi" => "Khách hàng"]);
 
         $this->khachHangTK = TaiKhoan::create([
-            "MaTaiKhoan" => "TK_KH_001",
-            "TenDangNhap" => "khachhang1",
-            "MatKhau" => bcrypt("password"),
-            "HoTen" => "Khách Hàng Test",
-            "VaiTro" => "KHACHHANG",
-            "TrangThai" => "HOAT_DONG"
+            "ma_tai_khoan" => "TK_KH_001",
+            "ten_dang_nhap" => "khachhang1",
+            "mat_khau" => bcrypt("password"),
+            "ho_ten" => "Khách Hàng Test",
+            "vai_tro" => "KHACHHANG",
+            "trang_thai" => "HOAT_DONG"
         ]);
 
         $this->hoChieuSo = HoChieuSo::create([
-            "MaKhachHang" => "KH_001",
-            "MaTaiKhoan" => "TK_KH_001",
-            "HangThanhVien" => "THANH_VIEN",
-            "DiemXanh" => 0
+            "ma_khach_hang" => "KH_001",
+            "ma_tai_khoan" => "TK_KH_001",
+            "hang_thanh_vien" => "THANH_VIEN",
+            "diem_xanh" => 0
         ]);
 
         $this->tourMau = TourMau::create([
-            "MaTourMau" => "TM_004",
-            "TieuDe" => "Tour Test KH",
-            "ThoiLuong" => 3,
-            "GiaSan" => 1000000
+            "ma_tour_mau" => "TM_004",
+            "tieu_de" => "Tour Test KH",
+            "thoi_luong" => 3,
+            "gia_san" => 1000000
         ]);
 
         $this->tourThucTe = TourThucTe::create([
-            "MaTourThucTe" => "TTT_004",
-            "MaTourMau" => "TM_004",
-            "NgayKhoiHanh" => Carbon::now()->addDays(10),
-            "GiaHienHanh" => 1200000,
-            "SoKhachToiDa" => 20,
-            "SoKhachToiThieu" => 10,
-            "ChoConLai" => 20,
-            "TrangThai" => "MO_BAN"
+            "ma_tour_thuc_te" => "TTT_004",
+            "ma_tour_mau" => "TM_004",
+            "ngay_khoi_hanh" => Carbon::now()->addDays(10),
+            "gia_hien_hanh" => 1200000,
+            "so_khach_toi_da" => 20,
+            "so_khach_toi_thieu" => 10,
+            "cho_con_lai" => 20,
+            "trang_thai" => "MO_BAN"
         ]);
 
         $this->donDatTour = DonDatTour::create([
-            "MaDatTour" => "DAT_001",
-            "MaTourThucTe" => "TTT_004",
-            "MaKhachHang" => "KH_001",
-            "NgayDat" => Carbon::now(),
-            "TrangThai" => "DA_THANH_TOAN",
-            "TongTien" => 1200000
+            "ma_dat_tour" => "DAT_001",
+            "ma_tour_thuc_te" => "TTT_004",
+            "ma_khach_hang" => "KH_001",
+            "ngay_dat" => Carbon::now(),
+            "trang_thai" => "DA_THANH_TOAN",
+            "tong_tien" => 1200000
         ]);
     }
 
@@ -97,10 +97,10 @@ class KhachHangTest extends TestCase
                  ->assertJsonPath("data.hoTen", "Tên Mới")
                  ->assertJsonPath("data.cccd", "012345678912");
 
-        $this->assertDatabaseHas("TAIKHOAN", [
-            "MaTaiKhoan" => "TK_KH_001",
-            "HoTen" => "Tên Mới",
-            "CCCD" => "012345678912"
+        $this->assertDatabaseHas("tai_khoans", [
+            "ma_tai_khoan" => "TK_KH_001",
+            "ho_ten" => "Tên Mới",
+            "cccd" => "012345678912"
         ]);
     }
 
@@ -129,12 +129,12 @@ class KhachHangTest extends TestCase
         $response->assertStatus(200)
                  ->assertJsonPath("message", "Gửi yêu cầu hủy tour thành công");
 
-        $this->assertDatabaseHas("YEUCAUHOTRO", [
-            "MaDatTour" => "DAT_001",
-            "MaKhachHang" => "KH_001",
-            "LoaiYeuCau" => "HUY_TOUR",
-            "NoiDung" => "Tôi bận việc gia đình",
-            "TrangThai" => "CHO_XU_LY"
+        $this->assertDatabaseHas("yeu_cau_ho_tros", [
+            "ma_dat_tour" => "DAT_001",
+            "ma_khach_hang" => "KH_001",
+            "loai_yeu_cau" => "HUY_TOUR",
+            "noi_dung" => "Tôi bận việc gia đình",
+            "trang_thai" => "CHO_XU_LY"
         ]);
     }
 }

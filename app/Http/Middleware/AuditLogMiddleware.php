@@ -51,12 +51,12 @@ class AuditLogMiddleware
                 $maNhatKy = $this->maTuDongService->taoMaNhatKyHeThong();
 
                 NhatKyHeThong::create([
-                    'MaNhatKyHeThong' => $maNhatKy,
-                    'MaTaiKhoan' => $user->MaTaiKhoan,
-                    'HanhDong' => $action . ' ' . $objectName,
-                    'DoiTuong' => $objectName,
-                    'MaDoiTuong' => $objectId,
-                    'ThoiGian' => now()
+                    'ma_nhat_ky_he_thong' => $maNhatKy,
+                    'ma_tai_khoan' => $user->ma_tai_khoan,
+                    'hanh_dong' => $action . ' ' . $objectName,
+                    'doi_tuong' => $objectName,
+                    'ma_doi_tuong' => $objectId,
+                    'thoi_gian' => now()
                 ]);
             }
         }

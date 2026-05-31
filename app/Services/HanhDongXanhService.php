@@ -17,7 +17,7 @@ class HanhDongXanhService
 
         if (!empty($maTourThucTe)) {
             $query->whereHas('tourThucTes', function ($q) use ($maTourThucTe) {
-                $q->where('TOURTHUCTE.MaTourThucTe', $maTourThucTe);
+                $q->where('tour_thuc_tes.ma_tour_thuc_te', $maTourThucTe);
             });
         }
 
@@ -38,9 +38,9 @@ class HanhDongXanhService
         return DB::transaction(function () use ($data) {
             $hdx = new HanhDongXanh();
             // Tao ma hanh dong xanh ngan gon tu UUID.
-            $hdx->MaHanhDongXanh = 'HDX_' . strtoupper(substr(Str::uuid()->toString(), 0, 8));
-            $hdx->TenHanhDong = $data['tenHanhDong'];
-            $hdx->DiemCong = $data['diemCong'];
+            $hdx->ma_hanh_dong_xanh = 'HDX_' . strtoupper(substr(Str::uuid()->toString(), 0, 8));
+            $hdx->ten_hanh_dong = $data['tenHanhDong'];
+            $hdx->diem_cong = $data['diemCong'];
             $hdx->save();
 
             $this->ganTourThucTe($hdx, $data['maTourThucTe'] ?? null);
@@ -59,10 +59,10 @@ class HanhDongXanhService
             }
 
             if (isset($data['tenHanhDong'])) {
-                $hdx->TenHanhDong = $data['tenHanhDong'];
+                $hdx->ten_hanh_dong = $data['tenHanhDong'];
             }
             if (isset($data['diemCong'])) {
-                $hdx->DiemCong = $data['diemCong'];
+                $hdx->diem_cong = $data['diemCong'];
             }
             $hdx->save();
 

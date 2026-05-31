@@ -32,58 +32,58 @@ class ThanhToanTest extends TestCase
 
         // 1. Táº¡o tÃ i khoáº£n khÃ¡ch hÃ ng
         $this->tkKh = TaiKhoan::create([
-            'MaTaiKhoan'   => 'TEST_TK_TT_KH',
-            'TenDangNhap'  => 'test_tt_khach',
-            'MatKhau'      => bcrypt('123456'),
-            'HoTen'        => 'KhÃ¡ch HÃ ng Thanh ToÃ¡n',
-            'Email'        => 'tt_khach_' . time() . '@test.com',
-            'SoDienThoai'  => '0987555666',
-            'VaiTro'       => 'KHACHHANG',
-            'TrangThai'    => 'HOAT_DONG',
-            'NgaySinh'     => '1990-01-01',
+            'ma_tai_khoan'   => 'TEST_TK_TT_KH',
+            'ten_dang_nhap'  => 'test_tt_khach',
+            'mat_khau'      => bcrypt('123456'),
+            'ho_ten'        => 'KhÃ¡ch HÃ ng Thanh ToÃ¡n',
+            'email'        => 'tt_khach_' . time() . '@test.com',
+            'so_dien_thoai'  => '0987555666',
+            'vai_tro'       => 'KHACHHANG',
+            'trang_thai'    => 'HOAT_DONG',
+            'ngay_sinh'     => '1990-01-01',
         ]);
 
         $this->hcs = HoChieuSo::create([
-            'MaKhachHang'   => 'TEST_KH_TT',
-            'MaTaiKhoan'    => 'TEST_TK_TT_KH',
-            'HangThanhVien' => 'THANH_VIEN',
-            'DiemXanh'      => 0,
+            'ma_khach_hang'   => 'TEST_KH_TT',
+            'ma_tai_khoan'    => 'TEST_TK_TT_KH',
+            'hang_thanh_vien' => 'THANH_VIEN',
+            'diem_xanh'      => 0,
         ]);
 
         $this->tokenKh = JWTAuth::fromUser($this->tkKh);
 
         // 2. Táº¡o tÃ i khoáº£n Sales (Kinh Doanh)
         $this->tkKd = TaiKhoan::create([
-            'MaTaiKhoan'   => 'TEST_TK_TT_KD',
-            'TenDangNhap'  => 'test_tt_sales',
-            'MatKhau'      => bcrypt('123456'),
-            'HoTen'        => 'NhÃ¢n ViÃªn Sales',
-            'Email'        => 'tt_sales_' . time() . '@test.com',
-            'SoDienThoai'  => '0987666777',
-            'VaiTro'       => 'KINHDOANH',
-            'TrangThai'    => 'HOAT_DONG',
-            'NgaySinh'     => '1985-05-05',
+            'ma_tai_khoan'   => 'TEST_TK_TT_KD',
+            'ten_dang_nhap'  => 'test_tt_sales',
+            'mat_khau'      => bcrypt('123456'),
+            'ho_ten'        => 'NhÃ¢n ViÃªn Sales',
+            'email'        => 'tt_sales_' . time() . '@test.com',
+            'so_dien_thoai'  => '0987666777',
+            'vai_tro'       => 'KINHDOANH',
+            'trang_thai'    => 'HOAT_DONG',
+            'ngay_sinh'     => '1985-05-05',
         ]);
 
         $this->tokenKd = JWTAuth::fromUser($this->tkKd);
 
         // 3. Táº¡o Tour Máº«u vÃ  Tour Thá»±c Táº¿
         TourMau::create([
-            'MaTourMau' => 'TEST_TM_TT',
-            'TieuDe'    => 'Tour Test Thanh ToÃ¡n',
-            'ThoiLuong' => 3,
-            'GiaSan'    => 1000000,
+            'ma_tour_mau' => 'TEST_TM_TT',
+            'tieu_de'    => 'Tour Test Thanh ToÃ¡n',
+            'thoi_luong' => 3,
+            'gia_san'    => 1000000,
         ]);
 
         $this->tourThucTe = TourThucTe::create([
-            'MaTourThucTe'   => 'TEST_TTT_TT',
-            'MaTourMau'      => 'TEST_TM_TT',
-            'NgayKhoiHanh'   => Carbon::now()->addDays(10)->format('Y-m-d'),
-            'GiaHienHanh'    => 2000000,
-            'SoKhachToiThieu'=> 2,
-            'SoKhachToiDa'   => 20,
-            'ChoConLai'      => 10,
-            'TrangThai'      => 'MO_BAN',
+            'ma_tour_thuc_te'   => 'TEST_TTT_TT',
+            'ma_tour_mau'      => 'TEST_TM_TT',
+            'ngay_khoi_hanh'   => Carbon::now()->addDays(10)->format('Y-m-d'),
+            'gia_hien_hanh'    => 2000000,
+            'so_khach_toi_thieu'=> 2,
+            'so_khach_toi_da'   => 20,
+            'cho_con_lai'      => 10,
+            'trang_thai'      => 'MO_BAN',
         ]);
     }
 
@@ -94,21 +94,21 @@ class ThanhToanTest extends TestCase
     {
         // 1. Táº¡o Ä‘Æ¡n Ä‘áº·t tour á»Ÿ tráº¡ng thÃ¡i CHO_XAC_NHAN
         $don = DonDatTour::create([
-            'MaDatTour'     => 'DDT_TEST_TT1',
-            'MaTourThucTe'  => 'TEST_TTT_TT',
-            'MaKhachHang'   => 'TEST_KH_TT',
-            'NgayDat'       => Carbon::now(),
-            'TongTien'      => 2000000.0,
-            'TrangThai'     => 'CHO_XAC_NHAN',
+            'ma_dat_tour'     => 'DDT_TEST_TT1',
+            'ma_tour_thuc_te'  => 'TEST_TTT_TT',
+            'ma_khach_hang'   => 'TEST_KH_TT',
+            'ngay_dat'       => Carbon::now(),
+            'tong_tien'      => 2000000.0,
+            'trang_thai'     => 'CHO_XAC_NHAN',
         ]);
 
         // Táº¡o chi tiáº¿t Ä‘áº·t cá»§a ngÆ°á»i Ä‘áº·t Ä‘á»ƒ lÆ°u lá»‹ch sá»­ tour
         ChiTietDatTour::create([
-            'MaChiTietDat' => 'CTD_TEST_TT1',
-            'MaDatTour' => 'DDT_TEST_TT1',
-            'MaKhachHang' => 'TEST_KH_TT',
-            'LoaiKhach' => 'NGUOI_DAT',
-            'GiaTaiThoiDiemDat' => 2000000.0,
+            'ma_chi_tiet_dat' => 'CTD_TEST_TT1',
+            'ma_dat_tour' => 'DDT_TEST_TT1',
+            'ma_khach_hang' => 'TEST_KH_TT',
+            'loai_khach' => 'NGUOI_DAT',
+            'gia_tai_thoi_diem_dat' => 2000000.0,
         ]);
 
         // 2. KhÃ¡ch hÃ ng gá»i API thanh toÃ¡n mock
@@ -121,21 +121,21 @@ class ThanhToanTest extends TestCase
         $response->assertJsonPath('data.trangThai', 'DA_XAC_NHAN');
 
         // 3. Kiá»ƒm tra DB
-        $this->assertDatabaseHas('DONDATTOUR', [
-            'MaDatTour' => 'DDT_TEST_TT1',
-            'TrangThai' => 'DA_XAC_NHAN',
+        $this->assertDatabaseHas('don_dat_tours', [
+            'ma_dat_tour' => 'DDT_TEST_TT1',
+            'trang_thai' => 'DA_XAC_NHAN',
         ]);
 
-        $this->assertDatabaseHas('GIAODICH', [
-            'MaDatTour' => 'DDT_TEST_TT1',
-            'PhuongThuc' => 'MOCK',
-            'TrangThai' => 'THANH_CONG',
+        $this->assertDatabaseHas('giao_diches', [
+            'ma_dat_tour' => 'DDT_TEST_TT1',
+            'phuong_thuc' => 'MOCK',
+            'trang_thai' => 'THANH_CONG',
         ]);
 
-        $this->assertDatabaseHas('LICHSUTOUR', [
-            'MaKhachHang' => 'TEST_KH_TT',
-            'MaTourThucTe' => 'TEST_TTT_TT',
-            'MaChiTietDat' => 'CTD_TEST_TT1',
+        $this->assertDatabaseHas('lich_su_tours', [
+            'ma_khach_hang' => 'TEST_KH_TT',
+            'ma_tour_thuc_te' => 'TEST_TTT_TT',
+            'ma_chi_tiet_dat' => 'CTD_TEST_TT1',
         ]);
     }
 
@@ -145,12 +145,12 @@ class ThanhToanTest extends TestCase
     public function test_bao_chuyen_khoan_thanh_cong()
     {
         $don = DonDatTour::create([
-            'MaDatTour'     => 'DDT_TEST_TT2',
-            'MaTourThucTe'  => 'TEST_TTT_TT',
-            'MaKhachHang'   => 'TEST_KH_TT',
-            'NgayDat'       => Carbon::now(),
-            'TongTien'      => 2000000.0,
-            'TrangThai'     => 'CHO_XAC_NHAN',
+            'ma_dat_tour'     => 'DDT_TEST_TT2',
+            'ma_tour_thuc_te'  => 'TEST_TTT_TT',
+            'ma_khach_hang'   => 'TEST_KH_TT',
+            'ngay_dat'       => Carbon::now(),
+            'tong_tien'      => 2000000.0,
+            'trang_thai'     => 'CHO_XAC_NHAN',
         ]);
 
         $response = $this->withHeader('Authorization', 'Bearer ' . $this->tokenKh)
@@ -163,10 +163,10 @@ class ThanhToanTest extends TestCase
         $response->assertJsonPath('data.trangThai', 'CHO_THANH_TOAN');
         $response->assertJsonPath('data.maGDNH', 'KHXN:FT2391028');
 
-        $this->assertDatabaseHas('GIAODICH', [
-            'MaDatTour' => 'DDT_TEST_TT2',
-            'MaGDNH' => 'KHXN:FT2391028',
-            'TrangThai' => 'CHO_THANH_TOAN',
+        $this->assertDatabaseHas('giao_diches', [
+            'ma_dat_tour' => 'DDT_TEST_TT2',
+            'ma_gdnh' => 'KHXN:FT2391028',
+            'trang_thai' => 'CHO_THANH_TOAN',
         ]);
     }
 
@@ -176,31 +176,31 @@ class ThanhToanTest extends TestCase
     public function test_sales_xac_nhan_thanh_toan_dong_y()
     {
         $don = DonDatTour::create([
-            'MaDatTour'     => 'DDT_TEST_TT3',
-            'MaTourThucTe'  => 'TEST_TTT_TT',
-            'MaKhachHang'   => 'TEST_KH_TT',
-            'NgayDat'       => Carbon::now(),
-            'TongTien'      => 2000000.0,
-            'TrangThai'     => 'CHO_XAC_NHAN',
+            'ma_dat_tour'     => 'DDT_TEST_TT3',
+            'ma_tour_thuc_te'  => 'TEST_TTT_TT',
+            'ma_khach_hang'   => 'TEST_KH_TT',
+            'ngay_dat'       => Carbon::now(),
+            'tong_tien'      => 2000000.0,
+            'trang_thai'     => 'CHO_XAC_NHAN',
         ]);
 
         ChiTietDatTour::create([
-            'MaChiTietDat' => 'CTD_TEST_TT3',
-            'MaDatTour' => 'DDT_TEST_TT3',
-            'MaKhachHang' => 'TEST_KH_TT',
-            'LoaiKhach' => 'NGUOI_DAT',
-            'GiaTaiThoiDiemDat' => 2000000.0,
+            'ma_chi_tiet_dat' => 'CTD_TEST_TT3',
+            'ma_dat_tour' => 'DDT_TEST_TT3',
+            'ma_khach_hang' => 'TEST_KH_TT',
+            'loai_khach' => 'NGUOI_DAT',
+            'gia_tai_thoi_diem_dat' => 2000000.0,
         ]);
 
         // Táº¡o sáºµn giao dá»‹ch KHXN:
         GiaoDich::create([
-            'MaGiaoDich' => 'GD_TEST_TT3',
-            'MaDatTour' => 'DDT_TEST_TT3',
-            'LoaiGiaoDich' => 'THANH_TOAN',
-            'PhuongThuc' => 'CHUYEN_KHOAN',
-            'SoTien' => 2000000.0,
-            'MaGDNH' => 'KHXN:FT12345',
-            'TrangThai' => 'CHO_THANH_TOAN',
+            'ma_giao_dich' => 'GD_TEST_TT3',
+            'ma_dat_tour' => 'DDT_TEST_TT3',
+            'loai_giao_dich' => 'THANH_TOAN',
+            'phuong_thuc' => 'CHUYEN_KHOAN',
+            'so_tien' => 2000000.0,
+            'ma_gdnh' => 'KHXN:FT12345',
+            'trang_thai' => 'CHO_THANH_TOAN',
         ]);
 
         // Sales gá»i API xÃ¡c nháº­n
@@ -213,20 +213,20 @@ class ThanhToanTest extends TestCase
         $response->assertStatus(200);
         $response->assertJsonPath('data.trangThai', 'DA_XAC_NHAN');
 
-        $this->assertDatabaseHas('DONDATTOUR', [
-            'MaDatTour' => 'DDT_TEST_TT3',
-            'TrangThai' => 'DA_XAC_NHAN',
+        $this->assertDatabaseHas('don_dat_tours', [
+            'ma_dat_tour' => 'DDT_TEST_TT3',
+            'trang_thai' => 'DA_XAC_NHAN',
         ]);
 
-        $this->assertDatabaseHas('GIAODICH', [
-            'MaDatTour' => 'DDT_TEST_TT3',
-            'MaGDNH' => 'FT12345',
-            'TrangThai' => 'THANH_CONG',
+        $this->assertDatabaseHas('giao_diches', [
+            'ma_dat_tour' => 'DDT_TEST_TT3',
+            'ma_gdnh' => 'FT12345',
+            'trang_thai' => 'THANH_CONG',
         ]);
 
-        $this->assertDatabaseHas('LICHSUTOUR', [
-            'MaKhachHang' => 'TEST_KH_TT',
-            'MaTourThucTe' => 'TEST_TTT_TT',
+        $this->assertDatabaseHas('lich_su_tours', [
+            'ma_khach_hang' => 'TEST_KH_TT',
+            'ma_tour_thuc_te' => 'TEST_TTT_TT',
         ]);
     }
 
@@ -236,22 +236,22 @@ class ThanhToanTest extends TestCase
     public function test_sales_xac_nhan_thanh_toan_tu_choi()
     {
         $don = DonDatTour::create([
-            'MaDatTour'     => 'DDT_TEST_TT4',
-            'MaTourThucTe'  => 'TEST_TTT_TT',
-            'MaKhachHang'   => 'TEST_KH_TT',
-            'NgayDat'       => Carbon::now(),
-            'TongTien'      => 2000000.0,
-            'TrangThai'     => 'CHO_XAC_NHAN',
+            'ma_dat_tour'     => 'DDT_TEST_TT4',
+            'ma_tour_thuc_te'  => 'TEST_TTT_TT',
+            'ma_khach_hang'   => 'TEST_KH_TT',
+            'ngay_dat'       => Carbon::now(),
+            'tong_tien'      => 2000000.0,
+            'trang_thai'     => 'CHO_XAC_NHAN',
         ]);
 
         GiaoDich::create([
-            'MaGiaoDich' => 'GD_TEST_TT4',
-            'MaDatTour' => 'DDT_TEST_TT4',
-            'LoaiGiaoDich' => 'THANH_TOAN',
-            'PhuongThuc' => 'CHUYEN_KHOAN',
-            'SoTien' => 2000000.0,
-            'MaGDNH' => 'KHXN:FT12345',
-            'TrangThai' => 'CHO_THANH_TOAN',
+            'ma_giao_dich' => 'GD_TEST_TT4',
+            'ma_dat_tour' => 'DDT_TEST_TT4',
+            'loai_giao_dich' => 'THANH_TOAN',
+            'phuong_thuc' => 'CHUYEN_KHOAN',
+            'so_tien' => 2000000.0,
+            'ma_gdnh' => 'KHXN:FT12345',
+            'trang_thai' => 'CHO_THANH_TOAN',
         ]);
 
         $response = $this->withHeader('Authorization', 'Bearer ' . $this->tokenKd)
@@ -262,14 +262,14 @@ class ThanhToanTest extends TestCase
 
         $response->assertStatus(200);
 
-        $this->assertDatabaseHas('DONDATTOUR', [
-            'MaDatTour' => 'DDT_TEST_TT4',
-            'TrangThai' => 'CHO_XAC_NHAN', // Váº«n chá» xÃ¡c nháº­n
+        $this->assertDatabaseHas('don_dat_tours', [
+            'ma_dat_tour' => 'DDT_TEST_TT4',
+            'trang_thai' => 'CHO_XAC_NHAN', // Váº«n chá» xÃ¡c nháº­n
         ]);
 
-        $this->assertDatabaseHas('GIAODICH', [
-            'MaDatTour' => 'DDT_TEST_TT4',
-            'TrangThai' => 'THAT_BAI',
+        $this->assertDatabaseHas('giao_diches', [
+            'ma_dat_tour' => 'DDT_TEST_TT4',
+            'trang_thai' => 'THAT_BAI',
         ]);
     }
 
@@ -293,19 +293,19 @@ class ThanhToanTest extends TestCase
     {
         // Mock DonDatTour
         $don = DonDatTour::create([
-            'MaDatTour'     => 'DON_VNPAY_01',
-            'MaTourThucTe'  => 'TEST_TTT_TT',
-            'MaKhachHang'   => 'TEST_KH_TT',
-            'NgayDat'       => Carbon::now(),
-            'TongTien'      => 3000000.0,
-            'TrangThai'     => 'CHO_XAC_NHAN',
+            'ma_dat_tour'     => 'DON_VNPAY_01',
+            'ma_tour_thuc_te'  => 'TEST_TTT_TT',
+            'ma_khach_hang'   => 'TEST_KH_TT',
+            'ngay_dat'       => Carbon::now(),
+            'tong_tien'      => 3000000.0,
+            'trang_thai'     => 'CHO_XAC_NHAN',
         ]);
         ChiTietDatTour::create([
-            'MaChiTietDat' => 'CTD_VNPAY_01',
-            'MaDatTour' => 'DON_VNPAY_01',
-            'MaKhachHang' => 'TEST_KH_TT',
-            'LoaiKhach' => 'NGUOI_DAT',
-            'GiaTaiThoiDiemDat' => 3000000.0,
+            'ma_chi_tiet_dat' => 'CTD_VNPAY_01',
+            'ma_dat_tour' => 'DON_VNPAY_01',
+            'ma_khach_hang' => 'TEST_KH_TT',
+            'loai_khach' => 'NGUOI_DAT',
+            'gia_tai_thoi_diem_dat' => 3000000.0,
         ]);
 
         \Illuminate\Support\Facades\Config::set('vnpay.tmn_code', 'TESTCODE');
@@ -328,11 +328,11 @@ class ThanhToanTest extends TestCase
                      ]
                  ]);
 
-        $this->assertDatabaseHas('GIAODICH', [
-            'MaDatTour' => 'DON_VNPAY_01',
-            'PhuongThuc' => 'VNPAY',
-            'TrangThai' => 'CHO_THANH_TOAN',
-            'LoaiGiaoDich' => 'THANH_TOAN'
+        $this->assertDatabaseHas('giao_diches', [
+            'ma_dat_tour' => 'DON_VNPAY_01',
+            'phuong_thuc' => 'VNPAY',
+            'trang_thai' => 'CHO_THANH_TOAN',
+            'loai_giao_dich' => 'THANH_TOAN'
         ]);
     }
 
@@ -340,31 +340,31 @@ class ThanhToanTest extends TestCase
     {
         // Setup DonDatTour
         DonDatTour::create([
-            'MaDatTour'     => 'DON_VNPAY_02',
-            'MaTourThucTe'  => 'TEST_TTT_TT',
-            'MaKhachHang'   => 'TEST_KH_TT',
-            'NgayDat'       => Carbon::now(),
-            'TongTien'      => 3000000.0,
-            'TrangThai'     => 'CHO_XAC_NHAN',
+            'ma_dat_tour'     => 'DON_VNPAY_02',
+            'ma_tour_thuc_te'  => 'TEST_TTT_TT',
+            'ma_khach_hang'   => 'TEST_KH_TT',
+            'ngay_dat'       => Carbon::now(),
+            'tong_tien'      => 3000000.0,
+            'trang_thai'     => 'CHO_XAC_NHAN',
         ]);
         ChiTietDatTour::create([
-            'MaChiTietDat' => 'CTD_VNPAY_02',
-            'MaDatTour' => 'DON_VNPAY_02',
-            'MaKhachHang' => 'TEST_KH_TT',
-            'LoaiKhach' => 'NGUOI_DAT',
-            'GiaTaiThoiDiemDat' => 3000000.0,
+            'ma_chi_tiet_dat' => 'CTD_VNPAY_02',
+            'ma_dat_tour' => 'DON_VNPAY_02',
+            'ma_khach_hang' => 'TEST_KH_TT',
+            'loai_khach' => 'NGUOI_DAT',
+            'gia_tai_thoi_diem_dat' => 3000000.0,
         ]);
 
         // Setup GiaoDich
         GiaoDich::create([
-            'MaGiaoDich' => 'GD_VNP_02',
-            'MaDatTour' => 'DON_VNPAY_02',
-            'LoaiGiaoDich' => 'THANH_TOAN',
-            'PhuongThuc' => 'VNPAY',
-            'SoTien' => 3000000,
-            'MaGDNH' => 'QR_DON_VNPAY_02',
-            'TrangThai' => 'CHO_THANH_TOAN',
-            'NgayThanhToan' => Carbon::now(),
+            'ma_giao_dich' => 'GD_VNP_02',
+            'ma_dat_tour' => 'DON_VNPAY_02',
+            'loai_giao_dich' => 'THANH_TOAN',
+            'phuong_thuc' => 'VNPAY',
+            'so_tien' => 3000000,
+            'ma_gdnh' => 'QR_DON_VNPAY_02',
+            'trang_thai' => 'CHO_THANH_TOAN',
+            'ngay_thanh_toan' => Carbon::now(),
         ]);
 
         \Illuminate\Support\Facades\Config::set('vnpay.tmn_code', 'TESTCODE');
@@ -405,13 +405,13 @@ class ThanhToanTest extends TestCase
                      'success' => true,
                  ]);
 
-        $this->assertDatabaseHas('GIAODICH', [
-            'MaGiaoDich' => 'GD_VNP_02',
-            'TrangThai' => 'THANH_CONG',
+        $this->assertDatabaseHas('giao_diches', [
+            'ma_giao_dich' => 'GD_VNP_02',
+            'trang_thai' => 'THANH_CONG',
         ]);
-        $this->assertDatabaseHas('DONDATTOUR', [
-            'MaDatTour' => 'DON_VNPAY_02',
-            'TrangThai' => 'DA_XAC_NHAN'
+        $this->assertDatabaseHas('don_dat_tours', [
+            'ma_dat_tour' => 'DON_VNPAY_02',
+            'trang_thai' => 'DA_XAC_NHAN'
         ]);
     }
 

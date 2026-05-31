@@ -26,48 +26,48 @@ class HdvVanHanhTest extends TestCase
     {
         parent::setUp();
 
-        VaiTro::create(["MaVaiTro" => "HDV", "TenHienThi" => "Hướng Dẫn Viên"]);
+        VaiTro::create(["ma_vai_tro" => "HDV", "ten_hien_thi" => "Hướng Dẫn Viên"]);
 
         $this->hdvTK = TaiKhoan::create([
-            "MaTaiKhoan" => "TK_HDV_002",
-            "TenDangNhap" => "hdv_vanhanh",
-            "MatKhau" => bcrypt("password"),
-            "HoTen" => "HDV Test",
-            "VaiTro" => "HDV",
-            "TrangThai" => "HOAT_DONG"
+            "ma_tai_khoan" => "TK_HDV_002",
+            "ten_dang_nhap" => "hdv_vanhanh",
+            "mat_khau" => bcrypt("password"),
+            "ho_ten" => "HDV Test",
+            "vai_tro" => "HDV",
+            "trang_thai" => "HOAT_DONG"
         ]);
 
         $this->hdv = NhanVien::create([
-            "MaNhanVien" => "NV_002",
-            "MaTaiKhoan" => "TK_HDV_002",
-            "LoaiNhanVien" => "HDV",
-            "TrangThaiLamViec" => "DANG_LAM"
+            "ma_nhan_vien" => "NV_002",
+            "ma_tai_khoan" => "TK_HDV_002",
+            "loai_nhan_vien" => "HDV",
+            "trang_thai_lam_viec" => "DANG_LAM"
         ]);
 
         $this->tourMau = TourMau::create([
-            "MaTourMau" => "TM_002",
-            "TieuDe" => "Tour Test",
-            "ThoiLuong" => 3,
-            "GiaSan" => 1000000
+            "ma_tour_mau" => "TM_002",
+            "tieu_de" => "Tour Test",
+            "thoi_luong" => 3,
+            "gia_san" => 1000000
         ]);
 
         $this->tourThucTe = TourThucTe::create([
-            "MaTourThucTe" => "TTT_002",
-            "MaTourMau" => "TM_002",
-            "NgayKhoiHanh" => Carbon::now()->addDays(1),
-            "GiaHienHanh" => 1200000,
-            "SoKhachToiDa" => 20,
-            "SoKhachToiThieu" => 10,
-            "ChoConLai" => 20,
-            "TrangThai" => "DANG_DIEN_RA"
+            "ma_tour_thuc_te" => "TTT_002",
+            "ma_tour_mau" => "TM_002",
+            "ngay_khoi_hanh" => Carbon::now()->addDays(1),
+            "gia_hien_hanh" => 1200000,
+            "so_khach_toi_da" => 20,
+            "so_khach_toi_thieu" => 10,
+            "cho_con_lai" => 20,
+            "trang_thai" => "DANG_DIEN_RA"
         ]);
 
         PhanCongTour::create([
-            "MaPhanCongTour" => "PCT_002",
-            "MaTourThucTe" => "TTT_002",
-            "MaNhanVien" => "NV_002",
-            "NgayPhanCong" => Carbon::now(),
-            "TrangThaiChapNhan" => "DA_DONG_Y"
+            "ma_phan_cong_tour" => "PCT_002",
+            "ma_tour_thuc_te" => "TTT_002",
+            "ma_nhan_vien" => "NV_002",
+            "ngay_phan_cong" => Carbon::now(),
+            "trang_thai_chap_nhan" => "DA_DONG_Y"
         ]);
     }
 
@@ -85,10 +85,10 @@ class HdvVanHanhTest extends TestCase
         $response->assertStatus(200)
                  ->assertJsonPath("message", "Điểm danh thành công");
 
-        $this->assertDatabaseHas("DIEMDANH", [
-            "MaTourThucTe" => "TTT_002",
-            "MaKhachHang" => "KH_001",
-            "TrangThai" => "DA_DIEM_DANH"
+        $this->assertDatabaseHas("diem_danhs", [
+            "ma_tour_thuc_te" => "TTT_002",
+            "ma_khach_hang" => "KH_001",
+            "trang_thai" => "DA_DIEM_DANH"
         ]);
     }
 
@@ -105,10 +105,10 @@ class HdvVanHanhTest extends TestCase
         $response->assertStatus(200)
                  ->assertJsonPath("message", "Báo cáo sự cố thành công");
 
-        $this->assertDatabaseHas("NHATKYSUCO", [
-            "MaTourThucTe" => "TTT_002",
-            "MucDo" => "SOS",
-            "MoTa" => "Khách bị lạc"
+        $this->assertDatabaseHas("nhat_ky_su_cos", [
+            "ma_tour_thuc_te" => "TTT_002",
+            "muc_do" => "SOS",
+            "mo_ta" => "Khách bị lạc"
         ]);
     }
 
@@ -125,10 +125,10 @@ class HdvVanHanhTest extends TestCase
         $response->assertStatus(200)
                  ->assertJsonPath("message", "Khai báo chi phí thành công");
 
-        $this->assertDatabaseHas("CHIPHITHUCTE", [
-            "MaTourThucTe" => "TTT_002",
-            "ThanhTien" => 5000000,
-            "TrangThaiDuyet" => "CHO_DUYET"
+        $this->assertDatabaseHas("chi_phi_thuc_tes", [
+            "ma_tour_thuc_te" => "TTT_002",
+            "thanh_tien" => 5000000,
+            "trang_thai_duyet" => "CHO_DUYET"
         ]);
     }
 }

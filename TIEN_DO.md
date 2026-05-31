@@ -67,12 +67,12 @@ Tài liệu này dùng để theo dõi toàn bộ lộ trình và tiến độ p
 - [x] Kiểm thử toàn bộ: `php artisan test` pass **64 tests / 258 assertions** ✅
 - [x] Fix SSL/TLS: Export Windows Trusted Root CA vào cacert.pem cho PHP curl OpenSSL.
 
-## ⏳ Giai đoạn 7.2: CHUẨN HÓA KIẾN TRÚC LARAVEL (Chưa thực hiện)
-- [ ] Refactor toàn bộ 35 bảng Database và cột sang chuẩn `snake_case` của Laravel.
-- [ ] Cập nhật toàn bộ Eloquent Models, loại bỏ `$table` và `$primaryKey` cấu hình tay.
-- [ ] Chuẩn hóa toàn bộ bình luận, tài liệu và tên kỹ thuật theo ngữ cảnh Laravel độc lập.
-- [ ] Áp dụng `CamelCaseJsonResponse` Middleware để map JSON trả về Frontend thay vì ép tại `BaseModel`.
-- [ ] Refactor toàn bộ truy vấn `where('PascalCase')` sang `where('snake_case')` ở tất cả Controller và Service.
+## ✅ Giai đoạn 7.2: CHUẨN HÓA KIẾN TRÚC LARAVEL (Hoàn thành 100%)
+- [x] Refactor toàn bộ 35 bảng Database và cột sang chuẩn `snake_case` của Laravel.
+- [x] Cập nhật toàn bộ Eloquent Models, chuyển các thuộc tính và quan hệ sang snake_case, đồng thời giữ nguyên các quan hệ nghiệp vụ.
+- [x] Chuẩn hóa toàn bộ bình luận, tài liệu và tên kỹ thuật theo ngữ cảnh Laravel độc lập.
+- [x] Áp dụng `CamelCaseJsonResponse` Middleware để map JSON trả về Frontend tự động làm lớp bảo vệ tối ưu.
+- [x] Refactor toàn bộ truy vấn `where('PascalCase')` sang `where('snake_case')` ở tất cả Controller và Service sử dụng Tokenizer an toàn.
 
 ---
 

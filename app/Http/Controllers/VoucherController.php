@@ -20,7 +20,7 @@ class VoucherController extends Controller
     public function apDungVoucher(ApDungVoucherRequest $request)
     {
         $donDatTour = $this->voucherService->apDungVoucherChoDon(
-            auth()->user()->MaTaiKhoan,
+            auth()->user()->ma_tai_khoan,
             $request->validated()
         );
 
@@ -30,7 +30,7 @@ class VoucherController extends Controller
     public function apVoucher(ApDungVoucherRequest $request)
     {
         $voucher = $this->voucherService->apVoucherTheoContract(
-            auth()->user()->MaTaiKhoan,
+            auth()->user()->ma_tai_khoan,
             $request->validated()
         );
 
@@ -40,7 +40,7 @@ class VoucherController extends Controller
     public function danhSachVoucher(Request $request)
     {
         $perPage = (int) $request->query('per_page', $request->query('size', 10));
-        $paginator = $this->voucherService->layDanhSachVoucherCuaKhach(auth()->user()->MaTaiKhoan, $perPage);
+        $paginator = $this->voucherService->layDanhSachVoucherCuaKhach(auth()->user()->ma_tai_khoan, $perPage);
 
         return $this->successResponse(
             KhuyenMaiKhResource::collection($paginator)->response()->getData(true),
@@ -73,7 +73,7 @@ class VoucherController extends Controller
     public function doiDiem(DoiDiemVoucherRequest $request)
     {
         $khuyenMaiKh = $this->voucherService->doiDiem(
-            auth()->user()->MaTaiKhoan,
+            auth()->user()->ma_tai_khoan,
             $request->validated()['maVoucher']
         );
 

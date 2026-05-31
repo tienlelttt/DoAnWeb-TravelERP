@@ -12,14 +12,14 @@ class HanhDongXanhResource extends JsonResource
         // Lấy maTourThucTe đầu tiên nếu có liên kết
         $maTourThucTe = null;
         if ($this->relationLoaded('tourThucTes') && $this->tourThucTes->isNotEmpty()) {
-            $maTourThucTe = $this->tourThucTes->first()->MaTourThucTe;
+            $maTourThucTe = $this->tourThucTes->first()->ma_tour_thuc_te;
         }
 
         return [
-            'maHanhDongXanh' => $this->MaHanhDongXanh,
+            'maHanhDongXanh' => $this->ma_hanh_dong_xanh,
             'maTourThucTe' => $maTourThucTe,
-            'tenHanhDong' => $this->TenHanhDong,
-            'diemCong' => (int) $this->DiemCong,
+            'tenHanhDong' => $this->ten_hanh_dong,
+            'diemCong' => (int) $this->diem_cong,
         ];
     }
 }

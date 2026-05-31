@@ -10,8 +10,8 @@ class TaiKhoan extends BaseModel implements AuthenticatableContract, JWTSubject
 {
     use Authenticatable;
 
-    protected $table = 'TAIKHOAN';
-    protected $primaryKey = 'MaTaiKhoan';
+    protected $table = 'tai_khoans';
+    protected $primaryKey = 'ma_tai_khoan';
     public $incrementing = false;
     protected $keyType = 'string';
     protected $guarded = [];
@@ -23,11 +23,11 @@ class TaiKhoan extends BaseModel implements AuthenticatableContract, JWTSubject
      */
     public function getAuthPassword()
     {
-        return $this->MatKhau;
+        return $this->mat_khau;
     }
 
     public function vaiTro() {
-        return $this->belongsTo(VaiTro::class, 'VaiTro', 'MaVaiTro'); 
+        return $this->belongsTo(VaiTro::class, 'vai_tro', 'ma_vai_tro'); 
     }
 
     /**
@@ -35,7 +35,7 @@ class TaiKhoan extends BaseModel implements AuthenticatableContract, JWTSubject
      */
     public function getJWTIdentifier()
     {
-        return $this->getKey(); // Tức là MaTaiKhoan. Hoặc $this->TenDangNhap tuỳ ý, nhưng nên để getKey() để Auth::user() dễ tìm
+        return $this->getKey(); // Tức là ma_tai_khoan. Hoặc $this->ten_dang_nhap tuỳ ý, nhưng nên để getKey() để Auth::user() dễ tìm
     }
 
     /**
@@ -44,10 +44,10 @@ class TaiKhoan extends BaseModel implements AuthenticatableContract, JWTSubject
     public function getJWTCustomClaims()
     {
         return [
-            'roles' => [$this->VaiTro],
-            'maVaiTro' => $this->vaiTro ? $this->vaiTro->MaVaiTro : '',
-            'tenHienThi' => $this->vaiTro ? $this->vaiTro->TenHienThi : '',
-            'hoTen' => $this->HoTen
+            'roles' => [$this->vai_tro],
+            'maVaiTro' => $this->vaiTro ? $this->vaiTro->ma_vai_tro : '',
+            'tenHienThi' => $this->vaiTro ? $this->vaiTro->ten_hien_thi : '',
+            'hoTen' => $this->ho_ten
         ];
     }
 }

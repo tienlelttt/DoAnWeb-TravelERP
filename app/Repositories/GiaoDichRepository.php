@@ -25,9 +25,9 @@ class GiaoDichRepository
      */
     public function timGiaoDichChoDuyet(string $maDatTour): ?GiaoDich
     {
-        return GiaoDich::where('MaDatTour', $maDatTour)
-            ->where('TrangThai', 'CHO_THANH_TOAN')
-            ->where('MaGDNH', 'like', 'KHXN:%')
+        return GiaoDich::where('ma_dat_tour', $maDatTour)
+            ->where('trang_thai', 'CHO_THANH_TOAN')
+            ->where('ma_gdnh', 'like', 'KHXN:%')
             ->first();
     }
 }

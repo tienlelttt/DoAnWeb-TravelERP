@@ -28,16 +28,16 @@ class VanHanhService
      */
     private function checkQuyenHDV(string $maTourThucTe, string $maNhanVien): TourThucTe
     {
-        $phanCong = PhanCongTour::where('MaTourThucTe', $maTourThucTe)
-            ->where('MaNhanVien', $maNhanVien)
-            ->where('TrangThaiChapNhan', 'DA_DONG_Y')
+        $phanCong = PhanCongTour::where('ma_tour_thuc_te', $maTourThucTe)
+            ->where('ma_nhan_vien', $maNhanVien)
+            ->where('trang_thai_chap_nhan', 'DA_DONG_Y')
             ->first();
 
         if (!$phanCong) {
             throw AppException::forbidden("Bạn không được phân công hoặc chưa đồng ý tham gia tour này");
         }
 
-        $tour = TourThucTe::where('MaTourThucTe', $maTourThucTe)->first();
+        $tour = TourThucTe::where('ma_tour_thuc_te', $maTourThucTe)->first();
         if (!$tour) {
             throw AppException::notFound("Không tìm thấy thông tin tour");
         }
@@ -47,7 +47,7 @@ class VanHanhService
 
     private function kiemTraTourTonTai(string $maTourThucTe): TourThucTe
     {
-        $tour = TourThucTe::where('MaTourThucTe', $maTourThucTe)->first();
+        $tour = TourThucTe::where('ma_tour_thuc_te', $maTourThucTe)->first();
         if (!$tour) {
             throw AppException::notFound("Không tìm thấy thông tin tour");
         }
@@ -58,8 +58,8 @@ class VanHanhService
     public function layLichTrinh(string $maTourThucTe, string $maNhanVien)
     {
         $tour = $this->checkQuyenHDV($maTourThucTe, $maNhanVien);
-        return LichTrinhTour::where('MaTourMau', $tour->MaTourMau)
-            ->orderBy('NgayThu')
+        return LichTrinhTour::where('ma_tour_mau', $tour->ma_tour_mau)
+            ->orderBy('ngay_thu')
             ->get();
     }
 
@@ -78,8 +78,8 @@ class VanHanhService
 
     private function layDanhSachKhachTheoTour(string $maTourThucTe): array
     {
-        $donDatTours = DonDatTour::where('MaTourThucTe', $maTourThucTe)
-            ->where('TrangThai', 'DA_THANH_TOAN')
+        $donDatTours = DonDatTour::where('ma_tour_thuc_te', $maTourThucTe)
+            ->where('trang_thai', 'DA_THANH_TOAN')
             ->with(['chiTietDatTours.khachHang', 'chiTietDatTours.nguoiDongHanh'])
             ->get();
             
@@ -88,18 +88,18 @@ class VanHanhService
             foreach ($don->chiTietDatTours as $ct) {
                 if ($ct->khachHang) {
                     $danhSach[] = [
-                        'LoaiKhach' => 'KHACH_CHINH',
-                        'MaKhachHang' => $ct->MaKhachHang,
-                        'HoTen' => $ct->khachHang->HoTen ?? '',
-                        'GhiChu' => $ct->GhiChu
+                        'loai_khach' => 'KHACH_CHINH',
+                        'ma_khach_hang' => $ct->ma_khach_hang,
+                        'ho_ten' => $ct->khachHang->ho_ten ?? '',
+                        'ghi_chu' => $ct->ghi_chu
                     ];
                 }
                 if ($ct->nguoiDongHanh) {
                     $danhSach[] = [
-                        'LoaiKhach' => 'NGUOI_DONG_HANH',
-                        'MaNguoiDongHanh' => $ct->MaNguoiDongHanh,
-                        'HoTen' => $ct->nguoiDongHanh->HoTen ?? '',
-                        'GhiChu' => $ct->GhiChu
+                        'loai_khach' => 'NGUOI_DONG_HANH',
+                        'ma_nguoi_dong_hanh' => $ct->ma_nguoi_dong_hanh,
+                        'ho_ten' => $ct->nguoiDongHanh->ho_ten ?? '',
+                        'ghi_chu' => $ct->ghi_chu
                     ];
                 }
             }
@@ -112,21 +112,21 @@ class VanHanhService
         $tour = $this->checkQuyenHDV($maTourThucTe, $maNhanVien);
         
         // Thường chỉ cho điểm danh khi tour DANG_DIEN_RA, có thể linh động theo design.
-        if (!in_array($tour->TrangThai, ['CHO_KICH_HOAT', 'MO_BAN', 'DANG_DIEN_RA'])) {
+        if (!in_array($tour->trang_thai, ['CHO_KICH_HOAT', 'MO_BAN', 'DANG_DIEN_RA'])) {
             throw AppException::badRequest("Trạng thái tour hiện tại không cho phép điểm danh");
         }
 
         $maDiemDanh = $this->maTuDongService->taoMaDiemDanh();
         $diemDanh = new DiemDanh();
-        $diemDanh->MaDiemDanh = $maDiemDanh;
-        $diemDanh->MaTourThucTe = $maTourThucTe;
-        $diemDanh->MaKhachHang = $data['maKhachHang'] ?? null;
-        $diemDanh->MaNguoiDongHanh = $data['maNguoiDongHanh'] ?? null;
-        $diemDanh->LoaiKhach = $data['loaiKhach'];
-        $diemDanh->MaNhanVien = $maNhanVien;
-        $diemDanh->ThoiGian = now();
-        $diemDanh->DiaDiem = $data['diaDiem'] ?? null;
-        $diemDanh->TrangThai = $data['trangThai']; // DA_DIEM_DANH, VANG
+        $diemDanh->ma_diem_danh = $maDiemDanh;
+        $diemDanh->ma_tour_thuc_te = $maTourThucTe;
+        $diemDanh->ma_khach_hang = $data['maKhachHang'] ?? null;
+        $diemDanh->ma_nguoi_dong_hanh = $data['maNguoiDongHanh'] ?? null;
+        $diemDanh->loai_khach = $data['loaiKhach'];
+        $diemDanh->ma_nhan_vien = $maNhanVien;
+        $diemDanh->thoi_gian = now();
+        $diemDanh->dia_diem = $data['diaDiem'] ?? null;
+        $diemDanh->trang_thai = $data['trangThai']; // DA_DIEM_DANH, VANG
         $diemDanh->save();
 
         return $diemDanh;
@@ -138,13 +138,13 @@ class VanHanhService
 
         $maGhiNhan = $this->maTuDongService->taoMaGhiNhanHanhDong();
         $hanhDong = new HanhDong();
-        $hanhDong->MaGhiNhanHanhDong = $maGhiNhan;
-        $hanhDong->MaTourThucTe = $maTourThucTe;
-        $hanhDong->MaKhachHang = $data['maKhachHang'];
-        $hanhDong->MaHanhDongXanh = $data['maHanhDongXanh'];
-        $hanhDong->MaNhanVienXacMinh = $maNhanVien;
-        $hanhDong->ThoiGian = now();
-        $hanhDong->MinhChung = $data['minhChung'] ?? null;
+        $hanhDong->ma_ghi_nhan_hanh_dong = $maGhiNhan;
+        $hanhDong->ma_tour_thuc_te = $maTourThucTe;
+        $hanhDong->ma_khach_hang = $data['maKhachHang'];
+        $hanhDong->ma_hanh_dong_xanh = $data['maHanhDongXanh'];
+        $hanhDong->ma_nhan_vien_xac_minh = $maNhanVien;
+        $hanhDong->thoi_gian = now();
+        $hanhDong->minh_chung = $data['minhChung'] ?? null;
         $hanhDong->save();
 
         return $hanhDong;
@@ -153,9 +153,9 @@ class VanHanhService
     public function layDanhSachSuCo(string $maTourThucTe, string $maNhanVien)
     {
         $this->checkQuyenHDV($maTourThucTe, $maNhanVien);
-        return NhatKySuCo::where('MaTourThucTe', $maTourThucTe)
-            ->where('MaNhanVienBaoCao', $maNhanVien)
-            ->orderBy('ThoiGianBaoCao', 'desc')
+        return NhatKySuCo::where('ma_tour_thuc_te', $maTourThucTe)
+            ->where('ma_nhan_vien_bao_cao', $maNhanVien)
+            ->orderBy('thoi_gian_bao_cao', 'desc')
             ->get();
     }
 
@@ -163,8 +163,8 @@ class VanHanhService
     {
         $this->kiemTraTourTonTai($maTourThucTe);
 
-        return NhatKySuCo::where('MaTourThucTe', $maTourThucTe)
-            ->orderBy('ThoiGianBaoCao', 'desc')
+        return NhatKySuCo::where('ma_tour_thuc_te', $maTourThucTe)
+            ->orderBy('thoi_gian_bao_cao', 'desc')
             ->get();
     }
 
@@ -174,16 +174,16 @@ class VanHanhService
 
         $maSuCo = $this->maTuDongService->taoMaNhatKySuCo();
         $suCo = new NhatKySuCo();
-        $suCo->MaNhatKySuCo = $maSuCo;
-        $suCo->MaTourThucTe = $maTourThucTe;
-        $suCo->MaNhanVienBaoCao = $maNhanVien;
-        $suCo->MaKhachHang = $data['maKhachHang'] ?? null;
-        $suCo->MaNguoiDongHanh = $data['maNguoiDongHanh'] ?? null;
-        $suCo->MoTa = $data['moTa'];
-        $suCo->GiaiPhap = $data['giaiPhap'] ?? null;
-        $suCo->MucDo = $data['mucDo']; // THAP, SOS
-        $suCo->LoaiSuCo = $data['loaiSuCo']; // Y_TE, THOI_TIET...
-        $suCo->ThoiGianBaoCao = now();
+        $suCo->ma_nhat_ky_su_co = $maSuCo;
+        $suCo->ma_tour_thuc_te = $maTourThucTe;
+        $suCo->ma_nhan_vien_bao_cao = $maNhanVien;
+        $suCo->ma_khach_hang = $data['maKhachHang'] ?? null;
+        $suCo->ma_nguoi_dong_hanh = $data['maNguoiDongHanh'] ?? null;
+        $suCo->mo_ta = $data['moTa'];
+        $suCo->giai_phap = $data['giaiPhap'] ?? null;
+        $suCo->muc_do = $data['mucDo']; // THAP, SOS
+        $suCo->loai_su_co = $data['loaiSuCo']; // Y_TE, THOI_TIET...
+        $suCo->thoi_gian_bao_cao = now();
         $suCo->save();
 
         return $suCo;
@@ -191,13 +191,13 @@ class VanHanhService
 
     public function capNhatSuCo(string $maSuCo, string $maNhanVien, array $data)
     {
-        $suCo = NhatKySuCo::where('MaNhatKySuCo', $maSuCo)->where('MaNhanVienBaoCao', $maNhanVien)->first();
+        $suCo = NhatKySuCo::where('ma_nhat_ky_su_co', $maSuCo)->where('ma_nhan_vien_bao_cao', $maNhanVien)->first();
         if (!$suCo) {
             throw AppException::notFound("Không tìm thấy sự cố do bạn báo cáo");
         }
         
-        $suCo->MoTa = $data['moTa'] ?? $suCo->MoTa;
-        $suCo->GiaiPhap = $data['giaiPhap'] ?? $suCo->GiaiPhap;
+        $suCo->mo_ta = $data['moTa'] ?? $suCo->mo_ta;
+        $suCo->giai_phap = $data['giaiPhap'] ?? $suCo->giai_phap;
         $suCo->save();
         return $suCo;
     }
@@ -205,9 +205,9 @@ class VanHanhService
     public function layDanhSachChiPhi(string $maTourThucTe, string $maNhanVien)
     {
         $this->checkQuyenHDV($maTourThucTe, $maNhanVien);
-        return ChiPhiThucTe::where('MaTourThucTe', $maTourThucTe)
-            ->where('MaNhanVien', $maNhanVien)
-            ->orderBy('NgayKhai', 'desc')
+        return ChiPhiThucTe::where('ma_tour_thuc_te', $maTourThucTe)
+            ->where('ma_nhan_vien', $maNhanVien)
+            ->orderBy('ngay_khai', 'desc')
             ->get();
     }
 
@@ -215,8 +215,8 @@ class VanHanhService
     {
         $this->kiemTraTourTonTai($maTourThucTe);
 
-        return ChiPhiThucTe::where('MaTourThucTe', $maTourThucTe)
-            ->orderBy('NgayKhai', 'desc')
+        return ChiPhiThucTe::where('ma_tour_thuc_te', $maTourThucTe)
+            ->orderBy('ngay_khai', 'desc')
             ->get();
     }
 
@@ -226,14 +226,14 @@ class VanHanhService
 
         $maChiPhi = $this->maTuDongService->taoMaChiPhiThucTe();
         $chiPhi = new ChiPhiThucTe();
-        $chiPhi->MaChiPhiThucTe = $maChiPhi;
-        $chiPhi->MaTourThucTe = $maTourThucTe;
-        $chiPhi->MaNhanVien = $maNhanVien;
-        $chiPhi->DanhMuc = $data['danhMuc'];
-        $chiPhi->ThanhTien = $data['thanhTien'];
-        $chiPhi->HoaDonAnh = $data['hoaDonAnh'] ?? null;
-        $chiPhi->TrangThaiDuyet = 'CHO_DUYET';
-        $chiPhi->NgayKhai = now();
+        $chiPhi->ma_chi_phi_thuc_te = $maChiPhi;
+        $chiPhi->ma_tour_thuc_te = $maTourThucTe;
+        $chiPhi->ma_nhan_vien = $maNhanVien;
+        $chiPhi->danh_muc = $data['danhMuc'];
+        $chiPhi->thanh_tien = $data['thanhTien'];
+        $chiPhi->hoa_don_anh = $data['hoaDonAnh'] ?? null;
+        $chiPhi->trang_thai_duyet = 'CHO_DUYET';
+        $chiPhi->ngay_khai = now();
         $chiPhi->save();
 
         return $chiPhi;
@@ -241,17 +241,17 @@ class VanHanhService
 
     public function boSungChiPhi(string $maChiPhi, string $maNhanVien, array $data)
     {
-        $chiPhi = ChiPhiThucTe::where('MaChiPhiThucTe', $maChiPhi)->where('MaNhanVien', $maNhanVien)->first();
+        $chiPhi = ChiPhiThucTe::where('ma_chi_phi_thuc_te', $maChiPhi)->where('ma_nhan_vien', $maNhanVien)->first();
         if (!$chiPhi) {
             throw AppException::notFound("Không tìm thấy khoản chi phí này");
         }
 
-        if ($chiPhi->TrangThaiDuyet !== 'YEU_CAU_BO_SUNG') {
+        if ($chiPhi->trang_thai_duyet !== 'YEU_CAU_BO_SUNG') {
             throw AppException::badRequest("Chỉ được bổ sung khi có yêu cầu từ kế toán");
         }
 
-        $chiPhi->HoaDonAnh = $data['hoaDonAnh'] ?? $chiPhi->HoaDonAnh;
-        $chiPhi->TrangThaiDuyet = 'CHO_DUYET';
+        $chiPhi->hoa_don_anh = $data['hoaDonAnh'] ?? $chiPhi->hoa_don_anh;
+        $chiPhi->trang_thai_duyet = 'CHO_DUYET';
         $chiPhi->save();
 
         return $chiPhi;

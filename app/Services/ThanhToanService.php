@@ -41,24 +41,24 @@ class ThanhToanService
     {
         return DB::transaction(function () use ($maDatTour, $maTaiKhoan) {
             // 1. Tìm đơn đặt tour và kiểm tra quyền sở hữu
-            $don = DonDatTour::where('MaDatTour', $maDatTour)->first();
+            $don = DonDatTour::where('ma_dat_tour', $maDatTour)->first();
             if (!$don) {
                 throw AppException::notFound("Không tìm thấy đơn đặt tour: " . $maDatTour);
             }
 
             // Lấy hồ sơ khách hàng từ tài khoản đang đăng nhập
-            $khachHang = \App\Models\HoChieuSo::where('MaTaiKhoan', $maTaiKhoan)->first();
-            if (!$khachHang || $don->MaKhachHang !== $khachHang->MaKhachHang) {
+            $khachHang = \App\Models\HoChieuSo::where('ma_tai_khoan', $maTaiKhoan)->first();
+            if (!$khachHang || $don->ma_khach_hang !== $khachHang->ma_khach_hang) {
                 throw AppException::forbidden("Bạn không có quyền thực hiện thanh toán cho đơn hàng này");
             }
 
             // 2. Kiểm tra trạng thái đơn đặt tour phải ở trạng thái CHO_XAC_NHAN
-            if ($don->TrangThai !== 'CHO_XAC_NHAN') {
+            if ($don->trang_thai !== 'CHO_XAC_NHAN') {
                 throw AppException::badRequest("Chỉ có thể thanh toán cho đơn hàng ở trạng thái 'Chờ xác nhận'");
             }
 
             // 3. Khóa dòng TourThucTe liên quan bằng lockForUpdate để tránh overbooking
-            $tour = TourThucTe::lockForUpdate()->find($don->MaTourThucTe);
+            $tour = TourThucTe::lockForUpdate()->find($don->ma_tour_thuc_te);
             if (!$tour) {
                 throw AppException::notFound("Không tìm thấy tour thực tế tương ứng");
             }
@@ -66,31 +66,31 @@ class ThanhToanService
             // 4. Tạo giao dịch thành công trực tiếp
             $maGiaoDich = $this->maTuDongService->taoMaGiaoDich();
             $this->giaoDichRepository->taoGiaoDich([
-                'MaGiaoDich' => $maGiaoDich,
-                'MaDatTour' => $don->MaDatTour,
-                'LoaiGiaoDich' => 'THANH_TOAN',
-                'PhuongThuc' => 'MOCK',
-                'SoTien' => $don->TongTien,
-                'MaGDNH' => 'MOCK_PAYMENT_' . strtoupper(Str::random(10)),
-                'TrangThai' => 'THANH_CONG',
-                'NgayThanhToan' => Carbon::now(),
+                'ma_giao_dich' => $maGiaoDich,
+                'ma_dat_tour' => $don->ma_dat_tour,
+                'loai_giao_dich' => 'THANH_TOAN',
+                'phuong_thuc' => 'MOCK',
+                'so_tien' => $don->tong_tien,
+                'ma_gdnh' => 'MOCK_PAYMENT_' . strtoupper(Str::random(10)),
+                'trang_thai' => 'THANH_CONG',
+                'ngay_thanh_toan' => Carbon::now(),
             ]);
 
             // 5. Cập nhật đơn đặt tour sang trạng thái DA_XAC_NHAN
-            $don->TrangThai = 'DA_XAC_NHAN';
+            $don->trang_thai = 'DA_XAC_NHAN';
             $don->save();
 
-            // 6. Tạo bản ghi LICHSUTOUR cho khách hàng chính (người đặt)
-            $ctNguoiDat = ChiTietDatTour::where('MaDatTour', $don->MaDatTour)
-                ->where('LoaiKhach', 'NGUOI_DAT')
+            // 6. Tạo bản ghi lich_su_tours cho khách hàng chính (người đặt)
+            $ctNguoiDat = ChiTietDatTour::where('ma_dat_tour', $don->ma_dat_tour)
+                ->where('loai_khach', 'NGUOI_DAT')
                 ->first();
 
             $this->lichSuTourRepository->taoLichSu([
-                'MaLichSuTour' => $this->maTuDongService->taoMaLichSuTour(),
-                'MaKhachHang' => $don->MaKhachHang,
-                'MaTourThucTe' => $don->MaTourThucTe,
-                'MaChiTietDat' => $ctNguoiDat ? $ctNguoiDat->MaChiTietDat : null,
-                'NgayThamGia' => $tour->NgayKhoiHanh,
+                'ma_lich_su_tour' => $this->maTuDongService->taoMaLichSuTour(),
+                'ma_khach_hang' => $don->ma_khach_hang,
+                'ma_tour_thuc_te' => $don->ma_tour_thuc_te,
+                'ma_chi_tiet_dat' => $ctNguoiDat ? $ctNguoiDat->ma_chi_tiet_dat : null,
+                'ngay_tham_gia' => $tour->ngay_khoi_hanh,
             ]);
 
             return $don;
@@ -109,24 +109,24 @@ class ThanhToanService
     {
         return DB::transaction(function () use ($maDatTour, $maGDNH, $maTaiKhoan) {
             // 1. Tìm đơn đặt tour và kiểm tra
-            $don = DonDatTour::where('MaDatTour', $maDatTour)->first();
+            $don = DonDatTour::where('ma_dat_tour', $maDatTour)->first();
             if (!$don) {
                 throw AppException::notFound("Không tìm thấy đơn đặt tour: " . $maDatTour);
             }
 
-            $khachHang = \App\Models\HoChieuSo::where('MaTaiKhoan', $maTaiKhoan)->first();
-            if (!$khachHang || $don->MaKhachHang !== $khachHang->MaKhachHang) {
+            $khachHang = \App\Models\HoChieuSo::where('ma_tai_khoan', $maTaiKhoan)->first();
+            if (!$khachHang || $don->ma_khach_hang !== $khachHang->ma_khach_hang) {
                 throw AppException::forbidden("Bạn không có quyền thực hiện thao tác này trên đơn hàng này");
             }
 
-            if ($don->TrangThai !== 'CHO_XAC_NHAN') {
+            if ($don->trang_thai !== 'CHO_XAC_NHAN') {
                 throw AppException::badRequest("Chỉ có thể báo chuyển khoản cho đơn hàng ở trạng thái 'Chờ xác nhận'");
             }
 
             // Kiểm tra xem đã có giao dịch báo chuyển khoản đang chờ duyệt chưa
-            $giaoDichTonTai = GiaoDich::where('MaDatTour', $maDatTour)
-                ->where('TrangThai', 'CHO_THANH_TOAN')
-                ->where('MaGDNH', 'like', 'KHXN:%')
+            $giaoDichTonTai = GiaoDich::where('ma_dat_tour', $maDatTour)
+                ->where('trang_thai', 'CHO_THANH_TOAN')
+                ->where('ma_gdnh', 'like', 'KHXN:%')
                 ->exists();
 
             if ($giaoDichTonTai) {
@@ -136,14 +136,14 @@ class ThanhToanService
             // 2. Tạo giao dịch ở trạng thái CHO_THANH_TOAN với tiền tố KHXN:
             $maGiaoDich = $this->maTuDongService->taoMaGiaoDich();
             return $this->giaoDichRepository->taoGiaoDich([
-                'MaGiaoDich' => $maGiaoDich,
-                'MaDatTour' => $don->MaDatTour,
-                'LoaiGiaoDich' => 'THANH_TOAN',
-                'PhuongThuc' => 'CHUYEN_KHOAN',
-                'SoTien' => $don->TongTien,
-                'MaGDNH' => 'KHXN:' . trim($maGDNH),
-                'TrangThai' => 'CHO_THANH_TOAN',
-                'NgayThanhToan' => null,
+                'ma_giao_dich' => $maGiaoDich,
+                'ma_dat_tour' => $don->ma_dat_tour,
+                'loai_giao_dich' => 'THANH_TOAN',
+                'phuong_thuc' => 'CHUYEN_KHOAN',
+                'so_tien' => $don->tong_tien,
+                'ma_gdnh' => 'KHXN:' . trim($maGDNH),
+                'trang_thai' => 'CHO_THANH_TOAN',
+                'ngay_thanh_toan' => null,
             ]);
         });
     }
@@ -159,12 +159,12 @@ class ThanhToanService
     {
         return DB::transaction(function () use ($maDatTour, $trangThaiXacNhan) {
             // 1. Tìm đơn đặt tour
-            $don = DonDatTour::where('MaDatTour', $maDatTour)->first();
+            $don = DonDatTour::where('ma_dat_tour', $maDatTour)->first();
             if (!$don) {
                 throw AppException::notFound("Không tìm thấy đơn đặt tour: " . $maDatTour);
             }
 
-            if ($don->TrangThai !== 'CHO_XAC_NHAN') {
+            if ($don->trang_thai !== 'CHO_XAC_NHAN') {
                 throw AppException::badRequest("Đơn đặt tour không ở trạng thái 'Chờ xác nhận'");
             }
 
@@ -175,7 +175,7 @@ class ThanhToanService
             }
 
             // 3. Khóa dòng TourThucTe liên quan
-            $tour = TourThucTe::lockForUpdate()->find($don->MaTourThucTe);
+            $tour = TourThucTe::lockForUpdate()->find($don->ma_tour_thuc_te);
             if (!$tour) {
                 throw AppException::notFound("Không tìm thấy tour thực tế tương ứng");
             }
@@ -183,32 +183,32 @@ class ThanhToanService
             if (strtoupper($trangThaiXacNhan) === 'DONG_Y' || strtoupper($trangThaiXacNhan) === 'TC') {
                 // Đồng ý xác nhận thanh toán thành công
                 // Cập nhật trạng thái giao dịch
-                $giaoDich->TrangThai = 'THANH_CONG';
-                $giaoDich->NgayThanhToan = Carbon::now();
+                $giaoDich->trang_thai = 'THANH_CONG';
+                $giaoDich->ngay_thanh_toan = Carbon::now();
                 // Loại bỏ tiền tố KHXN: để lưu lại mã giao dịch ngân hàng chính thức
-                $giaoDich->MaGDNH = str_replace('KHXN:', '', $giaoDich->MaGDNH);
+                $giaoDich->ma_gdnh = str_replace('KHXN:', '', $giaoDich->ma_gdnh);
                 $giaoDich->save();
 
                 // Cập nhật trạng thái đơn hàng sang DA_XAC_NHAN
-                $don->TrangThai = 'DA_XAC_NHAN';
+                $don->trang_thai = 'DA_XAC_NHAN';
                 $don->save();
 
-                // Tạo bản ghi LICHSUTOUR cho khách hàng chính
-                $ctNguoiDat = ChiTietDatTour::where('MaDatTour', $don->MaDatTour)
-                    ->where('LoaiKhach', 'NGUOI_DAT')
+                // Tạo bản ghi lich_su_tours cho khách hàng chính
+                $ctNguoiDat = ChiTietDatTour::where('ma_dat_tour', $don->ma_dat_tour)
+                    ->where('loai_khach', 'NGUOI_DAT')
                     ->first();
 
                 $this->lichSuTourRepository->taoLichSu([
-                    'MaLichSuTour' => $this->maTuDongService->taoMaLichSuTour(),
-                    'MaKhachHang' => $don->MaKhachHang,
-                    'MaTourThucTe' => $don->MaTourThucTe,
-                    'MaChiTietDat' => $ctNguoiDat ? $ctNguoiDat->MaChiTietDat : null,
-                    'NgayThamGia' => $tour->NgayKhoiHanh,
+                    'ma_lich_su_tour' => $this->maTuDongService->taoMaLichSuTour(),
+                    'ma_khach_hang' => $don->ma_khach_hang,
+                    'ma_tour_thuc_te' => $don->ma_tour_thuc_te,
+                    'ma_chi_tiet_dat' => $ctNguoiDat ? $ctNguoiDat->ma_chi_tiet_dat : null,
+                    'ngay_tham_gia' => $tour->ngay_khoi_hanh,
                 ]);
             } else {
                 // Từ chối xác nhận thanh toán (ví dụ: khách báo chuyển khoản giả mạo)
                 // Cập nhật trạng thái giao dịch thành THAT_BAI
-                $giaoDich->TrangThai = 'THAT_BAI';
+                $giaoDich->trang_thai = 'THAT_BAI';
                 $giaoDich->save();
             }
 

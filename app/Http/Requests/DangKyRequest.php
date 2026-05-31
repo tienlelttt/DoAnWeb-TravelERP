@@ -44,7 +44,7 @@ class DangKyRequest extends FormRequest
             'matKhau.min' => 'Mật khẩu phải có ít nhất 6 ký tự',
             'xacNhanMatKhau.required' => 'Xác nhận mật khẩu không được để trống',
             'hoTen.required' => 'Họ tên không được để trống',
-            'email.email' => 'Email không hợp lệ'
+            'email.email' => 'email không hợp lệ'
         ];
     }
 }

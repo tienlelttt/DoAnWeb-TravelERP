@@ -18,27 +18,27 @@ class AdminTest extends TestCase
         parent::setUp();
 
         // Tạo roles
-        VaiTro::create(['MaVaiTro' => 'ADMIN', 'TenHienThi' => 'Quản trị viên']);
-        VaiTro::create(['MaVaiTro' => 'KHACHHANG', 'TenHienThi' => 'Khách Hàng']);
+        VaiTro::create(['ma_vai_tro' => 'ADMIN', 'ten_hien_thi' => 'Quản trị viên']);
+        VaiTro::create(['ma_vai_tro' => 'KHACHHANG', 'ten_hien_thi' => 'Khách Hàng']);
 
         // Tạo admin user
         $this->adminUser = TaiKhoan::create([
-            'MaTaiKhoan' => 'TK_ADMIN',
-            'TenDangNhap' => 'admin_test',
-            'MatKhau' => Hash::make('password123'),
-            'HoTen' => 'Admin Test',
-            'VaiTro' => 'ADMIN',
-            'TrangThai' => 'HOAT_DONG'
+            'ma_tai_khoan' => 'TK_ADMIN',
+            'ten_dang_nhap' => 'admin_test',
+            'mat_khau' => Hash::make('password123'),
+            'ho_ten' => 'Admin Test',
+            'vai_tro' => 'ADMIN',
+            'trang_thai' => 'HOAT_DONG'
         ]);
 
         // Tạo normal user
         $this->normalUser = TaiKhoan::create([
-            'MaTaiKhoan' => 'TK_USER',
-            'TenDangNhap' => 'user_test',
-            'MatKhau' => Hash::make('password123'),
-            'HoTen' => 'User Test',
-            'VaiTro' => 'KHACHHANG',
-            'TrangThai' => 'HOAT_DONG'
+            'ma_tai_khoan' => 'TK_USER',
+            'ten_dang_nhap' => 'user_test',
+            'mat_khau' => Hash::make('password123'),
+            'ho_ten' => 'User Test',
+            'vai_tro' => 'KHACHHANG',
+            'trang_thai' => 'HOAT_DONG'
         ]);
     }
 
@@ -85,10 +85,10 @@ class AdminTest extends TestCase
         $response->assertStatus(201);
 
         // Kiểm tra database xem Audit Log có được lưu không
-        $this->assertDatabaseHas('NHATKYHETHONG', [
-            'MaTaiKhoan' => 'TK_ADMIN',
-            'DoiTuong' => 'users',
-            'HanhDong' => 'POST users'
+        $this->assertDatabaseHas('nhat_ky_he_thongs', [
+            'ma_tai_khoan' => 'TK_ADMIN',
+            'doi_tuong' => 'users',
+            'hanh_dong' => 'POST users'
         ]);
     }
 

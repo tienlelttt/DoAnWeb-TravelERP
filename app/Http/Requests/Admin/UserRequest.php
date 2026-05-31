@@ -31,22 +31,22 @@ class UserRequest extends FormRequest
                 'nullable',
                 'string',
                 'max:20',
-                Rule::unique('TAIKHOAN', 'CCCD')->ignore($userId, 'MaTaiKhoan')
+                Rule::unique('tai_khoans', 'cccd')->ignore($userId, 'ma_tai_khoan')
             ],
             'ngaySinh' => 'nullable|date',
             'email' => [
                 'nullable',
                 'email',
                 'max:200',
-                Rule::unique('TAIKHOAN', 'Email')->ignore($userId, 'MaTaiKhoan')
+                Rule::unique('tai_khoans', 'email')->ignore($userId, 'ma_tai_khoan')
             ],
             'soDienThoai' => 'nullable|string|max:20',
-            'vaiTro' => 'required|string|exists:VAITRO,MaVaiTro',
+            'vaiTro' => 'required|string|exists:vai_tros,ma_vai_tro',
             'trangThai' => 'required|string|in:HOAT_DONG,KHOA',
         ];
 
         if ($this->isMethod('post')) {
-            $rules['tenDangNhap'] = 'required|string|max:100|unique:TAIKHOAN,TenDangNhap';
+            $rules['tenDangNhap'] = 'required|string|max:100|unique:tai_khoans,ten_dang_nhap';
             $rules['matKhau'] = 'required|string|min:6';
         } else {
             // Cập nhật, tenDangNhap có thể không đổi
@@ -54,7 +54,7 @@ class UserRequest extends FormRequest
                 'required',
                 'string',
                 'max:100',
-                Rule::unique('TAIKHOAN', 'TenDangNhap')->ignore($userId, 'MaTaiKhoan')
+                Rule::unique('tai_khoans', 'ten_dang_nhap')->ignore($userId, 'ma_tai_khoan')
             ];
             // Mật khẩu có thể không truyền khi update
             $rules['matKhau'] = 'nullable|string|min:6';
@@ -71,8 +71,8 @@ class UserRequest extends FormRequest
             'matKhau.required' => 'Mật khẩu không được để trống.',
             'matKhau.min' => 'Mật khẩu phải có ít nhất 6 ký tự.',
             'hoTen.required' => 'Họ tên không được để trống.',
-            'email.unique' => 'Email đã tồn tại trong hệ thống.',
-            'cccd.unique' => 'CCCD đã tồn tại trong hệ thống.',
+            'email.unique' => 'email đã tồn tại trong hệ thống.',
+            'cccd.unique' => 'cccd đã tồn tại trong hệ thống.',
             'vaiTro.required' => 'Vai trò không được để trống.',
             'vaiTro.exists' => 'Vai trò không hợp lệ.',
             'trangThai.required' => 'Trạng thái không được để trống.',
