@@ -159,4 +159,86 @@ class AuthController extends Controller
         Auth::guard('api')->logout();
         return $this->noContent("Đăng xuất thành công");
     }
+
+    /**
+     * Kiểm tra mật khẩu (để xác thực trước khi thực hiện tác vụ nhạy cảm)
+     */
+    public function kiemTraMatKhau(Request $request)
+    {
+        $request->validate([
+            'matKhauCu' => 'required'
+        ]);
+
+        $user = Auth::guard('api')->user();
+        if (!Hash::check($request->matKhauCu, $user->MatKhau)) {
+            throw AppException::unauthorized("Mật khẩu cũ không đúng", "UNAUTHORIZED");
+        }
+
+        return $this->noContent("Mật khẩu cũ chính xác");
+    }
+
+    /**
+     * Quên mật khẩu
+     */
+    public function quenMatKhau(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email'
+        ]);
+
+        $taiKhoan = TaiKhoan::where('Email', $request->email)->first();
+        if (!$taiKhoan) {
+            throw AppException::notFound("Không tìm thấy tài khoản với email này");
+        }
+
+        // Tạo token JWT tuỳ chỉnh dành cho reset mật khẩu
+        // Ở thực tế, bạn có thể gửi email có chứa link reset kèm theo resetToken.
+        $resetToken = JWTAuth::customClaims(['is_reset_token' => true])->fromUser($taiKhoan);
+        
+        // TODO: Gửi email chứa resetToken cho người dùng
+        return $this->ok("Đã gửi hướng dẫn đặt lại mật khẩu vào email của bạn", null);
+    }
+
+    /**
+     * Đặt lại mật khẩu (dùng token từ quen mật khẩu)
+     */
+    public function datLaiMatKhau(Request $request)
+    {
+        $request->validate([
+            'resetToken' => 'required|string',
+            'matKhauMoi' => 'required|min:6',
+            'xacNhanMatKhau' => 'required'
+        ]);
+
+        if ($request->matKhauMoi !== $request->xacNhanMatKhau) {
+            throw AppException::badRequest("Mật khẩu mới và xác nhận không khớp");
+        }
+
+        try {
+            // Lấy payload từ JWT token mà không gán auth() login.
+            $payload = JWTAuth::setToken($request->resetToken)->getPayload();
+            
+            // Check custom claim
+            if (!$payload->get('is_reset_token')) {
+                throw AppException::unauthorized("Token không hợp lệ để reset mật khẩu", "UNAUTHORIZED");
+            }
+            
+            // Tìm user từ token subject
+            $taiKhoan = JWTAuth::setToken($request->resetToken)->toUser();
+            
+            if (!$taiKhoan) {
+                throw AppException::notFound("Không tìm thấy tài khoản");
+            }
+
+            $taiKhoan->MatKhau = Hash::make($request->matKhauMoi);
+            $taiKhoan->save();
+
+            // Huỷ token reset sau khi xài xong
+            JWTAuth::invalidate($request->resetToken);
+
+            return $this->noContent("Đặt lại mật khẩu thành công");
+        } catch (\Exception $e) {
+            throw AppException::unauthorized("Token không hợp lệ hoặc đã hết hạn", "UNAUTHORIZED");
+        }
+    }
 }

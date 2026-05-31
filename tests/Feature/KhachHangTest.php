@@ -113,7 +113,7 @@ class KhachHangTest extends TestCase
         ]);
 
         $response->assertStatus(200)
-                 ->assertJsonPath("data.data.0.MaDatTour", "DAT_001");
+                 ->assertJsonPath("data.data.0.maDatTour", "DAT_001");
     }
 
     public function test_khach_hang_yeu_cau_huy_tour()

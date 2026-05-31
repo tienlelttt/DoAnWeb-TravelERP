@@ -60,4 +60,20 @@ class KhachHangController extends Controller
         $res = $this->khachHangService->yeuCauHuyTour($this->getMaTaiKhoan(), $maDatTour, $data);
         return $this->successResponse($res, "Gửi yêu cầu hủy tour thành công");
     }
+
+    public function yeuCauHoTroCanBoSung(): JsonResponse
+    {
+        $data = $this->khachHangService->yeuCauHoTroCanBoSung($this->getMaTaiKhoan());
+        return $this->successResponse($data);
+    }
+
+    public function boSungYeuCauHoTro(string $maYeuCau, Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            "noiDungBoSung" => "required|string"
+        ]);
+        
+        $res = $this->khachHangService->boSungYeuCauHoTro($this->getMaTaiKhoan(), $maYeuCau, $data);
+        return $this->successResponse($res, "Bổ sung thông tin thành công");
+    }
 }

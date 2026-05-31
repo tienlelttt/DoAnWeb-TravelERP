@@ -156,4 +156,36 @@ class KhachHangService
 
         return $yeuCau;
     }
+
+    public function yeuCauHoTroCanBoSung(string $maTaiKhoan)
+    {
+        $hcs = $this->getHoChieuSo($maTaiKhoan);
+        return YeuCauHoTro::where("MaKhachHang", $hcs->MaKhachHang)
+            ->where("TrangThai", "CAN_BO_SUNG")
+            ->orderBy("updated_at", "desc")
+            ->paginate(15);
+    }
+
+    public function boSungYeuCauHoTro(string $maTaiKhoan, string $maYeuCau, array $data)
+    {
+        $hcs = $this->getHoChieuSo($maTaiKhoan);
+        
+        $yeuCau = YeuCauHoTro::where("MaYeuCauHoTro", $maYeuCau)
+            ->where("MaKhachHang", $hcs->MaKhachHang)
+            ->first();
+
+        if (!$yeuCau) {
+            throw AppException::notFound("Không tìm thấy yêu cầu hỗ trợ này");
+        }
+
+        if ($yeuCau->TrangThai !== "CAN_BO_SUNG") {
+            throw AppException::badRequest("Yêu cầu này không ở trạng thái cần bổ sung thông tin");
+        }
+
+        $yeuCau->NoiDung = $yeuCau->NoiDung . "\n\n[KHÁCH HÀNG BỔ SUNG]: " . $data["noiDungBoSung"];
+        $yeuCau->TrangThai = "CHO_XU_LY";
+        $yeuCau->save();
+
+        return $yeuCau;
+    }
 }
