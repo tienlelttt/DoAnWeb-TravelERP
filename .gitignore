@@ -1,25 +1,42 @@
-# Các file cấu hình môi trường
-.env
-.env.*
-!.env.example
+# Backend Laravel
+backend/vendor/
+backend/.env
+backend/.env.*
+!backend/.env.example
+backend/.phpunit.result.cache
+backend/storage/*.key
+backend/bootstrap/cache/
+backend/storage/logs/
+backend/*.log
+backend/public/hot
+backend/public/storage
+backend/public/mix-manifest.json
 
-# Thư mục vendor (Laravel dependencies)
-/vendor/
+# Frontend React
+frontend/admin/node_modules/
+frontend/admin/dist/
+frontend/admin/.env.local
+frontend/admin/.env.development.local
+frontend/admin/.env.test.local
+frontend/admin/.env.production.local
 
-# Các thư mục log và cache
-/storage/*.key
-/bootstrap/cache/
-storage/logs/
-*.log
+frontend/hdv/node_modules/
+frontend/hdv/dist/
+frontend/hdv/.env.local
+frontend/hdv/.env.development.local
+frontend/hdv/.env.test.local
+frontend/hdv/.env.production.local
 
-# Cấu hình IDE / OS
+frontend/kh/node_modules/
+frontend/kh/dist/
+frontend/kh/.env.local
+frontend/kh/.env.development.local
+frontend/kh/.env.test.local
+frontend/kh/.env.production.local
+
+# IDE / OS
 .idea/
 .vscode/
 *.swp
 .DS_Store
-
-# Node modules (nếu có dùng frontend stack tại đây)
-node_modules/
-/public/hot
-/public/storage
-/public/mix-manifest.json
+Thumbs.db

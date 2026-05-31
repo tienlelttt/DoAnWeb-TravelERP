@@ -1,0 +1,25 @@
+# Các file cấu hình môi trường
+.env
+.env.*
+!.env.example
+
+# Thư mục vendor (Laravel dependencies)
+/vendor/
+
+# Các thư mục log và cache
+/storage/*.key
+/bootstrap/cache/
+storage/logs/
+*.log
+
+# Cấu hình IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# Node modules (nếu có dùng frontend stack tại đây)
+node_modules/
+/public/hot
+/public/storage
+/public/mix-manifest.json

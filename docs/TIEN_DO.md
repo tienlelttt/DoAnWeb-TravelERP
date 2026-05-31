@@ -74,6 +74,14 @@ Tài liệu này dùng để theo dõi toàn bộ lộ trình và tiến độ p
 - [x] Áp dụng `CamelCaseJsonResponse` Middleware để map JSON trả về Frontend tự động làm lớp bảo vệ tối ưu.
 - [x] Refactor toàn bộ truy vấn `where('PascalCase')` sang `where('snake_case')` ở tất cả Controller và Service sử dụng Tokenizer an toàn.
 
+## ✅ TÁI CẤU TRÚC MONOREPO (Hoàn thành 100%)
+- [x] Phân chia cấu trúc monorepo chuẩn: `backend/`, `frontend/`, `database-scripts/`, `docs/`.
+- [x] Gom và gộp 3 ứng dụng frontend React (`admin`, `hdv`, `kh`) vào `frontend/` và loại bỏ thư mục `.git` để Monorepo theo dõi.
+- [x] Dọn dẹp và bỏ qua các thư mục dependencies (`vendor/`, `node_modules/`) và cấu hình môi trường cục bộ (`.env`).
+- [x] Thiết lập file `.gitignore` chuẩn ở thư mục gốc Monorepo bảo vệ và loại trừ các file tự sinh/nhạy cảm.
+- [x] Di chuyển toàn bộ file tài liệu vào `docs/` để cấu trúc thư mục gốc Monorepo sạch đẹp.
+- [x] Bảo toàn 100% nội dung code và kiểm tra trạng thái Git (`git status`) sạch sẽ, chỉ chứa hoạt động di chuyển và cấu trúc mới.
+
 ---
 
 ## 🔴 RÀNG BUỘC BẮT BUỘC (MANDATORY RULES)
