@@ -53,7 +53,7 @@ Tài liệu này dùng để theo dõi toàn bộ lộ trình và tiến độ p
 - [x] Kế toán - Tích hợp Power BI (Cấp credential kết nối Database, Xuất file Excel/CSV).
 - [x] Cron Jobs (Schedule hủy đơn đặt tour quá hạn, cập nhật giá động).
 
-## ⏳ Giai đoạn 7.1: ĐỒNG BỘ API CONTRACT & GIỮ NGUYÊN FRONTEND (Đang thực hiện)
+## ✅ Giai đoạn 7.1: ĐỒNG BỘ API CONTRACT & GIỮ NGUYÊN FRONTEND (Hoàn thành 100%)
 - [x] Lập baseline API contract cho frontend hiện tại.
 - [x] Bổ sung alias API Khách hàng, Thanh toán và Quản trị.
 - [x] Bổ sung nghiệp vụ Voucher khách hàng theo contract hiện tại.
@@ -63,8 +63,9 @@ Tài liệu này dùng để theo dõi toàn bộ lộ trình và tiến độ p
 - [x] Bổ sung API Điều hành xem đoàn, sự cố và chi phí theo tour.
 - [x] Bổ sung test contract cho các alias API.
 - [x] Chuẩn hóa README, AGENTS, CODING_GUIDELINES và comment runtime để backend PHP đọc như một hệ thống độc lập.
-- [x] Kiểm thử contract: `ApiContractCompatibilityTest` pass 4 tests / 15 assertions.
-- [x] Kiểm thử toàn bộ: `php artisan test` pass 64 tests / 258 assertions.
+- [x] Kiểm thử contract: `ApiContractCompatibilityTest` pass 4 tests / 15 assertions ✅
+- [x] Kiểm thử toàn bộ: `php artisan test` pass **64 tests / 258 assertions** ✅
+- [x] Fix SSL/TLS: Export Windows Trusted Root CA vào cacert.pem cho PHP curl OpenSSL.
 
 ## ⏳ Giai đoạn 7.2: CHUẨN HÓA KIẾN TRÚC LARAVEL (Chưa thực hiện)
 - [ ] Refactor toàn bộ 35 bảng Database và cột sang chuẩn `snake_case` của Laravel.
