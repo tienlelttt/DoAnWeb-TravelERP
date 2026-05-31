@@ -40,7 +40,7 @@ Route::prefix('dieu-hanh')->group(function () {
     Route::get('danh-gia', [DanhGiaController::class, 'tatCaDanhGia'])->middleware('role:KINHDOANH,ADMIN');
 });
 
-Route::group(['prefix' => 'khach-hang', 'middleware' => ['auth:api', 'role:KHACHHANG']], function () {
+Route::group(['prefix' => 'khach-hang', 'middleware' => ['auth:api', 'role:KHACHHANG,ADMIN']], function () {
     Route::post('danh-gia', [DanhGiaController::class, 'guiDanhGia']);
     
     // Đặt Tour
@@ -53,6 +53,10 @@ Route::group(['prefix' => 'khach-hang', 'middleware' => ['auth:api', 'role:KHACH
     // Voucher
     Route::post('don-dat-tour/ap-dung-voucher', [\App\Http\Controllers\VoucherController::class, 'apDungVoucher']);
     Route::get('voucher', [\App\Http\Controllers\VoucherController::class, 'danhSachVoucher']);
+    Route::get('vi-voucher', [\App\Http\Controllers\VoucherController::class, 'viVoucher']);
+    Route::get('voucher-co-the-doi', [\App\Http\Controllers\VoucherController::class, 'voucherCoTheDoi']);
+    Route::post('ap-voucher', [\App\Http\Controllers\VoucherController::class, 'apVoucher']);
+    Route::post('doi-diem', [\App\Http\Controllers\VoucherController::class, 'doiDiem']);
 });
 
 // Hỗ trợ route alias
@@ -62,9 +66,13 @@ Route::group(['middleware' => ['auth:api', 'role:KHACHHANG']], function () {
 
 // UC: CAc API liAn quan den Thanh Toan (Task 4.3)
 Route::group(['prefix' => 'thanh-toan'], function () {
-    Route::group(['middleware' => ['auth:api', 'role:KHACHHANG']], function () {
+    Route::group(['middleware' => ['auth:api', 'role:KHACHHANG,ADMIN']], function () {
+        Route::post('khoi-tao', [\App\Http\Controllers\ThanhToanController::class, 'khoiTaoThanhToan']);
         Route::post('mock', [\App\Http\Controllers\ThanhToanController::class, 'thanhToanMock']);
         Route::post('bao-chuyen-khoan', [\App\Http\Controllers\ThanhToanController::class, 'baoChuyenKhoan']);
+        Route::post('{maDatTour}/het-han-qr', [\App\Http\Controllers\ThanhToanController::class, 'hetHanThanhToanQr']);
+        Route::post('{maDatTour}/xac-nhan-chuyen-khoan', [\App\Http\Controllers\ThanhToanController::class, 'xacNhanDaChuyenKhoan']);
+        Route::get('{maDatTour}/ket-qua', [\App\Http\Controllers\ThanhToanController::class, 'ketQua']);
         Route::post('vnpay/tao-url', [\App\Http\Controllers\ThanhToanController::class, 'taoThanhToanVnpay']);
     });
     Route::get('vnpay/return', [\App\Http\Controllers\ThanhToanController::class, 'vnpayReturn']);
@@ -72,6 +80,7 @@ Route::group(['prefix' => 'thanh-toan'], function () {
 });
 
 Route::group(['prefix' => 'kinh-doanh', 'middleware' => ['auth:api', 'role:KINHDOANH']], function () {
+    Route::get('danh-gia', [DanhGiaController::class, 'tatCaDanhGia']);
     Route::post('xac-nhan-thanh-toan', [\App\Http\Controllers\KinhDoanhController::class, 'xacNhanThanhToan']);
     Route::post('duyet-don/{maDon}', [\App\Http\Controllers\XuLyHuyController::class, 'duyetDonVip']);
     Route::post('xu-ly-huy', [\App\Http\Controllers\XuLyHuyController::class, 'xuLyHuy']);
@@ -145,10 +154,14 @@ Route::prefix('san-pham')->group(function () {
 // Giai doan 5: Phan he dieu hanh & HDV
 // ==========================================
 Route::group(['prefix' => 'dieu-hanh', 'middleware' => ['auth:api', 'role:DIEUHANH']], function () {
+    Route::post('/phan-cong', [\App\Http\Controllers\DieuHanhController::class, 'phanCongTour']);
     Route::post('/phan-cong-tour', [\App\Http\Controllers\DieuHanhController::class, 'phanCongTour']);
     Route::get('/tour-can-phan-cong', [\App\Http\Controllers\DieuHanhController::class, 'tourCanPhanCong']);
     Route::get('/hdv-kha-dung', [\App\Http\Controllers\DieuHanhController::class, 'hdvKhaDung']);
     Route::delete('/phan-cong/{id}', [\App\Http\Controllers\DieuHanhController::class, 'huyPhanCong']);
+    Route::get('/tour/{maTour}/doan', [\App\Http\Controllers\DieuHanhVanHanhController::class, 'danhSachDoan']);
+    Route::get('/tour/{maTour}/su-co', [\App\Http\Controllers\DieuHanhVanHanhController::class, 'danhSachSuCo']);
+    Route::get('/tour/{maTour}/chi-phi', [\App\Http\Controllers\DieuHanhVanHanhController::class, 'chiPhiCuaTour']);
 });
 
 Route::group(['prefix' => 'hdv', 'middleware' => ['auth:api', 'role:HDV']], function () {
@@ -228,4 +241,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:api', 'role:ADMIN', 'a
     
     // Nhat ky he thong
     Route::get('/nhat-ky-he-thong', [\App\Http\Controllers\Admin\NhatKyHeThongController::class, 'danhSach']);
+});
+
+Route::group(['prefix' => 'quan-tri', 'middleware' => ['auth:api', 'role:ADMIN', 'audit_log']], function () {
+    Route::get('/nhat-ky-he-thong', [\App\Http\Controllers\Admin\NhatKyHeThongController::class, 'danhSach']);
+    Route::post('/dang-ky-nhan-vien', [\App\Http\Controllers\QuanTriCompatController::class, 'dangKyNhanVien']);
 });
