@@ -4,7 +4,7 @@
 
 **Đề tài:** Hệ thống quản lí vận hành du lịch số  
 **Kiến trúc:** MySQL Database · Laravel PHP Backend · React/Vite Frontend  
-**Repository:** Workspace gồm backend Laravel và 3 ứng dụng Frontend: `admin`, `hdv`, `kh`
+**Repository:** Workspace gồm Backend Laravel và 3 ứng dụng Frontend: `admin`, `hdv`, `kh`
 
 | Thành phần | Repository nguồn | Branch |
 |---|---|---|
@@ -17,13 +17,15 @@
 ## Mục lục
 
 1. [Giới thiệu đồ án](#giới-thiệu-đồ-án)
-2. [Cây thư mục](#cây-thư-mục)
+2. [Cấu trúc](#cấu-trúc)
 3. [Công nghệ và công cụ sử dụng](#công-nghệ-và-công-cụ-sử-dụng)
 4. [Yêu cầu môi trường](#yêu-cầu-môi-trường)
 5. [Hướng dẫn cài đặt và chạy dự án](#hướng-dẫn-cài-đặt-và-chạy-dự-án)
 6. [Tài khoản seed](#tài-khoản-seed)
-7. [Lỗi thường gặp](#lỗi-thường-gặp)
-8. [Thành viên nhóm](#thành-viên-nhóm)
+7. [Kiểm thử hệ thống](#kiểm-thử-hệ-thống)
+8. [Lỗi thường gặp](#lỗi-thường-gặp)
+9. [Tài liệu phát triển](#tài-liệu-phát-triển)
+10. [Thành viên nhóm](#thành-viên-nhóm)
 
 ---
 
@@ -45,34 +47,23 @@ Backend cung cấp REST API bảo vệ bằng JWT. Frontend gồm ba giao diện
 
 ---
 
-## Cây thư mục
+## Cấu trúc
 
 ```text
 Digital-Travel_ERP/
-├─ be-php/                  # Backend PHP Laravel
-│  ├─ app/
-│  │  ├─ Http/Controllers/  # REST API theo phân hệ
-│  │  ├─ Models/            # Eloquent Models
-│  │  ├─ Services/          # Business logic
-│  │  └─ Traits/            # ApiResponse format JSON
-│  ├─ database/
-│  │  └─ migrations/        # Migration khởi tạo cấu trúc dữ liệu
-│  ├─ routes/
-│  │  └─ api.php            # Định tuyến API
-│  ├─ .env.example
-│  └─ composer.json
-├─ admin/                   # Giao diện quản trị/nhân viên nội bộ
-│  ├─ src/
-│  ├─ package.json
-│  └─ vite.config.ts
-├─ hdv/                     # Giao diện hướng dẫn viên
-│  ├─ src/
-│  ├─ package.json
-│  └─ vite.config.ts
-└─ kh/                      # Giao diện khách hàng
-   ├─ src/
-   ├─ package.json
-   └─ vite.config.ts
+├── backend/                  # Backend PHP Laravel
+│ ├── app/
+│ ├── config/                 # Tệp cấu hình ứng dụng
+│ ├── database/
+│ ├── routes/                 # Cấu hình định tuyến API
+│ ├── tests/                  # Bộ kiểm thử tự động (PHPUnit)
+│ └── artisan                 # Công cụ CLI của Laravel
+├── frontend/                 # Các ứng dụng React
+│ ├── admin/                  # Giao diện quản trị/nhân viên nội bộ
+│ ├── hdv/                    # Giao diện hướng dẫn viên
+│ └── kh/                     # Giao diện khách hàng
+├── database-scripts/         # Các DB script độc lập 
+└── docs/ 
 ```
 
 ---
@@ -133,31 +124,47 @@ Khuyến nghị sử dụng **Laragon** để cài đặt trọn gói PHP, MySQL
 
 ### 1. Khởi tạo Database tự động
 
-Mở Terminal của Laragon, truy cập vào thư mục backend PHP:
-```powershell
-cd be-php
-composer install
+- Tạo Database MySQL tên `travel_erp` (utf8mb4_unicode_ci) bằng Laragon, HeidiSQL hoặc dòng lệnh.
+- Mở terminal, di chuyển vào thư mục `backend/`:
+  ```bash
+  cd backend
 ```
 
-Tạo file `.env` từ `.env.example`:
-```powershell
-copy .env.example .env
-```
-Mở `.env` và thiết lập kết nối MySQL (Mặc định Laragon là user `root`, pass rỗng):
-```properties
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=travel_erp
-DB_USERNAME=root
-DB_PASSWORD=
+- Cài đặt các gói PHP:
+  ```bash
+  composer install --ignore-platform-reqs
 ```
 
-Tạo Database MySQL (bằng công cụ HeidiSQL trong Laragon) mang tên `travel_erp`.
-Chạy migration để khởi tạo cấu trúc cơ sở dữ liệu:
-```powershell
-php artisan migrate
+- Tạo file .env từ .env.example:
+  ```bash
+  cp .env.example .env
 ```
+
+- Sửa thông tin kết nối database trong .env:
+  ```env
+  DB_CONNECTION=mysql
+  DB_HOST=127.0.0.1
+  DB_PORT=3306
+  DB_DATABASE=travel_erp
+  DB_USERNAME=root
+  DB_PASSWORD=
+```
+
+- Tạo khóa ứng dụng:
+  ```bash
+  php artisan key:generate
+```
+
+- Chạy migration để khởi tạo cấu trúc bảng:
+  ```bash
+  php artisan migrate
+```
+
+- Nạp dữ liệu mẫu:
+  ```bash
+  php artisan db:seed
+```
+
 
 ### 2. Chạy Backend
 
@@ -169,25 +176,25 @@ Backend chạy tại: `http://localhost:8000`
 
 ### 3. Cài đặt và chạy Frontend
 
-Mở terminal mới (Node.js).
+Mở các cửa sổ terminal riêng biệt cho từng ứng dụng:
 
 #### Admin
 ```powershell
-cd admin
+cd frontend/admin
 npm install
 npm run dev
 ```
 
 #### Hướng dẫn viên
 ```powershell
-cd hdv
+cd frontend/hdv
 npm install
 npm run dev
 ```
 
 #### Khách hàng
 ```powershell
-cd kh
+cd frontend/kh
 npm install
 npm run dev
 ```
@@ -196,7 +203,7 @@ npm run dev
 
 ## Tài khoản seed
 
-Mật khẩu mặc định: `password` (Tuỳ thuộc vào script dump Data hiện có)
+Mật khẩu mặc định: password (dựa trên dữ liệu seeder hiện có)
 
 | Vai trò | Username | Giao diện / phân hệ |
 |---|---|---|
@@ -220,7 +227,11 @@ Mật khẩu mặc định: `password` (Tuỳ thuộc vào script dump Data hi�
 | API trả `401 Unauthorized` | Chưa đăng nhập hoặc token hết hạn | Đăng nhập lại |
 
 ---
+Tài liệu phát triển
+- Ngữ cảnh dự án: docs/PROJECT_CONTEXT.md
+- API Contract Baseline: docs/api-contract-baseline.md
 
+---
 ## Thành viên nhóm
 
 | STT | MSSV | Họ và Tên | GitHub | Email |
