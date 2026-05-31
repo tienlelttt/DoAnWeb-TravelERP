@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Copy, Check, Eye, EyeOff, Download, Database, RefreshCw } from 'lucide-react';
+import { X, Copy, Check, Eye, EyeOff, Download, Database, RefreshCw, FileText } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { powerBiService } from '../../services/power-bi';
 import type { 
@@ -33,6 +33,7 @@ const PowerBIConnectionModal: React.FC<PowerBIConnectionModalProps> = ({ isOpen,
     dinhDang: 'EXCEL'
   });
   const [loadingDownload, setLoadingDownload] = useState(false);
+  const [loadingPdf, setLoadingPdf] = useState(false);
   const [errorDownload, setErrorDownload] = useState('');
 
   useEffect(() => {
@@ -123,6 +124,61 @@ const PowerBIConnectionModal: React.FC<PowerBIConnectionModalProps> = ({ isOpen,
       setErrorDownload('Có lỗi xảy ra khi xuất dữ liệu. Vui lòng thử lại.');
     } finally {
       setLoadingDownload(false);
+    }
+  };
+
+  const handleDownloadPdf = async () => {
+    if (!downloadReq.tuNgay || !downloadReq.denNgay) {
+      setErrorDownload('Vui lòng chọn đầy đủ thời gian (Từ ngày và Đến ngày) để xuất báo cáo PDF.');
+      return;
+    }
+    setLoadingPdf(true);
+    setErrorDownload('');
+    try {
+      const req = { 
+        tuNgay: downloadReq.tuNgay, 
+        denNgay: downloadReq.denNgay 
+      };
+      
+      const response = await powerBiService.xuatPdf(selectedKho, req);
+      
+      // Handle file download
+      const contentDisposition = response.headers['content-disposition'];
+      let filename = `${selectedKho}_Report_${Date.now()}.pdf`;
+      if (contentDisposition) {
+        const filenameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
+        if (filenameMatch && filenameMatch.length === 2) {
+          filename = filenameMatch[1];
+        }
+      }
+
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode?.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (err: any) {
+      console.error(err);
+      if (err.response?.data instanceof Blob) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const errorObj = JSON.parse(reader.result as string);
+            setErrorDownload(errorObj.message || 'Có lỗi xảy ra khi xuất báo cáo PDF.');
+          } catch (parseErr) {
+            setErrorDownload('Có lỗi xảy ra khi xuất báo cáo PDF. Vui lòng kiểm tra lại dữ liệu.');
+          }
+        };
+        reader.readAsText(err.response.data);
+      } else {
+        setErrorDownload(err.message || 'Có lỗi xảy ra khi xuất báo cáo PDF. Vui lòng thử lại.');
+      }
+    } finally {
+      setLoadingPdf(false);
     }
   };
 
@@ -316,15 +372,24 @@ const PowerBIConnectionModal: React.FC<PowerBIConnectionModalProps> = ({ isOpen,
                 </div>
               )}
 
-              <div className="pt-4 border-t border-gray-100 flex justify-end">
+              <div className="pt-4 border-t border-gray-100 flex justify-end gap-3">
+                <Button 
+                  variant="secondary" 
+                  onClick={handleDownloadPdf} 
+                  disabled={loadingPdf || loadingDownload || !selectedKho}
+                  className="flex items-center gap-2 px-6 border-red-200 text-red-700 hover:bg-red-50 hover:text-red-800"
+                >
+                  {loadingPdf ? <RefreshCw className="animate-spin" size={18} /> : <FileText size={18} />}
+                  {loadingPdf ? 'Đang tạo PDF...' : 'Xuất PDF báo cáo'}
+                </Button>
                 <Button 
                   variant="primary" 
                   onClick={handleDownload} 
-                  disabled={loadingDownload || !selectedKho}
+                  disabled={loadingDownload || loadingPdf || !selectedKho}
                   className="flex items-center gap-2 px-6"
                 >
                   {loadingDownload ? <RefreshCw className="animate-spin" size={18} /> : <Download size={18} />}
-                  {loadingDownload ? 'Đang tạo file...' : 'Xuất dữ liệu'}
+                  {loadingDownload ? 'Đang tạo file...' : 'Xuất Excel/CSV'}
                 </Button>
               </div>
             </div>

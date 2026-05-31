@@ -243,6 +243,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:api', 'role:ADMIN', 'a
     Route::get('/nhat-ky-he-thong', [\App\Http\Controllers\Admin\NhatKyHeThongController::class, 'danhSach']);
 });
 
+Route::group(['prefix' => 'admin', 'middleware' => ['auth:api', 'role:ADMIN,KETOAN']], function () {
+    Route::post('/report/pdf/{type}', [\App\Http\Controllers\Admin\ReportPdfController::class, 'exportPDF']);
+});
+
 Route::group(['prefix' => 'quan-tri', 'middleware' => ['auth:api', 'role:ADMIN', 'audit_log']], function () {
     Route::get('/nhat-ky-he-thong', [\App\Http\Controllers\Admin\NhatKyHeThongController::class, 'danhSach']);
     Route::post('/dang-ky-nhan-vien', [\App\Http\Controllers\QuanTriCompatController::class, 'dangKyNhanVien']);

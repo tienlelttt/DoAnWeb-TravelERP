@@ -82,6 +82,16 @@ Tài liệu này dùng để theo dõi toàn bộ lộ trình và tiến độ p
 - [x] Di chuyển toàn bộ file tài liệu vào `docs/` để cấu trúc thư mục gốc Monorepo sạch đẹp.
 - [x] Bảo toàn 100% nội dung code và kiểm tra trạng thái Git (`git status`) sạch sẽ, chỉ chứa hoạt động di chuyển và cấu trúc mới.
 
+## ✅ XUẤT BÁO CÁO PDF KÈM BIỂU ĐỒ (Hoàn thành 100%)
+- [x] Cài đặt `barryvdh/laravel-dompdf` cho backend Laravel.
+- [x] Xây dựng `SvgChartHelper` vẽ 4 loại biểu đồ SVG thuần PHP (cột nhóm, đường, tròn, thanh ngang).
+- [x] Phát triển `ReportPdfService`: lấy dữ liệu, giới hạn 5000 dòng, lọc Top 15 biểu đồ, render PDF.
+- [x] Phát triển `ReportPdfController`: phân quyền ADMIN/KETOAN, validate ngày, đặt tên file chuẩn.
+- [x] Thiết kế 5 Blade templates in ấn (font DejaVu Sans, thead lặp trang, page-break-inside: avoid).
+- [x] Đăng ký route API `POST /api/admin/report/pdf/{type}` bảo mật phân quyền.
+- [x] Tích hợp nút **"Xuất PDF báo cáo"** vào `PowerBIConnectionModal.tsx` với xử lý Blob và thông báo lỗi rõ ràng.
+- [x] Kiểm thử tự động: `ReportPdfTest.php` — **6 tests / 20 assertions đều pass ✅**.
+
 ---
 
 ## 🔴 RÀNG BUỘC BẮT BUỘC (MANDATORY RULES)

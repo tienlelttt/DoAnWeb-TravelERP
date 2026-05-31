@@ -40,5 +40,12 @@ export const powerBiService = {
       responseType: 'blob'
     });
     return response;
+  },
+
+  xuatPdf: async (type: string, request: { tuNgay?: string; denNgay?: string }) => {
+    const response = await api.post(`/api/admin/report/pdf/${type}`, request, {
+      responseType: 'blob'
+    });
+    return response;
   }
 };
