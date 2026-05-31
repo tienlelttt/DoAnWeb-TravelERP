@@ -43,11 +43,12 @@ class TaiKhoan extends BaseModel implements AuthenticatableContract, JWTSubject
      */
     public function getJWTCustomClaims()
     {
+        // Dùng trực tiếp cột FK vai_tro để tránh lazy-load quan hệ khi sinh token
         return [
-            'roles' => [$this->vai_tro],
-            'maVaiTro' => $this->vaiTro ? $this->vaiTro->ma_vai_tro : '',
-            'tenHienThi' => $this->vaiTro ? $this->vaiTro->ten_hien_thi : '',
-            'hoTen' => $this->ho_ten
+            'roles'      => [$this->vai_tro],
+            'maVaiTro'   => (string) ($this->vai_tro ?? ''),
+            'tenHienThi' => $this->vai_tro ?? '',
+            'hoTen'      => $this->ho_ten ?? '',
         ];
     }
 }

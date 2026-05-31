@@ -111,6 +111,22 @@ class KhachHangService
             ->paginate(15);
     }
 
+    public function layDanhSachYeuCauHoTro(string $maTaiKhoan, array $filters = [])
+    {
+        $hcs = $this->getHoChieuSo($maTaiKhoan);
+        $query = YeuCauHoTro::where("ma_khach_hang", $hcs->ma_khach_hang);
+
+        if (!empty($filters['loaiYeuCau'])) {
+            $query->where('loai_yeu_cau', $filters['loaiYeuCau']);
+        }
+
+        if (!empty($filters['trangThai'])) {
+            $query->where('trang_thai', $filters['trangThai']);
+        }
+
+        return $query->orderBy('created_at', 'desc')->paginate(15);
+    }
+
     public function taoYeuCauHoTro(string $maTaiKhoan, array $data)
     {
         $hcs = $this->getHoChieuSo($maTaiKhoan);

@@ -192,14 +192,14 @@ export default function App() {
     return (passRes?.data || []).map(mapPassenger);
   };
 
-  const hydrateTourDetails = async (tour: Tour): Promise<Tour> => {
+  const hydrateTourDetails = async (tour: Tour, skipPassengers = false): Promise<Tour> => {
     const [passengerResult, detailResult] = await Promise.allSettled([
-      loadPassengersForTour(tour.code),
+      skipPassengers ? Promise.resolve([]) : loadPassengersForTour(tour.code),
       hdvService.layLichTrinhTourThucTe(tour.code)
     ]);
     const hydratedTour = { ...tour };
 
-    if (passengerResult.status === 'fulfilled') {
+    if (passengerResult.status === 'fulfilled' && !skipPassengers) {
       hydratedTour.passengers = passengerResult.value;
       hydratedTour.guestsCount = passengerResult.value.length;
     }
@@ -273,7 +273,7 @@ export default function App() {
       const upcoming = accepted.filter((t: any) => ['CHO_KICH_HOAT', 'MO_BAN', 'SAP_DIEN_RA'].includes(t.trangThaiTour));
       const past = accepted.filter((t: any) => t.trangThaiTour === 'KET_THUC' || t.trangThaiTour === 'DA_QUYET_TOAN');
 
-      setPendingTours(await Promise.all(pending.map((t: any) => hydrateTourDetails(mapAssignmentToTour(t)))));
+      setPendingTours(await Promise.all(pending.map((t: any) => hydrateTourDetails(mapAssignmentToTour(t), true))));
       setUpcomingTours(await Promise.all(upcoming.map((t: any) => hydrateTourDetails(mapAssignmentToTour(t)))));
       setPastTours(await Promise.all(past.map((t: any) => hydrateTourDetails(mapAssignmentToTour(t)))));
 

@@ -267,6 +267,10 @@ class KinhDoanhCompatController extends Controller
             $query->where('trang_thai', $request->query('trangThai'));
         }
 
+        if ($request->query('loaiYeuCau')) {
+            $query->where('loai_yeu_cau', $request->query('loaiYeuCau'));
+        }
+
         $page = (int) $request->query('page', 0) + 1;
         $size = (int) $request->query('size', 100);
 

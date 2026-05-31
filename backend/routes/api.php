@@ -99,6 +99,15 @@ Route::group(['prefix' => 'kinh-doanh', 'middleware' => ['auth:api', 'role:KINHD
     Route::post('yeu-cau-ho-tro/{maYeuCau}/yeu-cau-khach-hang-bo-sung', [\App\Http\Controllers\KinhDoanhCompatController::class, 'yeuCauKhachHangBoSung']);
 });
 
+// Kinh doanh - Read-only routes cho KETOAN (xem đơn hàng)
+Route::group(['prefix' => 'kinh-doanh', 'middleware' => ['auth:api', 'role:KETOAN,ADMIN']], function () {
+    Route::get('dat-tour', [\App\Http\Controllers\KinhDoanhCompatController::class, 'danhSachDonDatTour']);
+    Route::get('don-dat-tour', [\App\Http\Controllers\KinhDoanhCompatController::class, 'danhSachDonDatTour']);
+    Route::get('khach-hang', [\App\Http\Controllers\KinhDoanhCompatController::class, 'timKiemKhachHang']);
+    Route::get('khach-hang/{maKhachHang}', [\App\Http\Controllers\KinhDoanhCompatController::class, 'chiTietKhachHang']);
+    Route::get('yeu-cau-ho-tro', [\App\Http\Controllers\KinhDoanhCompatController::class, 'danhSachYeuCauHoTro']);
+});
+
 Route::group(['prefix' => 'ke-toan', 'middleware' => ['auth:api', 'role:KETOAN,ADMIN']], function () {
     Route::post('hoan-tien', [\App\Http\Controllers\HoanTienController::class, 'hoanTien']);
     
@@ -244,6 +253,7 @@ Route::group(['prefix' => 'khach-hang', 'middleware' => ['auth:api', 'role:KHACH
     Route::get('/lich-su-tour', [\App\Http\Controllers\KhachHangController::class, 'lichSuTour']);
     
     // Yêu cầu hỗ trợ
+    Route::get('/yeu-cau-ho-tro', [\App\Http\Controllers\KhachHangController::class, 'layDanhSachYeuCauHoTro']);
     Route::post('/yeu-cau-ho-tro', [\App\Http\Controllers\KhachHangController::class, 'taoYeuCauHoTro']);
     Route::get('/yeu-cau-ho-tro/can-bo-sung', [\App\Http\Controllers\KhachHangController::class, 'yeuCauHoTroCanBoSung']);
     Route::put('/yeu-cau-ho-tro/{maYeuCau}/bo-sung', [\App\Http\Controllers\KhachHangController::class, 'boSungYeuCauHoTro']);

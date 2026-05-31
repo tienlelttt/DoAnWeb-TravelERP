@@ -26,12 +26,18 @@ class VanHanhService
     /**
      * Kiểm tra xem HDV có quyền tác nghiệp trên Tour thực tế này không
      */
-    private function checkQuyenHDV(string $maTourThucTe, string $maNhanVien): TourThucTe
+    private function checkQuyenHDV(string $maTourThucTe, string $maNhanVien, bool $allowPending = false): TourThucTe
     {
-        $phanCong = PhanCongTour::where('ma_tour_thuc_te', $maTourThucTe)
-            ->where('ma_nhan_vien', $maNhanVien)
-            ->where('trang_thai_chap_nhan', 'DA_DONG_Y')
-            ->first();
+        $query = PhanCongTour::where('ma_tour_thuc_te', $maTourThucTe)
+            ->where('ma_nhan_vien', $maNhanVien);
+
+        if (!$allowPending) {
+            $query->where('trang_thai_chap_nhan', 'DA_DONG_Y');
+        } else {
+            $query->whereIn('trang_thai_chap_nhan', ['DA_DONG_Y', 'CHO_PHAN_HOI']);
+        }
+
+        $phanCong = $query->first();
 
         if (!$phanCong) {
             throw AppException::forbidden("Bạn không được phân công hoặc chưa đồng ý tham gia tour này");
@@ -57,7 +63,7 @@ class VanHanhService
 
     public function layLichTrinh(string $maTourThucTe, string $maNhanVien)
     {
-        $tour = $this->checkQuyenHDV($maTourThucTe, $maNhanVien);
+        $tour = $this->checkQuyenHDV($maTourThucTe, $maNhanVien, true);
         return LichTrinhTour::where('ma_tour_mau', $tour->ma_tour_mau)
             ->orderBy('ngay_thu')
             ->get();
