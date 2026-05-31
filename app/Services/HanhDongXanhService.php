@@ -37,7 +37,7 @@ class HanhDongXanhService
     {
         return DB::transaction(function () use ($data) {
             $hdx = new HanhDongXanh();
-            // Java code: "HDX_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase()
+            // Tao ma hanh dong xanh ngan gon tu UUID.
             $hdx->MaHanhDongXanh = 'HDX_' . strtoupper(substr(Str::uuid()->toString(), 0, 8));
             $hdx->TenHanhDong = $data['tenHanhDong'];
             $hdx->DiemCong = $data['diemCong'];

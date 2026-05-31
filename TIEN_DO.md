@@ -1,21 +1,21 @@
-# TIẾN ĐỘ CHUYỂN ĐỔI BACKEND JAVA -> PHP (LARAVEL)
+# TIẾN ĐỘ PHÁT TRIỂN BACKEND PHP (LARAVEL)
 
-Tài liệu này dùng để theo dõi toàn bộ lộ trình và tiến độ đập đi xây lại Backend từ Spring Boot (Java) sang Laravel (PHP).
+Tài liệu này dùng để theo dõi toàn bộ lộ trình và tiến độ phát triển Backend Laravel cho hệ thống Digital Travel ERP.
 
 ---
 
 ## 🟢 GIAI ĐOẠN 1: KHỞI TẠO HẠ TẦNG (Hoàn thành 100%)
 - [x] Tạo project Laravel 11 (`be-php`).
 - [x] Cấu hình kết nối MySQL (`travel_erp`).
-- [x] Sinh toàn bộ 35 file Migration tự động dựa trên cấu trúc Oracle.
+- [x] Sinh toàn bộ 35 file Migration dựa trên mô hình dữ liệu nghiệp vụ.
 - [x] Sinh 35 file Eloquent Models kế thừa `BaseModel` (có relationships).
-- [x] Thiết lập `SpringBootHasher` để mật khẩu Bcrypt băm ra giống hệt Java (Cost=10).
+- [x] Thiết lập hasher Bcrypt ổn định với cost=10.
 
 ## ⚪ GIAI ĐOẠN 2: CORE API & AUTHENTICATION (Có cập nhật)
-- [x] Khởi tạo `ApiResponse` trait và `AppException` để bắt lỗi, chuẩn hóa JSON trả về khớp 100% với Spring Boot.
+- [x] Khởi tạo `ApiResponse` trait và `AppException` để bắt lỗi, chuẩn hóa JSON trả về cho frontend.
 - [x] Cấu hình Exception Handler toàn cục tại `bootstrap/app.php`.
 - [x] Cài đặt `tymon/jwt-auth` và cấu hình guard API.
-- [x] Chuyển đổi logic sinh mã tự động `MaTuDongService` (Sử dụng Transaction Lock thay thế cho Oracle LOCK TABLE).
+- [x] Hoàn thiện logic sinh mã tự động `MaTuDongService` bằng Transaction Lock.
 - [x] Viết Controller `AuthController` (Đăng ký, Đăng nhập).
 - [x] Khởi tạo Seeder bơm dữ liệu mẫu cho bảng `VAITRO`.
 - [x] Bổ sung: Khởi tạo NhanVienController cơ bản (Lấy hồ sơ nhân viên).
@@ -53,10 +53,23 @@ Tài liệu này dùng để theo dõi toàn bộ lộ trình và tiến độ �
 - [x] Kế toán - Tích hợp Power BI (Cấp credential kết nối Database, Xuất file Excel/CSV).
 - [x] Cron Jobs (Schedule hủy đơn đặt tour quá hạn, cập nhật giá động).
 
-## ⏳ Giai đoạn 7: THUẦN HÓA LARAVEL & XÓA BỎ DI SẢN JAVA (Giai đoạn cuối)
+## ⏳ Giai đoạn 7.1: ĐỒNG BỘ API CONTRACT & GIỮ NGUYÊN FRONTEND (Đang thực hiện)
+- [x] Lập baseline API contract cho frontend hiện tại.
+- [x] Bổ sung alias API Khách hàng, Thanh toán và Quản trị.
+- [x] Bổ sung nghiệp vụ Voucher khách hàng theo contract hiện tại.
+- [x] Bổ sung nghiệp vụ đăng ký nhân viên Quản trị.
+- [x] Làm mỏng `VoucherController`, chuyển logic áp voucher về Service.
+- [x] Bổ sung alias API Kinh doanh và Điều hành.
+- [x] Bổ sung API Điều hành xem đoàn, sự cố và chi phí theo tour.
+- [x] Bổ sung test contract cho các alias API.
+- [x] Chuẩn hóa README, AGENTS, CODING_GUIDELINES và comment runtime để backend PHP đọc như một hệ thống độc lập.
+- [x] Kiểm thử contract: `ApiContractCompatibilityTest` pass 4 tests / 15 assertions.
+- [x] Kiểm thử toàn bộ: `php artisan test` pass 64 tests / 258 assertions.
+
+## ⏳ Giai đoạn 7.2: CHUẨN HÓA KIẾN TRÚC LARAVEL (Chưa thực hiện)
 - [ ] Refactor toàn bộ 35 bảng Database và cột sang chuẩn `snake_case` của Laravel.
 - [ ] Cập nhật toàn bộ Eloquent Models, loại bỏ `$table` và `$primaryKey` cấu hình tay.
-- [ ] Xóa bỏ toàn bộ các bình luận, tài liệu nhắc đến "Java", "Spring Boot", "Oracle".
+- [ ] Chuẩn hóa toàn bộ bình luận, tài liệu và tên kỹ thuật theo ngữ cảnh Laravel độc lập.
 - [ ] Áp dụng `CamelCaseJsonResponse` Middleware để map JSON trả về Frontend thay vì ép tại `BaseModel`.
 - [ ] Refactor toàn bộ truy vấn `where('PascalCase')` sang `where('snake_case')` ở tất cả Controller và Service.
 
@@ -71,8 +84,8 @@ Tài liệu này dùng để theo dõi toàn bộ lộ trình và tiến độ �
    - Chú thích (Comments) và **các thông báo lỗi trả về cho Frontend (message)** bắt buộc phải là **Tiếng Việt có dấu** rõ ràng, chuẩn ngữ pháp.
    - Code phải chuẩn form, dễ đọc, cấu trúc thư mục rõ ràng.
 2. **Kiến trúc & Tương thích:**
-   - Chuyển đổi toàn diện từ Java sang PHP, **xóa sạch mọi tàn dư của Java ở Giai đoạn 7**.
-   - **JSON Response phải khớp 100% với phiên bản cũ** để Frontend React không bị lỗi.
+   - Backend Laravel phải đứng độc lập, tài liệu và code không phụ thuộc vào lịch sử công nghệ trước đó.
+   - **JSON Response phải khớp 100% với API contract đã công bố** để Frontend React không bị lỗi.
    - Chấp nhận giữ cấu trúc PascalCase ở Database tạm thời cho đến Giai đoạn 7.
 3. **Quy trình làm việc (Step-by-Step):**
    - Làm từng tính năng một, **làm tới đâu phải chạy test thử (Postman/Frontend) tới đó**.

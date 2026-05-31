@@ -61,9 +61,9 @@ class VnpayService
                 'LoaiGiaoDich' => 'THANH_TOAN',
                 'PhuongThuc' => 'VNPAY',
                 'SoTien' => $don->TongTien,
-                'MaGDNH' => 'QR_' . $don->MaDatTour, // Tương tự Java
+                'MaGDNH' => 'QR_' . $don->MaDatTour,
                 'TrangThai' => 'CHO_THANH_TOAN',
-                'NgayThanhToan' => Carbon::now(), // Theo logic của Java (Tạo giao dịch chờ)
+                'NgayThanhToan' => Carbon::now(),
             ]);
         }
 

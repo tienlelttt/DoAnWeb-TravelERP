@@ -153,7 +153,7 @@ class DanhGiaTest extends TestCase
             'MaTourThucTe'  => 'TEST_TTT_DG',
         ]);
 
-        // TrangThai hợp lệ theo Java entity: CHUA_XU_LY | CHO_BO_SUNG | CHO_GIAI_TRINH | CHO_DUYET | DA_XU_LY | TU_CHOI
+        // TrangThai hop le: CHUA_XU_LY | CHO_BO_SUNG | CHO_GIAI_TRINH | CHO_DUYET | DA_XU_LY | TU_CHOI
         // YEUCAUHOTRO: NoiDung (NOT NULL CLOB), LoaiYeuCau (NOT NULL), TrangThai (NOT NULL), MaKhachHang (FK NOT NULL)
         YeuCauHoTro::create([
             'MaYeuCauHoTro' => 'TEST_YC_DG',
@@ -161,7 +161,7 @@ class DanhGiaTest extends TestCase
             'MaKhachHang'   => 'TEST_KH_DG',
             'LoaiYeuCau'    => 'KHIEU_NAI',
             'NoiDung'       => 'Tour quá tệ',
-            'TrangThai'     => 'CHUA_XU_LY', // Đúng theo Java entity
+            'TrangThai'     => 'CHUA_XU_LY',
         ]);
 
         $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)

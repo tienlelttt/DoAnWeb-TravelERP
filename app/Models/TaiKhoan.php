@@ -31,7 +31,7 @@ class TaiKhoan extends BaseModel implements AuthenticatableContract, JWTSubject
     }
 
     /**
-     * Lấy giá trị định danh cho JWT (Tương đương getUsername() bên Java)
+     * Lấy giá trị định danh cho JWT.
      */
     public function getJWTIdentifier()
     {
@@ -39,7 +39,7 @@ class TaiKhoan extends BaseModel implements AuthenticatableContract, JWTSubject
     }
 
     /**
-     * Thêm các thông tin (claims) tuỳ chỉnh vào token giống hệt JwtUtil.java
+     * Thêm các thông tin tuỳ chỉnh vào token.
      */
     public function getJWTCustomClaims()
     {

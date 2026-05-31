@@ -8,10 +8,10 @@ Digital Travel ERP
 
 Mục tiêu:
 
-* Chuyển đổi Backend từ Java Spring Boot + Oracle sang Laravel + MySQL.
+* Phát triển Backend Digital Travel ERP trên Laravel + MySQL.
 * Giữ nguyên nghiệp vụ hệ thống.
-* Giữ nguyên API Contract.
-* Giữ nguyên cấu trúc JSON Response.
+* Giữ nguyên API Contract đã công bố.
+* Giữ nguyên cấu trúc JSON Response đang được frontend sử dụng.
 * Frontend React hoạt động mà không cần chỉnh sửa code.
 
 ---
@@ -30,10 +30,11 @@ Mục tiêu:
 
 ### BẮT BUỘC
 
-* Giữ tương thích 100% với hệ thống Java.
+* Giữ tương thích 100% với API Contract, schema dữ liệu và hành vi nghiệp vụ đã công bố.
 * Ưu tiên tính đúng đắn hơn tốc độ phát triển.
 * Mọi thay đổi phải có test.
 * Mọi thay đổi phải cập nhật TIEN_DO.md.
+* Không để code, comment runtime hoặc cấu hình public phụ thuộc vào backend khác.
 
 ---
 
@@ -151,7 +152,7 @@ Không sử dụng message tiếng Anh.
 
 ## 8. Response JSON
 
-Bắt buộc giống Spring Boot.
+Bắt buộc giữ đúng hợp đồng API đã công bố.
 
 Không được tự ý thay đổi:
 
@@ -160,7 +161,7 @@ Không được tự ý thay đổi:
 * pagination format
 * error format
 
-Mọi API mới phải kiểm tra tương thích với API Java.
+Mọi API mới phải kiểm tra tương thích với frontend và tài liệu hợp đồng API.
 
 ---
 

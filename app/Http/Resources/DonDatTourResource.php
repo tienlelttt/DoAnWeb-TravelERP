@@ -51,8 +51,8 @@ class DonDatTourResource extends JsonResource
             }
         }
 
-        // ── 2. Hướng dẫn viên (secondary query – giống Java toResponse) ───────
-        // Wrap trong try/catch để không làm vỡ response nếu cột chưa migrate
+        // ── 2. Hướng dẫn viên ───────────────────────────────────────────────
+        // Wrap trong try/catch để không làm vỡ response nếu bảng phụ chưa sẵn sàng
         $phanCong = null;
         $nangLuc  = null;
         try {
@@ -63,7 +63,7 @@ class DonDatTourResource extends JsonResource
                 ? NangLucNhanVien::where('MaNhanVien', $phanCong->MaNhanVien)->first()
                 : null;
         } catch (\Throwable $e) {
-            // Bảng chưa migrate hoặc cột chưa tồn tại → trả null, không crash
+            // Bảng phụ hoặc cột chưa tồn tại thì trả null, không crash
         }
 
         // ── 3. Khiếu nại ─────────────────────────────────────────────────────
@@ -97,7 +97,7 @@ class DonDatTourResource extends JsonResource
         } catch (\Throwable $e) {}
 
         // ── 6. Parse chuỗi Hành Động Xanh ────────────────────────────────────
-        // Java: tinhDiemXanhDuKien(don.getHanhDongXanh())
+        // Tính điểm xanh dự kiến từ chuỗi hành động xanh đã lưu.
         $hdxParsed    = [];
         $diemXanhDuKien = 0;
         if (!empty($this->HanhDongXanh)) {
@@ -115,7 +115,7 @@ class DonDatTourResource extends JsonResource
             }
         }
 
-        // ── 7. Map response (giống DonDatTourResponse.builder() Java) ─────────
+        // ── 7. Map response theo contract frontend ───────────────────────────
         return [
             'maDatTour'               => $this->MaDatTour,
             'maTourThucTe'            => $ttt->MaTourThucTe,
@@ -162,7 +162,7 @@ class DonDatTourResource extends JsonResource
             'daKhieuNai'              => $trangThaiKhieuNai !== null,
             'trangThaiKhieuNai'       => $trangThaiKhieuNai,
 
-            // ── Chi tiết hành khách (giống Java toChiTietResponse) ────────────
+            // ── Chi tiết hành khách ──────────────────────────────────────────
             'chiTietKhach'   => $this->chiTietDatTours->map(function ($ct) use ($ngayTinhTuoi) {
                 // Ưu tiên NguoiDongHanh, sau mới dùng KhachHang
                 $ndh     = $ct->nguoiDongHanh;
@@ -175,7 +175,7 @@ class DonDatTourResource extends JsonResource
                     : null;
                 $nhomTuoi = ($tuoi !== null && $tuoi <= 11) ? 'TRE_EM' : 'NGUOI_LON';
 
-                // ghiChuYTe: Java gopGhiChuYTeVaDiUng
+                // Gộp ghi chú y tế và dị ứng vào một chuỗi hiển thị.
                 $ghiChuYTe = null;
                 if ($kh) {
                     $parts = [];
@@ -209,7 +209,7 @@ class DonDatTourResource extends JsonResource
                 ];
             }),
 
-            // ── Chi tiết dịch vụ (giống Java toDichVuResponse) ───────────────
+            // ── Chi tiết dịch vụ ─────────────────────────────────────────────
             'chiTietDichVu'  => $this->chiTietDichVus->map(function ($cv) {
                 return [
                     'maChiTietDichVu' => $cv->MaChiTietDichVu,

@@ -32,12 +32,12 @@ class DatTourRequest extends FormRequest
             'danhSachDichVu.*.maDichVuThem' => 'required|string',
             'danhSachDichVu.*.soLuong' => 'required|integer|min:1',
 
-            // Hành động xanh (Mới)
+            // Hành động xanh chi tiết
             'danhSachHanhDongXanhChiTiet' => 'nullable|array',
             'danhSachHanhDongXanhChiTiet.*.maHanhDongXanh' => 'required|string',
             'danhSachHanhDongXanhChiTiet.*.soLuong' => 'nullable|integer|min:1',
 
-            // Hành động xanh (Legacy)
+            // Hành động xanh dạng rút gọn
             'danhSachHanhDongXanh' => 'nullable|array',
             'danhSachHanhDongXanh.*' => 'string',
         ];

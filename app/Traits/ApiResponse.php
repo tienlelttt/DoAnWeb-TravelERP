@@ -7,7 +7,7 @@ use Illuminate\Http\JsonResponse;
 trait ApiResponse
 {
     /**
-     * Trả về định dạng JSON chuẩn của hệ thống (Khớp hoàn toàn với Spring Boot).
+     * Trả về định dạng JSON chuẩn của hệ thống.
      */
     protected function formatResponse(int $status, bool $success, string $message, $data = null, $error = null): JsonResponse
     {
@@ -32,7 +32,7 @@ trait ApiResponse
 
     public function noContent(string $message = "Thành công"): JsonResponse
     {
-        // Spring Boot ResponseEntity.noContent() thường ko có body, nhưng theo AuthController cũ thì nó trả về ApiResponse.noContent(...) status 200
+        // Một số màn hình frontend vẫn kỳ vọng response 200 có body cho thao tác không trả dữ liệu.
         return $this->formatResponse(200, true, $message);
     }
 

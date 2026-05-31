@@ -12,8 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Service xử lý logic kết xuất dữ liệu cho Power BI
- * Đảm bảo tương thích hoàn toàn với hệ thống Java cũ.
+ * Service xử lý logic kết xuất dữ liệu cho Power BI.
  */
 class PowerBiService
 {

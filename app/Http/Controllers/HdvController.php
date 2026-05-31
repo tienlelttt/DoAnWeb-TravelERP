@@ -35,9 +35,6 @@ class HdvController extends Controller
         return $hdv->MaNhanVien;
     }
 
-    // ----------------------------------------------------
-    // API CŨ TỪ TASK 5.1
-    // ----------------------------------------------------
     public function traLoiPhanCong(string $maPhanCong, TraLoiPhanCongRequest $request): JsonResponse
     {
         $maHdv = $this->getHdvId();
@@ -46,10 +43,6 @@ class HdvController extends Controller
         
         return $this->successResponse($phanCong, "Đã phản hồi yêu cầu phân công");
     }
-
-    // ----------------------------------------------------
-    // API MỚI TỪ TASK 5.2 (Ánh xạ từ VanHanhController.java)
-    // ----------------------------------------------------
 
     public function lichTrinhTour(string $maTour): JsonResponse
     {

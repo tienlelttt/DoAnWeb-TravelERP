@@ -183,7 +183,7 @@ class PhanCongTourService
                 throw AppException::notFound("Không tìm thấy thông tin phân công");
             }
             
-            // Xoá hoặc đánh dấu HUY tuỳ theo DB (ta dùng delete cho sạch theo Java code thường làm)
+            // Xoa phan cong de giu du lieu van hanh gon gang.
             $phanCong->delete();
             return true;
         });

@@ -1,16 +1,13 @@
 <p align="center"><img width="454" height="126" alt="image" src="https://github.com/user-attachments/assets/2036c003-62d1-42f1-9817-6cca86de0fc8" /> </p>
 
-# Digital Travel ERP (Phiên bản PHP/Laravel)
+# Digital Travel ERP Backend
 
 **Đề tài:** Hệ thống quản lí vận hành du lịch số  
 **Kiến trúc:** MySQL Database · Laravel PHP Backend · React/Vite Frontend  
-**Repository:** Monorepo gồm `be-php` (Backend) và 3 ứng dụng Frontend: `admin`, `hdv`, `kh`
-
-**Nguồn source tích hợp (Phiên bản Gốc):**
+**Repository:** Workspace gồm backend Laravel và 3 ứng dụng Frontend: `admin`, `hdv`, `kh`
 
 | Thành phần | Repository nguồn | Branch |
 |---|---|---|
-| Backend (Java) | [Yuu2006/Do-An-TravelERP](https://github.com/Yuu2006/Do-An-TravelERP) | `main` |
 | Frontend Admin | [ThorBietBay001/Frontend-Digital-Travel-ERP](https://github.com/ThorBietBay001/Frontend-Digital-Travel-ERP) | `main` |
 | Frontend HDV | [ThorBietBay001/Frontend-Digital-Travel-ERP](https://github.com/ThorBietBay001/Frontend-Digital-Travel-ERP) | `ui-ux/hdv` |
 | Frontend Khách hàng | [ThorBietBay001/Frontend-Digital-Travel-ERP](https://github.com/ThorBietBay001/Frontend-Digital-Travel-ERP) | `ui-ux/KH` |
@@ -52,19 +49,18 @@ Backend cung cấp REST API bảo vệ bằng JWT. Frontend gồm ba giao diện
 
 ```text
 Digital-Travel_ERP/
-├─ be-php/                  # Backend PHP Laravel (Mới)
+├─ be-php/                  # Backend PHP Laravel
 │  ├─ app/
 │  │  ├─ Http/Controllers/  # REST API theo phân hệ
-│  │  ├─ Models/            # Eloquent Models mapping MySQL
+│  │  ├─ Models/            # Eloquent Models
 │  │  ├─ Services/          # Business logic
 │  │  └─ Traits/            # ApiResponse format JSON
 │  ├─ database/
-│  │  └─ migrations/        # File tạo 35 bảng tự động
+│  │  └─ migrations/        # Migration khởi tạo cấu trúc dữ liệu
 │  ├─ routes/
 │  │  └─ api.php            # Định tuyến API
 │  ├─ .env.example
 │  └─ composer.json
-├─ be/                      # Backend Java Spring Boot (Cũ)
 ├─ admin/                   # Giao diện quản trị/nhân viên nội bộ
 │  ├─ src/
 │  ├─ package.json
@@ -158,7 +154,7 @@ DB_PASSWORD=
 ```
 
 Tạo Database MySQL (bằng công cụ HeidiSQL trong Laragon) mang tên `travel_erp`.
-Chạy lệnh Migration để tự động sinh 35 bảng CSDL y hệt Oracle cũ:
+Chạy migration để khởi tạo cấu trúc cơ sở dữ liệu:
 ```powershell
 php artisan migrate
 ```
