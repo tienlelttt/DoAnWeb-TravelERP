@@ -27,7 +27,7 @@ class VoucherAdminResource extends JsonResource
             'loaiUuDai' => $this->LoaiUuDai,
             'giaTriGiam' => (float) $this->GiaTriGiam,
             'mucGiamToiDa' => $this->MucGiamToiDa ? (float) $this->MucGiamToiDa : null,
-            'diemCanDoi' => 0, // Dành cho KH nếu có cơ chế đổi điểm
+            'diemCanDoi' => $this->tinhDiemCanDoi(),
             'dieuKienApDung' => $this->DieuKienApDung,
             'soLuotPhatHanh' => (int) $this->SoLuotPhatHanh,
             'soLuotDaDung' => (int) $this->SoLuotDaDung,
@@ -36,5 +36,18 @@ class VoucherAdminResource extends JsonResource
             'ngayHetHan' => $this->NgayHetHan,
             'trangThai' => $trangThai
         ];
+    }
+
+    private function tinhDiemCanDoi(): int
+    {
+        if (strtoupper((string) $this->LoaiUuDai) === 'SO_TIEN') {
+            return (int) ceil((float) $this->GiaTriGiam);
+        }
+
+        if ($this->MucGiamToiDa !== null) {
+            return (int) ceil(((float) $this->MucGiamToiDa * (float) $this->GiaTriGiam * 2) / 100);
+        }
+
+        return (int) ceil((float) $this->GiaTriGiam * 50);
     }
 }

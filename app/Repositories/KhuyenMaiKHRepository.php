@@ -48,7 +48,7 @@ class KhuyenMaiKHRepository
      */
     public function danhSachVoucherCuaKhach(string $maKhachHang, int $perPage = 10)
     {
-        return KhuyenMaiKh::with('voucher')
+        return KhuyenMaiKh::with(['voucher', 'khachHang.taiKhoan'])
             ->where('MaKhachHang', $maKhachHang)
             ->paginate($perPage);
     }

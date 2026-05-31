@@ -6,10 +6,14 @@ use App\Models\Voucher;
 use App\Models\DatTourUuDai;
 use App\Models\DonDatTour;
 use App\Models\HoChieuSo;
+use App\Models\KhuyenMaiKh;
+use App\Models\NhatKyDoiDiem;
 use App\Exceptions\AppException;
 use App\Repositories\VoucherRepository;
 use App\Repositories\KhuyenMaiKHRepository;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class VoucherService
 {
@@ -128,6 +132,58 @@ class VoucherService
         return $tienGiam;
     }
 
+    public function apVoucherTheoContract(string $maTaiKhoan, array $data): Voucher
+    {
+        return DB::transaction(function () use ($maTaiKhoan, $data) {
+            $donDatTour = $this->timDonDatTourCuaKhach($maTaiKhoan, $data['maDatTour']);
+
+            $tienGiam = $this->apDungVoucher($data['maVoucher'], $donDatTour, (float) $donDatTour->TongTien);
+            $donDatTour->TongTien = (float) $donDatTour->TongTien - $tienGiam;
+            $donDatTour->save();
+
+            return Voucher::where('MaVoucher', $data['maVoucher'])
+                ->orWhere('MaCode', $data['maVoucher'])
+                ->firstOrFail();
+        });
+    }
+
+    public function apDungVoucherChoDon(string $maTaiKhoan, array $data): DonDatTour
+    {
+        $donDatTour = DB::transaction(function () use ($maTaiKhoan, $data) {
+            $don = $this->timDonDatTourCuaKhach($maTaiKhoan, $data['maDatTour']);
+            $tienGiam = $this->apDungVoucher($data['maVoucher'], $don, (float) $don->TongTien);
+
+            $don->TongTien = (float) $don->TongTien - $tienGiam;
+            $don->save();
+
+            return $don;
+        });
+
+        return $donDatTour->load([
+            'tourThucTe.tourMau',
+            'khachHang.taiKhoan',
+            'chiTietDatTours.khachHang.taiKhoan',
+            'chiTietDatTours.nguoiDongHanh',
+            'chiTietDichVus.dichVuThem',
+            'datTourUuDai.voucher',
+        ]);
+    }
+
+    private function timDonDatTourCuaKhach(string $maTaiKhoan, string $maDatTour): DonDatTour
+    {
+        $donDatTour = DonDatTour::where('MaDatTour', $maDatTour)->first();
+        if (!$donDatTour) {
+            throw AppException::notFound("Không tìm thấy đơn đặt tour: " . $maDatTour);
+        }
+
+        $khachHang = HoChieuSo::where('MaTaiKhoan', $maTaiKhoan)->first();
+        if (!$khachHang || $donDatTour->MaKhachHang !== $khachHang->MaKhachHang) {
+            throw AppException::forbidden("Bạn không có quyền áp voucher cho đơn này");
+        }
+
+        return $donDatTour;
+    }
+
     /**
      * Lấy danh sách voucher trong ví của khách hàng
      *
@@ -143,6 +199,97 @@ class VoucherService
         }
 
         return $this->khuyenMaiKHRepository->danhSachVoucherCuaKhach($khachHang->MaKhachHang, $perPage);
+    }
+
+    public function danhSachCoTheDoi(int $perPage = 20)
+    {
+        $now = Carbon::now();
+
+        return Voucher::where('TrangThai', 'SAN_SANG')
+            ->where('NgayHieuLuc', '<=', $now)
+            ->where('NgayHetHan', '>=', $now)
+            ->orderBy('NgayHetHan', 'asc')
+            ->paginate($perPage);
+    }
+
+    public function doiDiem(string $maTaiKhoan, string $maVoucher): KhuyenMaiKh
+    {
+        return DB::transaction(function () use ($maTaiKhoan, $maVoucher) {
+            $khachHang = HoChieuSo::where('MaTaiKhoan', $maTaiKhoan)->lockForUpdate()->first();
+            if (!$khachHang) {
+                throw AppException::notFound("Không tìm thấy hồ sơ khách hàng");
+            }
+
+            $voucher = Voucher::where('MaVoucher', $maVoucher)->lockForUpdate()->first();
+            if (!$voucher) {
+                throw AppException::notFound("Không tìm thấy voucher: " . $maVoucher);
+            }
+
+            if ($voucher->TrangThai !== 'SAN_SANG') {
+                throw AppException::badRequest("Voucher không sẵn sàng để đổi điểm");
+            }
+
+            $now = Carbon::now();
+            if ($voucher->NgayHieuLuc && $now->lt(Carbon::parse($voucher->NgayHieuLuc))) {
+                throw AppException::badRequest("Voucher chưa đến thời gian hiệu lực");
+            }
+
+            if ($voucher->NgayHetHan && $now->gt(Carbon::parse($voucher->NgayHetHan))) {
+                throw AppException::badRequest("Voucher đã hết hạn");
+            }
+
+            if ((int) $voucher->SoLuotDaDung >= (int) $voucher->SoLuotPhatHanh) {
+                throw AppException::badRequest("Voucher đã hết lượt sử dụng");
+            }
+
+            $daCoTrongVi = KhuyenMaiKh::where('MaKhachHang', $khachHang->MaKhachHang)
+                ->where('MaVoucher', $voucher->MaVoucher)
+                ->where('TrangThai', 'CO_HIEU_LUC')
+                ->exists();
+
+            if ($daCoTrongVi) {
+                throw AppException::badRequest("Khách hàng đã sở hữu voucher này");
+            }
+
+            $diemCanDoi = $this->tinhDiemCanDoi($voucher);
+            if ((int) $khachHang->DiemXanh < $diemCanDoi) {
+                throw AppException::badRequest("Không đủ điểm xanh. Cần: {$diemCanDoi}, Hiện có: {$khachHang->DiemXanh}");
+            }
+
+            $khachHang->DiemXanh = (int) $khachHang->DiemXanh - $diemCanDoi;
+            $khachHang->save();
+
+            $khuyenMaiKh = KhuyenMaiKh::create([
+                'MaKhachHang' => $khachHang->MaKhachHang,
+                'MaVoucher' => $voucher->MaVoucher,
+                'NgayHetHan' => $voucher->NgayHetHan,
+                'NgayNhan' => $now,
+                'TrangThai' => 'CO_HIEU_LUC',
+            ]);
+
+            NhatKyDoiDiem::create([
+                'MaNhatKyDoiDiem' => 'NKDD_' . strtoupper(substr(Str::uuid()->toString(), 0, 8)),
+                'MaKhachHang' => $khachHang->MaKhachHang,
+                'MaVoucher' => $voucher->MaVoucher,
+                'DiemQuyDoi' => $diemCanDoi,
+                'NgayQuyDoi' => $now,
+            ]);
+
+            return $khuyenMaiKh->load(['voucher', 'khachHang.taiKhoan']);
+        });
+    }
+
+    public function tinhDiemCanDoi(Voucher $voucher): int
+    {
+        if (strtoupper((string) $voucher->LoaiUuDai) === 'SO_TIEN') {
+            return (int) ceil((float) $voucher->GiaTriGiam);
+        }
+
+        if ($voucher->MucGiamToiDa !== null) {
+            return (int) ceil(((float) $voucher->MucGiamToiDa * (float) $voucher->GiaTriGiam * 2) / 100);
+        }
+
+        return (int) ceil((float) $voucher->GiaTriGiam * 50);
     }
 
     public function danhSachAdmin($perPage = 10)
