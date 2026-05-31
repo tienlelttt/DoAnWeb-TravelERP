@@ -41,10 +41,17 @@ Tài liệu này dùng để theo dõi toàn bộ lộ trình và tiến độ �
 - [x] API cho App HDV (Xem lịch, điểm danh, báo cáo chi phí).
 - [x] Quản lý duyệt chi phí Tour.
 
-## ⏳ Giai đoạn 6: ADMIN & BÁO CÁO (Chưa bắt đầu)
-- [ ] Quản lý người dùng, phân quyền RBAC.
-- [ ] API Thống kê doanh thu, số lượng khách (Dashboard).
-- [ ] Ghi nhật ký hệ thống (Audit Logs).
+## 🟢 Giai đoạn 6: ADMIN & BÁO CÁO (Hoàn thành 100%)
+- [x] Quản lý người dùng, phân quyền RBAC.
+- [x] API Thống kê doanh thu, số lượng khách (Dashboard).
+- [x] Ghi nhật ký hệ thống (Audit Logs).
+
+## ✅ Giai đoạn 6.5: BỔ SUNG NGHIỆP VỤ RÒ RỈ (Đã hoàn thành)
+- [x] Kế toán - Quyết toán Tour (Tính toán, chốt sổ, yêu cầu bổ sung chứng từ).
+- [x] Kế toán - Quản lý Giao dịch hoàn tiền (Duyệt/Từ chối hoàn tiền).
+- [x] Kinh doanh/Admin - Quản lý Voucher (Tạo mới, vô hiệu hóa, phân bổ cho khách hàng).
+- [x] Kế toán - Tích hợp Power BI (Cấp credential kết nối Database, Xuất file Excel/CSV).
+- [x] Cron Jobs (Schedule hủy đơn đặt tour quá hạn, cập nhật giá động).
 
 ## ⏳ Giai đoạn 7: THUẦN HÓA LARAVEL & XÓA BỎ DI SẢN JAVA (Giai đoạn cuối)
 - [ ] Refactor toàn bộ 35 bảng Database và cột sang chuẩn `snake_case` của Laravel.
