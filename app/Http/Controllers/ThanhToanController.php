@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ThanhToanMockRequest;
 use App\Http\Requests\BaoChuyenKhoanRequest;
+use App\Http\Requests\KhoiTaoThanhToanRequest;
+use App\Models\GiaoDich;
 use App\Services\ThanhToanService;
 use App\Http\Resources\DonDatTourResource;
 use App\Http\Resources\GiaoDichResource;
@@ -45,6 +47,38 @@ class ThanhToanController extends Controller
      * @param BaoChuyenKhoanRequest $request
      * @return JsonResponse
      */
+    public function khoiTaoThanhToan(KhoiTaoThanhToanRequest $request): JsonResponse
+    {
+        $user = auth()->user();
+        $data = $request->validated();
+        $maDatTour = $data['maDonDatTour'] ?? $data['maDatTour'];
+        $phuongThuc = strtoupper($data['phuongThuc'] ?? 'VNPAY');
+        $mock = (bool) ($data['mock'] ?? false);
+
+        if ($mock || $phuongThuc === 'MOCK') {
+            $donDatTour = $this->thanhToanService->thanhToanMock($maDatTour, $user->MaTaiKhoan);
+            $giaoDich = GiaoDich::where('MaDatTour', $donDatTour->MaDatTour)
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+            return $this->successResponse(
+                $this->thanhToanResponse($giaoDich, null, 'Thanh toán mock thành công'),
+                'Khởi tạo thanh toán thành công'
+            );
+        }
+
+        $payUrl = $this->vnpayService->taoUrlThanhToan($maDatTour, $user->MaTaiKhoan, $request->ip());
+        $giaoDich = GiaoDich::where('MaDatTour', $maDatTour)
+            ->where('TrangThai', 'CHO_THANH_TOAN')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        return $this->successResponse(
+            $this->thanhToanResponse($giaoDich, $payUrl, 'Đã khởi tạo giao dịch thanh toán'),
+            'Khởi tạo thanh toán thành công'
+        );
+    }
+
     public function baoChuyenKhoan(BaoChuyenKhoanRequest $request): JsonResponse
     {
         $user = auth()->user();
@@ -56,6 +90,44 @@ class ThanhToanController extends Controller
     /**
      * Tạo URL thanh toán VNPAY
      */
+    public function xacNhanDaChuyenKhoan(string $maDatTour): JsonResponse
+    {
+        $user = auth()->user();
+        $giaoDich = $this->thanhToanService->baoChuyenKhoan($maDatTour, 'KHACH_XAC_NHAN_' . now()->format('YmdHis'), $user->MaTaiKhoan);
+
+        return $this->successResponse(
+            $this->thanhToanResponse($giaoDich, null, 'Đã ghi nhận khách hàng chuyển khoản, chờ xác nhận'),
+            'Đã ghi nhận khách hàng chuyển khoản, chờ xác nhận'
+        );
+    }
+
+    public function hetHanThanhToanQr(string $maDatTour): JsonResponse
+    {
+        $giaoDich = GiaoDich::where('MaDatTour', $maDatTour)
+            ->where('TrangThai', 'CHO_THANH_TOAN')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        if ($giaoDich) {
+            $giaoDich->TrangThai = 'THAT_BAI';
+            $giaoDich->save();
+        }
+
+        return $this->successResponse(null, 'Mã QR đã hết hạn, đơn đã hết hạn giữ chỗ');
+    }
+
+    public function ketQua(string $maDatTour): JsonResponse
+    {
+        $giaoDich = GiaoDich::where('MaDatTour', $maDatTour)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        return $this->successResponse(
+            $this->thanhToanResponse($giaoDich, null, $giaoDich ? 'Lấy kết quả thanh toán thành công' : 'Chưa có giao dịch thanh toán'),
+            'Lấy kết quả thanh toán thành công'
+        );
+    }
+
     public function taoThanhToanVnpay(Request $request): \Illuminate\Http\JsonResponse
     {
         $request->validate([
@@ -109,5 +181,18 @@ class ThanhToanController extends Controller
                 'Message' => 'Unknown Error'
             ]);
         }
+    }
+    private function thanhToanResponse(?GiaoDich $giaoDich, ?string $payUrl, string $thongBao): array
+    {
+        return [
+            'maGiaoDich' => $giaoDich?->MaGiaoDich,
+            'maDatTour' => $giaoDich?->MaDatTour,
+            'trangThai' => $giaoDich?->TrangThai ?? 'CHO_THANH_TOAN',
+            'phuongThuc' => $giaoDich?->PhuongThuc,
+            'soTien' => $giaoDich ? (float) $giaoDich->SoTien : null,
+            'ngayThanhToan' => $giaoDich?->NgayThanhToan,
+            'payUrl' => $payUrl,
+            'thongBao' => $thongBao,
+        ];
     }
 }
