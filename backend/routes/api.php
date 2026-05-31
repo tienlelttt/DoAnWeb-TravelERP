@@ -189,6 +189,9 @@ Route::prefix('dieu-hanh')->group(function () {
         Route::get('/tour-can-phan-cong', [\App\Http\Controllers\DieuHanhController::class, 'tourCanPhanCong']);
         Route::get('/hdv-kha-dung', [\App\Http\Controllers\DieuHanhController::class, 'hdvKhaDung']);
         Route::delete('/phan-cong/{id}', [\App\Http\Controllers\DieuHanhController::class, 'huyPhanCong']);
+        Route::get('/nhan-vien/{maNhanVien}/nang-luc', [\App\Http\Controllers\DieuHanhController::class, 'layNangLucNhanVien']);
+        Route::put('/nhan-vien/{maNhanVien}/nang-luc', [\App\Http\Controllers\DieuHanhController::class, 'capNhatNangLucNhanVien']);
+        Route::get('/nhan-vien/{maNhanVien}/lich-cong-tac', [\App\Http\Controllers\DieuHanhController::class, 'layLichCongTacNhanVien']);
         Route::get('/tour/{maTour}/doan', [\App\Http\Controllers\DieuHanhVanHanhController::class, 'danhSachDoan']);
         Route::get('/tour/{maTour}/su-co', [\App\Http\Controllers\DieuHanhVanHanhController::class, 'danhSachSuCo']);
         Route::get('/tour/{maTour}/chi-phi', [\App\Http\Controllers\DieuHanhVanHanhController::class, 'chiPhiCuaTour']);
@@ -303,4 +306,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:api', 'role:ADMIN,KETO
 Route::group(['prefix' => 'quan-tri', 'middleware' => ['auth:api', 'role:ADMIN', 'audit_log']], function () {
     Route::get('/nhat-ky-he-thong', [\App\Http\Controllers\Admin\NhatKyHeThongController::class, 'danhSach']);
     Route::post('/dang-ky-nhan-vien', [\App\Http\Controllers\QuanTriCompatController::class, 'dangKyNhanVien']);
+    
+    // Compatibility routes for Staff Management (accountsService)
+    Route::get('/nhan-vien', [\App\Http\Controllers\QuanTriCompatController::class, 'danhSachNhanVien']);
+    Route::get('/nhan-vien/{nhanVien}', [\App\Http\Controllers\QuanTriCompatController::class, 'chiTietNhanVien']);
+    Route::put('/nhan-vien/{nhanVien}/vai-tro', [\App\Http\Controllers\QuanTriCompatController::class, 'ganVaiTro']);
+    Route::put('/nhan-vien/{nhanVien}/mo-khoa', [\App\Http\Controllers\QuanTriCompatController::class, 'moKhoaTaiKhoan']);
+    Route::put('/nhan-vien/{nhanVien}/khoa', [\App\Http\Controllers\QuanTriCompatController::class, 'khoaTaiKhoan']);
 });

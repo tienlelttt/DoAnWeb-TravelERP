@@ -172,4 +172,61 @@ class PhanCongTourTest extends TestCase
             "trang_thai" => "MO_BAN"
         ]);
     }
+
+    public function test_dieu_hanh_lay_nang_luc_nhan_vien()
+    {
+        $token = JWTAuth::fromUser($this->dieuHanhTK);
+
+        // 1. Lấy năng lực khi chưa có -> trả về null
+        $response = $this->getJson("/api/dieu-hanh/nhan-vien/NV_HDV_001/nang-luc", ["Authorization" => "Bearer $token"]);
+        $response->assertStatus(200)
+                 ->assertJsonPath("data", null);
+
+        // 2. Cập nhật năng lực
+        $responseUpdate = $this->putJson("/api/dieu-hanh/nhan-vien/NV_HDV_001/nang-luc", [
+            "ngonNgu" => "Tiếng Anh, Tiếng Pháp",
+            "chungChi" => "HDV Quốc Tế",
+            "chuyenMon" => "Leo núi"
+        ], ["Authorization" => "Bearer $token"]);
+
+        $responseUpdate->assertStatus(200)
+                       ->assertJsonPath("data.ngonNgu", "Tiếng Anh, Tiếng Pháp");
+
+        // 3. Lấy lại năng lực -> trả về data vừa tạo
+        $responseGet = $this->getJson("/api/dieu-hanh/nhan-vien/NV_HDV_001/nang-luc", ["Authorization" => "Bearer $token"]);
+        $responseGet->assertStatus(200)
+                    ->assertJsonPath("data.ngonNgu", "Tiếng Anh, Tiếng Pháp")
+                    ->assertJsonPath("data.chungChi", "HDV Quốc Tế")
+                    ->assertJsonPath("data.chuyenMon", "Leo núi");
+    }
+
+    public function test_dieu_hanh_lay_lich_cong_tac_nhan_vien()
+    {
+        $token = JWTAuth::fromUser($this->dieuHanhTK);
+
+        // Tạo một phân công
+        $tourThucTe = TourThucTe::create([
+            "ma_tour_thuc_te" => "TTT_001",
+            "ma_tour_mau" => "TM_001",
+            "ngay_khoi_hanh" => Carbon::now()->addDays(10),
+            "gia_hien_hanh" => 1200000,
+            "so_khach_toi_da" => 20,
+            "so_khach_toi_thieu" => 10,
+            "cho_con_lai" => 20,
+            "trang_thai" => "CHO_KICH_HOAT"
+        ]);
+
+        PhanCongTour::create([
+            "ma_phan_cong_tour" => "PCT_001",
+            "ma_tour_thuc_te" => "TTT_001",
+            "ma_nhan_vien" => "NV_HDV_001",
+            "ngay_phan_cong" => Carbon::now(),
+            "trang_thai_chap_nhan" => "CHO_PHAN_HOI"
+        ]);
+
+        $response = $this->getJson("/api/dieu-hanh/nhan-vien/NV_HDV_001/lich-cong-tac", ["Authorization" => "Bearer $token"]);
+        $response->assertStatus(200)
+                 ->assertJsonCount(1, "data")
+                 ->assertJsonPath("data.0.maPhanCong", "PCT_001");
+    }
 }

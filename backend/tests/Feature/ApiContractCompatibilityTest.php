@@ -75,6 +75,11 @@ class ApiContractCompatibilityTest extends TestCase
     {
         $this->getJson('/api/quan-tri/nhat-ky-he-thong')->assertStatus(401);
         $this->postJson('/api/quan-tri/dang-ky-nhan-vien', [])->assertStatus(401);
+        $this->getJson('/api/quan-tri/nhan-vien')->assertStatus(401);
+        $this->getJson('/api/quan-tri/nhan-vien/NV001')->assertStatus(401);
+        $this->putJson('/api/quan-tri/nhan-vien/NV001/vai-tro', [])->assertStatus(401);
+        $this->putJson('/api/quan-tri/nhan-vien/NV001/mo-khoa', [])->assertStatus(401);
+        $this->putJson('/api/quan-tri/nhan-vien/NV001/khoa', [])->assertStatus(401);
     }
 
     public function test_operation_alias_routes_are_registered(): void

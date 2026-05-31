@@ -13,4 +13,9 @@ class NhanVien extends BaseModel
     public function taiKhoan() {
         return $this->belongsTo(TaiKhoan::class, 'ma_tai_khoan', 'ma_tai_khoan'); 
     }
+
+    public function getRouteKeyName()
+    {
+        return 'ma_nhan_vien';
+    }
 }
