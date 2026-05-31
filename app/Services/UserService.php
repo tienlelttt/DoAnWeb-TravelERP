@@ -3,6 +3,9 @@
 namespace App\Services;
 
 use App\Models\TaiKhoan;
+use App\Models\NhanVien;
+use App\Exceptions\AppException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
@@ -51,6 +54,39 @@ class UserService
         ];
 
         return TaiKhoan::create($taiKhoanData);
+    }
+
+    public function taoNhanVienQuanTri(array $data): TaiKhoan
+    {
+        return DB::transaction(function () use ($data) {
+            $maVaiTro = strtoupper($data['maVaiTro'] ?? $data['vaiTro']);
+            $vaiTroNhanVien = ['ADMIN', 'SANPHAM', 'KINHDOANH', 'DIEUHANH', 'KETOAN', 'HDV'];
+
+            if (!in_array($maVaiTro, $vaiTroNhanVien, true)) {
+                throw AppException::badRequest('Vai trò không hợp lệ cho tài khoản nhân viên');
+            }
+
+            $taiKhoan = TaiKhoan::create([
+                'MaTaiKhoan' => $this->maTuDongService->taoMaTaiKhoanTheoVaiTro($maVaiTro),
+                'TenDangNhap' => $data['tenDangNhap'],
+                'MatKhau' => Hash::make($data['matKhau']),
+                'HoTen' => $data['hoTen'],
+                'Email' => $data['email'] ?? null,
+                'SoDienThoai' => $data['soDienThoai'] ?? null,
+                'VaiTro' => $maVaiTro,
+                'TrangThai' => 'HOAT_DONG',
+            ]);
+
+            NhanVien::create([
+                'MaNhanVien' => $this->maTuDongService->taoMaNhanVien(),
+                'MaTaiKhoan' => $taiKhoan->MaTaiKhoan,
+                'LoaiNhanVien' => $maVaiTro,
+                'NgayVaoLam' => now(),
+                'TrangThaiLamViec' => 'HOAT_DONG',
+            ]);
+
+            return $taiKhoan->load('vaiTro');
+        });
     }
 
     public function update($id, array $data)
