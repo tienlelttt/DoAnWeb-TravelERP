@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             VaiTroSeeder::class,
             TaiKhoanAdminSeeder::class,
+            SqlFileSeeder::class,
         ]);
     }
 }

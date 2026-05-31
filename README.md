@@ -203,17 +203,17 @@ npm run dev
 
 ## Tài khoản seed
 
-Mật khẩu mặc định: password (dựa trên dữ liệu seeder hiện có)
+Mật khẩu mặc định cho tất cả các tài khoản: **`password`**
 
-| Vai trò | Username | Giao diện / phân hệ |
-|---|---|---|
-| `ADMIN` | `admin` | Admin |
-| `SANPHAM` | `sanpham01` | Admin - sản phẩm |
-| `DIEUHANH` | `manager01` | Admin - điều hành |
-| `KINHDOANH` | `sales01` | Admin - kinh doanh |
-| `KETOAN` | `ketoan01` | Admin - kế toán |
-| `HDV` | `hdv01` | HDV |
-| `HDV` | `hdv02` | HDV |
+| Vai trò | Tên đăng nhập (Username) | Phân hệ / Cổng kiểm thử | Cổng mặc định |
+|:---|:---|:---|:---|
+| `ADMIN` | `admin` | Phân hệ Admin - Quản trị | `http://localhost:5173` |
+| `SANPHAM` | `sanpham01` | Phân hệ Admin - Quản lý sản phẩm | `http://localhost:5173` |
+| `DIEUHANH` | `manager01` | Phân hệ Admin - Điều phối, điều hành | `http://localhost:5173` |
+| `KINHDOANH` | `sales01` | Phân hệ Admin - Quản lý kinh doanh | `http://localhost:5173` |
+| `KETOAN` | `ketoan01` | Phân hệ Admin - Quản lý kế toán | `http://localhost:5173` |
+| `HDV` | `hdv01` | Phân hệ Hướng dẫn viên (HDV) | `http://localhost:5174` |
+| `KHACHHANG` | `khach01` | Phân hệ Khách hàng (KH) | `http://localhost:5175` |
 
 ---
 
