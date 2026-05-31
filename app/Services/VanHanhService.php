@@ -45,6 +45,16 @@ class VanHanhService
         return $tour;
     }
 
+    private function kiemTraTourTonTai(string $maTourThucTe): TourThucTe
+    {
+        $tour = TourThucTe::where('MaTourThucTe', $maTourThucTe)->first();
+        if (!$tour) {
+            throw AppException::notFound("Không tìm thấy thông tin tour");
+        }
+
+        return $tour;
+    }
+
     public function layLichTrinh(string $maTourThucTe, string $maNhanVien)
     {
         $tour = $this->checkQuyenHDV($maTourThucTe, $maNhanVien);
@@ -56,7 +66,18 @@ class VanHanhService
     public function layDanhSachKhach(string $maTourThucTe, string $maNhanVien)
     {
         $this->checkQuyenHDV($maTourThucTe, $maNhanVien);
-        
+
+        return $this->layDanhSachKhachTheoTour($maTourThucTe);
+    }
+
+    public function layDanhSachKhachDieuHanh(string $maTourThucTe)
+    {
+        $this->kiemTraTourTonTai($maTourThucTe);
+        return $this->layDanhSachKhachTheoTour($maTourThucTe);
+    }
+
+    private function layDanhSachKhachTheoTour(string $maTourThucTe): array
+    {
         $donDatTours = DonDatTour::where('MaTourThucTe', $maTourThucTe)
             ->where('TrangThai', 'DA_THANH_TOAN')
             ->with(['chiTietDatTours.khachHang', 'chiTietDatTours.nguoiDongHanh'])
@@ -138,6 +159,15 @@ class VanHanhService
             ->get();
     }
 
+    public function layDanhSachSuCoDieuHanh(string $maTourThucTe)
+    {
+        $this->kiemTraTourTonTai($maTourThucTe);
+
+        return NhatKySuCo::where('MaTourThucTe', $maTourThucTe)
+            ->orderBy('ThoiGianBaoCao', 'desc')
+            ->get();
+    }
+
     public function baoCaoSuCo(string $maTourThucTe, string $maNhanVien, array $data)
     {
         $this->checkQuyenHDV($maTourThucTe, $maNhanVien);
@@ -177,6 +207,15 @@ class VanHanhService
         $this->checkQuyenHDV($maTourThucTe, $maNhanVien);
         return ChiPhiThucTe::where('MaTourThucTe', $maTourThucTe)
             ->where('MaNhanVien', $maNhanVien)
+            ->orderBy('NgayKhai', 'desc')
+            ->get();
+    }
+
+    public function layDanhSachChiPhiDieuHanh(string $maTourThucTe)
+    {
+        $this->kiemTraTourTonTai($maTourThucTe);
+
+        return ChiPhiThucTe::where('MaTourThucTe', $maTourThucTe)
             ->orderBy('NgayKhai', 'desc')
             ->get();
     }
