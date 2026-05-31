@@ -63,7 +63,7 @@ class TourThucTeController extends Controller implements HasMiddleware
 
     public function taoMoi(TaoTourThucTeRequest $request)
     {
-        $this->checkRole(['SANPHAM', 'ADMIN']);
+        $this->checkRole(['DIEUHANH', 'ADMIN']);
         
         return $this->created(
             $this->tourThucTeService->taoMoi($request->validated())
@@ -72,7 +72,7 @@ class TourThucTeController extends Controller implements HasMiddleware
 
     public function capNhat(CapNhatTourThucTeRequest $request, $id)
     {
-        $this->checkRole(['SANPHAM', 'ADMIN']);
+        $this->checkRole(['DIEUHANH', 'ADMIN']);
         
         return $this->ok("Cập nhật thành công", 
             $this->tourThucTeService->capNhat($id, $request->validated())
@@ -81,7 +81,7 @@ class TourThucTeController extends Controller implements HasMiddleware
 
     public function xoa($id)
     {
-        $this->checkRole(['SANPHAM', 'ADMIN']);
+        $this->checkRole(['DIEUHANH', 'ADMIN']);
         
         $this->tourThucTeService->xoa($id);
         return $this->noContent('Hủy tour thực tế thành công');

@@ -40,4 +40,9 @@ class AppException extends Exception
     {
         return new self(404, $errorCode, $message);
     }
+
+    public static function forbidden(string $message, string $errorCode = "FORBIDDEN"): self
+    {
+        return new self(403, $errorCode, $message);
+    }
 }

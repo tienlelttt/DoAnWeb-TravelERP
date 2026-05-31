@@ -8,13 +8,13 @@ import { Button } from '../../components/ui/Button';
 import { customersService } from '../../services/customers';
 import { ordersService } from '../../services/orders';
 import { tourInstanceService } from '../../services/tour-instance';
-import { tourTemplateService } from '../../services/tour-template';
 import { incidentService } from '../../services/incidents';
 import type { NhatKySuCoResponse } from '../../services/incidents';
 import { ChevronLeft, ChevronRight, AlertTriangle, Info } from 'lucide-react';
 import type { TourThucTeResponse } from '../../pages/tour-instance/mockData';
 import PowerBIConnectionModal from './PowerBIConnectionModal';
 import { formatDate } from '../../utils/dateHelpers';
+import { useAuth } from '../../context/AuthContext';
 
 const revenueData = [
   { name: 'T1', value: 120000000 },
@@ -86,6 +86,7 @@ function formatTrangThaiTour(status: string | undefined): string {
 }
 
 const Dashboard: React.FC = () => {
+  const { user } = useAuth();
   const [stats, setStats] = useState({
     customers: 834245,
     orders: 31684,
@@ -101,14 +102,19 @@ const Dashboard: React.FC = () => {
   const [currentFeaturedIndex, setCurrentFeaturedIndex] = useState(0);
 
   useEffect(() => {
-    // Fetch actual data from backend
+    // Fetch actual data from backend based on user role permissions
     const fetchStats = async () => {
       try {
+        const canViewCustomers = user?.maVaiTro === 'KINHDOANH' || user?.maVaiTro === 'ADMIN';
+        const canViewOrders = user?.maVaiTro === 'KINHDOANH' || user?.maVaiTro === 'ADMIN';
+        const canViewTours = true;
+        const canViewIncidents = ['HDV', 'ADMIN', 'KINHDOANH', 'DIEUHANH', 'KETOAN', 'SANPHAM'].includes(user?.maVaiTro || '');
+
         const [customers, orders, tours, incidents] = await Promise.all([
-          customersService.timKiemKhachHang({ page: 0, size: 1 }).catch(() => null),
-          ordersService.danhSachTatCa({ page: 0, size: 1 }).catch(() => null),
-          tourInstanceService.danhSach({ page: 0, size: 1 }).catch(() => null),
-          incidentService.lichSuSuCoCuaHdv().catch(() => null)
+          canViewCustomers ? customersService.timKiemKhachHang({ page: 0, size: 1 }).catch(() => null) : Promise.resolve(null),
+          canViewOrders ? ordersService.danhSachTatCa({ page: 0, size: 1 }).catch(() => null) : Promise.resolve(null),
+          canViewTours ? tourInstanceService.danhSach({ page: 0, size: 1 }).catch(() => null) : Promise.resolve(null),
+          canViewIncidents ? incidentService.lichSuSuCoCuaHdv().catch(() => null) : Promise.resolve(null)
         ]);
 
         setStats(prev => ({
@@ -197,7 +203,7 @@ const Dashboard: React.FC = () => {
       }
     };
     fetchStats();
-  }, []);
+  }, [user?.maVaiTro]);
 
   const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -230,12 +236,14 @@ const Dashboard: React.FC = () => {
     <MainLayout activeMenu="Tổng quan" breadcrumb={[{ label: 'Tổng quan' }]}>
       <div className="flex flex-col gap-6 animate-fadeIn pb-10">
         {/* HEADER ACTIONS */}
-        <div className="flex justify-end gap-3">
-          <Button variant="primary" className="py-2.5 px-6 text-sm shadow-sm hover:shadow-md transition-all flex items-center gap-2" onClick={() => setIsPowerBiModalOpen(true)}>
-            <BarChart3 size={18} />
-            Phân tích dữ liệu
-          </Button>
-        </div>
+        {(user?.maVaiTro === 'KETOAN' || user?.maVaiTro === 'ADMIN') && (
+          <div className="flex justify-end gap-3">
+            <Button variant="primary" className="py-2.5 px-6 text-sm shadow-sm hover:shadow-md transition-all flex items-center gap-2" onClick={() => setIsPowerBiModalOpen(true)}>
+              <BarChart3 size={18} />
+              Phân tích dữ liệu
+            </Button>
+          </div>
+        )}
 
         {/* TOP SECTION */}
         <div className="grid grid-cols-12 gap-6 items-stretch">
