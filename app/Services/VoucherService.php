@@ -144,4 +144,89 @@ class VoucherService
 
         return $this->khuyenMaiKHRepository->danhSachVoucherCuaKhach($khachHang->MaKhachHang, $perPage);
     }
+
+    public function danhSachAdmin($perPage = 10)
+    {
+        return Voucher::orderBy('NgayHieuLuc', 'desc')->paginate($perPage);
+    }
+
+    public function taoVoucher(array $data)
+    {
+        $maTuDong = app(MaTuDongService::class);
+        $voucher = new Voucher();
+        $voucher->MaVoucher = $maTuDong->taoMaVoucher();
+        $voucher->MaCode = $data['maCode'];
+        $voucher->LoaiUuDai = $data['loaiUuDai'];
+        $voucher->GiaTriGiam = $data['giaTriGiam'];
+        $voucher->MucGiamToiDa = $data['mucGiamToiDa'] ?? null;
+        $voucher->DieuKienApDung = $data['dieuKienApDung'] ?? null;
+        $voucher->SoLuotPhatHanh = $data['soLuotPhatHanh'];
+        $voucher->SoLuotDaDung = 0;
+        $voucher->NgayHieuLuc = $data['ngayHieuLuc'];
+        $voucher->NgayHetHan = $data['ngayHetHan'];
+        $voucher->TrangThai = 'SAN_SANG';
+        
+        $voucher->save();
+        return $voucher;
+    }
+
+    public function capNhatVoucher($maVoucher, array $data)
+    {
+        $voucher = Voucher::find($maVoucher);
+        if (!$voucher) throw AppException::notFound("Không tìm thấy voucher");
+
+        $voucher->MaCode = $data['maCode'];
+        $voucher->LoaiUuDai = $data['loaiUuDai'];
+        $voucher->GiaTriGiam = $data['giaTriGiam'];
+        $voucher->MucGiamToiDa = $data['mucGiamToiDa'] ?? null;
+        $voucher->DieuKienApDung = $data['dieuKienApDung'] ?? null;
+        $voucher->SoLuotPhatHanh = $data['soLuotPhatHanh'];
+        $voucher->NgayHieuLuc = $data['ngayHieuLuc'];
+        $voucher->NgayHetHan = $data['ngayHetHan'];
+        
+        $voucher->save();
+        return $voucher;
+    }
+
+    public function voHieuHoaVoucher($maVoucher)
+    {
+        $voucher = Voucher::find($maVoucher);
+        if (!$voucher) throw AppException::notFound("Không tìm thấy voucher");
+        $voucher->TrangThai = 'VO_HIEU_HOA';
+        $voucher->save();
+        return $voucher;
+    }
+
+    public function phatHanhVoucher($maVoucher, $maKhachHang)
+    {
+        $voucher = Voucher::find($maVoucher);
+        if (!$voucher) throw AppException::notFound("Không tìm thấy voucher");
+
+        if ($voucher->TrangThai !== 'SAN_SANG') {
+            throw AppException::badRequest("Voucher không sẵn sàng để phát hành");
+        }
+
+        $daPhatHanh = \App\Models\KhuyenMaiKh::where('MaVoucher', $maVoucher)->count();
+        if ($daPhatHanh >= $voucher->SoLuotPhatHanh) {
+            throw AppException::badRequest("Đã đạt giới hạn phát hành của voucher này");
+        }
+
+        $tonTai = \App\Models\KhuyenMaiKh::where('MaVoucher', $maVoucher)
+            ->where('MaKhachHang', $maKhachHang)->first();
+        
+        if ($tonTai) {
+            throw AppException::badRequest("Khách hàng này đã nhận voucher này rồi");
+        }
+
+        $km = new \App\Models\KhuyenMaiKh();
+        $km->MaKhachHang = $maKhachHang;
+        $km->MaVoucher = $maVoucher;
+        $km->TrangThai = 'CO_HIEU_LUC';
+        $km->NgayNhan = Carbon::now();
+        $km->NgayHetHan = $voucher->NgayHetHan;
+        $km->save();
+
+        return $km;
+    }
 }
+

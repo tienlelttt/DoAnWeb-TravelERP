@@ -80,7 +80,7 @@ class KeToanChiPhiTest extends TestCase
         ]);
 
         $response->assertStatus(200)
-                 ->assertJsonPath("data.data.0.MaChiPhiThucTe", "CP_001");
+                 ->assertJsonPath("data.data.0.maChiPhiThucTe", "CP_001");
     }
 
     public function test_ke_toan_duyet_chi_phi()
