@@ -30,7 +30,7 @@ class UserController extends Controller
             'status' => 200,
             'success' => true,
             'message' => 'Thành công',
-            'data' => new \App\Http\Resources\SpringPaginationResource($users)
+            'data' => new \App\Http\Resources\ContractPaginationResource($users)
         ]);
     }
 

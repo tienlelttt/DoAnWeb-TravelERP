@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\SpringPaginationResource;
+use App\Http\Resources\ContractPaginationResource;
 use App\Services\QuyetToanService;
 use Illuminate\Http\Request;
 
@@ -37,7 +37,7 @@ class KeToanHoanTienController extends Controller
             'status' => 200,
             'success' => true,
             'message' => 'Thành công',
-            'data' => new SpringPaginationResource($list)
+            'data' => new ContractPaginationResource($list)
         ]);
     }
 

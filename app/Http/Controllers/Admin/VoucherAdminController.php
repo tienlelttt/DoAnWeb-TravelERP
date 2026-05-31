@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\VoucherAdminRequest;
 use App\Http\Resources\VoucherAdminResource;
-use App\Http\Resources\SpringPaginationResource;
+use App\Http\Resources\ContractPaginationResource;
 use App\Services\VoucherService;
 use Illuminate\Http\Request;
 
@@ -31,7 +31,7 @@ class VoucherAdminController extends Controller
             'status' => 200,
             'success' => true,
             'message' => 'Lấy danh sách thành công',
-            'data' => new SpringPaginationResource($list)
+            'data' => new ContractPaginationResource($list)
         ]);
     }
 
