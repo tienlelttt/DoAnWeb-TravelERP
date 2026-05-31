@@ -13,16 +13,16 @@ class VaiTroSeeder extends Seeder
     public function run(): void
     {
         $roles = [
-            ['MaVaiTro' => 'ADMIN', 'TenHienThi' => 'Quản trị hệ thống'],
-            ['MaVaiTro' => 'SANPHAM', 'TenHienThi' => 'Nhân viên sản phẩm'],
-            ['MaVaiTro' => 'KINHDOANH', 'TenHienThi' => 'Nhân viên kinh doanh'],
-            ['MaVaiTro' => 'DIEUHANH', 'TenHienThi' => 'Nhân viên điều hành'],
-            ['MaVaiTro' => 'KETOAN', 'TenHienThi' => 'Kế toán'],
-            ['MaVaiTro' => 'HDV', 'TenHienThi' => 'Hướng dẫn viên'],
-            ['MaVaiTro' => 'KHACHHANG', 'TenHienThi' => 'Khách hàng'],
+            ['ma_vai_tro' => 'ADMIN', 'ten_hien_thi' => 'Quản trị hệ thống'],
+            ['ma_vai_tro' => 'SANPHAM', 'ten_hien_thi' => 'Nhân viên sản phẩm'],
+            ['ma_vai_tro' => 'KINHDOANH', 'ten_hien_thi' => 'Nhân viên kinh doanh'],
+            ['ma_vai_tro' => 'DIEUHANH', 'ten_hien_thi' => 'Nhân viên điều hành'],
+            ['ma_vai_tro' => 'KETOAN', 'ten_hien_thi' => 'Kế toán'],
+            ['ma_vai_tro' => 'HDV', 'ten_hien_thi' => 'Hướng dẫn viên'],
+            ['ma_vai_tro' => 'KHACHHANG', 'ten_hien_thi' => 'Khách hàng'],
         ];
 
         // Dùng insertOrIgnore để chạy nhiều lần không bị lỗi trùng khóa chính
-        DB::table('VAITRO')->insertOrIgnore($roles);
+        DB::table('vai_tros')->insertOrIgnore($roles);
     }
 }

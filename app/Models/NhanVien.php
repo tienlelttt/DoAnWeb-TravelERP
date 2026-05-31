@@ -4,13 +4,13 @@ namespace App\Models;
 
 class NhanVien extends BaseModel
 {
-    protected $table = 'NHANVIEN';
-    protected $primaryKey = 'MaNhanVien';
+    protected $table = 'nhan_viens';
+    protected $primaryKey = 'ma_nhan_vien';
     public $incrementing = false;
     protected $keyType = 'string';
     protected $guarded = [];
 
     public function taiKhoan() {
-        return $this->belongsTo(TaiKhoan::class, 'MaTaiKhoan', 'MaTaiKhoan'); 
+        return $this->belongsTo(TaiKhoan::class, 'ma_tai_khoan', 'ma_tai_khoan'); 
     }
 }

@@ -12,16 +12,16 @@ class DashboardService
     public function getOverview()
     {
         // 1. Tổng doanh thu (Các đơn đã thanh toán)
-        $totalRevenue = DonDatTour::where('TrangThai', 'DA_THANH_TOAN')->sum('TongTien');
+        $totalRevenue = DonDatTour::where('trang_thai', 'DA_THANH_TOAN')->sum('tong_tien');
 
         // 2. Tổng số bookings (đã thanh toán hoặc hoàn thành)
-        $totalBookings = DonDatTour::whereIn('TrangThai', ['DA_THANH_TOAN', 'HOAN_THANH'])->count();
+        $totalBookings = DonDatTour::whereIn('trang_thai', ['DA_THANH_TOAN', 'HOAN_THANH'])->count();
 
         // 3. Tổng số khách hàng (số người trong các booking hợp lệ)
-        // Lấy từ bảng DSNGUOIDONGHANH liên kết với DONDATTOUR hoặc đơn giản là đếm
-        $totalCustomers = DB::table('DSNGUOIDONGHANH')
-            ->join('DONDATTOUR', 'DSNGUOIDONGHANH.MaDatTour', '=', 'DONDATTOUR.MaDatTour')
-            ->whereIn('DONDATTOUR.TrangThai', ['DA_THANH_TOAN', 'HOAN_THANH'])
+        // Lấy từ bảng ds_nguoi_dong_hanhs liên kết với don_dat_tours hoặc đơn giản là đếm
+        $totalCustomers = DB::table('ds_nguoi_dong_hanhs')
+            ->join('don_dat_tours', 'ds_nguoi_dong_hanhs.ma_dat_tour', '=', 'don_dat_tours.ma_dat_tour')
+            ->whereIn('don_dat_tours.trang_thai', ['DA_THANH_TOAN', 'HOAN_THANH'])
             ->count();
             
         // 4. Tổng số users (nhân viên + khách hàng)
@@ -40,11 +40,11 @@ class DashboardService
         $year = $year ?? Carbon::now()->year;
 
         // Group by tháng trong năm
-        $revenues = DonDatTour::where('TrangThai', 'DA_THANH_TOAN')
-            ->whereYear('NgayDat', $year)
+        $revenues = DonDatTour::where('trang_thai', 'DA_THANH_TOAN')
+            ->whereYear('ngay_dat', $year)
             ->select(
-                DB::raw('MONTH(NgayDat) as month'),
-                DB::raw('SUM(TongTien) as revenue')
+                DB::raw('MONTH(ngay_dat) as month'),
+                DB::raw('SUM(tong_tien) as revenue')
             )
             ->groupBy('month')
             ->orderBy('month')

@@ -36,85 +36,85 @@ class HuyDonTest extends TestCase
 
         // 1. Tạo tài khoản khách hàng
         $this->tkKh = TaiKhoan::create([
-            'MaTaiKhoan'   => 'TEST_TK_HUY_KH',
-            'TenDangNhap'  => 'test_huy_khach',
-            'MatKhau'      => bcrypt('123456'),
-            'HoTen'        => 'Khách Hàng Hủy Đơn',
-            'Email'        => 'huy_khach_' . time() . '@test.com',
-            'SoDienThoai'  => '0987111222',
-            'VaiTro'       => 'KHACHHANG',
-            'TrangThai'    => 'HOAT_DONG',
-            'NgaySinh'     => '1990-01-01',
+            'ma_tai_khoan'   => 'TEST_TK_HUY_KH',
+            'ten_dang_nhap'  => 'test_huy_khach',
+            'mat_khau'      => bcrypt('123456'),
+            'ho_ten'        => 'Khách Hàng Hủy Đơn',
+            'email'        => 'huy_khach_' . time() . '@test.com',
+            'so_dien_thoai'  => '0987111222',
+            'vai_tro'       => 'KHACHHANG',
+            'trang_thai'    => 'HOAT_DONG',
+            'ngay_sinh'     => '1990-01-01',
         ]);
 
         $this->hcs = HoChieuSo::create([
-            'MaKhachHang'   => 'TEST_KH_HUY',
-            'MaTaiKhoan'    => 'TEST_TK_HUY_KH',
-            'HangThanhVien' => 'THANH_VIEN',
-            'DiemXanh'      => 0,
+            'ma_khach_hang'   => 'TEST_KH_HUY',
+            'ma_tai_khoan'    => 'TEST_TK_HUY_KH',
+            'hang_thanh_vien' => 'THANH_VIEN',
+            'diem_xanh'      => 0,
         ]);
 
         $this->tokenKh = JWTAuth::fromUser($this->tkKh);
 
         // 2. Tạo tài khoản Sales (Kinh Doanh)
         $this->tkKd = TaiKhoan::create([
-            'MaTaiKhoan'   => 'TEST_TK_HUY_KD',
-            'TenDangNhap'  => 'test_huy_sales',
-            'MatKhau'      => bcrypt('123456'),
-            'HoTen'        => 'Nhân Viên Sales Hủy',
-            'Email'        => 'huy_sales_' . time() . '@test.com',
-            'SoDienThoai'  => '0987222333',
-            'VaiTro'       => 'KINHDOANH',
-            'TrangThai'    => 'HOAT_DONG',
-            'NgaySinh'     => '1985-05-05',
+            'ma_tai_khoan'   => 'TEST_TK_HUY_KD',
+            'ten_dang_nhap'  => 'test_huy_sales',
+            'mat_khau'      => bcrypt('123456'),
+            'ho_ten'        => 'Nhân Viên Sales Hủy',
+            'email'        => 'huy_sales_' . time() . '@test.com',
+            'so_dien_thoai'  => '0987222333',
+            'vai_tro'       => 'KINHDOANH',
+            'trang_thai'    => 'HOAT_DONG',
+            'ngay_sinh'     => '1985-05-05',
         ]);
 
         NhanVien::create([
-            'MaNhanVien' => 'NV_TEST_HUY_KD',
-            'MaTaiKhoan' => 'TEST_TK_HUY_KD',
-            'TrangThaiLamViec' => 'DANG_LAM',
+            'ma_nhan_vien' => 'NV_TEST_HUY_KD',
+            'ma_tai_khoan' => 'TEST_TK_HUY_KD',
+            'trang_thai_lam_viec' => 'DANG_LAM',
         ]);
 
         $this->tokenKd = JWTAuth::fromUser($this->tkKd);
 
         // 3. Tạo tài khoản Kế Toán (KeToan)
         $this->tkKt = TaiKhoan::create([
-            'MaTaiKhoan'   => 'TEST_TK_HUY_KT',
-            'TenDangNhap'  => 'test_huy_ketoan',
-            'MatKhau'      => bcrypt('123456'),
-            'HoTen'        => 'Nhân Viên Kế Toán',
-            'Email'        => 'huy_kt_' . time() . '@test.com',
-            'SoDienThoai'  => '0987333444',
-            'VaiTro'       => 'KETOAN',
-            'TrangThai'    => 'HOAT_DONG',
-            'NgaySinh'     => '1988-08-08',
+            'ma_tai_khoan'   => 'TEST_TK_HUY_KT',
+            'ten_dang_nhap'  => 'test_huy_ketoan',
+            'mat_khau'      => bcrypt('123456'),
+            'ho_ten'        => 'Nhân Viên Kế Toán',
+            'email'        => 'huy_kt_' . time() . '@test.com',
+            'so_dien_thoai'  => '0987333444',
+            'vai_tro'       => 'KETOAN',
+            'trang_thai'    => 'HOAT_DONG',
+            'ngay_sinh'     => '1988-08-08',
         ]);
 
         NhanVien::create([
-            'MaNhanVien' => 'NV_TEST_HUY_KT',
-            'MaTaiKhoan' => 'TEST_TK_HUY_KT',
-            'TrangThaiLamViec' => 'DANG_LAM',
+            'ma_nhan_vien' => 'NV_TEST_HUY_KT',
+            'ma_tai_khoan' => 'TEST_TK_HUY_KT',
+            'trang_thai_lam_viec' => 'DANG_LAM',
         ]);
 
         $this->tokenKt = JWTAuth::fromUser($this->tkKt);
 
         // 4. Tạo Tour Mẫu và Tour Thực Tế
         TourMau::create([
-            'MaTourMau' => 'TEST_TM_HUY',
-            'TieuDe'    => 'Tour Test Hủy Đơn',
-            'ThoiLuong' => 3,
-            'GiaSan'    => 1000000,
+            'ma_tour_mau' => 'TEST_TM_HUY',
+            'tieu_de'    => 'Tour Test Hủy Đơn',
+            'thoi_luong' => 3,
+            'gia_san'    => 1000000,
         ]);
 
         $this->tourThucTe = TourThucTe::create([
-            'MaTourThucTe'   => 'TEST_TTT_HUY',
-            'MaTourMau'      => 'TEST_TM_HUY',
-            'NgayKhoiHanh'   => Carbon::now()->addDays(10)->format('Y-m-d'), // Cách 10 ngày
-            'GiaHienHanh'    => 2000000,
-            'SoKhachToiThieu'=> 2,
-            'SoKhachToiDa'   => 20,
-            'ChoConLai'      => 10,
-            'TrangThai'      => 'MO_BAN',
+            'ma_tour_thuc_te'   => 'TEST_TTT_HUY',
+            'ma_tour_mau'      => 'TEST_TM_HUY',
+            'ngay_khoi_hanh'   => Carbon::now()->addDays(10)->format('Y-m-d'), // Cách 10 ngày
+            'gia_hien_hanh'    => 2000000,
+            'so_khach_toi_thieu'=> 2,
+            'so_khach_toi_da'   => 20,
+            'cho_con_lai'      => 10,
+            'trang_thai'      => 'MO_BAN',
         ]);
     }
 
@@ -124,20 +124,20 @@ class HuyDonTest extends TestCase
     public function test_duyet_don_vip_thanh_cong()
     {
         $don = DonDatTour::create([
-            'MaDatTour'     => 'DDT_HUY_TEST1',
-            'MaTourThucTe'  => 'TEST_TTT_HUY',
-            'MaKhachHang'   => 'TEST_KH_HUY',
-            'NgayDat'       => Carbon::now(),
-            'TongTien'      => 2000000.0,
-            'TrangThai'     => 'CHO_XAC_NHAN',
+            'ma_dat_tour'     => 'DDT_HUY_TEST1',
+            'ma_tour_thuc_te'  => 'TEST_TTT_HUY',
+            'ma_khach_hang'   => 'TEST_KH_HUY',
+            'ngay_dat'       => Carbon::now(),
+            'tong_tien'      => 2000000.0,
+            'trang_thai'     => 'CHO_XAC_NHAN',
         ]);
 
         ChiTietDatTour::create([
-            'MaChiTietDat' => 'CTD_HUY_TEST1',
-            'MaDatTour' => 'DDT_HUY_TEST1',
-            'MaKhachHang' => 'TEST_KH_HUY',
-            'LoaiKhach' => 'NGUOI_DAT',
-            'GiaTaiThoiDiemDat' => 2000000.0,
+            'ma_chi_tiet_dat' => 'CTD_HUY_TEST1',
+            'ma_dat_tour' => 'DDT_HUY_TEST1',
+            'ma_khach_hang' => 'TEST_KH_HUY',
+            'loai_khach' => 'NGUOI_DAT',
+            'gia_tai_thoi_diem_dat' => 2000000.0,
         ]);
 
         $response = $this->withHeader('Authorization', 'Bearer ' . $this->tokenKd)
@@ -146,20 +146,20 @@ class HuyDonTest extends TestCase
         $response->assertStatus(200);
         $response->assertJsonPath('data.trangThai', 'DA_XAC_NHAN');
 
-        $this->assertDatabaseHas('DONDATTOUR', [
-            'MaDatTour' => 'DDT_HUY_TEST1',
-            'TrangThai' => 'DA_XAC_NHAN',
+        $this->assertDatabaseHas('don_dat_tours', [
+            'ma_dat_tour' => 'DDT_HUY_TEST1',
+            'trang_thai' => 'DA_XAC_NHAN',
         ]);
 
-        $this->assertDatabaseHas('GIAODICH', [
-            'MaDatTour' => 'DDT_HUY_TEST1',
-            'PhuongThuc' => 'CONG_NO',
-            'TrangThai' => 'THANH_CONG',
+        $this->assertDatabaseHas('giao_diches', [
+            'ma_dat_tour' => 'DDT_HUY_TEST1',
+            'phuong_thuc' => 'CONG_NO',
+            'trang_thai' => 'THANH_CONG',
         ]);
 
-        $this->assertDatabaseHas('LICHSUTOUR', [
-            'MaKhachHang' => 'TEST_KH_HUY',
-            'MaTourThucTe' => 'TEST_TTT_HUY',
+        $this->assertDatabaseHas('lich_su_tours', [
+            'ma_khach_hang' => 'TEST_KH_HUY',
+            'ma_tour_thuc_te' => 'TEST_TTT_HUY',
         ]);
     }
 
@@ -170,12 +170,12 @@ class HuyDonTest extends TestCase
     public function test_yeu_cau_huy_don_tinh_phi_bac_thang()
     {
         $don = DonDatTour::create([
-            'MaDatTour'     => 'DDT_HUY_TEST2',
-            'MaTourThucTe'  => 'TEST_TTT_HUY',
-            'MaKhachHang'   => 'TEST_KH_HUY',
-            'NgayDat'       => Carbon::now(),
-            'TongTien'      => 2000000.0,
-            'TrangThai'     => 'DA_XAC_NHAN', // Phải đã xác nhận
+            'ma_dat_tour'     => 'DDT_HUY_TEST2',
+            'ma_tour_thuc_te'  => 'TEST_TTT_HUY',
+            'ma_khach_hang'   => 'TEST_KH_HUY',
+            'ngay_dat'       => Carbon::now(),
+            'tong_tien'      => 2000000.0,
+            'trang_thai'     => 'DA_XAC_NHAN', // Phải đã xác nhận
         ]);
 
         $response = $this->withHeader('Authorization', 'Bearer ' . $this->tokenKh)
@@ -187,24 +187,24 @@ class HuyDonTest extends TestCase
         $response->assertStatus(200);
         $response->assertJsonPath('data.trangThai', 'CHO_HUY');
 
-        $this->assertDatabaseHas('DONDATTOUR', [
-            'MaDatTour' => 'DDT_HUY_TEST2',
-            'TrangThai' => 'CHO_HUY',
+        $this->assertDatabaseHas('don_dat_tours', [
+            'ma_dat_tour' => 'DDT_HUY_TEST2',
+            'trang_thai' => 'CHO_HUY',
         ]);
 
         // Kiểm tra ticket hỗ trợ
-        $this->assertDatabaseHas('YEUCAUHOTRO', [
-            'MaDatTour' => 'DDT_HUY_TEST2',
-            'LoaiYeuCau' => 'HUY_TOUR',
-            'TrangThai' => 'CHUA_XU_LY',
+        $this->assertDatabaseHas('yeu_cau_ho_tros', [
+            'ma_dat_tour' => 'DDT_HUY_TEST2',
+            'loai_yeu_cau' => 'HUY_TOUR',
+            'trang_thai' => 'CHUA_XU_LY',
         ]);
 
         // Kiểm tra giao dịch hoàn tiền (chờ xử lý)
-        $this->assertDatabaseHas('GIAODICH', [
-            'MaDatTour' => 'DDT_HUY_TEST2',
-            'LoaiGiaoDich' => 'HOAN_TIEN',
-            'SoTien' => 1400000.0, // Hoàn 1.4M (Trừ 30% phí hủy của 2.0M)
-            'TrangThai' => 'CHO_THANH_TOAN',
+        $this->assertDatabaseHas('giao_diches', [
+            'ma_dat_tour' => 'DDT_HUY_TEST2',
+            'loai_giao_dich' => 'HOAN_TIEN',
+            'so_tien' => 1400000.0, // Hoàn 1.4M (Trừ 30% phí hủy của 2.0M)
+            'trang_thai' => 'CHO_THANH_TOAN',
         ]);
     }
 
@@ -215,23 +215,23 @@ class HuyDonTest extends TestCase
     {
         // Tạo tour thực tế khởi hành ngày mai (1 ngày nữa)
         $tourSatNgay = TourThucTe::create([
-            'MaTourThucTe'   => 'TEST_TTT_SAT',
-            'MaTourMau'      => 'TEST_TM_HUY',
-            'NgayKhoiHanh'   => Carbon::now()->addDays(1)->format('Y-m-d'),
-            'GiaHienHanh'    => 2000000,
-            'SoKhachToiThieu'=> 2,
-            'SoKhachToiDa'   => 20,
-            'ChoConLai'      => 10,
-            'TrangThai'      => 'MO_BAN',
+            'ma_tour_thuc_te'   => 'TEST_TTT_SAT',
+            'ma_tour_mau'      => 'TEST_TM_HUY',
+            'ngay_khoi_hanh'   => Carbon::now()->addDays(1)->format('Y-m-d'),
+            'gia_hien_hanh'    => 2000000,
+            'so_khach_toi_thieu'=> 2,
+            'so_khach_toi_da'   => 20,
+            'cho_con_lai'      => 10,
+            'trang_thai'      => 'MO_BAN',
         ]);
 
         $don = DonDatTour::create([
-            'MaDatTour'     => 'DDT_HUY_TEST3',
-            'MaTourThucTe'  => 'TEST_TTT_SAT',
-            'MaKhachHang'   => 'TEST_KH_HUY',
-            'NgayDat'       => Carbon::now(),
-            'TongTien'      => 2000000.0,
-            'TrangThai'     => 'DA_XAC_NHAN',
+            'ma_dat_tour'     => 'DDT_HUY_TEST3',
+            'ma_tour_thuc_te'  => 'TEST_TTT_SAT',
+            'ma_khach_hang'   => 'TEST_KH_HUY',
+            'ngay_dat'       => Carbon::now(),
+            'tong_tien'      => 2000000.0,
+            'trang_thai'     => 'DA_XAC_NHAN',
         ]);
 
         $response = $this->withHeader('Authorization', 'Bearer ' . $this->tokenKh)
@@ -250,36 +250,36 @@ class HuyDonTest extends TestCase
     public function test_sales_duyet_huy_don_dong_y()
     {
         $don = DonDatTour::create([
-            'MaDatTour'     => 'DDT_HUY_TEST4',
-            'MaTourThucTe'  => 'TEST_TTT_HUY',
-            'MaKhachHang'   => 'TEST_KH_HUY',
-            'NgayDat'       => Carbon::now(),
-            'TongTien'      => 2000000.0,
-            'TrangThai'     => 'CHO_HUY',
+            'ma_dat_tour'     => 'DDT_HUY_TEST4',
+            'ma_tour_thuc_te'  => 'TEST_TTT_HUY',
+            'ma_khach_hang'   => 'TEST_KH_HUY',
+            'ngay_dat'       => Carbon::now(),
+            'tong_tien'      => 2000000.0,
+            'trang_thai'     => 'CHO_HUY',
         ]);
 
         ChiTietDatTour::create([
-            'MaChiTietDat' => 'CTD_HUY_TEST4',
-            'MaDatTour' => 'DDT_HUY_TEST4',
-            'MaKhachHang' => 'TEST_KH_HUY',
-            'LoaiKhach' => 'NGUOI_DAT',
-            'GiaTaiThoiDiemDat' => 2000000.0,
+            'ma_chi_tiet_dat' => 'CTD_HUY_TEST4',
+            'ma_dat_tour' => 'DDT_HUY_TEST4',
+            'ma_khach_hang' => 'TEST_KH_HUY',
+            'loai_khach' => 'NGUOI_DAT',
+            'gia_tai_thoi_diem_dat' => 2000000.0,
         ]);
 
         YeuCauHoTro::create([
-            'MaYeuCauHoTro' => 'YCHT_TEST4',
-            'MaDatTour' => 'DDT_HUY_TEST4',
-            'MaKhachHang' => 'TEST_KH_HUY',
-            'LoaiYeuCau' => 'HUY_TOUR',
-            'NoiDung' => 'Yêu cầu hủy',
-            'TrangThai' => 'CHUA_XU_LY',
+            'ma_yeu_cau_ho_tro' => 'YCHT_TEST4',
+            'ma_dat_tour' => 'DDT_HUY_TEST4',
+            'ma_khach_hang' => 'TEST_KH_HUY',
+            'loai_yeu_cau' => 'HUY_TOUR',
+            'noi_dung' => 'Yêu cầu hủy',
+            'trang_thai' => 'CHUA_XU_LY',
         ]);
 
         LichSuTour::create([
-            'MaLichSuTour' => 'LST_TEST4',
-            'MaKhachHang' => 'TEST_KH_HUY',
-            'MaTourThucTe' => 'TEST_TTT_HUY',
-            'MaChiTietDat' => 'CTD_HUY_TEST4',
+            'ma_lich_su_tour' => 'LST_TEST4',
+            'ma_khach_hang' => 'TEST_KH_HUY',
+            'ma_tour_thuc_te' => 'TEST_TTT_HUY',
+            'ma_chi_tiet_dat' => 'CTD_HUY_TEST4',
         ]);
 
         // Sales đồng ý
@@ -292,15 +292,15 @@ class HuyDonTest extends TestCase
         $response->assertStatus(200);
 
         // Ticket chuyển thành DA_XU_LY
-        $this->assertDatabaseHas('YEUCAUHOTRO', [
-            'MaYeuCauHoTro' => 'YCHT_TEST4',
-            'TrangThai' => 'DA_XU_LY',
-            'MaNhanVienXuLy' => 'NV_TEST_HUY_KD',
+        $this->assertDatabaseHas('yeu_cau_ho_tros', [
+            'ma_yeu_cau_ho_tro' => 'YCHT_TEST4',
+            'trang_thai' => 'DA_XU_LY',
+            'ma_nhan_vien_xu_ly' => 'NV_TEST_HUY_KD',
         ]);
 
         // Lịch sử tour đã bị xóa
-        $this->assertDatabaseMissing('LICHSUTOUR', [
-            'MaLichSuTour' => 'LST_TEST4',
+        $this->assertDatabaseMissing('lich_su_tours', [
+            'ma_lich_su_tour' => 'LST_TEST4',
         ]);
     }
 
@@ -311,57 +311,57 @@ class HuyDonTest extends TestCase
     {
         // Tour đang có 10 chỗ trống
         $tourHuy = TourThucTe::create([
-            'MaTourThucTe'   => 'TEST_TTT_HOAN',
-            'MaTourMau'      => 'TEST_TM_HUY',
-            'NgayKhoiHanh'   => Carbon::now()->addDays(10)->format('Y-m-d'),
-            'GiaHienHanh'    => 2000000,
-            'SoKhachToiThieu'=> 2,
-            'SoKhachToiDa'   => 20,
-            'ChoConLai'      => 10,
-            'TrangThai'      => 'MO_BAN',
+            'ma_tour_thuc_te'   => 'TEST_TTT_HOAN',
+            'ma_tour_mau'      => 'TEST_TM_HUY',
+            'ngay_khoi_hanh'   => Carbon::now()->addDays(10)->format('Y-m-d'),
+            'gia_hien_hanh'    => 2000000,
+            'so_khach_toi_thieu'=> 2,
+            'so_khach_toi_da'   => 20,
+            'cho_con_lai'      => 10,
+            'trang_thai'      => 'MO_BAN',
         ]);
 
         $don = DonDatTour::create([
-            'MaDatTour'     => 'DDT_HUY_TEST5',
-            'MaTourThucTe'  => 'TEST_TTT_HOAN',
-            'MaKhachHang'   => 'TEST_KH_HUY',
-            'NgayDat'       => Carbon::now(),
-            'TongTien'      => 2000000.0,
-            'TrangThai'     => 'CHO_HUY',
+            'ma_dat_tour'     => 'DDT_HUY_TEST5',
+            'ma_tour_thuc_te'  => 'TEST_TTT_HOAN',
+            'ma_khach_hang'   => 'TEST_KH_HUY',
+            'ngay_dat'       => Carbon::now(),
+            'tong_tien'      => 2000000.0,
+            'trang_thai'     => 'CHO_HUY',
         ]);
 
         // 2 hành khách trong đơn hàng (2 chỗ)
         ChiTietDatTour::create([
-            'MaChiTietDat' => 'CTD_TEST5_1',
-            'MaDatTour' => 'DDT_HUY_TEST5',
-            'LoaiKhach' => 'NGUOI_DAT',
-            'GiaTaiThoiDiemDat' => 2000000.0,
+            'ma_chi_tiet_dat' => 'CTD_TEST5_1',
+            'ma_dat_tour' => 'DDT_HUY_TEST5',
+            'loai_khach' => 'NGUOI_DAT',
+            'gia_tai_thoi_diem_dat' => 2000000.0,
         ]);
         ChiTietDatTour::create([
-            'MaChiTietDat' => 'CTD_TEST5_2',
-            'MaDatTour' => 'DDT_HUY_TEST5',
-            'LoaiKhach' => 'NGUOI_DONG_HANH',
-            'GiaTaiThoiDiemDat' => 2000000.0,
+            'ma_chi_tiet_dat' => 'CTD_TEST5_2',
+            'ma_dat_tour' => 'DDT_HUY_TEST5',
+            'loai_khach' => 'NGUOI_DONG_HANH',
+            'gia_tai_thoi_diem_dat' => 2000000.0,
         ]);
 
         // Giao dịch hoàn tiền đang chờ
         GiaoDich::create([
-            'MaGiaoDich' => 'GD_HOAN_5',
-            'MaDatTour' => 'DDT_HUY_TEST5',
-            'LoaiGiaoDich' => 'HOAN_TIEN',
-            'PhuongThuc' => 'CHUYEN_KHOAN',
-            'SoTien' => 1400000.0,
-            'TrangThai' => 'CHO_THANH_TOAN',
+            'ma_giao_dich' => 'GD_HOAN_5',
+            'ma_dat_tour' => 'DDT_HUY_TEST5',
+            'loai_giao_dich' => 'HOAN_TIEN',
+            'phuong_thuc' => 'CHUYEN_KHOAN',
+            'so_tien' => 1400000.0,
+            'trang_thai' => 'CHO_THANH_TOAN',
         ]);
 
         // Ticket hủy tour đã được Sales duyệt (DA_XU_LY)
         YeuCauHoTro::create([
-            'MaYeuCauHoTro' => 'YCHT_TEST5',
-            'MaDatTour' => 'DDT_HUY_TEST5',
-            'MaKhachHang' => 'TEST_KH_HUY',
-            'LoaiYeuCau' => 'HUY_TOUR',
-            'NoiDung' => 'Yêu cầu hủy',
-            'TrangThai' => 'DA_XU_LY',
+            'ma_yeu_cau_ho_tro' => 'YCHT_TEST5',
+            'ma_dat_tour' => 'DDT_HUY_TEST5',
+            'ma_khach_hang' => 'TEST_KH_HUY',
+            'loai_yeu_cau' => 'HUY_TOUR',
+            'noi_dung' => 'Yêu cầu hủy',
+            'trang_thai' => 'DA_XU_LY',
         ]);
 
         // Kế toán hoàn tiền
@@ -374,17 +374,17 @@ class HuyDonTest extends TestCase
         $response->assertStatus(200);
         $response->assertJsonPath('data.trangThai', 'DA_HUY');
 
-        $this->assertDatabaseHas('DONDATTOUR', [
-            'MaDatTour' => 'DDT_HUY_TEST5',
-            'TrangThai' => 'DA_HUY',
+        $this->assertDatabaseHas('don_dat_tours', [
+            'ma_dat_tour' => 'DDT_HUY_TEST5',
+            'trang_thai' => 'DA_HUY',
         ]);
 
-        $this->assertDatabaseHas('GIAODICH', [
-            'MaGiaoDich' => 'GD_HOAN_5',
-            'TrangThai' => 'DA_HOAN_TIEN',
+        $this->assertDatabaseHas('giao_diches', [
+            'ma_giao_dich' => 'GD_HOAN_5',
+            'trang_thai' => 'DA_HOAN_TIEN',
         ]);
 
         // Kiểm tra số chỗ còn lại tăng từ 10 lên 12 chỗ
-        $this->assertEquals(12, TourThucTe::where('MaTourThucTe', 'TEST_TTT_HOAN')->first()->ChoConLai);
+        $this->assertEquals(12, TourThucTe::where('ma_tour_thuc_te', 'TEST_TTT_HOAN')->first()->cho_con_lai);
     }
 }

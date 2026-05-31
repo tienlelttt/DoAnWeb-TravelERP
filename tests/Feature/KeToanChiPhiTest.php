@@ -23,51 +23,51 @@ class KeToanChiPhiTest extends TestCase
     {
         parent::setUp();
 
-        VaiTro::create(["MaVaiTro" => "KETOAN", "TenHienThi" => "Kế toán"]);
+        VaiTro::create(["ma_vai_tro" => "KETOAN", "ten_hien_thi" => "Kế toán"]);
 
         $this->keToanTK = TaiKhoan::create([
-            "MaTaiKhoan" => "TK_KT_001",
-            "TenDangNhap" => "ketoan1",
-            "MatKhau" => bcrypt("password"),
-            "HoTen" => "Kế Toán Test",
-            "VaiTro" => "KETOAN",
-            "TrangThai" => "HOAT_DONG"
+            "ma_tai_khoan" => "TK_KT_001",
+            "ten_dang_nhap" => "ketoan1",
+            "mat_khau" => bcrypt("password"),
+            "ho_ten" => "Kế Toán Test",
+            "vai_tro" => "KETOAN",
+            "trang_thai" => "HOAT_DONG"
         ]);
 
         $this->keToan = NhanVien::create([
-            "MaNhanVien" => "NV_KT_001",
-            "MaTaiKhoan" => "TK_KT_001",
-            "LoaiNhanVien" => "KETOAN",
-            "TrangThaiLamViec" => "DANG_LAM"
+            "ma_nhan_vien" => "NV_KT_001",
+            "ma_tai_khoan" => "TK_KT_001",
+            "loai_nhan_vien" => "KETOAN",
+            "trang_thai_lam_viec" => "DANG_LAM"
         ]);
 
         $this->tourMau = TourMau::create([
-            "MaTourMau" => "TM_003",
-            "TieuDe" => "Tour Test Ke Toan",
-            "ThoiLuong" => 3,
-            "GiaSan" => 1000000
+            "ma_tour_mau" => "TM_003",
+            "tieu_de" => "Tour Test Ke Toan",
+            "thoi_luong" => 3,
+            "gia_san" => 1000000
         ]);
 
         $this->tourThucTe = TourThucTe::create([
-            "MaTourThucTe" => "TTT_003",
-            "MaTourMau" => "TM_003",
-            "NgayKhoiHanh" => Carbon::now()->addDays(1),
-            "GiaHienHanh" => 1200000,
-            "SoKhachToiDa" => 20,
-            "SoKhachToiThieu" => 10,
-            "ChoConLai" => 20,
-            "TrangThai" => "DANG_DIEN_RA"
+            "ma_tour_thuc_te" => "TTT_003",
+            "ma_tour_mau" => "TM_003",
+            "ngay_khoi_hanh" => Carbon::now()->addDays(1),
+            "gia_hien_hanh" => 1200000,
+            "so_khach_toi_da" => 20,
+            "so_khach_toi_thieu" => 10,
+            "cho_con_lai" => 20,
+            "trang_thai" => "DANG_DIEN_RA"
         ]);
 
         $this->chiPhi = ChiPhiThucTe::create([
-            "MaChiPhiThucTe" => "CP_001",
-            "MaTourThucTe" => "TTT_003",
-            "MaNhanVien" => "NV_002",
-            "DanhMuc" => "An uong",
-            "ThanhTien" => 5000000,
-            "HoaDonAnh" => "/uploads/bill1.jpg",
-            "TrangThaiDuyet" => "CHO_DUYET",
-            "NgayKhai" => Carbon::now()
+            "ma_chi_phi_thuc_te" => "CP_001",
+            "ma_tour_thuc_te" => "TTT_003",
+            "ma_nhan_vien" => "NV_002",
+            "danh_muc" => "An uong",
+            "thanh_tien" => 5000000,
+            "hoa_don_anh" => "/uploads/bill1.jpg",
+            "trang_thai_duyet" => "CHO_DUYET",
+            "ngay_khai" => Carbon::now()
         ]);
     }
 
@@ -94,9 +94,9 @@ class KeToanChiPhiTest extends TestCase
         $response->assertStatus(200)
                  ->assertJsonPath("message", "Đã duyệt khoản chi phí");
 
-        $this->assertDatabaseHas("CHIPHITHUCTE", [
-            "MaChiPhiThucTe" => "CP_001",
-            "TrangThaiDuyet" => "DA_DUYET"
+        $this->assertDatabaseHas("chi_phi_thuc_tes", [
+            "ma_chi_phi_thuc_te" => "CP_001",
+            "trang_thai_duyet" => "DA_DUYET"
         ]);
     }
 
@@ -110,9 +110,9 @@ class KeToanChiPhiTest extends TestCase
 
         $response->assertStatus(200);
 
-        $this->assertDatabaseHas("CHIPHITHUCTE", [
-            "MaChiPhiThucTe" => "CP_001",
-            "TrangThaiDuyet" => "TU_CHOI"
+        $this->assertDatabaseHas("chi_phi_thuc_tes", [
+            "ma_chi_phi_thuc_te" => "CP_001",
+            "trang_thai_duyet" => "TU_CHOI"
         ]);
     }
 
@@ -126,9 +126,9 @@ class KeToanChiPhiTest extends TestCase
 
         $response->assertStatus(200);
 
-        $this->assertDatabaseHas("CHIPHITHUCTE", [
-            "MaChiPhiThucTe" => "CP_001",
-            "TrangThaiDuyet" => "YEU_CAU_BO_SUNG"
+        $this->assertDatabaseHas("chi_phi_thuc_tes", [
+            "ma_chi_phi_thuc_te" => "CP_001",
+            "trang_thai_duyet" => "YEU_CAU_BO_SUNG"
         ]);
     }
 }

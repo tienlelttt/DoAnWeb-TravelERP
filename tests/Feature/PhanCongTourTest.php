@@ -23,53 +23,53 @@ class PhanCongTourTest extends TestCase
     {
         parent::setUp();
 
-        VaiTro::create(["MaVaiTro" => "DIEUHANH", "TenHienThi" => "Điều Hành"]);
-        VaiTro::create(["MaVaiTro" => "HDV", "TenHienThi" => "Hướng Dẫn Viên"]);
+        VaiTro::create(["ma_vai_tro" => "DIEUHANH", "ten_hien_thi" => "Điều Hành"]);
+        VaiTro::create(["ma_vai_tro" => "HDV", "ten_hien_thi" => "Hướng Dẫn Viên"]);
 
         $this->dieuHanhTK = TaiKhoan::create([
-            "MaTaiKhoan" => "TK_DH_001",
-            "TenDangNhap" => "dieuhanh1",
-            "MatKhau" => bcrypt("password"),
-            "HoTen" => "Điều Hành",
-            "VaiTro" => "DIEUHANH",
-            "TrangThai" => "HOAT_DONG"
+            "ma_tai_khoan" => "TK_DH_001",
+            "ten_dang_nhap" => "dieuhanh1",
+            "mat_khau" => bcrypt("password"),
+            "ho_ten" => "Điều Hành",
+            "vai_tro" => "DIEUHANH",
+            "trang_thai" => "HOAT_DONG"
         ]);
 
         $this->hdvTK = TaiKhoan::create([
-            "MaTaiKhoan" => "TK_HDV_001",
-            "TenDangNhap" => "hdv1",
-            "MatKhau" => bcrypt("password"),
-            "HoTen" => "Nguyễn Văn HDV",
-            "VaiTro" => "HDV",
-            "TrangThai" => "HOAT_DONG"
+            "ma_tai_khoan" => "TK_HDV_001",
+            "ten_dang_nhap" => "hdv1",
+            "mat_khau" => bcrypt("password"),
+            "ho_ten" => "Nguyễn Văn HDV",
+            "vai_tro" => "HDV",
+            "trang_thai" => "HOAT_DONG"
         ]);
 
         $this->hdv = NhanVien::create([
-            "MaNhanVien" => "NV_HDV_001",
-            "MaTaiKhoan" => "TK_HDV_001",
-            "LoaiNhanVien" => "HDV",
-            "TrangThaiLamViec" => "DANG_LAM"
+            "ma_nhan_vien" => "NV_HDV_001",
+            "ma_tai_khoan" => "TK_HDV_001",
+            "loai_nhan_vien" => "HDV",
+            "trang_thai_lam_viec" => "DANG_LAM"
         ]);
 
         $this->tourMau = TourMau::create([
-            "MaTourMau" => "TM_001",
-            "TieuDe" => "Tour Test",
-            "ThoiLuong" => 3,
-            "GiaSan" => 1000000
+            "ma_tour_mau" => "TM_001",
+            "tieu_de" => "Tour Test",
+            "thoi_luong" => 3,
+            "gia_san" => 1000000
         ]);
     }
 
     public function test_dieu_hanh_phan_cong_thanh_cong()
     {
         $tourThucTe = TourThucTe::create([
-            "MaTourThucTe" => "TTT_001",
-            "MaTourMau" => "TM_001",
-            "NgayKhoiHanh" => Carbon::now()->addDays(10),
-            "GiaHienHanh" => 1200000,
-            "SoKhachToiDa" => 20,
-            "SoKhachToiThieu" => 10,
-            "ChoConLai" => 20,
-            "TrangThai" => "CHO_KICH_HOAT"
+            "ma_tour_thuc_te" => "TTT_001",
+            "ma_tour_mau" => "TM_001",
+            "ngay_khoi_hanh" => Carbon::now()->addDays(10),
+            "gia_hien_hanh" => 1200000,
+            "so_khach_toi_da" => 20,
+            "so_khach_toi_thieu" => 10,
+            "cho_con_lai" => 20,
+            "trang_thai" => "CHO_KICH_HOAT"
         ]);
 
         $token = JWTAuth::fromUser($this->dieuHanhTK);
@@ -82,43 +82,43 @@ class PhanCongTourTest extends TestCase
         $response->assertStatus(200)
                  ->assertJsonPath("message", "Phân công hướng dẫn viên thành công");
 
-        $this->assertDatabaseHas("PHANCONGTOUR", [
-            "MaTourThucTe" => "TTT_001",
-            "MaNhanVien" => "NV_HDV_001",
-            "TrangThaiChapNhan" => "CHO_PHAN_HOI"
+        $this->assertDatabaseHas("phan_cong_tours", [
+            "ma_tour_thuc_te" => "TTT_001",
+            "ma_nhan_vien" => "NV_HDV_001",
+            "trang_thai_chap_nhan" => "CHO_PHAN_HOI"
         ]);
     }
 
     public function test_phan_cong_that_bai_do_trung_lich_12_tieng()
     {
         $tour1 = TourThucTe::create([
-            "MaTourThucTe" => "TTT_001",
-            "MaTourMau" => "TM_001",
-            "NgayKhoiHanh" => Carbon::now()->addDays(10),
-            "GiaHienHanh" => 1200000,
-            "SoKhachToiDa" => 20,
-            "SoKhachToiThieu" => 10,
-            "ChoConLai" => 20,
-            "TrangThai" => "CHO_KICH_HOAT"
+            "ma_tour_thuc_te" => "TTT_001",
+            "ma_tour_mau" => "TM_001",
+            "ngay_khoi_hanh" => Carbon::now()->addDays(10),
+            "gia_hien_hanh" => 1200000,
+            "so_khach_toi_da" => 20,
+            "so_khach_toi_thieu" => 10,
+            "cho_con_lai" => 20,
+            "trang_thai" => "CHO_KICH_HOAT"
         ]);
 
         PhanCongTour::create([
-            "MaPhanCongTour" => "PCT_001",
-            "MaTourThucTe" => "TTT_001",
-            "MaNhanVien" => "NV_HDV_001",
-            "NgayPhanCong" => Carbon::now(),
-            "TrangThaiChapNhan" => "DA_DONG_Y"
+            "ma_phan_cong_tour" => "PCT_001",
+            "ma_tour_thuc_te" => "TTT_001",
+            "ma_nhan_vien" => "NV_HDV_001",
+            "ngay_phan_cong" => Carbon::now(),
+            "trang_thai_chap_nhan" => "DA_DONG_Y"
         ]);
 
         $tour2 = TourThucTe::create([
-            "MaTourThucTe" => "TTT_002",
-            "MaTourMau" => "TM_001",
-            "NgayKhoiHanh" => Carbon::now()->addDays(13)->addHours(6),
-            "GiaHienHanh" => 1200000,
-            "SoKhachToiDa" => 20,
-            "SoKhachToiThieu" => 10,
-            "ChoConLai" => 20,
-            "TrangThai" => "CHO_KICH_HOAT"
+            "ma_tour_thuc_te" => "TTT_002",
+            "ma_tour_mau" => "TM_001",
+            "ngay_khoi_hanh" => Carbon::now()->addDays(13)->addHours(6),
+            "gia_hien_hanh" => 1200000,
+            "so_khach_toi_da" => 20,
+            "so_khach_toi_thieu" => 10,
+            "cho_con_lai" => 20,
+            "trang_thai" => "CHO_KICH_HOAT"
         ]);
 
         $token = JWTAuth::fromUser($this->dieuHanhTK);
@@ -135,22 +135,22 @@ class PhanCongTourTest extends TestCase
     public function test_hdv_dong_y_tu_dong_mo_ban_tour()
     {
         $tourThucTe = TourThucTe::create([
-            "MaTourThucTe" => "TTT_001",
-            "MaTourMau" => "TM_001",
-            "NgayKhoiHanh" => Carbon::now()->addDays(10),
-            "GiaHienHanh" => 1200000,
-            "SoKhachToiDa" => 20,
-            "SoKhachToiThieu" => 10,
-            "ChoConLai" => 20,
-            "TrangThai" => "CHO_KICH_HOAT"
+            "ma_tour_thuc_te" => "TTT_001",
+            "ma_tour_mau" => "TM_001",
+            "ngay_khoi_hanh" => Carbon::now()->addDays(10),
+            "gia_hien_hanh" => 1200000,
+            "so_khach_toi_da" => 20,
+            "so_khach_toi_thieu" => 10,
+            "cho_con_lai" => 20,
+            "trang_thai" => "CHO_KICH_HOAT"
         ]);
 
         $phanCong = PhanCongTour::create([
-            "MaPhanCongTour" => "PCT_001",
-            "MaTourThucTe" => "TTT_001",
-            "MaNhanVien" => "NV_HDV_001",
-            "NgayPhanCong" => Carbon::now(),
-            "TrangThaiChapNhan" => "CHO_PHAN_HOI"
+            "ma_phan_cong_tour" => "PCT_001",
+            "ma_tour_thuc_te" => "TTT_001",
+            "ma_nhan_vien" => "NV_HDV_001",
+            "ngay_phan_cong" => Carbon::now(),
+            "trang_thai_chap_nhan" => "CHO_PHAN_HOI"
         ]);
 
         $token = JWTAuth::fromUser($this->hdvTK);
@@ -162,14 +162,14 @@ class PhanCongTourTest extends TestCase
         $response->assertStatus(200)
                  ->assertJsonPath("message", "Đã phản hồi yêu cầu phân công");
 
-        $this->assertDatabaseHas("PHANCONGTOUR", [
-            "MaPhanCongTour" => "PCT_001",
-            "TrangThaiChapNhan" => "DA_DONG_Y"
+        $this->assertDatabaseHas("phan_cong_tours", [
+            "ma_phan_cong_tour" => "PCT_001",
+            "trang_thai_chap_nhan" => "DA_DONG_Y"
         ]);
 
-        $this->assertDatabaseHas("TOURTHUCTE", [
-            "MaTourThucTe" => "TTT_001",
-            "TrangThai" => "MO_BAN"
+        $this->assertDatabaseHas("tour_thuc_tes", [
+            "ma_tour_thuc_te" => "TTT_001",
+            "trang_thai" => "MO_BAN"
         ]);
     }
 }

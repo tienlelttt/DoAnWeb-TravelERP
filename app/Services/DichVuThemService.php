@@ -23,7 +23,7 @@ class DichVuThemService
 
         if (!empty($maTourThucTe)) {
             $query->whereHas('tourThucTes', function ($q) use ($maTourThucTe) {
-                $q->where('TOURTHUCTE.MaTourThucTe', $maTourThucTe);
+                $q->where('tour_thuc_tes.ma_tour_thuc_te', $maTourThucTe);
             });
         }
 
@@ -43,10 +43,10 @@ class DichVuThemService
     {
         return DB::transaction(function () use ($data) {
             $dv = new DichVuThem();
-            $dv->MaDichVuThem = $this->maTuDongService->taoMaDichVuThem();
-            $dv->Ten = $data['ten'];
-            $dv->DonGia = $data['donGia'];
-            $dv->DonViTinh = $data['donViTinh'] ?? null;
+            $dv->ma_dich_vu_them = $this->maTuDongService->taoMaDichVuThem();
+            $dv->ten = $data['ten'];
+            $dv->don_gia = $data['donGia'];
+            $dv->don_vi_tinh = $data['donViTinh'] ?? null;
             $dv->save();
 
             return new DichVuThemResource($dv);
@@ -62,13 +62,13 @@ class DichVuThemService
             }
 
             if (isset($data['ten'])) {
-                $dv->Ten = $data['ten'];
+                $dv->ten = $data['ten'];
             }
             if (isset($data['donGia'])) {
-                $dv->DonGia = $data['donGia'];
+                $dv->don_gia = $data['donGia'];
             }
             if (isset($data['donViTinh'])) {
-                $dv->DonViTinh = $data['donViTinh'];
+                $dv->don_vi_tinh = $data['donViTinh'];
             }
             $dv->save();
 

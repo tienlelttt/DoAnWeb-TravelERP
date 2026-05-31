@@ -33,8 +33,8 @@ class CancelExpiredBookings extends Command
         
         $expiredTime = Carbon::now()->subHours(24);
 
-        $expiredBookings = DonDatTour::where('TrangThai', 'CHO_THANH_TOAN')
-            ->where('NgayDat', '<=', $expiredTime)
+        $expiredBookings = DonDatTour::where('trang_thai', 'CHO_THANH_TOAN')
+            ->where('ngay_dat', '<=', $expiredTime)
             ->get();
 
         if ($expiredBookings->isEmpty()) {
@@ -46,20 +46,20 @@ class CancelExpiredBookings extends Command
         foreach ($expiredBookings as $don) {
             DB::transaction(function () use ($don, &$count) {
                 // Lock đơn
-                $lockedDon = DonDatTour::lockForUpdate()->find($don->MaDatTour);
+                $lockedDon = DonDatTour::lockForUpdate()->find($don->ma_dat_tour);
                 
-                if ($lockedDon->TrangThai !== 'CHO_THANH_TOAN') {
+                if ($lockedDon->trang_thai !== 'CHO_THANH_TOAN') {
                     return; // Đã được xử lý bởi tiến trình khác
                 }
 
-                $lockedDon->TrangThai = 'DA_HUY';
+                $lockedDon->trang_thai = 'DA_HUY';
                 $lockedDon->save();
 
                 // Hoàn lại chỗ cho tour
-                $tour = TourThucTe::lockForUpdate()->find($lockedDon->MaTourThucTe);
+                $tour = TourThucTe::lockForUpdate()->find($lockedDon->ma_tour_thuc_te);
                 if ($tour) {
-                    $soKhach = DB::table('CHITIETDATTOUR')->where('MaDatTour', $lockedDon->MaDatTour)->count();
-                    $tour->ChoConLai = min($tour->ChoConLai + $soKhach, $tour->SoKhachToiDa);
+                    $soKhach = DB::table('chi_tiet_dat_tours')->where('ma_dat_tour', $lockedDon->ma_dat_tour)->count();
+                    $tour->cho_con_lai = min($tour->cho_con_lai + $soKhach, $tour->so_khach_toi_da);
                     $tour->save();
                 }
 

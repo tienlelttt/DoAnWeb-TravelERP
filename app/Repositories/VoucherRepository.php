@@ -17,8 +17,8 @@ class VoucherRepository
         // Sử dụng lockForUpdate để tránh race condition khi nhiều người cùng dùng chung mã voucher
         return Voucher::lockForUpdate()
             ->where(function ($query) use ($maVoucher) {
-                $query->where('MaVoucher', $maVoucher)
-                      ->orWhere('MaCode', $maVoucher);
+                $query->where('ma_voucher', $maVoucher)
+                      ->orWhere('ma_code', $maVoucher);
             })
             ->first();
     }
@@ -31,7 +31,7 @@ class VoucherRepository
      */
     public function tangSoLuotDaDung(Voucher $voucher): void
     {
-        $voucher->SoLuotDaDung += 1;
+        $voucher->so_luot_da_dung += 1;
         $voucher->save();
     }
 }

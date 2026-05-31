@@ -24,44 +24,44 @@ class NhanVienTest extends TestCase
         parent::setUp();
 
         // 1. Tạo Tài khoản và Nhân viên
-        $tkHdv = TaiKhoan::create(['MaTaiKhoan' => 'TK_HDV_01', 'TenDangNhap' => 'hdv_01', 'MatKhau' => bcrypt('123456'), 'HoTen' => 'HDV', 'VaiTro' => 'HDV', 'TrangThai' => 'HOAT_DONG']);
-        $tkDieuHanh = TaiKhoan::create(['MaTaiKhoan' => 'TK_DH_01', 'TenDangNhap' => 'dh_01', 'MatKhau' => bcrypt('123456'), 'HoTen' => 'Điều Hành', 'VaiTro' => 'DIEUHANH', 'TrangThai' => 'HOAT_DONG']);
-        $tkKinhDoanh = TaiKhoan::create(['MaTaiKhoan' => 'TK_KD_01', 'TenDangNhap' => 'kd_01', 'MatKhau' => bcrypt('123456'), 'HoTen' => 'Kinh Doanh', 'VaiTro' => 'KINHDOANH', 'TrangThai' => 'HOAT_DONG']);
-        $tkKeToan = TaiKhoan::create(['MaTaiKhoan' => 'TK_KT_01', 'TenDangNhap' => 'kt_01', 'MatKhau' => bcrypt('123456'), 'HoTen' => 'Kế Toán', 'VaiTro' => 'KETOAN', 'TrangThai' => 'HOAT_DONG']);
+        $tkHdv = TaiKhoan::create(['ma_tai_khoan' => 'TK_HDV_01', 'ten_dang_nhap' => 'hdv_01', 'mat_khau' => bcrypt('123456'), 'ho_ten' => 'HDV', 'vai_tro' => 'HDV', 'trang_thai' => 'HOAT_DONG']);
+        $tkDieuHanh = TaiKhoan::create(['ma_tai_khoan' => 'TK_DH_01', 'ten_dang_nhap' => 'dh_01', 'mat_khau' => bcrypt('123456'), 'ho_ten' => 'Điều Hành', 'vai_tro' => 'DIEUHANH', 'trang_thai' => 'HOAT_DONG']);
+        $tkKinhDoanh = TaiKhoan::create(['ma_tai_khoan' => 'TK_KD_01', 'ten_dang_nhap' => 'kd_01', 'mat_khau' => bcrypt('123456'), 'ho_ten' => 'Kinh Doanh', 'vai_tro' => 'KINHDOANH', 'trang_thai' => 'HOAT_DONG']);
+        $tkKeToan = TaiKhoan::create(['ma_tai_khoan' => 'TK_KT_01', 'ten_dang_nhap' => 'kt_01', 'mat_khau' => bcrypt('123456'), 'ho_ten' => 'Kế Toán', 'vai_tro' => 'KETOAN', 'trang_thai' => 'HOAT_DONG']);
 
-        $this->nhanVienHdv = NhanVien::create(['MaNhanVien' => 'NV_HDV_01', 'MaTaiKhoan' => 'TK_HDV_01', 'TrangThaiLamViec' => 'DANG_LAM']);
-        $this->nhanVienDieuHanh = NhanVien::create(['MaNhanVien' => 'NV_DH_01', 'MaTaiKhoan' => 'TK_DH_01', 'TrangThaiLamViec' => 'DANG_LAM']);
-        NhanVien::create(['MaNhanVien' => 'NV_KD_01', 'MaTaiKhoan' => 'TK_KD_01', 'TrangThaiLamViec' => 'DANG_LAM']);
-        NhanVien::create(['MaNhanVien' => 'NV_KT_01', 'MaTaiKhoan' => 'TK_KT_01', 'TrangThaiLamViec' => 'DANG_LAM']);
+        $this->nhanVienHdv = NhanVien::create(['ma_nhan_vien' => 'NV_HDV_01', 'ma_tai_khoan' => 'TK_HDV_01', 'trang_thai_lam_viec' => 'DANG_LAM']);
+        $this->nhanVienDieuHanh = NhanVien::create(['ma_nhan_vien' => 'NV_DH_01', 'ma_tai_khoan' => 'TK_DH_01', 'trang_thai_lam_viec' => 'DANG_LAM']);
+        NhanVien::create(['ma_nhan_vien' => 'NV_KD_01', 'ma_tai_khoan' => 'TK_KD_01', 'trang_thai_lam_viec' => 'DANG_LAM']);
+        NhanVien::create(['ma_nhan_vien' => 'NV_KT_01', 'ma_tai_khoan' => 'TK_KT_01', 'trang_thai_lam_viec' => 'DANG_LAM']);
 
         // 2. Tạo Năng lực
         NangLucNhanVien::create([
-            'MaNangLucNhanVien' => 'NL_HDV_01',
-            'MaNhanVien' => 'NV_HDV_01',
-            'NgonNgu' => 'Tiếng Anh',
-            'ChungChi' => 'HDV',
-            'DanhGia' => 4.8,
-            'SoDanhGia' => 150
+            'ma_nang_luc_nhan_vien' => 'NL_HDV_01',
+            'ma_nhan_vien' => 'NV_HDV_01',
+            'ngon_ngu' => 'Tiếng Anh',
+            'chung_chi' => 'HDV',
+            'danh_gia' => 4.8,
+            'so_danh_gia' => 150
         ]);
 
         // 3. Tạo dữ liệu Lịch công tác
-        TourMau::create(['MaTourMau' => 'TM_NV_TEST', 'TieuDe' => 'Tour NV', 'ThoiLuong' => 3, 'GiaSan' => 1000]);
-        TourThucTe::create(['MaTourThucTe' => 'TTT_NV_TEST', 'MaTourMau' => 'TM_NV_TEST', 'NgayKhoiHanh' => now()->addDays(5)->toDateString(), 'GiaHienHanh' => 1500, 'SoKhachToiDa' => 20, 'SoKhachToiThieu' => 5, 'ChoConLai' => 20, 'TrangThai' => 'MO_BAN']);
+        TourMau::create(['ma_tour_mau' => 'TM_NV_TEST', 'tieu_de' => 'Tour NV', 'thoi_luong' => 3, 'gia_san' => 1000]);
+        TourThucTe::create(['ma_tour_thuc_te' => 'TTT_NV_TEST', 'ma_tour_mau' => 'TM_NV_TEST', 'ngay_khoi_hanh' => now()->addDays(5)->toDateString(), 'gia_hien_hanh' => 1500, 'so_khach_toi_da' => 20, 'so_khach_toi_thieu' => 5, 'cho_con_lai' => 20, 'trang_thai' => 'MO_BAN']);
         
         PhanCongTour::create([
-            'MaPhanCongTour' => 'PC_HDV_01',
-            'MaTourThucTe' => 'TTT_NV_TEST',
-            'MaNhanVien' => 'NV_HDV_01',
-            'NgayPhanCong' => now(),
-            'TrangThaiChapNhan' => 'DA_DONG_Y'
+            'ma_phan_cong_tour' => 'PC_HDV_01',
+            'ma_tour_thuc_te' => 'TTT_NV_TEST',
+            'ma_nhan_vien' => 'NV_HDV_01',
+            'ngay_phan_cong' => now(),
+            'trang_thai_chap_nhan' => 'DA_DONG_Y'
         ]);
 
         PhanCongTour::create([
-            'MaPhanCongTour' => 'PC_DH_01',
-            'MaTourThucTe' => 'TTT_NV_TEST',
-            'MaNhanVien' => 'NV_DH_01',
-            'NgayPhanCong' => now(),
-            'TrangThaiChapNhan' => 'DA_DONG_Y'
+            'ma_phan_cong_tour' => 'PC_DH_01',
+            'ma_tour_thuc_te' => 'TTT_NV_TEST',
+            'ma_nhan_vien' => 'NV_DH_01',
+            'ngay_phan_cong' => now(),
+            'trang_thai_chap_nhan' => 'DA_DONG_Y'
         ]);
 
         // Lấy Token

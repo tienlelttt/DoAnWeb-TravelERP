@@ -24,19 +24,19 @@ class TourThucTeService
         $query = TourThucTe::with('tourMau');
 
         if (!empty($trangThai)) {
-            $query->where('TrangThai', $trangThai);
+            $query->where('trang_thai', $trangThai);
         }
         if (!empty($maTourMau)) {
-            $query->where('MaTourMau', $maTourMau);
+            $query->where('ma_tour_mau', $maTourMau);
         }
         if (!empty($giaTu)) {
-            $query->where('GiaHienHanh', '>=', $giaTu);
+            $query->where('gia_hien_hanh', '>=', $giaTu);
         }
         if (!empty($giaDen)) {
-            $query->where('GiaHienHanh', '<=', $giaDen);
+            $query->where('gia_hien_hanh', '<=', $giaDen);
         }
 
-        $query->orderBy('NgayKhoiHanh', 'asc');
+        $query->orderBy('ngay_khoi_hanh', 'asc');
 
         $tours = $query->paginate($perPage);
         return TourThucTeResource::collection($tours)->response()->getData(true);
@@ -47,25 +47,25 @@ class TourThucTeService
         $query = TourThucTe::with(['tourMau' => function($q) {
             $q->with('lichTrinhTours');
         }])
-        ->where('TrangThai', 'MO_BAN')
-        ->where('ChoConLai', '>', 0)
-        ->where('NgayKhoiHanh', '>', now());
+        ->where('trang_thai', 'MO_BAN')
+        ->where('cho_con_lai', '>', 0)
+        ->where('ngay_khoi_hanh', '>', now());
 
         if (!empty($giaTu)) {
-            $query->where('GiaHienHanh', '>=', $giaTu);
+            $query->where('gia_hien_hanh', '>=', $giaTu);
         }
         if (!empty($giaDen)) {
-            $query->where('GiaHienHanh', '<=', $giaDen);
+            $query->where('gia_hien_hanh', '<=', $giaDen);
         }
         
         if (!empty($thoiLuongMin) || !empty($thoiLuongMax)) {
             $query->whereHas('tourMau', function($q) use ($thoiLuongMin, $thoiLuongMax) {
-                if (!empty($thoiLuongMin)) $q->where('ThoiLuong', '>=', $thoiLuongMin);
-                if (!empty($thoiLuongMax)) $q->where('ThoiLuong', '<=', $thoiLuongMax);
+                if (!empty($thoiLuongMin)) $q->where('thoi_luong', '>=', $thoiLuongMin);
+                if (!empty($thoiLuongMax)) $q->where('thoi_luong', '<=', $thoiLuongMax);
             });
         }
 
-        $query->orderBy('NgayKhoiHanh', 'asc');
+        $query->orderBy('ngay_khoi_hanh', 'asc');
 
         $tours = $query->paginate($perPage);
         return TourCongKhaiResource::collection($tours)->response()->getData(true);
@@ -103,8 +103,8 @@ class TourThucTeService
                 throw AppException::badRequest("S? khách t?i thi?u không du?c l?n hon s? khách t?i da");
             }
 
-            if ($data['giaHienHanh'] < $tourMau->GiaSan) {
-                throw AppException::badRequest("Giá hi?n hành không du?c th?p hon giá sàn c?a tour m?u ({$tourMau->GiaSan})");
+            if ($data['giaHienHanh'] < $tourMau->gia_san) {
+                throw AppException::badRequest("Giá hi?n hành không du?c th?p hon giá sàn c?a tour m?u ({$tourMau->gia_san})");
             }
 
             $trangThai = !empty($data['trangThai']) ? $data['trangThai'] : 'CHO_KICH_HOAT';
@@ -114,14 +114,14 @@ class TourThucTeService
             }
 
             $ttt = new TourThucTe();
-            $ttt->MaTourThucTe = $this->maTuDongService->taoMaTourThucTe();
-            $ttt->MaTourMau = $tourMau->MaTourMau;
-            $ttt->NgayKhoiHanh = $data['ngayKhoiHanh'];
-            $ttt->GiaHienHanh = $data['giaHienHanh'];
-            $ttt->SoKhachToiDa = $data['soKhachToiDa'];
-            $ttt->SoKhachToiThieu = $soKhachToiThieu;
-            $ttt->ChoConLai = $data['soKhachToiDa'];
-            $ttt->TrangThai = $trangThai;
+            $ttt->ma_tour_thuc_te = $this->maTuDongService->taoMaTourThucTe();
+            $ttt->ma_tour_mau = $tourMau->ma_tour_mau;
+            $ttt->ngay_khoi_hanh = $data['ngayKhoiHanh'];
+            $ttt->gia_hien_hanh = $data['giaHienHanh'];
+            $ttt->so_khach_toi_da = $data['soKhachToiDa'];
+            $ttt->so_khach_toi_thieu = $soKhachToiThieu;
+            $ttt->cho_con_lai = $data['soKhachToiDa'];
+            $ttt->trang_thai = $trangThai;
             $ttt->save();
 
             // B? qua D?ch v? thêm & Hành d?ng xanh trong giai do?n 3.1
@@ -140,24 +140,24 @@ class TourThucTeService
             }
 
             if (isset($data['giaHienHanh'])) {
-                $ttt->GiaHienHanh = $data['giaHienHanh'];
+                $ttt->gia_hien_hanh = $data['giaHienHanh'];
             }
             if (isset($data['soKhachToiDa'])) {
-                if ($data['soKhachToiDa'] < $ttt->SoKhachToiThieu) {
+                if ($data['soKhachToiDa'] < $ttt->so_khach_toi_thieu) {
                     throw AppException::badRequest("S? khách t?i da không du?c nh? hon s? khách t?i thi?u");
                 }
-                $ttt->SoKhachToiDa = $data['soKhachToiDa'];
+                $ttt->so_khach_toi_da = $data['soKhachToiDa'];
             }
             if (isset($data['soKhachToiThieu'])) {
-                if ($data['soKhachToiThieu'] > $ttt->SoKhachToiDa) {
+                if ($data['soKhachToiThieu'] > $ttt->so_khach_toi_da) {
                     throw AppException::badRequest("S? khách t?i thi?u không du?c l?n hon s? khách t?i da");
                 }
-                $ttt->SoKhachToiThieu = $data['soKhachToiThieu'];
+                $ttt->so_khach_toi_thieu = $data['soKhachToiThieu'];
             }
             if (isset($data['trangThai'])) {
                 $this->validateTrangThaiTourThucTe($data['trangThai']);
                 // B? qua ki?m tra phân công HDV trong giai do?n này
-                $ttt->TrangThai = $data['trangThai'];
+                $ttt->trang_thai = $data['trangThai'];
             }
 
             $ttt->save();
@@ -175,16 +175,16 @@ class TourThucTeService
                 throw AppException::notFound("Không tìm th?y tour th?c t?: {$id}");
             }
 
-            if ($ttt->TrangThai !== 'CHO_KICH_HOAT' && $ttt->TrangThai !== 'MO_BAN') {
+            if ($ttt->trang_thai !== 'CHO_KICH_HOAT' && $ttt->trang_thai !== 'MO_BAN') {
                 throw AppException::badRequest("Ch? có th? xóa tour th?c t? ? tr?ng thái CHO_KICH_HOAT ho?c MO_BAN");
             }
 
             // Ki?m tra xem có don d?t tour nào không (b? qua cho Giai do?n 3.1 vì DonDatTour thu?c Giai do?n 4, nhung t?m th?i cài d?t ki?m tra co b?n)
-            if (DonDatTour::where('MaTourThucTe', $id)->whereNotIn('TrangThai', ['DA_HUY'])->exists()) {
+            if (DonDatTour::where('ma_tour_thuc_te', $id)->whereNotIn('trang_thai', ['DA_HUY'])->exists()) {
                 throw AppException::badRequest("Không th? xóa tour th?c t? dã phát sinh don d?t tour");
             }
 
-            $ttt->TrangThai = 'HUY';
+            $ttt->trang_thai = 'HUY';
             $ttt->save();
         });
     }
@@ -199,8 +199,8 @@ class TourThucTeService
 public function layDanhGia(string $maTourThucTe)
     {
         return \App\Models\DanhGiaKh::with("khachHang.taiKhoan")
-            ->where("MaTourThucTe", $maTourThucTe)
-            ->orderBy("NgayDanhGia", "desc")
+            ->where("ma_tour_thuc_te", $maTourThucTe)
+            ->orderBy("ngay_danh_gia", "desc")
             ->paginate(10);
     }
 

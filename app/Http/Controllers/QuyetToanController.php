@@ -54,7 +54,7 @@ class QuyetToanController extends Controller
     public function taoQuyetToan(QuyetToanRequest $request, $maTour)
     {
         $user = auth('api')->user();
-        $data = $this->quyetToanService->taoQuyetToan($maTour, $request->validated(), $user->MaTaiKhoan);
+        $data = $this->quyetToanService->taoQuyetToan($maTour, $request->validated(), $user->ma_tai_khoan);
 
         return response()->json([
             'status' => 201,

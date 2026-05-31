@@ -21,7 +21,7 @@ class DanhGiaService
     public function guiDanhGia($maTaiKhoan, array $data)
     {
         return DB::transaction(function () use ($maTaiKhoan, $data) {
-            $hcs = HoChieuSo::with('taiKhoan')->where('MaTaiKhoan', $maTaiKhoan)->first();
+            $hcs = HoChieuSo::with('taiKhoan')->where('ma_tai_khoan', $maTaiKhoan)->first();
             if (!$hcs) {
                 throw AppException::notFound("Không tìm thấy hồ sơ khách hàng");
             }
@@ -31,29 +31,29 @@ class DanhGiaService
                 throw AppException::notFound("Không tìm thấy tour: " . $data['maTourThucTe']);
             }
 
-            if ($tour->TrangThai !== 'KET_THUC' && $tour->TrangThai !== 'DA_QUYET_TOAN') {
+            if ($tour->trang_thai !== 'KET_THUC' && $tour->trang_thai !== 'DA_QUYET_TOAN') {
                 throw AppException::badRequest("Chỉ có thể đánh giá tour đã kết thúc");
             }
 
-            $lichSu = LichSuTour::where('MaKhachHang', $hcs->MaKhachHang)
-                ->where('MaTourThucTe', $tour->MaTourThucTe)
+            $lichSu = LichSuTour::where('ma_khach_hang', $hcs->ma_khach_hang)
+                ->where('ma_tour_thuc_te', $tour->ma_tour_thuc_te)
                 ->first();
             if (!$lichSu) {
                 throw AppException::badRequest("Bạn chưa tham gia tour này nên không thể đánh giá");
             }
 
-            $daDanhGia = DanhGiaKh::where('MaKhachHang', $hcs->MaKhachHang)
-                ->where('MaTourThucTe', $tour->MaTourThucTe)
+            $daDanhGia = DanhGiaKh::where('ma_khach_hang', $hcs->ma_khach_hang)
+                ->where('ma_tour_thuc_te', $tour->ma_tour_thuc_te)
                 ->exists();
             if ($daDanhGia) {
                 throw AppException::badRequest("Bạn đã đánh giá tour này rồi");
             }
 
             // Khiếu nại chưa xử lý xong: CHUA_XU_LY, CHO_BO_SUNG, CHO_GIAI_TRINH, CHO_DUYET
-            $hasComplaint = YeuCauHoTro::where('MaKhachHang', $hcs->MaKhachHang)
-                ->whereIn('TrangThai', ['CHUA_XU_LY', 'CHO_BO_SUNG', 'CHO_GIAI_TRINH', 'CHO_DUYET'])
+            $hasComplaint = YeuCauHoTro::where('ma_khach_hang', $hcs->ma_khach_hang)
+                ->whereIn('trang_thai', ['CHUA_XU_LY', 'CHO_BO_SUNG', 'CHO_GIAI_TRINH', 'CHO_DUYET'])
                 ->whereHas('donDatTour', function($q) use ($tour) {
-                    $q->where('MaTourThucTe', $tour->MaTourThucTe);
+                    $q->where('ma_tour_thuc_te', $tour->ma_tour_thuc_te);
                 })
                 ->exists();
 
@@ -62,18 +62,18 @@ class DanhGiaService
             }
 
             $dg = new DanhGiaKh();
-            $dg->MaDanhGiaKhachHang = 'DG_' . strtoupper(substr(Str::uuid()->toString(), 0, 8));
-            $dg->MaTourThucTe = $tour->MaTourThucTe;
-            $dg->MaKhachHang = $hcs->MaKhachHang;
-            $dg->SoSao = $data['soSao'];
-            $dg->NhanXet = $data['nhanXet'] ?? null;
-            $dg->NgayDanhGia = Carbon::now();
+            $dg->ma_danh_gia_khach_hang = 'DG_' . strtoupper(substr(Str::uuid()->toString(), 0, 8));
+            $dg->ma_tour_thuc_te = $tour->ma_tour_thuc_te;
+            $dg->ma_khach_hang = $hcs->ma_khach_hang;
+            $dg->so_sao = $data['soSao'];
+            $dg->nhan_xet = $data['nhanXet'] ?? null;
+            $dg->ngay_danh_gia = Carbon::now();
             $dg->save();
 
-            $this->capNhatDiemTrungBinhTourMau($tour->MaTourMau);
+            $this->capNhatDiemTrungBinhTourMau($tour->ma_tour_mau);
             
             if (isset($data['soSaoHdv'])) {
-                $this->capNhatDiemTrungBinhHdv($tour->MaTourThucTe, $data['soSaoHdv']);
+                $this->capNhatDiemTrungBinhHdv($tour->ma_tour_thuc_te, $data['soSaoHdv']);
             }
 
             $dg->load(['tourThucTe.tourMau', 'khachHang.taiKhoan']);
@@ -87,40 +87,40 @@ class DanhGiaService
         if (!$tm) return;
 
         $soDanhGia = DanhGiaKh::whereHas('tourThucTe', function($q) use ($maTourMau) {
-            $q->where('MaTourMau', $maTourMau);
+            $q->where('ma_tour_mau', $maTourMau);
         })->count();
 
         $diemMoi = DanhGiaKh::whereHas('tourThucTe', function($q) use ($maTourMau) {
-            $q->where('MaTourMau', $maTourMau);
-        })->avg('SoSao');
+            $q->where('ma_tour_mau', $maTourMau);
+        })->avg('so_sao');
 
-        $tm->SoDanhGia = $soDanhGia;
-        $tm->DanhGia = $diemMoi ? round($diemMoi, 2) : 0;
+        $tm->so_danh_gia = $soDanhGia;
+        $tm->danh_gia = $diemMoi ? round($diemMoi, 2) : 0;
         $tm->save();
     }
 
     private function capNhatDiemTrungBinhHdv($maTourThucTe, $soSaoHdv)
     {
-        $phanCongs = PhanCongTour::where('MaTourThucTe', $maTourThucTe)
-            ->where('TrangThaiChapNhan', 'DA_DONG_Y')
+        $phanCongs = PhanCongTour::where('ma_tour_thuc_te', $maTourThucTe)
+            ->where('trang_thai_chap_nhan', 'DA_DONG_Y')
             ->get();
             
         foreach ($phanCongs as $pc) {
-            $nl = NangLucNhanVien::where('MaNhanVien', $pc->MaNhanVien)->first();
+            $nl = NangLucNhanVien::where('ma_nhan_vien', $pc->ma_nhan_vien)->first();
             if (!$nl) {
                 $nl = new NangLucNhanVien();
-                $nl->MaNangLucNhanVien = 'NLNV_' . strtoupper(substr(Str::uuid()->toString(), 0, 8));
-                $nl->MaNhanVien = $pc->MaNhanVien;
-                $nl->DanhGia = 0;
-                $nl->SoDanhGia = 0;
+                $nl->ma_nang_luc_nhan_vien = 'NLNV_' . strtoupper(substr(Str::uuid()->toString(), 0, 8));
+                $nl->ma_nhan_vien = $pc->ma_nhan_vien;
+                $nl->danh_gia = 0;
+                $nl->so_danh_gia = 0;
             }
 
-            $soDanhGia = ($nl->SoDanhGia ?: 0) + 1;
-            $diemHienTai = $nl->DanhGia ?: 0;
+            $soDanhGia = ($nl->so_danh_gia ?: 0) + 1;
+            $diemHienTai = $nl->danh_gia ?: 0;
             $diemMoi = (($diemHienTai * ($soDanhGia - 1)) + $soSaoHdv) / $soDanhGia;
             
-            $nl->SoDanhGia = $soDanhGia;
-            $nl->DanhGia = round($diemMoi, 2);
+            $nl->so_danh_gia = $soDanhGia;
+            $nl->danh_gia = round($diemMoi, 2);
             $nl->save();
         }
     }
@@ -134,8 +134,8 @@ class DanhGiaService
 
         $query = DanhGiaKh::with(['tourThucTe.tourMau', 'khachHang.taiKhoan'])
             ->whereHas('tourThucTe', function($q) use ($tour) {
-                $q->where('MaTourMau', $tour->MaTourMau);
-            })->orderBy('NgayDanhGia', 'desc');
+                $q->where('ma_tour_mau', $tour->ma_tour_mau);
+            })->orderBy('ngay_danh_gia', 'desc');
 
         return DanhGiaResource::collection($query->paginate($perPage))->response()->getData(true);
     }
@@ -143,7 +143,7 @@ class DanhGiaService
     public function tatCaDanhGia($perPage = 10)
     {
         $query = DanhGiaKh::with(['tourThucTe.tourMau', 'khachHang.taiKhoan'])
-            ->orderBy('NgayDanhGia', 'desc');
+            ->orderBy('ngay_danh_gia', 'desc');
 
         return DanhGiaResource::collection($query->paginate($perPage))->response()->getData(true);
     }

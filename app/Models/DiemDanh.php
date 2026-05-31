@@ -4,25 +4,25 @@ namespace App\Models;
 
 class DiemDanh extends BaseModel
 {
-    protected $table = 'DIEMDANH';
-    protected $primaryKey = 'MaDiemDanh';
+    protected $table = 'diem_danhs';
+    protected $primaryKey = 'ma_diem_danh';
     public $incrementing = false;
     protected $keyType = 'string';
     protected $guarded = [];
 
     public function tourThucTe() {
-        return $this->belongsTo(TourThucTe::class, 'MaTourThucTe', 'MaTourThucTe'); 
+        return $this->belongsTo(TourThucTe::class, 'ma_tour_thuc_te', 'ma_tour_thuc_te'); 
     }
 
     public function khachHang() {
-        return $this->belongsTo(HoChieuSo::class, 'MaKhachHang', 'MaKhachHang'); 
+        return $this->belongsTo(HoChieuSo::class, 'ma_khach_hang', 'ma_khach_hang'); 
     }
 
     public function nguoiDongHanh() {
-        return $this->belongsTo(DsNguoiDongHanh::class, 'MaNguoiDongHanh', 'MaNguoiDongHanh'); 
+        return $this->belongsTo(DsNguoiDongHanh::class, 'ma_nguoi_dong_hanh', 'ma_nguoi_dong_hanh'); 
     }
 
     public function nhanVien() {
-        return $this->belongsTo(NhanVien::class, 'MaNhanVien', 'MaNhanVien'); 
+        return $this->belongsTo(NhanVien::class, 'ma_nhan_vien', 'ma_nhan_vien'); 
     }
 }

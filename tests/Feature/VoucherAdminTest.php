@@ -17,15 +17,15 @@ class VoucherAdminTest extends TestCase
     {
         parent::setUp();
 
-        VaiTro::create(['MaVaiTro' => 'KINHDOANH', 'TenHienThi' => 'Kinh Doanh']);
+        VaiTro::create(['ma_vai_tro' => 'KINHDOANH', 'ten_hien_thi' => 'Kinh Doanh']);
 
         $this->kinhDoanhUser = TaiKhoan::create([
-            'MaTaiKhoan' => 'TK_KINHDOANH',
-            'TenDangNhap' => 'kd_test',
-            'MatKhau' => Hash::make('password123'),
-            'HoTen' => 'Kinh Doanh Test',
-            'VaiTro' => 'KINHDOANH',
-            'TrangThai' => 'HOAT_DONG'
+            'ma_tai_khoan' => 'TK_KINHDOANH',
+            'ten_dang_nhap' => 'kd_test',
+            'mat_khau' => Hash::make('password123'),
+            'ho_ten' => 'Kinh Doanh Test',
+            'vai_tro' => 'KINHDOANH',
+            'trang_thai' => 'HOAT_DONG'
         ]);
     }
 
@@ -49,23 +49,23 @@ class VoucherAdminTest extends TestCase
                      'giaTriGiam' => 500000
                  ]);
 
-        $this->assertDatabaseHas('VOUCHER', [
-            'MaCode' => 'SUMMER2026'
+        $this->assertDatabaseHas('vouchers', [
+            'ma_code' => 'SUMMER2026'
         ]);
     }
 
     public function testKinhDoanhCoThePhatHanhVoucherChoKhachHang()
     {
         $voucher = Voucher::create([
-            'MaVoucher' => 'VC_TEST',
-            'MaCode' => 'TESTCODE',
-            'LoaiUuDai' => 'PHAN_TRAM',
-            'GiaTriGiam' => 10,
-            'SoLuotPhatHanh' => 10,
-            'SoLuotDaDung' => 0,
-            'NgayHieuLuc' => now(),
-            'NgayHetHan' => now()->addDays(30),
-            'TrangThai' => 'SAN_SANG'
+            'ma_voucher' => 'VC_TEST',
+            'ma_code' => 'TESTCODE',
+            'loai_uu_dai' => 'PHAN_TRAM',
+            'gia_tri_giam' => 10,
+            'so_luot_phat_hanh' => 10,
+            'so_luot_da_dung' => 0,
+            'ngay_hieu_luc' => now(),
+            'ngay_het_han' => now()->addDays(30),
+            'trang_thai' => 'SAN_SANG'
         ]);
 
         $payload = [
@@ -77,10 +77,10 @@ class VoucherAdminTest extends TestCase
 
         $response->assertStatus(201);
 
-        $this->assertDatabaseHas('KHUYENMAI_KH', [
-            'MaKhachHang' => 'KH_VIP_01',
-            'MaVoucher' => 'VC_TEST',
-            'TrangThai' => 'CO_HIEU_LUC'
+        $this->assertDatabaseHas('khuyen_mai_khs', [
+            'ma_khach_hang' => 'KH_VIP_01',
+            'ma_voucher' => 'VC_TEST',
+            'trang_thai' => 'CO_HIEU_LUC'
         ]);
     }
 }

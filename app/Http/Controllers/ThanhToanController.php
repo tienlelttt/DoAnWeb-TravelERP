@@ -33,7 +33,7 @@ class ThanhToanController extends Controller
     public function thanhToanMock(ThanhToanMockRequest $request): JsonResponse
     {
         $user = auth()->user();
-        $donDatTour = $this->thanhToanService->thanhToanMock($request->validated()['maDatTour'], $user->MaTaiKhoan);
+        $donDatTour = $this->thanhToanService->thanhToanMock($request->validated()['maDatTour'], $user->ma_tai_khoan);
 
         // Load các relation để DonDatTourResource render đầy đủ
         $donDatTour->load(['tourThucTe.tourMau', 'khachHang.taiKhoan', 'chiTietDatTours.khachHang.taiKhoan', 'chiTietDatTours.nguoiDongHanh', 'chiTietDichVus.dichVuThem', 'datTourUuDai.voucher']);
@@ -56,8 +56,8 @@ class ThanhToanController extends Controller
         $mock = (bool) ($data['mock'] ?? false);
 
         if ($mock || $phuongThuc === 'MOCK') {
-            $donDatTour = $this->thanhToanService->thanhToanMock($maDatTour, $user->MaTaiKhoan);
-            $giaoDich = GiaoDich::where('MaDatTour', $donDatTour->MaDatTour)
+            $donDatTour = $this->thanhToanService->thanhToanMock($maDatTour, $user->ma_tai_khoan);
+            $giaoDich = GiaoDich::where('ma_dat_tour', $donDatTour->ma_dat_tour)
                 ->orderBy('created_at', 'desc')
                 ->first();
 
@@ -67,9 +67,9 @@ class ThanhToanController extends Controller
             );
         }
 
-        $payUrl = $this->vnpayService->taoUrlThanhToan($maDatTour, $user->MaTaiKhoan, $request->ip());
-        $giaoDich = GiaoDich::where('MaDatTour', $maDatTour)
-            ->where('TrangThai', 'CHO_THANH_TOAN')
+        $payUrl = $this->vnpayService->taoUrlThanhToan($maDatTour, $user->ma_tai_khoan, $request->ip());
+        $giaoDich = GiaoDich::where('ma_dat_tour', $maDatTour)
+            ->where('trang_thai', 'CHO_THANH_TOAN')
             ->orderBy('created_at', 'desc')
             ->first();
 
@@ -83,7 +83,7 @@ class ThanhToanController extends Controller
     {
         $user = auth()->user();
         $data = $request->validated();
-        $giaoDich = $this->thanhToanService->baoChuyenKhoan($data['maDatTour'], $data['maGDNH'], $user->MaTaiKhoan);
+        $giaoDich = $this->thanhToanService->baoChuyenKhoan($data['maDatTour'], $data['maGDNH'], $user->ma_tai_khoan);
         return $this->successResponse(new GiaoDichResource($giaoDich), "Báo chuyển khoản ngân hàng thành công. Vui lòng chờ Sales duyệt giao dịch.");
     }
 
@@ -93,7 +93,7 @@ class ThanhToanController extends Controller
     public function xacNhanDaChuyenKhoan(string $maDatTour): JsonResponse
     {
         $user = auth()->user();
-        $giaoDich = $this->thanhToanService->baoChuyenKhoan($maDatTour, 'KHACH_XAC_NHAN_' . now()->format('YmdHis'), $user->MaTaiKhoan);
+        $giaoDich = $this->thanhToanService->baoChuyenKhoan($maDatTour, 'KHACH_XAC_NHAN_' . now()->format('YmdHis'), $user->ma_tai_khoan);
 
         return $this->successResponse(
             $this->thanhToanResponse($giaoDich, null, 'Đã ghi nhận khách hàng chuyển khoản, chờ xác nhận'),
@@ -103,13 +103,13 @@ class ThanhToanController extends Controller
 
     public function hetHanThanhToanQr(string $maDatTour): JsonResponse
     {
-        $giaoDich = GiaoDich::where('MaDatTour', $maDatTour)
-            ->where('TrangThai', 'CHO_THANH_TOAN')
+        $giaoDich = GiaoDich::where('ma_dat_tour', $maDatTour)
+            ->where('trang_thai', 'CHO_THANH_TOAN')
             ->orderBy('created_at', 'desc')
             ->first();
 
         if ($giaoDich) {
-            $giaoDich->TrangThai = 'THAT_BAI';
+            $giaoDich->trang_thai = 'THAT_BAI';
             $giaoDich->save();
         }
 
@@ -118,7 +118,7 @@ class ThanhToanController extends Controller
 
     public function ketQua(string $maDatTour): JsonResponse
     {
-        $giaoDich = GiaoDich::where('MaDatTour', $maDatTour)
+        $giaoDich = GiaoDich::where('ma_dat_tour', $maDatTour)
             ->orderBy('created_at', 'desc')
             ->first();
 
@@ -136,7 +136,7 @@ class ThanhToanController extends Controller
             'maDatTour.required' => 'Vui lòng cung cấp mã đặt tour'
         ]);
 
-        $maTaiKhoan = auth()->user()->MaTaiKhoan;
+        $maTaiKhoan = auth()->user()->ma_tai_khoan;
         $url = $this->vnpayService->taoUrlThanhToan($request->maDatTour, $maTaiKhoan, $request->ip());
 
         return $this->successResponse(['paymentUrl' => $url], "Tạo URL thanh toán VNPAY thành công");
@@ -185,12 +185,12 @@ class ThanhToanController extends Controller
     private function thanhToanResponse(?GiaoDich $giaoDich, ?string $payUrl, string $thongBao): array
     {
         return [
-            'maGiaoDich' => $giaoDich?->MaGiaoDich,
-            'maDatTour' => $giaoDich?->MaDatTour,
-            'trangThai' => $giaoDich?->TrangThai ?? 'CHO_THANH_TOAN',
-            'phuongThuc' => $giaoDich?->PhuongThuc,
-            'soTien' => $giaoDich ? (float) $giaoDich->SoTien : null,
-            'ngayThanhToan' => $giaoDich?->NgayThanhToan,
+            'maGiaoDich' => $giaoDich?->ma_giao_dich,
+            'maDatTour' => $giaoDich?->ma_dat_tour,
+            'trangThai' => $giaoDich?->trang_thai ?? 'CHO_THANH_TOAN',
+            'phuongThuc' => $giaoDich?->phuong_thuc,
+            'soTien' => $giaoDich ? (float) $giaoDich->so_tien : null,
+            'ngayThanhToan' => $giaoDich?->ngay_thanh_toan,
             'payUrl' => $payUrl,
             'thongBao' => $thongBao,
         ];

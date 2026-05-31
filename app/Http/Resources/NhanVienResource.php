@@ -15,15 +15,15 @@ class NhanVienResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'maNhanVien' => $this->MaNhanVien,
-            'loaiNhanVien' => $this->LoaiNhanVien,
-            'trangThaiLamViec' => $this->TrangThaiLamViec,
+            'maNhanVien' => $this->ma_nhan_vien,
+            'loaiNhanVien' => $this->loai_nhan_vien,
+            'trangThaiLamViec' => $this->trang_thai_lam_viec,
             'taiKhoan' => [
-                'hoTen' => $this->taiKhoan->HoTen ?? null,
-                'email' => $this->taiKhoan->Email ?? null,
-                'soDienThoai' => $this->taiKhoan->SoDienThoai ?? null,
-                'vaiTro' => $this->taiKhoan->VaiTro ?? null,
-                'trangThai' => $this->taiKhoan->TrangThai ?? null,
+                'hoTen' => $this->taiKhoan->ho_ten ?? null,
+                'email' => $this->taiKhoan->email ?? null,
+                'soDienThoai' => $this->taiKhoan->so_dien_thoai ?? null,
+                'vaiTro' => $this->taiKhoan->vai_tro ?? null,
+                'trangThai' => $this->taiKhoan->trang_thai ?? null,
             ]
         ];
     }

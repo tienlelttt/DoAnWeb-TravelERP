@@ -14,7 +14,7 @@ class DoiDiemVoucherRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'maVoucher' => 'required|string|exists:VOUCHER,MaVoucher',
+            'maVoucher' => 'required|string|exists:vouchers,ma_voucher',
         ];
     }
 

@@ -14,7 +14,7 @@ class BaoChuyenKhoanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'maDatTour' => 'required|string|exists:DONDATTOUR,MaDatTour',
+            'maDatTour' => 'required|string|exists:don_dat_tours,ma_dat_tour',
             'maGDNH' => 'required|string|min:3',
         ];
     }

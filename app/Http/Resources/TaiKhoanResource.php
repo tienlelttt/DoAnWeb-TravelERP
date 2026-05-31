@@ -15,15 +15,15 @@ class TaiKhoanResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'maTaiKhoan' => $this->MaTaiKhoan,
-            'tenDangNhap' => $this->TenDangNhap,
-            'hoTen' => $this->HoTen,
-            'cccd' => $this->CCCD,
-            'ngaySinh' => $this->NgaySinh ? $this->NgaySinh->format('Y-m-d') : null,
-            'email' => $this->Email,
-            'soDienThoai' => $this->SoDienThoai,
-            'vaiTro' => $this->VaiTro,
-            'trangThai' => $this->TrangThai,
+            'maTaiKhoan' => $this->ma_tai_khoan,
+            'tenDangNhap' => $this->ten_dang_nhap,
+            'hoTen' => $this->ho_ten,
+            'cccd' => $this->cccd,
+            'ngaySinh' => $this->ngay_sinh ? $this->ngay_sinh->format('Y-m-d') : null,
+            'email' => $this->email,
+            'soDienThoai' => $this->so_dien_thoai,
+            'vaiTro' => $this->vai_tro,
+            'trangThai' => $this->trang_thai,
             'createdAt' => $this->created_at ? $this->created_at->format('Y-m-d\TH:i:s') : null,
             'updatedAt' => $this->updated_at ? $this->updated_at->format('Y-m-d\TH:i:s') : null,
         ];

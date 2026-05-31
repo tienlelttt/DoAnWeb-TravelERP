@@ -19,15 +19,15 @@ class UserService
         $query = TaiKhoan::query();
 
         if (isset($filters['vaiTro'])) {
-            $query->where('VaiTro', $filters['vaiTro']);
+            $query->where('vai_tro', $filters['vaiTro']);
         }
         if (isset($filters['search'])) {
             $search = $filters['search'];
             $query->where(function ($q) use ($search) {
-                $q->where('HoTen', 'like', "%{$search}%")
-                  ->orWhere('Email', 'like', "%{$search}%")
-                  ->orWhere('SoDienThoai', 'like', "%{$search}%")
-                  ->orWhere('TenDangNhap', 'like', "%{$search}%");
+                $q->where('ho_ten', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('so_dien_thoai', 'like', "%{$search}%")
+                  ->orWhere('ten_dang_nhap', 'like', "%{$search}%");
             });
         }
 
@@ -36,21 +36,21 @@ class UserService
 
     public function create(array $data)
     {
-        $data['MaTaiKhoan'] = $this->maTuDongService->taoMaTaiKhoanTheoVaiTro($data['vaiTro']);
-        $data['MatKhau'] = Hash::make($data['matKhau']);
+        $data['ma_tai_khoan'] = $this->maTuDongService->taoMaTaiKhoanTheoVaiTro($data['vaiTro']);
+        $data['mat_khau'] = Hash::make($data['matKhau']);
         
         // Map keys
         $taiKhoanData = [
-            'MaTaiKhoan' => $data['MaTaiKhoan'],
-            'TenDangNhap' => $data['tenDangNhap'],
-            'MatKhau' => $data['MatKhau'],
-            'HoTen' => $data['hoTen'],
-            'CCCD' => $data['cccd'] ?? null,
-            'NgaySinh' => $data['ngaySinh'] ?? null,
-            'Email' => $data['email'] ?? null,
-            'SoDienThoai' => $data['soDienThoai'] ?? null,
-            'VaiTro' => $data['vaiTro'],
-            'TrangThai' => $data['trangThai'] ?? 'HOAT_DONG',
+            'ma_tai_khoan' => $data['ma_tai_khoan'],
+            'ten_dang_nhap' => $data['tenDangNhap'],
+            'mat_khau' => $data['mat_khau'],
+            'ho_ten' => $data['hoTen'],
+            'cccd' => $data['cccd'] ?? null,
+            'ngay_sinh' => $data['ngaySinh'] ?? null,
+            'email' => $data['email'] ?? null,
+            'so_dien_thoai' => $data['soDienThoai'] ?? null,
+            'vai_tro' => $data['vaiTro'],
+            'trang_thai' => $data['trangThai'] ?? 'HOAT_DONG',
         ];
 
         return TaiKhoan::create($taiKhoanData);
@@ -67,22 +67,22 @@ class UserService
             }
 
             $taiKhoan = TaiKhoan::create([
-                'MaTaiKhoan' => $this->maTuDongService->taoMaTaiKhoanTheoVaiTro($maVaiTro),
-                'TenDangNhap' => $data['tenDangNhap'],
-                'MatKhau' => Hash::make($data['matKhau']),
-                'HoTen' => $data['hoTen'],
-                'Email' => $data['email'] ?? null,
-                'SoDienThoai' => $data['soDienThoai'] ?? null,
-                'VaiTro' => $maVaiTro,
-                'TrangThai' => 'HOAT_DONG',
+                'ma_tai_khoan' => $this->maTuDongService->taoMaTaiKhoanTheoVaiTro($maVaiTro),
+                'ten_dang_nhap' => $data['tenDangNhap'],
+                'mat_khau' => Hash::make($data['matKhau']),
+                'ho_ten' => $data['hoTen'],
+                'email' => $data['email'] ?? null,
+                'so_dien_thoai' => $data['soDienThoai'] ?? null,
+                'vai_tro' => $maVaiTro,
+                'trang_thai' => 'HOAT_DONG',
             ]);
 
             NhanVien::create([
-                'MaNhanVien' => $this->maTuDongService->taoMaNhanVien(),
-                'MaTaiKhoan' => $taiKhoan->MaTaiKhoan,
-                'LoaiNhanVien' => $maVaiTro,
-                'NgayVaoLam' => now(),
-                'TrangThaiLamViec' => 'HOAT_DONG',
+                'ma_nhan_vien' => $this->maTuDongService->taoMaNhanVien(),
+                'ma_tai_khoan' => $taiKhoan->ma_tai_khoan,
+                'loai_nhan_vien' => $maVaiTro,
+                'ngay_vao_lam' => now(),
+                'trang_thai_lam_viec' => 'HOAT_DONG',
             ]);
 
             return $taiKhoan->load('vaiTro');
@@ -94,18 +94,18 @@ class UserService
         $taiKhoan = TaiKhoan::findOrFail($id);
 
         $updateData = [
-            'TenDangNhap' => $data['tenDangNhap'],
-            'HoTen' => $data['hoTen'],
-            'CCCD' => $data['cccd'] ?? null,
-            'NgaySinh' => $data['ngaySinh'] ?? null,
-            'Email' => $data['email'] ?? null,
-            'SoDienThoai' => $data['soDienThoai'] ?? null,
-            'VaiTro' => $data['vaiTro'],
-            'TrangThai' => $data['trangThai'],
+            'ten_dang_nhap' => $data['tenDangNhap'],
+            'ho_ten' => $data['hoTen'],
+            'cccd' => $data['cccd'] ?? null,
+            'ngay_sinh' => $data['ngaySinh'] ?? null,
+            'email' => $data['email'] ?? null,
+            'so_dien_thoai' => $data['soDienThoai'] ?? null,
+            'vai_tro' => $data['vaiTro'],
+            'trang_thai' => $data['trangThai'],
         ];
 
         if (!empty($data['matKhau'])) {
-            $updateData['MatKhau'] = Hash::make($data['matKhau']);
+            $updateData['mat_khau'] = Hash::make($data['matKhau']);
         }
 
         $taiKhoan->update($updateData);
@@ -117,7 +117,7 @@ class UserService
     {
         $taiKhoan = TaiKhoan::findOrFail($id);
         // Có thể thực hiện xóa mềm (KHOA) thay vì xóa cứng
-        $taiKhoan->update(['TrangThai' => 'KHOA']);
+        $taiKhoan->update(['trang_thai' => 'KHOA']);
         return true;
     }
 }

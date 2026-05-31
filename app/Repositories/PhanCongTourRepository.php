@@ -16,8 +16,8 @@ class PhanCongTourRepository
     {
         // Lấy danh sách các tour đã phân công cho HDV mà chưa bị từ chối
         $danhSachPhanCong = PhanCongTour::with(['tourThucTe.tourMau'])
-            ->where('MaNhanVien', $maNhanVien)
-            ->where('TrangThaiChapNhan', '!=', 'TU_CHOI')
+            ->where('ma_nhan_vien', $maNhanVien)
+            ->where('trang_thai_chap_nhan', '!=', 'TU_CHOI')
             ->get();
 
         foreach ($danhSachPhanCong as $phanCong) {
@@ -26,8 +26,8 @@ class PhanCongTourRepository
                 continue; // Bỏ qua nếu dữ liệu lỗi
             }
 
-            $thoiLuongCu = $tourThucTe->tourMau->ThoiLuong; // Số ngày
-            $ngayKhoiHanhCu = Carbon::parse($tourThucTe->NgayKhoiHanh);
+            $thoiLuongCu = $tourThucTe->tourMau->thoi_luong; // Số ngày
+            $ngayKhoiHanhCu = Carbon::parse($tourThucTe->ngay_khoi_hanh);
             $ngayKetThucCu = $ngayKhoiHanhCu->copy()->addDays($thoiLuongCu);
 
             // Kiểm tra trùng lặp: Nếu (Bắt đầu mới < Kết thúc cũ + 12h) VÀ (Kết thúc mới + 12h > Bắt đầu cũ) thì trùng
@@ -35,7 +35,7 @@ class PhanCongTourRepository
             $ngayKetThucMoiCong12h = $ngayKetThucMoi->copy()->addHours(12);
 
             if ($ngayKhoiHanhMoi < $ngayKetThucCuCong12h && $ngayKetThucMoiCong12h > $ngayKhoiHanhCu) {
-                throw AppException::badRequest("Hướng dẫn viên bị trùng lịch hoặc khoảng cách nghỉ ngơi giữa 2 tour ít hơn 12 tiếng. (Đang cấn lịch với tour " . $tourThucTe->MaTourThucTe . ")");
+                throw AppException::badRequest("Hướng dẫn viên bị trùng lịch hoặc khoảng cách nghỉ ngơi giữa 2 tour ít hơn 12 tiếng. (Đang cấn lịch với tour " . $tourThucTe->ma_tour_thuc_te . ")");
             }
         }
     }
@@ -45,8 +45,8 @@ class PhanCongTourRepository
      */
     public function kiemTraSoLuongHDVDongY(string $maTourThucTe): int
     {
-        return PhanCongTour::where('MaTourThucTe', $maTourThucTe)
-            ->where('TrangThaiChapNhan', 'DA_DONG_Y')
+        return PhanCongTour::where('ma_tour_thuc_te', $maTourThucTe)
+            ->where('trang_thai_chap_nhan', 'DA_DONG_Y')
             ->count();
     }
 }

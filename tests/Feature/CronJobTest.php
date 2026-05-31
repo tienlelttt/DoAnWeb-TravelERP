@@ -16,56 +16,56 @@ class CronJobTest extends TestCase
     public function testCancelExpiredBookingsJob()
     {
         $tourMau = \App\Models\TourMau::create([
-            'MaTourMau' => 'TM_01',
-            'TieuDe' => 'Tour Test',
-            'ThoiLuong' => 3,
-            'GiaSan' => 1000000
+            'ma_tour_mau' => 'TM_01',
+            'tieu_de' => 'Tour Test',
+            'thoi_luong' => 3,
+            'gia_san' => 1000000
         ]);
 
         $tour = TourThucTe::create([
-            'MaTourThucTe' => 'TT_CRON',
-            'MaTourMau' => 'TM_01',
-            'NgayKhoiHanh' => now()->addDays(5),
-            'GiaHienHanh' => 1000000,
-            'SoKhachToiDa' => 10,
-            'SoKhachToiThieu' => 5,
-            'ChoConLai' => 5,
-            'TrangThai' => 'DANG_NHAN_KHACH'
+            'ma_tour_thuc_te' => 'TT_CRON',
+            'ma_tour_mau' => 'TM_01',
+            'ngay_khoi_hanh' => now()->addDays(5),
+            'gia_hien_hanh' => 1000000,
+            'so_khach_toi_da' => 10,
+            'so_khach_toi_thieu' => 5,
+            'cho_con_lai' => 5,
+            'trang_thai' => 'DANG_NHAN_KHACH'
         ]);
 
         // Đơn quá hạn (25 tiếng trước)
         DonDatTour::create([
-            'MaDatTour' => 'DT_EXPIRED',
-            'MaTourThucTe' => 'TT_CRON',
-            'MaKhachHang' => 'KH_1',
-            'NgayDat' => Carbon::now()->subHours(25),
-            'TongTien' => 1000000,
-            'TrangThai' => 'CHO_THANH_TOAN'
+            'ma_dat_tour' => 'DT_EXPIRED',
+            'ma_tour_thuc_te' => 'TT_CRON',
+            'ma_khach_hang' => 'KH_1',
+            'ngay_dat' => Carbon::now()->subHours(25),
+            'tong_tien' => 1000000,
+            'trang_thai' => 'CHO_THANH_TOAN'
         ]);
 
         // Đơn còn hạn (23 tiếng trước)
         DonDatTour::create([
-            'MaDatTour' => 'DT_VALID',
-            'MaTourThucTe' => 'TT_CRON',
-            'MaKhachHang' => 'KH_2',
-            'NgayDat' => Carbon::now()->subHours(23),
-            'TongTien' => 1000000,
-            'TrangThai' => 'CHO_THANH_TOAN'
+            'ma_dat_tour' => 'DT_VALID',
+            'ma_tour_thuc_te' => 'TT_CRON',
+            'ma_khach_hang' => 'KH_2',
+            'ngay_dat' => Carbon::now()->subHours(23),
+            'tong_tien' => 1000000,
+            'trang_thai' => 'CHO_THANH_TOAN'
         ]);
 
         // Chạy cron job
         Artisan::call('bookings:cancel-expired');
 
         // Đơn quá hạn phải bị hủy
-        $this->assertDatabaseHas('DONDATTOUR', [
-            'MaDatTour' => 'DT_EXPIRED',
-            'TrangThai' => 'DA_HUY'
+        $this->assertDatabaseHas('don_dat_tours', [
+            'ma_dat_tour' => 'DT_EXPIRED',
+            'trang_thai' => 'DA_HUY'
         ]);
 
         // Đơn còn hạn phải giữ nguyên
-        $this->assertDatabaseHas('DONDATTOUR', [
-            'MaDatTour' => 'DT_VALID',
-            'TrangThai' => 'CHO_THANH_TOAN'
+        $this->assertDatabaseHas('don_dat_tours', [
+            'ma_dat_tour' => 'DT_VALID',
+            'trang_thai' => 'CHO_THANH_TOAN'
         ]);
     }
 
@@ -74,48 +74,48 @@ class CronJobTest extends TestCase
         $now = Carbon::now();
         
         $tourMau = \App\Models\TourMau::create([
-            'MaTourMau' => 'TM_02',
-            'TieuDe' => 'Tour Test',
-            'ThoiLuong' => 3,
-            'GiaSan' => 1000000
+            'ma_tour_mau' => 'TM_02',
+            'tieu_de' => 'Tour Test',
+            'thoi_luong' => 3,
+            'gia_san' => 1000000
         ]);
 
         // Tour lấp đầy > 80%
         $tourHot = TourThucTe::create([
-            'MaTourThucTe' => 'TT_HOT',
-            'MaTourMau' => 'TM_02',
-            'SoKhachToiDa' => 10,
-            'SoKhachToiThieu' => 5,
-            'ChoConLai' => 1, // Đã lấp 90%
-            'NgayKhoiHanh' => $now->copy()->addDays(10),
-            'GiaHienHanh' => 1000000,
-            'TrangThai' => 'DANG_NHAN_KHACH'
+            'ma_tour_thuc_te' => 'TT_HOT',
+            'ma_tour_mau' => 'TM_02',
+            'so_khach_toi_da' => 10,
+            'so_khach_toi_thieu' => 5,
+            'cho_con_lai' => 1, // Đã lấp 90%
+            'ngay_khoi_hanh' => $now->copy()->addDays(10),
+            'gia_hien_hanh' => 1000000,
+            'trang_thai' => 'DANG_NHAN_KHACH'
         ]);
 
         // Tour ế (lấp < 30%) và sắp khởi hành (<= 7 ngày)
         $tourE = TourThucTe::create([
-            'MaTourThucTe' => 'TT_E',
-            'MaTourMau' => 'TM_02',
-            'SoKhachToiDa' => 10,
-            'SoKhachToiThieu' => 5,
-            'ChoConLai' => 8, // Lấp 20%
-            'NgayKhoiHanh' => $now->copy()->addDays(5),
-            'GiaHienHanh' => 1000000,
-            'TrangThai' => 'DANG_NHAN_KHACH'
+            'ma_tour_thuc_te' => 'TT_E',
+            'ma_tour_mau' => 'TM_02',
+            'so_khach_toi_da' => 10,
+            'so_khach_toi_thieu' => 5,
+            'cho_con_lai' => 8, // Lấp 20%
+            'ngay_khoi_hanh' => $now->copy()->addDays(5),
+            'gia_hien_hanh' => 1000000,
+            'trang_thai' => 'DANG_NHAN_KHACH'
         ]);
 
         Artisan::call('pricing:update-dynamic');
 
         // Tour Hot phải tăng giá 5% (1.050.000)
-        $this->assertDatabaseHas('TOURTHUCTE', [
-            'MaTourThucTe' => 'TT_HOT',
-            'GiaHienHanh' => 1050000
+        $this->assertDatabaseHas('tour_thuc_tes', [
+            'ma_tour_thuc_te' => 'TT_HOT',
+            'gia_hien_hanh' => 1050000
         ]);
 
         // Tour Ế phải giảm giá 10% (900.000)
-        $this->assertDatabaseHas('TOURTHUCTE', [
-            'MaTourThucTe' => 'TT_E',
-            'GiaHienHanh' => 900000
+        $this->assertDatabaseHas('tour_thuc_tes', [
+            'ma_tour_thuc_te' => 'TT_E',
+            'gia_hien_hanh' => 900000
         ]);
     }
 }

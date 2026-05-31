@@ -4,14 +4,14 @@ namespace App\Models;
 
 class DichVuThem extends BaseModel
 {
-    protected $table = 'DICHVUTHEM';
-    protected $primaryKey = 'MaDichVuThem';
+    protected $table = 'dich_vu_thems';
+    protected $primaryKey = 'ma_dich_vu_them';
     public $incrementing = false;
     protected $keyType = 'string';
     protected $guarded = [];
 
     public function tourThucTes()
     {
-        return $this->belongsToMany(TourThucTe::class, 'DICHVU_TOURTHUCTE', 'MaDichVuThem', 'MaTourThucTe');
+        return $this->belongsToMany(TourThucTe::class, 'dich_vu_tour_thuc_tes', 'ma_dich_vu_them', 'ma_tour_thuc_te');
     }
 }

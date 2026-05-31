@@ -63,12 +63,12 @@ class PowerBiService
 
         // Ghi nhật ký hệ thống
         \App\Models\NhatKyHeThong::create([
-            'MaNhatKyHeThong' => app(\App\Services\MaTuDongService::class)->taoMaNhatKyHeThong(),
-            'MaTaiKhoan' => $user->MaTaiKhoan,
-            'HanhDong' => 'POWER_BI_KET_NOI',
-            'DoiTuong' => 'XUAT_DU_LIEU_POWERBI',
-            'GhiChu' => $maKho,
-            'ThoiGian' => \Carbon\Carbon::now()
+            'ma_nhat_ky_he_thong' => app(\App\Services\MaTuDongService::class)->taoMaNhatKyHeThong(),
+            'ma_tai_khoan' => $user->ma_tai_khoan,
+            'hanh_dong' => 'POWER_BI_KET_NOI',
+            'doi_tuong' => 'XUAT_DU_LIEU_POWERBI',
+            'ghi_chu' => $maKho,
+            'thoi_gian' => \Carbon\Carbon::now()
         ]);
 
         return [
@@ -95,12 +95,12 @@ class PowerBiService
         $denNgay = !empty($request['denNgay']) ? Carbon::parse($request['denNgay'])->endOfDay() : null;
 
         \App\Models\NhatKyHeThong::create([
-            'MaNhatKyHeThong' => app(\App\Services\MaTuDongService::class)->taoMaNhatKyHeThong(),
-            'MaTaiKhoan' => $user->MaTaiKhoan,
-            'HanhDong' => 'POWER_BI_XUAT_FILE',
-            'DoiTuong' => 'XUAT_DU_LIEU_POWERBI',
-            'GhiChu' => $maKho . "_" . $request['dinhDang'],
-            'ThoiGian' => \Carbon\Carbon::now()
+            'ma_nhat_ky_he_thong' => app(\App\Services\MaTuDongService::class)->taoMaNhatKyHeThong(),
+            'ma_tai_khoan' => $user->ma_tai_khoan,
+            'hanh_dong' => 'POWER_BI_XUAT_FILE',
+            'doi_tuong' => 'XUAT_DU_LIEU_POWERBI',
+            'ghi_chu' => $maKho . "_" . $request['dinhDang'],
+            'thoi_gian' => \Carbon\Carbon::now()
         ]);
 
         $dataRows = [];
@@ -110,19 +110,19 @@ class PowerBiService
             case 'DOANH_THU':
                 $headers = ['Mã QT', 'Mã Tour TT', 'Tiêu đề Tour', 'Tổng Doanh Thu', 'Tổng Chi Phí', 'Lợi Nhuận', 'Ngày QT', 'Trạng Thái'];
                 $query = QuyetToan::with('tourThucTe.tourMau');
-                if ($tuNgay) $query->where('NgayQuyetToan', '>=', $tuNgay);
-                if ($denNgay) $query->where('NgayQuyetToan', '<=', $denNgay);
+                if ($tuNgay) $query->where('ngay_quyet_toan', '>=', $tuNgay);
+                if ($denNgay) $query->where('ngay_quyet_toan', '<=', $denNgay);
                 
                 foreach ($query->get() as $qt) {
                     $dataRows[] = [
-                        $qt->MaQuyetToan,
-                        $qt->MaTourThucTe,
-                        $qt->tourThucTe?->tourMau?->TieuDe ?? '',
-                        $qt->TongDoanhThu,
-                        $qt->TongChiPhi,
-                        $qt->LoiNhuan,
-                        $qt->NgayQuyetToan,
-                        $qt->TrangThai
+                        $qt->ma_quyet_toan,
+                        $qt->ma_tour_thuc_te,
+                        $qt->tourThucTe?->tourMau?->tieu_de ?? '',
+                        $qt->tong_doanh_thu,
+                        $qt->tong_chi_phi,
+                        $qt->loi_nhuan,
+                        $qt->ngay_quyet_toan,
+                        $qt->trang_thai
                     ];
                 }
                 break;
@@ -130,17 +130,17 @@ class PowerBiService
             case 'DON_DAT_TOUR':
                 $headers = ['Mã Đặt Tour', 'Mã Tour TT', 'Tiêu đề Tour', 'Ngày Đặt', 'Tổng Tiền', 'Trạng Thái'];
                 $query = DonDatTour::with('tourThucTe.tourMau');
-                if ($tuNgay) $query->where('NgayDat', '>=', $tuNgay);
-                if ($denNgay) $query->where('NgayDat', '<=', $denNgay);
+                if ($tuNgay) $query->where('ngay_dat', '>=', $tuNgay);
+                if ($denNgay) $query->where('ngay_dat', '<=', $denNgay);
                 
                 foreach ($query->get() as $d) {
                     $dataRows[] = [
-                        $d->MaDatTour,
-                        $d->MaTourThucTe,
-                        $d->tourThucTe?->tourMau?->TieuDe ?? '',
-                        $d->NgayDat,
-                        $d->TongTien,
-                        $d->TrangThai
+                        $d->ma_dat_tour,
+                        $d->ma_tour_thuc_te,
+                        $d->tourThucTe?->tourMau?->tieu_de ?? '',
+                        $d->ngay_dat,
+                        $d->tong_tien,
+                        $d->trang_thai
                     ];
                 }
                 break;
@@ -148,17 +148,17 @@ class PowerBiService
             case 'CHI_PHI':
                 $headers = ['Mã Chi Phí', 'Mã Tour TT', 'Danh Mục', 'Thành Tiền', 'Trạng Thái Duyệt', 'Ngày Khai'];
                 $query = ChiPhiThucTe::query();
-                if ($tuNgay) $query->where('NgayKhai', '>=', $tuNgay);
-                if ($denNgay) $query->where('NgayKhai', '<=', $denNgay);
+                if ($tuNgay) $query->where('ngay_khai', '>=', $tuNgay);
+                if ($denNgay) $query->where('ngay_khai', '<=', $denNgay);
                 
                 foreach ($query->get() as $c) {
                     $dataRows[] = [
-                        $c->MaChiPhiThucTe,
-                        $c->MaTourThucTe,
-                        $c->DanhMuc,
-                        $c->ThanhTien,
-                        $c->TrangThaiDuyet,
-                        $c->NgayKhai
+                        $c->ma_chi_phi_thuc_te,
+                        $c->ma_tour_thuc_te,
+                        $c->danh_muc,
+                        $c->thanh_tien,
+                        $c->trang_thai_duyet,
+                        $c->ngay_khai
                     ];
                 }
                 break;
@@ -166,18 +166,18 @@ class PowerBiService
             case 'TOUR':
                 $headers = ['Mã Tour TT', 'Tiêu đề', 'Ngày Khởi Hành', 'Giá Hiện Hành', 'Số Khách Tối Đa', 'Chỗ Còn Lại', 'Trạng Thái'];
                 $query = TourThucTe::with('tourMau');
-                if ($tuNgay) $query->where('NgayKhoiHanh', '>=', $tuNgay);
-                if ($denNgay) $query->where('NgayKhoiHanh', '<=', $denNgay);
+                if ($tuNgay) $query->where('ngay_khoi_hanh', '>=', $tuNgay);
+                if ($denNgay) $query->where('ngay_khoi_hanh', '<=', $denNgay);
                 
                 foreach ($query->get() as $t) {
                     $dataRows[] = [
-                        $t->MaTourThucTe,
-                        $t->tourMau?->TieuDe ?? '',
-                        $t->NgayKhoiHanh,
-                        $t->GiaHienHanh,
-                        $t->SoKhachToiDa,
-                        $t->ChoConLai,
-                        $t->TrangThai
+                        $t->ma_tour_thuc_te,
+                        $t->tourMau?->tieu_de ?? '',
+                        $t->ngay_khoi_hanh,
+                        $t->gia_hien_hanh,
+                        $t->so_khach_toi_da,
+                        $t->cho_con_lai,
+                        $t->trang_thai
                     ];
                 }
                 break;
@@ -185,18 +185,18 @@ class PowerBiService
             case 'GIAO_DICH':
                 $headers = ['Mã Giao Dịch', 'Mã Đặt Tour', 'Loại GD', 'Phương Thức', 'Số Tiền', 'Trạng Thái', 'Ngày Thanh Toán'];
                 $query = GiaoDich::query();
-                if ($tuNgay) $query->where('NgayThanhToan', '>=', $tuNgay);
-                if ($denNgay) $query->where('NgayThanhToan', '<=', $denNgay);
+                if ($tuNgay) $query->where('ngay_thanh_toan', '>=', $tuNgay);
+                if ($denNgay) $query->where('ngay_thanh_toan', '<=', $denNgay);
                 
                 foreach ($query->get() as $g) {
                     $dataRows[] = [
-                        $g->MaGiaoDich,
-                        $g->MaDatTour,
-                        $g->LoaiGiaoDich,
-                        $g->PhuongThuc,
-                        $g->SoTien,
-                        $g->TrangThai,
-                        $g->NgayThanhToan
+                        $g->ma_giao_dich,
+                        $g->ma_dat_tour,
+                        $g->loai_giao_dich,
+                        $g->phuong_thuc,
+                        $g->so_tien,
+                        $g->trang_thai,
+                        $g->ngay_thanh_toan
                     ];
                 }
                 break;

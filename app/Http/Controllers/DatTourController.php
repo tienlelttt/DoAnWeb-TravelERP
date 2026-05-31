@@ -18,7 +18,7 @@ class DatTourController extends Controller
     public function datTour(DatTourRequest $request)
     {
         $user = auth()->user();
-        $result = $this->datTourService->datTour($user->MaTaiKhoan, $request->validated());
+        $result = $this->datTourService->datTour($user->ma_tai_khoan, $request->validated());
         return $this->successResponse($result, 'Đặt tour thành công', 201);
     }
 
@@ -26,21 +26,21 @@ class DatTourController extends Controller
     {
         $user = auth()->user();
         $perPage = $request->query('per_page', 10);
-        $result = $this->datTourService->danhSachCuaToi($user->MaTaiKhoan, $perPage);
+        $result = $this->datTourService->danhSachCuaToi($user->ma_tai_khoan, $perPage);
         return $this->successResponse($result, 'Lấy danh sách đơn đặt tour thành công');
     }
 
     public function chiTietCuaToi($maDatTour)
     {
         $user = auth()->user();
-        $result = $this->datTourService->chiTietCuaToi($user->MaTaiKhoan, $maDatTour);
+        $result = $this->datTourService->chiTietCuaToi($user->ma_tai_khoan, $maDatTour);
         return $this->successResponse($result, 'Lấy chi tiết đơn đặt tour thành công');
     }
 
     public function huyDatTour($maDatTour)
     {
         $user = auth()->user();
-        $this->datTourService->huyDatTour($user->MaTaiKhoan, $maDatTour);
+        $this->datTourService->huyDatTour($user->ma_tai_khoan, $maDatTour);
         return $this->successResponse(null, 'Hủy đơn đặt tour thành công');
     }
 }

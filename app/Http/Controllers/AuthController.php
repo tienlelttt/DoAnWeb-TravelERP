@@ -36,16 +36,16 @@ class AuthController extends Controller
             throw AppException::badRequest("Mật khẩu và xác nhận mật khẩu không khớp");
         }
         
-        if (TaiKhoan::where('TenDangNhap', $request->tenDangNhap)->exists()) {
+        if (TaiKhoan::where('ten_dang_nhap', $request->tenDangNhap)->exists()) {
             throw AppException::badRequest("Tên đăng nhập đã tồn tại");
         }
         
-        if (!empty($request->email) && TaiKhoan::where('Email', $request->email)->exists()) {
-            throw AppException::badRequest("Email đã được sử dụng");
+        if (!empty($request->email) && TaiKhoan::where('email', $request->email)->exists()) {
+            throw AppException::badRequest("email đã được sử dụng");
         }
         
-        if (!empty($request->cccd) && TaiKhoan::where('CCCD', $request->cccd)->exists()) {
-            throw AppException::badRequest("CCCD đã được sử dụng");
+        if (!empty($request->cccd) && TaiKhoan::where('cccd', $request->cccd)->exists()) {
+            throw AppException::badRequest("cccd đã được sử dụng");
         }
 
         $vaiTroKhach = VaiTro::find('KHACHHANG');
@@ -55,29 +55,29 @@ class AuthController extends Controller
 
         DB::transaction(function () use ($request, $vaiTroKhach) {
             $taiKhoan = new TaiKhoan();
-            $taiKhoan->MaTaiKhoan = $this->maTuDongService->taoMaTaiKhoanTheoVaiTro('KHACHHANG');
-            $taiKhoan->TenDangNhap = $request->tenDangNhap;
-            $taiKhoan->MatKhau = Hash::make($request->matKhau);
-            $taiKhoan->HoTen = $request->hoTen;
-            $taiKhoan->Cccd = $request->cccd;
-            $taiKhoan->NgaySinh = $request->ngaySinh;
-            $taiKhoan->Email = $request->email;
-            $taiKhoan->SoDienThoai = $request->soDienThoai;
-            $taiKhoan->VaiTro = $vaiTroKhach->MaVaiTro;
-            $taiKhoan->TrangThai = 'HOAT_DONG';
+            $taiKhoan->ma_tai_khoan = $this->maTuDongService->taoMaTaiKhoanTheoVaiTro('KHACHHANG');
+            $taiKhoan->ten_dang_nhap = $request->tenDangNhap;
+            $taiKhoan->mat_khau = Hash::make($request->matKhau);
+            $taiKhoan->ho_ten = $request->hoTen;
+            $taiKhoan->cccd = $request->cccd;
+            $taiKhoan->ngay_sinh = $request->ngaySinh;
+            $taiKhoan->email = $request->email;
+            $taiKhoan->so_dien_thoai = $request->soDienThoai;
+            $taiKhoan->vai_tro = $vaiTroKhach->ma_vai_tro;
+            $taiKhoan->trang_thai = 'HOAT_DONG';
             $taiKhoan->save();
 
             $hoChieuSo = new HoChieuSo();
-            $hoChieuSo->MaKhachHang = $this->maTuDongService->taoMaHoChieuSo();
-            $hoChieuSo->MaTaiKhoan = $taiKhoan->MaTaiKhoan;
-            $hoChieuSo->HangThanhVien = 'THANH_VIEN';
-            $hoChieuSo->DiemXanh = 0;
+            $hoChieuSo->ma_khach_hang = $this->maTuDongService->taoMaHoChieuSo();
+            $hoChieuSo->ma_tai_khoan = $taiKhoan->ma_tai_khoan;
+            $hoChieuSo->hang_thanh_vien = 'THANH_VIEN';
+            $hoChieuSo->diem_xanh = 0;
             $hoChieuSo->save();
         });
 
         // Tự động đăng nhập sau khi đăng ký
         $credentials = [
-            'TenDangNhap' => $request->tenDangNhap,
+            'ten_dang_nhap' => $request->tenDangNhap,
             'password' => $request->matKhau
         ];
         
@@ -88,9 +88,9 @@ class AuthController extends Controller
         return $this->created([
             'accessToken' => $token,
             'tokenType' => 'Bearer',
-            'maVaiTro' => $vaiTro ? $vaiTro->MaVaiTro : null,
-            'tenHienThi' => $vaiTro ? $vaiTro->TenHienThi : null,
-            'hoTen' => $user->HoTen
+            'maVaiTro' => $vaiTro ? $vaiTro->ma_vai_tro : null,
+            'tenHienThi' => $vaiTro ? $vaiTro->ten_hien_thi : null,
+            'hoTen' => $user->ho_ten
         ]);
     }
 
@@ -99,9 +99,9 @@ class AuthController extends Controller
      */
     public function dangNhap(DangNhapRequest $request)
     {
-        // Ghi chú: password ở đây tương ứng với hàm getAuthPassword() trả về $this->MatKhau
+        // Ghi chú: password ở đây tương ứng với hàm getAuthPassword() trả về $this->mat_khau
         $credentials = [
-            'TenDangNhap' => $request->tenDangNhap,
+            'ten_dang_nhap' => $request->tenDangNhap,
             'password' => $request->matKhau
         ];
 
@@ -110,7 +110,7 @@ class AuthController extends Controller
         }
 
         $user = Auth::guard('api')->user();
-        if ($user->TrangThai !== 'HOAT_DONG') {
+        if ($user->trang_thai !== 'HOAT_DONG') {
             throw new AppException(403, "FORBIDDEN", "Tài khoản không ở trạng thái HOAT_DONG");
         }
 
@@ -119,9 +119,9 @@ class AuthController extends Controller
         return $this->ok("Đăng nhập thành công", [
             'accessToken' => $token,
             'tokenType' => 'Bearer',
-            'maVaiTro' => $vaiTro ? $vaiTro->MaVaiTro : null,
-            'tenHienThi' => $vaiTro ? $vaiTro->TenHienThi : null,
-            'hoTen' => $user->HoTen
+            'maVaiTro' => $vaiTro ? $vaiTro->ma_vai_tro : null,
+            'tenHienThi' => $vaiTro ? $vaiTro->ten_hien_thi : null,
+            'hoTen' => $user->ho_ten
         ]);
     }
 
@@ -141,11 +141,11 @@ class AuthController extends Controller
         }
 
         $user = Auth::guard('api')->user();
-        if (!Hash::check($request->matKhauCu, $user->MatKhau)) {
+        if (!Hash::check($request->matKhauCu, $user->mat_khau)) {
             throw AppException::unauthorized("Mật khẩu cũ không đúng", "UNAUTHORIZED");
         }
 
-        $user->MatKhau = Hash::make($request->matKhauMoi);
+        $user->mat_khau = Hash::make($request->matKhauMoi);
         $user->save();
 
         return $this->noContent("Đổi mật khẩu thành công");
@@ -170,7 +170,7 @@ class AuthController extends Controller
         ]);
 
         $user = Auth::guard('api')->user();
-        if (!Hash::check($request->matKhauCu, $user->MatKhau)) {
+        if (!Hash::check($request->matKhauCu, $user->mat_khau)) {
             throw AppException::unauthorized("Mật khẩu cũ không đúng", "UNAUTHORIZED");
         }
 
@@ -186,7 +186,7 @@ class AuthController extends Controller
             'email' => 'required|email'
         ]);
 
-        $taiKhoan = TaiKhoan::where('Email', $request->email)->first();
+        $taiKhoan = TaiKhoan::where('email', $request->email)->first();
         if (!$taiKhoan) {
             throw AppException::notFound("Không tìm thấy tài khoản với email này");
         }
@@ -230,7 +230,7 @@ class AuthController extends Controller
                 throw AppException::notFound("Không tìm thấy tài khoản");
             }
 
-            $taiKhoan->MatKhau = Hash::make($request->matKhauMoi);
+            $taiKhoan->mat_khau = Hash::make($request->matKhauMoi);
             $taiKhoan->save();
 
             // Huỷ token reset sau khi xài xong

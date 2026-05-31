@@ -21,49 +21,49 @@ class QuyetToanTest extends TestCase
     {
         parent::setUp();
 
-        VaiTro::create(['MaVaiTro' => 'KETOAN', 'TenHienThi' => 'Kế Toán']);
+        VaiTro::create(['ma_vai_tro' => 'KETOAN', 'ten_hien_thi' => 'Kế Toán']);
 
         $this->keToanUser = TaiKhoan::create([
-            'MaTaiKhoan' => 'TK_KETOAN',
-            'TenDangNhap' => 'ketoan_test',
-            'MatKhau' => Hash::make('password123'),
-            'HoTen' => 'Ke Toan Test',
-            'VaiTro' => 'KETOAN',
-            'TrangThai' => 'HOAT_DONG'
+            'ma_tai_khoan' => 'TK_KETOAN',
+            'ten_dang_nhap' => 'ketoan_test',
+            'mat_khau' => Hash::make('password123'),
+            'ho_ten' => 'Ke Toan Test',
+            'vai_tro' => 'KETOAN',
+            'trang_thai' => 'HOAT_DONG'
         ]);
 
         NhanVien::create([
-            'MaNhanVien' => 'NV_01',
-            'MaTaiKhoan' => 'TK_KETOAN',
-            'LoaiNhanVien' => 'KETOAN',
-            'TrangThaiLamViec' => 'DANG_LAM_VIEC'
+            'ma_nhan_vien' => 'NV_01',
+            'ma_tai_khoan' => 'TK_KETOAN',
+            'loai_nhan_vien' => 'KETOAN',
+            'trang_thai_lam_viec' => 'DANG_LAM_VIEC'
         ]);
 
         $tourMau = TourMau::create([
-            'MaTourMau' => 'TM_01',
-            'TieuDe' => 'Tour Test',
-            'ThoiLuong' => 3,
-            'GiaSan' => 1000000
+            'ma_tour_mau' => 'TM_01',
+            'tieu_de' => 'Tour Test',
+            'thoi_luong' => 3,
+            'gia_san' => 1000000
         ]);
 
         $this->tourThucTe = TourThucTe::create([
-            'MaTourThucTe' => 'TT_01',
-            'MaTourMau' => 'TM_01',
-            'NgayKhoiHanh' => now()->subDays(5),
-            'GiaHienHanh' => 1000000,
-            'SoKhachToiDa' => 10,
-            'SoKhachToiThieu' => 5,
-            'ChoConLai' => 10,
-            'TrangThai' => 'KET_THUC'
+            'ma_tour_thuc_te' => 'TT_01',
+            'ma_tour_mau' => 'TM_01',
+            'ngay_khoi_hanh' => now()->subDays(5),
+            'gia_hien_hanh' => 1000000,
+            'so_khach_toi_da' => 10,
+            'so_khach_toi_thieu' => 5,
+            'cho_con_lai' => 10,
+            'trang_thai' => 'KET_THUC'
         ]);
 
         DonDatTour::create([
-            'MaDatTour' => 'DT_01',
-            'MaTourThucTe' => 'TT_01',
-            'MaKhachHang' => 'KH_01',
-            'NgayDat' => now()->subDays(10),
-            'TongTien' => 2000000,
-            'TrangThai' => 'HOAN_THANH'
+            'ma_dat_tour' => 'DT_01',
+            'ma_tour_thuc_te' => 'TT_01',
+            'ma_khach_hang' => 'KH_01',
+            'ngay_dat' => now()->subDays(10),
+            'tong_tien' => 2000000,
+            'trang_thai' => 'HOAN_THANH'
         ]);
     }
 
@@ -112,9 +112,9 @@ class QuyetToanTest extends TestCase
                      'giaCamKet' => 1500000
                  ]);
 
-        $this->assertDatabaseHas('QUYETTOAN', [
-            'MaTourThucTe' => 'TT_01',
-            'TrangThai' => 'CHUA_QUYET_TOAN'
+        $this->assertDatabaseHas('quyet_toans', [
+            'ma_tour_thuc_te' => 'TT_01',
+            'trang_thai' => 'CHUA_QUYET_TOAN'
         ]);
     }
 }

@@ -25,16 +25,16 @@ class TourMauService
         $query = TourMau::query();
 
         if (!empty($tieuDe)) {
-            $query->where('TieuDe', 'like', "%{$tieuDe}%");
+            $query->where('tieu_de', 'like', "%{$tieuDe}%");
         }
         if (!empty($thoiLuongMin)) {
-            $query->where('ThoiLuong', '>=', $thoiLuongMin);
+            $query->where('thoi_luong', '>=', $thoiLuongMin);
         }
         if (!empty($thoiLuongMax)) {
-            $query->where('ThoiLuong', '<=', $thoiLuongMax);
+            $query->where('thoi_luong', '<=', $thoiLuongMax);
         }
 
-        $query->orderBy('MaTourMau', 'desc');
+        $query->orderBy('ma_tour_mau', 'desc');
 
         $tours = $query->paginate($perPage);
         return TourMauResource::collection($tours)->response()->getData(true);
@@ -53,25 +53,25 @@ class TourMauService
     {
         return DB::transaction(function () use ($data) {
             $tour = new TourMau();
-            $tour->MaTourMau = $this->maTuDongService->taoMaTourMau();
-            $tour->TieuDe = $data['tieuDe'];
-            $tour->MoTa = $data['moTa'] ?? null;
-            $tour->ThoiLuong = $data['thoiLuong'];
-            $tour->GiaSan = $data['giaSan'];
-            $tour->DanhGia = null;
-            $tour->SoDanhGia = 0;
+            $tour->ma_tour_mau = $this->maTuDongService->taoMaTourMau();
+            $tour->tieu_de = $data['tieuDe'];
+            $tour->mo_ta = $data['moTa'] ?? null;
+            $tour->thoi_luong = $data['thoiLuong'];
+            $tour->gia_san = $data['giaSan'];
+            $tour->danh_gia = null;
+            $tour->so_danh_gia = 0;
             $tour->save();
 
             if (!empty($data['lichTrinh'])) {
                 foreach ($data['lichTrinh'] as $ltReq) {
                     $this->validateLichTrinh($tour, $ltReq['ngayThu']);
                     $lt = new LichTrinhTour();
-                    $lt->MaLichTrinhTour = $this->maTuDongService->taoMaLichTrinhTour();
-                    $lt->MaTourMau = $tour->MaTourMau;
-                    $lt->NgayThu = $ltReq['ngayThu'];
-                    $lt->HoatDong = $ltReq['hoatDong'];
-                    $lt->MoTa = $ltReq['moTa'] ?? null;
-                    $lt->ThucDon = $ltReq['thucDon'] ?? null;
+                    $lt->ma_lich_trinh_tour = $this->maTuDongService->taoMaLichTrinhTour();
+                    $lt->ma_tour_mau = $tour->ma_tour_mau;
+                    $lt->ngay_thu = $ltReq['ngayThu'];
+                    $lt->hoat_dong = $ltReq['hoatDong'];
+                    $lt->mo_ta = $ltReq['moTa'] ?? null;
+                    $lt->thuc_don = $ltReq['thucDon'] ?? null;
                     $lt->save();
                 }
             }
@@ -89,10 +89,10 @@ class TourMauService
                 throw AppException::notFound("Không tìm thấy tour mẫu: {$id}");
             }
 
-            $tour->TieuDe = $data['tieuDe'];
-            $tour->MoTa = $data['moTa'] ?? null;
-            $tour->ThoiLuong = $data['thoiLuong'];
-            $tour->GiaSan = $data['giaSan'];
+            $tour->tieu_de = $data['tieuDe'];
+            $tour->mo_ta = $data['moTa'] ?? null;
+            $tour->thoi_luong = $data['thoiLuong'];
+            $tour->gia_san = $data['giaSan'];
             $tour->save();
 
             return new TourMauResource($tour);
@@ -107,11 +107,11 @@ class TourMauService
                 throw AppException::notFound("Không tìm thấy tour mẫu: {$id}");
             }
 
-            if (TourThucTe::where('MaTourMau', $id)->exists()) {
+            if (TourThucTe::where('ma_tour_mau', $id)->exists()) {
                 throw AppException::badRequest("Không thể xóa tour mẫu vì đã có tour thực tế liên kết");
             }
 
-            LichTrinhTour::where('MaTourMau', $id)->delete();
+            LichTrinhTour::where('ma_tour_mau', $id)->delete();
             $tour->delete();
         });
     }
@@ -125,23 +125,23 @@ class TourMauService
             }
 
             $banSao = new TourMau();
-            $banSao->MaTourMau = $this->maTuDongService->taoMaTourMau();
-            $banSao->TieuDe = "[Sao chep] " . $goc->TieuDe;
-            $banSao->MoTa = $goc->MoTa;
-            $banSao->ThoiLuong = $goc->ThoiLuong;
-            $banSao->GiaSan = $goc->GiaSan;
-            $banSao->DanhGia = null;
-            $banSao->SoDanhGia = 0;
+            $banSao->ma_tour_mau = $this->maTuDongService->taoMaTourMau();
+            $banSao->tieu_de = "[Sao chep] " . $goc->tieu_de;
+            $banSao->mo_ta = $goc->mo_ta;
+            $banSao->thoi_luong = $goc->thoi_luong;
+            $banSao->gia_san = $goc->gia_san;
+            $banSao->danh_gia = null;
+            $banSao->so_danh_gia = 0;
             $banSao->save();
 
             foreach ($goc->lichTrinhTours as $ltGoc) {
                 $ltMoi = new LichTrinhTour();
-                $ltMoi->MaLichTrinhTour = $this->maTuDongService->taoMaLichTrinhTour();
-                $ltMoi->MaTourMau = $banSao->MaTourMau;
-                $ltMoi->NgayThu = $ltGoc->NgayThu;
-                $ltMoi->HoatDong = $ltGoc->HoatDong;
-                $ltMoi->MoTa = $ltGoc->MoTa;
-                $ltMoi->ThucDon = $ltGoc->ThucDon;
+                $ltMoi->ma_lich_trinh_tour = $this->maTuDongService->taoMaLichTrinhTour();
+                $ltMoi->ma_tour_mau = $banSao->ma_tour_mau;
+                $ltMoi->ngay_thu = $ltGoc->ngay_thu;
+                $ltMoi->hoat_dong = $ltGoc->hoat_dong;
+                $ltMoi->mo_ta = $ltGoc->mo_ta;
+                $ltMoi->thuc_don = $ltGoc->thuc_don;
                 $ltMoi->save();
             }
 
@@ -161,12 +161,12 @@ class TourMauService
             $this->validateLichTrinh($tour, $data['ngayThu']);
 
             $lt = new LichTrinhTour();
-            $lt->MaLichTrinhTour = $this->maTuDongService->taoMaLichTrinhTour();
-            $lt->MaTourMau = $maTourMau;
-            $lt->NgayThu = $data['ngayThu'];
-            $lt->HoatDong = $data['hoatDong'];
-            $lt->MoTa = $data['moTa'] ?? null;
-            $lt->ThucDon = $data['thucDon'] ?? null;
+            $lt->ma_lich_trinh_tour = $this->maTuDongService->taoMaLichTrinhTour();
+            $lt->ma_tour_mau = $maTourMau;
+            $lt->ngay_thu = $data['ngayThu'];
+            $lt->hoat_dong = $data['hoatDong'];
+            $lt->mo_ta = $data['moTa'] ?? null;
+            $lt->thuc_don = $data['thucDon'] ?? null;
             $lt->save();
 
             return new LichTrinhResource($lt);
@@ -186,26 +186,26 @@ class TourMauService
                 throw AppException::notFound("Không tìm thấy lịch trình: {$maLichTrinh}");
             }
 
-            if ($lt->MaTourMau !== $maTourMau) {
+            if ($lt->ma_tour_mau !== $maTourMau) {
                 throw AppException::badRequest("Lịch trình không thuộc tour mẫu này");
             }
 
-            if (isset($data['ngayThu']) && $data['ngayThu'] != $lt->NgayThu) {
-                if (LichTrinhTour::where('MaTourMau', $maTourMau)
-                    ->where('NgayThu', $data['ngayThu'])
-                    ->where('MaLichTrinhTour', '!=', $maLichTrinh)
+            if (isset($data['ngayThu']) && $data['ngayThu'] != $lt->ngay_thu) {
+                if (LichTrinhTour::where('ma_tour_mau', $maTourMau)
+                    ->where('ngay_thu', $data['ngayThu'])
+                    ->where('ma_lich_trinh_tour', '!=', $maLichTrinh)
                     ->exists()) {
                     throw AppException::badRequest("Ngày thứ {$data['ngayThu']} đã tồn tại trong tour này");
                 }
-                if ($data['ngayThu'] > $tour->ThoiLuong) {
-                    throw AppException::badRequest("Ngày thứ không được vượt quá thời lượng tour ({$tour->ThoiLuong} ngày)");
+                if ($data['ngayThu'] > $tour->thoi_luong) {
+                    throw AppException::badRequest("Ngày thứ không được vượt quá thời lượng tour ({$tour->thoi_luong} ngày)");
                 }
-                $lt->NgayThu = $data['ngayThu'];
+                $lt->ngay_thu = $data['ngayThu'];
             }
 
-            if (isset($data['hoatDong'])) $lt->HoatDong = $data['hoatDong'];
-            if (isset($data['moTa'])) $lt->MoTa = $data['moTa'];
-            if (isset($data['thucDon'])) $lt->ThucDon = $data['thucDon'];
+            if (isset($data['hoatDong'])) $lt->hoat_dong = $data['hoatDong'];
+            if (isset($data['moTa'])) $lt->mo_ta = $data['moTa'];
+            if (isset($data['thucDon'])) $lt->thuc_don = $data['thucDon'];
             $lt->save();
 
             return new LichTrinhResource($lt);
@@ -220,7 +220,7 @@ class TourMauService
                 throw AppException::notFound("Không tìm thấy lịch trình: {$maLichTrinh}");
             }
 
-            if ($lt->MaTourMau !== $maTourMau) {
+            if ($lt->ma_tour_mau !== $maTourMau) {
                 throw AppException::badRequest("Lịch trình không thuộc tour mẫu này");
             }
 
@@ -230,10 +230,10 @@ class TourMauService
 
     private function validateLichTrinh(TourMau $tour, $ngayThu)
     {
-        if ($ngayThu > $tour->ThoiLuong) {
-            throw AppException::badRequest("Ngày thứ {$ngayThu} vượt quá thời lượng tour ({$tour->ThoiLuong} ngày)");
+        if ($ngayThu > $tour->thoi_luong) {
+            throw AppException::badRequest("Ngày thứ {$ngayThu} vượt quá thời lượng tour ({$tour->thoi_luong} ngày)");
         }
-        if (LichTrinhTour::where('MaTourMau', $tour->MaTourMau)->where('NgayThu', $ngayThu)->exists()) {
+        if (LichTrinhTour::where('ma_tour_mau', $tour->ma_tour_mau)->where('ngay_thu', $ngayThu)->exists()) {
             throw AppException::badRequest("Ngày thứ {$ngayThu} đã tồn tại trong tour này");
         }
     }

@@ -22,7 +22,7 @@ class NhanVienController extends Controller
      */
     public function layHoSo(): JsonResponse
     {
-        $maTaiKhoan = auth()->user()->MaTaiKhoan;
+        $maTaiKhoan = auth()->user()->ma_tai_khoan;
         $nhanVien = $this->nhanVienService->layHoSoNhanVien($maTaiKhoan);
 
         return $this->successResponse(new NhanVienResource($nhanVien), "Láº¥y há»“ sÆ¡ nhÃ¢n viÃªn thÃ nh cÃ´ng");
@@ -34,23 +34,23 @@ class NhanVienController extends Controller
      * @return JsonResponse
      */
     public function layLichCongTac(): JsonResponse { 
-        $maTaiKhoan = auth()->user()->MaTaiKhoan;
+        $maTaiKhoan = auth()->user()->ma_tai_khoan;
         $nhanVien = $this->nhanVienService->layHoSoNhanVien($maTaiKhoan);
-        $lichCongTac = $this->nhanVienService->layLichCongTac($nhanVien->MaNhanVien);
+        $lichCongTac = $this->nhanVienService->layLichCongTac($nhanVien->ma_nhan_vien);
 
         // Map data Ä‘á»ƒ chuáº©n hÃ³a key vá» camelCase
         $data = $lichCongTac->map(function ($item) {
             return [
-                'maPhanCong' => $item->MaPhanCongTour,
-                'maTourThucTe' => $item->MaTourThucTe,
-                'ngayPhanCong' => $item->NgayPhanCong,
-                'ngayPhanHoi' => $item->NgayPhanHoi,
-                'trangThaiChapNhan' => $item->TrangThaiChapNhan,
+                'maPhanCong' => $item->ma_phan_cong_tour,
+                'maTourThucTe' => $item->ma_tour_thuc_te,
+                'ngayPhanCong' => $item->ngay_phan_cong,
+                'ngayPhanHoi' => $item->ngay_phan_hoi,
+                'trangThaiChapNhan' => $item->trang_thai_chap_nhan,
                 'tourThucTe' => $item->tourThucTe ? [
-                    'maTourThucTe' => $item->tourThucTe->MaTourThucTe,
-                    'maTourMau' => $item->tourThucTe->MaTourMau,
-                    'ngayKhoiHanh' => $item->tourThucTe->NgayKhoiHanh,
-                    'trangThai' => $item->tourThucTe->TrangThai,
+                    'maTourThucTe' => $item->tourThucTe->ma_tour_thuc_te,
+                    'maTourMau' => $item->tourThucTe->ma_tour_mau,
+                    'ngayKhoiHanh' => $item->tourThucTe->ngay_khoi_hanh,
+                    'trangThai' => $item->tourThucTe->trang_thai,
                 ] : null
             ];
         });
@@ -65,21 +65,21 @@ class NhanVienController extends Controller
      */
     public function layNangLuc(): JsonResponse
     {
-        $maTaiKhoan = auth()->user()->MaTaiKhoan;
+        $maTaiKhoan = auth()->user()->ma_tai_khoan;
         $nhanVien = $this->nhanVienService->layHoSoNhanVien($maTaiKhoan);
-        $nangLuc = $this->nhanVienService->layNangLuc($nhanVien->MaNhanVien);
+        $nangLuc = $this->nhanVienService->layNangLuc($nhanVien->ma_nhan_vien);
 
         if (!$nangLuc) {
             return $this->successResponse(null, "NhÃ¢n viÃªn chÆ°a cÃ³ há»“ sÆ¡ nÄƒng lá»±c");
         }
 
         $data = [
-            'maNangLuc' => $nangLuc->MaNangLucNhanVien,
-            'ngonNgu' => $nangLuc->NgonNgu,
-            'chungChi' => $nangLuc->ChungChi,
-            'chuyenMon' => $nangLuc->ChuyenMon,
-            'danhGia' => (float) $nangLuc->DanhGia,
-            'soDanhGia' => $nangLuc->SoDanhGia,
+            'maNangLuc' => $nangLuc->ma_nang_luc_nhan_vien,
+            'ngonNgu' => $nangLuc->ngon_ngu,
+            'chungChi' => $nangLuc->chung_chi,
+            'chuyenMon' => $nangLuc->chuyen_mon,
+            'danhGia' => (float) $nangLuc->danh_gia,
+            'soDanhGia' => $nangLuc->so_danh_gia,
         ];
 
         return $this->successResponse($data, "Láº¥y nÄƒng lá»±c nhÃ¢n viÃªn thÃ nh cÃ´ng");

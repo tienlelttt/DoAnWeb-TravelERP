@@ -26,7 +26,7 @@ class XuLyHuyController extends Controller
     {
         $user = auth()->user();
         $data = $request->validated();
-        $donDatTour = $this->huyDonService->xuLyHuyDon($data['maDatTour'], $data['trangThai'], $user->MaTaiKhoan);
+        $donDatTour = $this->huyDonService->xuLyHuyDon($data['maDatTour'], $data['trangThai'], $user->ma_tai_khoan);
 
         // Load các relation
         $donDatTour->load(['tourThucTe.tourMau', 'khachHang.taiKhoan', 'chiTietDatTours.khachHang.taiKhoan', 'chiTietDatTours.nguoiDongHanh', 'chiTietDichVus.dichVuThem', 'datTourUuDai.voucher']);

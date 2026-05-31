@@ -18,7 +18,7 @@ class DanhGiaController extends Controller
     public function guiDanhGia(DanhGiaRequest $request)
     {
         $user = auth()->user();
-        $result = $this->danhGiaService->guiDanhGia($user->MaTaiKhoan, $request->validated());
+        $result = $this->danhGiaService->guiDanhGia($user->ma_tai_khoan, $request->validated());
         return $this->successResponse($result, 'Đánh giá tour thành công', 201);
     }
 

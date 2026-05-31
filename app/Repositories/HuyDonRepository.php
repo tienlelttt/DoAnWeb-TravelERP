@@ -15,7 +15,7 @@ class HuyDonRepository
      */
     public function capNhatTrangThai(DonDatTour $don, string $trangThai): void
     {
-        $don->TrangThai = $trangThai;
+        $don->trang_thai = $trangThai;
         $don->save();
     }
 }

@@ -115,7 +115,7 @@ class TourMauController extends Controller implements HasMiddleware
 
     private function checkRole(array $roles)
     {
-        $userRole = auth()->user()->VaiTro;
+        $userRole = auth()->user()->vai_tro;
         if (!in_array($userRole, $roles)) {
             throw new \App\Exceptions\AppException(403, "Bạn không có quyền truy cập");
         }

@@ -26,8 +26,8 @@ class RoleMiddleware
             ], 401, [], JSON_UNESCAPED_UNICODE);
         }
 
-        // $user->VaiTro là chuỗi FK như 'KHACHHANG', 'ADMIN', ...
-        if (!empty($roles) && !in_array($user->VaiTro, $roles, true)) {
+        // $user->vai_tro là chuỗi FK như 'KHACHHANG', 'ADMIN', ...
+        if (!empty($roles) && !in_array($user->vai_tro, $roles, true)) {
             return response()->json([
                 'status'  => 403,
                 'success' => false,
