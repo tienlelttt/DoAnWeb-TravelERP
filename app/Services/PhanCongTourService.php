@@ -123,4 +123,69 @@ class PhanCongTourService
             }
         }
     }
+
+    /**
+     * Lấy danh sách tour cần phân công
+     */
+    public function danhSachTourCanPhanCong()
+    {
+        // Các tour chuẩn bị khởi hành và số lượng HDV < yêu cầu (nếu có logic đếm HDV)
+        // Hiện tại chỉ lấy các tour trạng thái CHO_KICH_HOAT hoặc MO_BAN và chưa khởi hành
+        return TourThucTe::with('tourMau')
+            ->whereIn('TrangThai', ['CHO_KICH_HOAT', 'MO_BAN'])
+            ->where('NgayKhoiHanh', '>', now())
+            ->orderBy('NgayKhoiHanh', 'asc')
+            ->paginate(10);
+    }
+
+    /**
+     * Lấy danh sách HDV khả dụng cho một tour (không trùng lịch)
+     */
+    public function danhSachHdvKhaDung(string $maTourThucTe)
+    {
+        $tourThucTe = TourThucTe::with('tourMau')->where('MaTourThucTe', $maTourThucTe)->first();
+        if (!$tourThucTe) {
+            throw AppException::notFound("Không tìm thấy tour thực tế");
+        }
+
+        $thoiLuong = $tourThucTe->tourMau->ThoiLuong;
+        $ngayKhoiHanh = Carbon::parse($tourThucTe->NgayKhoiHanh);
+        $ngayKetThuc = $ngayKhoiHanh->copy()->addDays($thoiLuong);
+
+        // Lấy tất cả nhân viên có vai trò HDV và đang DANG_LAM
+        $tatCaHdv = NhanVien::whereHas('taiKhoan', function($q) {
+            $q->where('VaiTro', 'HDV');
+        })->where('TrangThaiLamViec', 'DANG_LAM')->get();
+
+        $hdvKhaDung = collect();
+
+        foreach ($tatCaHdv as $hdv) {
+            try {
+                // Tận dụng hàm kiểm tra trùng lịch có sẵn
+                $this->phanCongTourRepo->kiemTraTrungLichHDV($hdv->MaNhanVien, $ngayKhoiHanh, $ngayKetThuc);
+                $hdvKhaDung->push($hdv);
+            } catch (\Exception $e) {
+                // Trùng lịch, bỏ qua
+            }
+        }
+
+        return $hdvKhaDung;
+    }
+
+    /**
+     * Hủy phân công
+     */
+    public function huyPhanCong(string $maPhanCong)
+    {
+        return DB::transaction(function () use ($maPhanCong) {
+            $phanCong = PhanCongTour::where('MaPhanCongTour', $maPhanCong)->lockForUpdate()->first();
+            if (!$phanCong) {
+                throw AppException::notFound("Không tìm thấy thông tin phân công");
+            }
+            
+            // Xoá hoặc đánh dấu HUY tuỳ theo DB (ta dùng delete cho sạch theo Java code thường làm)
+            $phanCong->delete();
+            return true;
+        });
+    }
 }
