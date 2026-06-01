@@ -5,7 +5,8 @@ namespace App\Models;
 class DichVuTourThucTe extends BaseModel
 {
     protected $table = 'dich_vu_tour_thuc_tes';
-    protected $primaryKey = 'id';
+    protected $primaryKey = null;
+    public $incrementing = false;
     protected $guarded = [];
 
     public function tourThucTe() {

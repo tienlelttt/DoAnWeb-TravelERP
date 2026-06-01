@@ -15,7 +15,7 @@ class TaiKhoan extends BaseModel implements AuthenticatableContract, JWTSubject
     public $incrementing = false;
     protected $keyType = 'string';
     protected $guarded = [];
-
+    protected $hidden = ['mat_khau'];
 
 
     /**

@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -11,14 +10,12 @@ class DatabaseSeeder extends Seeder
     use WithoutModelEvents;
 
     /**
-     * Seed the application's database.
+     * Nạp dữ liệu cơ sở cho toàn bộ hệ thống.
      */
     public function run(): void
     {
         $this->call([
-            VaiTroSeeder::class,
-            TaiKhoanAdminSeeder::class,
-            SqlFileSeeder::class,
+            CoreSystemSeeder::class,
         ]);
     }
 }
