@@ -212,13 +212,9 @@ class KhachHangService
             throw AppException::badRequest("Yêu cầu này không ở trạng thái cần bổ sung thông tin");
         }
 
-        $yeuCau->noi_dung = $yeuCau->noi_dung . "\n\n[KHÁCH HÀNG BỔ SUNG]: " . $data["noiDungBoSung"];
+        $yeuCau->noi_dung = $yeuCau->noi_dung . "\n\n[KHÁCH HÀNG BỔ SUNG lúc " . now()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i:s') . "]: " . $data["noiDungBoSung"];
         $yeuCau->trang_thai = "CHUA_XU_LY";
         $yeuCau->save();
-
-        // Cập nhật trạng thái đơn đặt tour thành CHO_HUY
-        $don->trang_thai = "CHO_HUY";
-        $don->save();
 
         return $yeuCau;
     }

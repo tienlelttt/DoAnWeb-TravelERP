@@ -261,7 +261,7 @@ class HdvController extends Controller
             throw AppException::notFound("Không tìm thấy yêu cầu hỗ trợ");
         }
 
-        $yc->noi_dung = $yc->noi_dung . "\n[HDV giải trình: " . $request->input('noiDung') . "]";
+        $yc->noi_dung = $yc->noi_dung . "\n\n[HDV giải trình lúc " . now()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i:s') . "]: " . $request->input('noiDung');
         $yc->trang_thai = 'CHUA_XU_LY';
         $yc->save();
 

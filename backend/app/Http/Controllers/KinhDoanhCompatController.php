@@ -376,6 +376,9 @@ class KinhDoanhCompatController extends Controller
         }
 
         $yc->trang_thai = 'CHO_GIAI_TRINH';
+        if ($request->has('noiDung')) {
+            $yc->noi_dung = $yc->noi_dung . "\n\n[Yêu cầu HDV giải trình lúc " . now()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i:s') . "]: " . $request->input('noiDung');
+        }
         $yc->save();
 
         return response()->json([
@@ -406,6 +409,9 @@ class KinhDoanhCompatController extends Controller
         }
 
         $yc->trang_thai = 'CHO_BO_SUNG';
+        if ($request->has('noiDung')) {
+            $yc->noi_dung = $yc->noi_dung . "\n\n[Yêu cầu KH bổ sung lúc " . now()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i:s') . "]: " . $request->input('noiDung');
+        }
         $yc->save();
 
         return response()->json([
