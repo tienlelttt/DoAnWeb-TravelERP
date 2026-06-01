@@ -43,12 +43,13 @@ class ImportSqlData extends Command
 
             $this->info("Đang nạp file: " . basename($file));
             $sql = file_get_contents($file);
-            
             try {
+                // Kích hoạt PIPES_AS_CONCAT cho session này để hỗ trợ toán tử || nối chuỗi
+                $sql = "SET SESSION sql_mode = CONCAT(@@sql_mode, ',PIPES_AS_CONCAT');\n" . $sql;
                 DB::unprepared($sql);
                 $this->info("Hoàn thành nạp: " . basename($file));
             } catch (\Exception $e) {
-                $this->error("Lỗi khi nạp file " . basename($file) . ": " . $e->getMessage());
+                $this->error("Lỗi khi nạp file " . basename($file) . ": " . substr($e->getMessage(), 0, 500));
             }
         }
 
