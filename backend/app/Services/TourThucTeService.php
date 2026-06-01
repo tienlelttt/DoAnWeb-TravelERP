@@ -211,7 +211,7 @@ public function layDanhGia(string $maTourThucTe)
         return \App\Models\DanhGiaKh::with("khachHang.taiKhoan")
             ->where("ma_tour_thuc_te", $maTourThucTe)
             ->orderBy("ngay_danh_gia", "desc")
-            ->paginate(10);
+            ->get();
     }
 
     public function layHanhDongXanh(string $maTourThucTe)

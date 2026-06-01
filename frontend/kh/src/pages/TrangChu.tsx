@@ -664,7 +664,7 @@ function TourCard({ tour, dinhDangGia }: { tour: any; dinhDangGia: (price: numbe
   const dateRange = dinhDangKhoangNgay(tour.departureDate, tour.endDate);
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow flex flex-col h-full">
       <div className="relative">
         <img
           src={tour.image}
@@ -683,8 +683,10 @@ function TourCard({ tour, dinhDangGia }: { tour: any; dinhDangGia: (price: numbe
         </div>
       </div>
 
-      <div className="p-6">
-        <h3 className="font-bold text-lg mb-2 text-gray-900">{tour.name}</h3>
+      <div className="p-6 flex-1 flex flex-col">
+        <h3 className="font-bold text-xl mb-2 text-gray-900 line-clamp-2 min-h-[3.5rem]">
+          {tour.name}
+        </h3>
         <p className="text-gray-600 text-sm mb-2 flex items-center">
           <Clock className="w-4 h-4 mr-1 shrink-0 text-gray-500" />
           {tour.duration}
@@ -694,13 +696,15 @@ function TourCard({ tour, dinhDangGia }: { tour: any; dinhDangGia: (price: numbe
           <span>{dateRange}</span>
         </p>
 
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-end justify-between mb-4 mt-auto">
           <div>
-            {tour.originalPrice && (
-              <p className="text-gray-400 line-through text-sm">
-                {dinhDangGia(tour.originalPrice)}
-              </p>
-            )}
+            <div className="min-h-[20px]">
+              {tour.originalPrice && (
+                <p className="text-gray-400 line-through text-sm">
+                  {dinhDangGia(tour.originalPrice)}
+                </p>
+              )}
+            </div>
             <p className="text-blue-600 font-bold text-xl">
               {dinhDangGia(tour.price)}
             </p>
@@ -713,7 +717,7 @@ function TourCard({ tour, dinhDangGia }: { tour: any; dinhDangGia: (price: numbe
 
         <Link
           to={`/tour/${tour.id}`}
-          className="block w-full text-center bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+          className="mt-auto block w-full text-center bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
         >
           Xem chi tiết
         </Link>
