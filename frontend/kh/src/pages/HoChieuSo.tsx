@@ -12,6 +12,8 @@ import {
   mapProfile,
   mapPublicTour,
   mapVoucher,
+  formatDisplayDate,
+  parseApiDate,
   unwrapData,
   unwrapPageContent,
   splitItineraryActivities
@@ -267,27 +269,18 @@ export default function HoChieuSo() {
   };
 
   const formatDate = (dateStr: string) => {
-    if (!dateStr) return 'Chưa cập nhật';
-    return new Date(dateStr).toLocaleDateString('vi-VN', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+    return formatDisplayDate(dateStr);
   };
 
   const formatShortDate = (dateStr?: string) => {
-    if (!dateStr) return 'Chưa cập nhật';
-    const date = new Date(dateStr);
-    if (Number.isNaN(date.getTime())) return 'Chưa cập nhật';
-    return date.toLocaleDateString('vi-VN');
+    return formatDisplayDate(dateStr);
   };
 
   const formatDateTime = (dateStr?: string) => {
-    if (!dateStr) return 'Chưa cập nhật';
-    const date = new Date(dateStr);
-    if (Number.isNaN(date.getTime())) return 'Chưa cập nhật';
+    const date = parseApiDate(dateStr);
+    if (!date) return 'Chưa cập nhật';
     const timeStr = date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
-    const dateStrFormatted = date.toLocaleDateString('vi-VN', { year: 'numeric', month: '2-digit', day: '2-digit' });
+    const dateStrFormatted = formatDisplayDate(date);
     return `${timeStr} - ${dateStrFormatted}`;
   };
 
@@ -999,7 +992,7 @@ export default function HoChieuSo() {
                     ) : (
                       <input
                         type="text"
-                        value={profile.dateOfBirth ? profile.dateOfBirth.split('-').reverse().join('/') : ''}
+                        value={formatDisplayDate(profile.dateOfBirth, '')}
                         disabled
                         className="w-full px-4 py-2 border border-gray-200 rounded-xl disabled:bg-gray-50 disabled:text-gray-600 font-medium"
                       />

@@ -9,6 +9,7 @@ import type { Customer } from './mockData';
 import { customersService } from '../../services/customers';
 import api from '../../services/api';
 import { mapSupportRequestStatus, mapOrderStatus } from '../../utils/statusMapping';
+import { formatDate } from '../../utils/dateHelpers';
 
 interface LichSuTourItem {
   maLichSuTour: string;
@@ -54,7 +55,7 @@ const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({ isOpen, onClo
             setDetailData({
               ...customer,
               idCard: res.cccd || customer.idCard,
-              birthday: res.ngaySinh ? res.ngaySinh.toString() : customer.birthday,
+              birthday: res.ngaySinh ? formatDate(res.ngaySinh) : customer.birthday,
               greenPoints: res.diemXanh || customer.greenPoints,
             });
           } else {
@@ -82,9 +83,9 @@ const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({ isOpen, onClo
             maLichSuTour: o.maDatTour,
             maTourThucTe: o.maTourThucTe,
             tieuDeTour: o.tieuDeTour,
-            ngayKhoiHanh: o.ngayKhoiHanh,
+            ngayKhoiHanh: o.ngayKhoiHanh ? formatDate(o.ngayKhoiHanh) : '',
             thoiLuong: o.thoiLuong,
-            ngayThamGia: o.ngayDat,
+            ngayThamGia: o.ngayDat ? formatDate(o.ngayDat) : '',
             trangThai: o.trangThai
           }));
           setTourHistory(mappedHistory);
@@ -226,7 +227,7 @@ const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({ isOpen, onClo
     {
       key: 'ngayTao',
       title: 'Ngày tạo',
-      render: (record) => <span className="text-sm text-gray-600">{record.ngayTao || '—'}</span>,
+      render: (record) => <span className="text-sm text-gray-600">{record.ngayTao ? formatDate(record.ngayTao) : '—'}</span>,
     },
   ];
 

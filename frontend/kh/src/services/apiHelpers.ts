@@ -42,6 +42,47 @@ const toNumber = (value: any, fallback = 0): number => {
   return Number.isFinite(num) ? num : fallback;
 };
 
+export const parseApiDate = (value?: string | Date | null): Date | null => {
+  if (!value) return null;
+  if (value instanceof Date) return Number.isNaN(value.getTime()) ? null : value;
+
+  const raw = String(value).trim();
+  const isoLike = raw.match(/^(\d{4})-(\d{2})-(\d{2})(?:[ T].*)?$/);
+  if (isoLike) {
+    const [, year, month, day] = isoLike;
+    return new Date(Number(year), Number(month) - 1, Number(day));
+  }
+
+  const viLike = raw.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})(?:[ T].*)?$/);
+  if (viLike) {
+    const [, day, month, year] = viLike;
+    return new Date(Number(year), Number(month) - 1, Number(day));
+  }
+
+  const date = new Date(raw);
+  return Number.isNaN(date.getTime()) ? null : date;
+};
+
+export const toDateInputValue = (value?: string | Date | null): string => {
+  const date = parseApiDate(value);
+  if (!date) return '';
+
+  const year = date.getFullYear().toString();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+export const formatDisplayDate = (value?: string | Date | null, fallback = 'Chưa cập nhật'): string => {
+  const date = parseApiDate(value);
+  if (!date) return fallback;
+
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const year = date.getFullYear().toString();
+  return `${day}/${month}/${year}`;
+};
+
 const taoSeedNumber = (value: string): number => {
   return value.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
 };
@@ -237,7 +278,7 @@ export const mapProfile = (p: ApiRecord) => ({
   address: '',
   membershipTier: p?.hangThanhVien || 'THANH_VIEN',
   greenPoints: toNumber(p?.diemXanh, 0),
-  dateOfBirth: p?.ngaySinh || '',
+  dateOfBirth: toDateInputValue(p?.ngaySinh),
   idCard: p?.cccd || '',
   healthInfo: p?.ghiChuYTe || '',
   allergies: p?.diUng || ''
