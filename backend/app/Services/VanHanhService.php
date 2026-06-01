@@ -16,6 +16,8 @@ use Carbon\Carbon;
 
 class VanHanhService
 {
+    private const TRANG_THAI_DON_DA_XAC_NHAN = ['DA_XAC_NHAN', 'DA_THANH_TOAN', 'HOAN_THANH'];
+
     protected MaTuDongService $maTuDongService;
 
     public function __construct(MaTuDongService $maTuDongService)
@@ -85,7 +87,7 @@ class VanHanhService
     private function layDanhSachKhachTheoTour(string $maTourThucTe): array
     {
         $donDatTours = DonDatTour::where('ma_tour_thuc_te', $maTourThucTe)
-            ->where('trang_thai', 'DA_THANH_TOAN')
+            ->whereIn('trang_thai', self::TRANG_THAI_DON_DA_XAC_NHAN)
             ->with(['chiTietDatTours.khachHang', 'chiTietDatTours.nguoiDongHanh'])
             ->get();
             
@@ -156,22 +158,22 @@ class VanHanhService
         return $hanhDong;
     }
 
-    public function layDanhSachSuCo(string $maTourThucTe, string $maNhanVien)
+    public function layDanhSachSuCo(string $maTourThucTe, string $maNhanVien, int $perPage = 15)
     {
         $this->checkQuyenHDV($maTourThucTe, $maNhanVien);
         return NhatKySuCo::where('ma_tour_thuc_te', $maTourThucTe)
             ->where('ma_nhan_vien_bao_cao', $maNhanVien)
             ->orderBy('thoi_gian_bao_cao', 'desc')
-            ->get();
+            ->paginate($perPage);
     }
 
-    public function layDanhSachSuCoDieuHanh(string $maTourThucTe)
+    public function layDanhSachSuCoDieuHanh(string $maTourThucTe, int $perPage = 15)
     {
         $this->kiemTraTourTonTai($maTourThucTe);
 
         return NhatKySuCo::where('ma_tour_thuc_te', $maTourThucTe)
             ->orderBy('thoi_gian_bao_cao', 'desc')
-            ->get();
+            ->paginate($perPage);
     }
 
     public function baoCaoSuCo(string $maTourThucTe, string $maNhanVien, array $data)
@@ -208,22 +210,22 @@ class VanHanhService
         return $suCo;
     }
 
-    public function layDanhSachChiPhi(string $maTourThucTe, string $maNhanVien)
+    public function layDanhSachChiPhi(string $maTourThucTe, string $maNhanVien, int $perPage = 15)
     {
         $this->checkQuyenHDV($maTourThucTe, $maNhanVien);
         return ChiPhiThucTe::where('ma_tour_thuc_te', $maTourThucTe)
             ->where('ma_nhan_vien', $maNhanVien)
             ->orderBy('ngay_khai', 'desc')
-            ->get();
+            ->paginate($perPage);
     }
 
-    public function layDanhSachChiPhiDieuHanh(string $maTourThucTe)
+    public function layDanhSachChiPhiDieuHanh(string $maTourThucTe, int $perPage = 15)
     {
         $this->kiemTraTourTonTai($maTourThucTe);
 
         return ChiPhiThucTe::where('ma_tour_thuc_te', $maTourThucTe)
             ->orderBy('ngay_khai', 'desc')
-            ->get();
+            ->paginate($perPage);
     }
 
     public function khaiBaoChiPhi(string $maTourThucTe, string $maNhanVien, array $data)

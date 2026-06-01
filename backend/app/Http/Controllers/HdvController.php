@@ -72,11 +72,12 @@ class HdvController extends Controller
         return $this->successResponse($res, "Ghi nhận hành động xanh thành công");
     }
 
-    public function danhSachSuCo(string $maTour): JsonResponse
+    public function danhSachSuCo(string $maTour, Request $request): JsonResponse
     {
         $maHdv = $this->getHdvId();
-        $res = $this->vanHanhService->layDanhSachSuCo($maTour, $maHdv);
-        return $this->successResponse($res, "Thành công");
+        $perPage = $this->normalizePerPage($request->query('size', $request->query('perPage')));
+        $res = $this->vanHanhService->layDanhSachSuCo($maTour, $maHdv, $perPage);
+        return $this->paginatedResponse($res, "Thành công");
     }
 
     public function baoCaoSuCo(string $maTour, BaoCaoSuCoRequest $request): JsonResponse
@@ -98,11 +99,12 @@ class HdvController extends Controller
         return $this->successResponse($res, "Cập nhật sự cố thành công");
     }
 
-    public function chiPhiCuaTour(string $maTour): JsonResponse
+    public function chiPhiCuaTour(string $maTour, Request $request): JsonResponse
     {
         $maHdv = $this->getHdvId();
-        $res = $this->vanHanhService->layDanhSachChiPhi($maTour, $maHdv);
-        return $this->successResponse($res, "Thành công");
+        $perPage = $this->normalizePerPage($request->query('size', $request->query('perPage')));
+        $res = $this->vanHanhService->layDanhSachChiPhi($maTour, $maHdv, $perPage);
+        return $this->paginatedResponse($res, "Thành công");
     }
 
     public function khaiChiPhi(string $maTour, KhaiBaoChiPhiRequest $request): JsonResponse
@@ -135,18 +137,19 @@ class HdvController extends Controller
             ->orderBy('ngay_phan_cong', 'desc')
             ->get();
 
-        $data = $phanCongs->map(function ($item) {
+        $tourCodes = $phanCongs->pluck('ma_tour_thuc_te')->filter()->unique()->values();
+        $guestCounts = \App\Models\ChiTietDatTour::query()
+            ->join('don_dat_tours', 'chi_tiet_dat_tours.ma_dat_tour', '=', 'don_dat_tours.ma_dat_tour')
+            ->whereIn('don_dat_tours.ma_tour_thuc_te', $tourCodes)
+            ->whereIn('don_dat_tours.trang_thai', ['DA_XAC_NHAN', 'DA_THANH_TOAN', 'HOAN_THANH'])
+            ->selectRaw('don_dat_tours.ma_tour_thuc_te, COUNT(*) as total')
+            ->groupBy('don_dat_tours.ma_tour_thuc_te')
+            ->pluck('total', 'ma_tour_thuc_te');
+
+        $data = $phanCongs->map(function ($item) use ($guestCounts) {
             $tourThucTe = $item->tourThucTe;
             $tourMau = $tourThucTe ? $tourThucTe->tourMau : null;
-            
-            // Lấy số lượng khách đã xác nhận của tour thực tế
-            $guestsCount = 0;
-            if ($tourThucTe) {
-                $guestsCount = \App\Models\ChiTietDatTour::whereHas('donDatTour', function ($q) use ($tourThucTe) {
-                    $q->where('ma_tour_thuc_te', $tourThucTe->ma_tour_thuc_te)
-                      ->whereIn('trang_thai', ['DA_XAC_NHAN', 'HOAN_THANH']);
-                })->count();
-            }
+            $guestsCount = $tourThucTe ? (int) ($guestCounts[$tourThucTe->ma_tour_thuc_te] ?? 0) : 0;
 
             return [
                 'maPhanCong' => $item->ma_phan_cong_tour,
@@ -205,9 +208,10 @@ class HdvController extends Controller
      * Lấy danh sách yêu cầu giải trình của HDV
      * GET /api/huong-dan-vien/yeu-cau-giai-trinh
      */
-    public function danhSachYeuCauGiaiTrinh(): JsonResponse
+    public function danhSachYeuCauGiaiTrinh(Request $request): JsonResponse
     {
         $maHdv = $this->getHdvId();
+        $perPage = $this->normalizePerPage($request->query('size', $request->query('perPage')));
         
         $tourCodes = \App\Models\PhanCongTour::where('ma_nhan_vien', $maHdv)
             ->where('trang_thai_chap_nhan', 'DA_DONG_Y')
@@ -217,9 +221,9 @@ class HdvController extends Controller
             ->whereHas('donDatTour', function ($q) use ($tourCodes) {
                 $q->whereIn('ma_tour_thuc_te', $tourCodes);
             })
-            ->get();
+            ->paginate($perPage);
 
-        $data = $requests->map(function ($yc) {
+        $data = $requests->getCollection()->map(function ($yc) {
             return [
                 'maYeuCau' => $yc->ma_yeu_cau_ho_tro,
                 'maDatTour' => $yc->ma_dat_tour,
@@ -228,13 +232,9 @@ class HdvController extends Controller
                 'trangThai' => $yc->trang_thai,
             ];
         });
+        $requests->setCollection($data);
 
-        return response()->json([
-            'status' => 200,
-            'success' => true,
-            'message' => 'Thành công',
-            'data' => $data
-        ]);
+        return $this->paginatedResponse($requests, 'Thành công');
     }
 
     /**
@@ -270,9 +270,10 @@ class HdvController extends Controller
      * Lấy danh sách quyết toán cần bổ sung thông tin
      * GET /api/huong-dan-vien/quyet-toan/can-bo-sung
      */
-    public function quyetToanCanBoSung(): JsonResponse
+    public function quyetToanCanBoSung(Request $request): JsonResponse
     {
         $maHdv = $this->getHdvId();
+        $perPage = $this->normalizePerPage($request->query('size', $request->query('perPage')));
         
         $tourCodes = \App\Models\PhanCongTour::where('ma_nhan_vien', $maHdv)
             ->where('trang_thai_chap_nhan', 'DA_DONG_Y')
@@ -281,9 +282,9 @@ class HdvController extends Controller
         $requests = \App\Models\QuyetToan::with('tourThucTe.tourMau')
             ->where('ghi_chu', 'like', '%' . \App\Services\QuyetToanService::YEU_CAU_BO_SUNG_MARKER . '%')
             ->whereIn('ma_tour_thuc_te', $tourCodes)
-            ->get();
+            ->paginate($perPage);
 
-        $data = $requests->map(function ($qt) {
+        $data = $requests->getCollection()->map(function ($qt) {
             return [
                 'maQuyetToan' => $qt->ma_quyet_toan,
                 'maTour' => $qt->ma_tour_thuc_te,
@@ -292,13 +293,9 @@ class HdvController extends Controller
                 'hoaDonAnh' => $qt->hoa_don_anh,
             ];
         });
+        $requests->setCollection($data);
 
-        return response()->json([
-            'status' => 200,
-            'success' => true,
-            'message' => 'Thành công',
-            'data' => $data
-        ]);
+        return $this->paginatedResponse($requests, 'Thành công');
     }
 
     /**
@@ -337,20 +334,16 @@ class HdvController extends Controller
      * Lấy toàn bộ chi phí thực tế của bản thân
      * GET /api/huong-dan-vien/chi-phi
      */
-    public function tatCaChiPhi(): JsonResponse
+    public function tatCaChiPhi(Request $request): JsonResponse
     {
         $maHdv = $this->getHdvId();
+        $perPage = $this->normalizePerPage($request->query('size', $request->query('perPage')));
         
         $chiPhis = \App\Models\ChiPhiThucTe::where('ma_nhan_vien', $maHdv)
             ->orderBy('ngay_khai', 'desc')
-            ->get();
+            ->paginate($perPage);
 
-        return response()->json([
-            'status' => 200,
-            'success' => true,
-            'message' => 'Thành công',
-            'data' => $chiPhis
-        ]);
+        return $this->paginatedResponse($chiPhis, "Thành công");
     }
 
     /**

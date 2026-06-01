@@ -65,6 +65,34 @@ class KinhDoanhCompatController extends Controller
     }
 
     /**
+     * Lấy chi tiết đơn đặt tour theo alias cũ mà frontend kinh doanh đang gọi.
+     * GET /api/kinh-doanh/dat-tour/{maDatTour}
+     * GET /api/kinh-doanh/don-dat-tour/{maDatTour}
+     */
+    public function chiTietDonDatTour(string $maDatTour)
+    {
+        $donDatTour = DonDatTour::with([
+            'tourThucTe.tourMau',
+            'khachHang.taiKhoan',
+            'chiTietDatTours.khachHang.taiKhoan',
+            'chiTietDatTours.nguoiDongHanh',
+            'chiTietDichVus.dichVuThem',
+            'datTourUuDai.voucher'
+        ])->where('ma_dat_tour', $maDatTour)->first();
+
+        if (!$donDatTour) {
+            throw AppException::notFound('Không tìm thấy đơn đặt tour: ' . $maDatTour);
+        }
+
+        return response()->json([
+            'status' => 200,
+            'success' => true,
+            'message' => 'Thành công',
+            'data' => new DonDatTourResource($donDatTour)
+        ], 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
      * Xác nhận đơn đặt tour
      * PUT /api/kinh-doanh/dat-tour/{maDatTour}/xac-nhan
      */

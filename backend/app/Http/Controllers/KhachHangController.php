@@ -83,4 +83,10 @@ class KhachHangController extends Controller
         $res = $this->khachHangService->boSungYeuCauHoTro($this->getMaTaiKhoan(), $maYeuCau, $data);
         return $this->successResponse($res, "Bổ sung thông tin thành công");
     }
+
+    public function danhSachDichVuThem(Request $request, \App\Services\DichVuThemService $dichVuThemService): JsonResponse
+    {
+        $maTourThucTe = $request->query('maTourThucTe');
+        return $this->successResponse($dichVuThemService->danhSach($maTourThucTe), "Thành công");
+    }
 }

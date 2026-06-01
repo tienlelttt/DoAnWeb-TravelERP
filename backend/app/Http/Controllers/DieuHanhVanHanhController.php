@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\VanHanhService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class DieuHanhVanHanhController extends Controller
 {
@@ -19,18 +20,22 @@ class DieuHanhVanHanhController extends Controller
         );
     }
 
-    public function danhSachSuCo(string $maTour): JsonResponse
+    public function danhSachSuCo(string $maTour, Request $request): JsonResponse
     {
-        return $this->successResponse(
-            $this->vanHanhService->layDanhSachSuCoDieuHanh($maTour),
+        $perPage = $this->normalizePerPage($request->query('size', $request->query('perPage')));
+
+        return $this->paginatedResponse(
+            $this->vanHanhService->layDanhSachSuCoDieuHanh($maTour, $perPage),
             'Thành công'
         );
     }
 
-    public function chiPhiCuaTour(string $maTour): JsonResponse
+    public function chiPhiCuaTour(string $maTour, Request $request): JsonResponse
     {
-        return $this->successResponse(
-            $this->vanHanhService->layDanhSachChiPhiDieuHanh($maTour),
+        $perPage = $this->normalizePerPage($request->query('size', $request->query('perPage')));
+
+        return $this->paginatedResponse(
+            $this->vanHanhService->layDanhSachChiPhiDieuHanh($maTour, $perPage),
             'Thành công'
         );
     }

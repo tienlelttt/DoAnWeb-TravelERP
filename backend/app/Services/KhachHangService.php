@@ -12,6 +12,8 @@ use Carbon\Carbon;
 
 class KhachHangService
 {
+    private const TRANG_THAI_DON_DA_THAM_GIA = ['DA_XAC_NHAN', 'DA_THANH_TOAN', 'HOAN_THANH'];
+
     protected MaTuDongService $maTuDongService;
 
     public function __construct(MaTuDongService $maTuDongService)
@@ -97,7 +99,7 @@ class KhachHangService
         // Lấy các tour đã đặt và đã thanh toán
         return DonDatTour::with(["tourThucTe.tourMau", "chiTietDatTours"])
             ->where("ma_khach_hang", $hcs->ma_khach_hang)
-            ->where("trang_thai", "DA_THANH_TOAN")
+            ->whereIn("trang_thai", self::TRANG_THAI_DON_DA_THAM_GIA)
             ->orderBy("ngay_dat", "desc")
             ->paginate(15);
     }

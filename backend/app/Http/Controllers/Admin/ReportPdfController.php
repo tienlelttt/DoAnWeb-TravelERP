@@ -13,6 +13,8 @@ use Carbon\Carbon;
  */
 class ReportPdfController extends Controller
 {
+    private const MAX_REPORT_DAYS = 366;
+
     public function __construct(
         private ReportPdfService $reportPdfService
     ) {}
@@ -58,6 +60,10 @@ class ReportPdfController extends Controller
         // 3. Kiểm tra logic ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc
         if ($tuNgay->gt($denNgay)) {
             throw AppException::badRequest("Ngày bắt đầu lọc (tuNgay) phải nhỏ hơn hoặc bằng ngày kết thúc (denNgay).");
+        }
+
+        if ($tuNgay->diffInDays($denNgay) + 1 > self::MAX_REPORT_DAYS) {
+            throw AppException::badRequest('Khoảng thời gian xuất báo cáo không được vượt quá ' . self::MAX_REPORT_DAYS . ' ngày.');
         }
 
         // 4. Lấy luồng dữ liệu PDF từ Service

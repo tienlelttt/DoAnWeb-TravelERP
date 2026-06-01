@@ -9,19 +9,21 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardService
 {
+    private const TRANG_THAI_DON_DA_THU_TIEN = ['DA_XAC_NHAN', 'DA_THANH_TOAN', 'HOAN_THANH'];
+
     public function getOverview()
     {
         // 1. Tổng doanh thu (Các đơn đã thanh toán)
-        $totalRevenue = DonDatTour::where('trang_thai', 'DA_THANH_TOAN')->sum('tong_tien');
+        $totalRevenue = DonDatTour::whereIn('trang_thai', self::TRANG_THAI_DON_DA_THU_TIEN)->sum('tong_tien');
 
         // 2. Tổng số bookings (đã thanh toán hoặc hoàn thành)
-        $totalBookings = DonDatTour::whereIn('trang_thai', ['DA_THANH_TOAN', 'HOAN_THANH'])->count();
+        $totalBookings = DonDatTour::whereIn('trang_thai', self::TRANG_THAI_DON_DA_THU_TIEN)->count();
 
         // 3. Tổng số khách hàng (số người trong các booking hợp lệ)
         // Lấy từ bảng ds_nguoi_dong_hanhs liên kết với don_dat_tours hoặc đơn giản là đếm
         $totalCustomers = DB::table('ds_nguoi_dong_hanhs')
             ->join('don_dat_tours', 'ds_nguoi_dong_hanhs.ma_dat_tour', '=', 'don_dat_tours.ma_dat_tour')
-            ->whereIn('don_dat_tours.trang_thai', ['DA_THANH_TOAN', 'HOAN_THANH'])
+            ->whereIn('don_dat_tours.trang_thai', self::TRANG_THAI_DON_DA_THU_TIEN)
             ->count();
             
         // 4. Tổng số users (nhân viên + khách hàng)
@@ -40,7 +42,7 @@ class DashboardService
         $year = $year ?? Carbon::now()->year;
 
         // Group by tháng trong năm
-        $revenues = DonDatTour::where('trang_thai', 'DA_THANH_TOAN')
+        $revenues = DonDatTour::whereIn('trang_thai', self::TRANG_THAI_DON_DA_THU_TIEN)
             ->whereYear('ngay_dat', $year)
             ->select(
                 DB::raw('MONTH(ngay_dat) as month'),

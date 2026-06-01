@@ -32,6 +32,8 @@ class ThanhToanController extends Controller
      */
     public function thanhToanMock(ThanhToanMockRequest $request): JsonResponse
     {
+        $this->damBaoDuocPhepThanhToanMock();
+
         $user = auth()->user();
         $donDatTour = $this->thanhToanService->thanhToanMock($request->validated()['maDatTour'], $user->ma_tai_khoan);
 
@@ -56,6 +58,8 @@ class ThanhToanController extends Controller
         $mock = (bool) ($data['mock'] ?? false);
 
         if ($mock || $phuongThuc === 'MOCK') {
+            $this->damBaoDuocPhepThanhToanMock();
+
             $donDatTour = $this->thanhToanService->thanhToanMock($maDatTour, $user->ma_tai_khoan);
             $giaoDich = GiaoDich::where('ma_dat_tour', $donDatTour->ma_dat_tour)
                 ->orderBy('created_at', 'desc')
@@ -194,5 +198,14 @@ class ThanhToanController extends Controller
             'payUrl' => $payUrl,
             'thongBao' => $thongBao,
         ];
+    }
+
+    private function damBaoDuocPhepThanhToanMock(): void
+    {
+        if (app()->environment(['local', 'testing']) || filter_var(env('PAYMENT_MOCK_ENABLED', false), FILTER_VALIDATE_BOOLEAN)) {
+            return;
+        }
+
+        abort(403, 'Thanh toán mock chỉ được bật trong môi trường local/testing hoặc khi PAYMENT_MOCK_ENABLED=true');
     }
 }

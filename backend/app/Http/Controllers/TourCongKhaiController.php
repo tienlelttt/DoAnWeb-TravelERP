@@ -38,6 +38,19 @@ class TourCongKhaiController extends Controller
         );
     }
 
+    public function lichTrinh(string $maTourThucTe): JsonResponse
+    {
+        $tour = \App\Models\TourThucTe::with('tourMau.lichTrinhTours')->find($maTourThucTe);
+        if (!$tour || !$tour->tourMau) {
+            throw \App\Exceptions\AppException::notFound("Không tìm thấy tour: {$maTourThucTe}");
+        }
+
+        return $this->successResponse(
+            $tour->tourMau->lichTrinhTours()->orderBy('ngay_thu')->get(),
+            "Thành công"
+        );
+    }
+
     public function danhGia(string $maTourThucTe): JsonResponse
     {
         return $this->successResponse($this->tourThucTeService->layDanhGia($maTourThucTe), "Thành công");

@@ -2,43 +2,43 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\NhanVienService;
 use App\Http\Resources\NhanVienResource;
+use App\Services\NhanVienService;
 use Illuminate\Http\JsonResponse;
 
 class NhanVienController extends Controller
 {
     protected NhanVienService $nhanVienService;
 
+    /**
+     * Khởi tạo controller với service hồ sơ nhân viên.
+     */
     public function __construct(NhanVienService $nhanVienService)
     {
         $this->nhanVienService = $nhanVienService;
     }
 
     /**
-     * Láº¥y há»“ sÆ¡ nhÃ¢n viÃªn Ä‘ang Ä‘Äƒng nháº­p
-     *
-     * @return JsonResponse
+     * Lấy hồ sơ nhân viên đang đăng nhập.
      */
     public function layHoSo(): JsonResponse
     {
         $maTaiKhoan = auth()->user()->ma_tai_khoan;
         $nhanVien = $this->nhanVienService->layHoSoNhanVien($maTaiKhoan);
 
-        return $this->successResponse(new NhanVienResource($nhanVien), "Láº¥y há»“ sÆ¡ nhÃ¢n viÃªn thÃ nh cÃ´ng");
+        return $this->successResponse(new NhanVienResource($nhanVien), 'Lấy hồ sơ nhân viên thành công');
     }
 
     /**
-     * Láº¥y danh sÃ¡ch phÃ¢n cÃ´ng tour cá»§a báº£n thÃ¢n
-     *
-     * @return JsonResponse
+     * Lấy danh sách phân công tour của nhân viên đang đăng nhập.
      */
-    public function layLichCongTac(): JsonResponse { 
+    public function layLichCongTac(): JsonResponse
+    {
         $maTaiKhoan = auth()->user()->ma_tai_khoan;
         $nhanVien = $this->nhanVienService->layHoSoNhanVien($maTaiKhoan);
         $lichCongTac = $this->nhanVienService->layLichCongTac($nhanVien->ma_nhan_vien);
 
-        // Map data Ä‘á»ƒ chuáº©n hÃ³a key vá» camelCase
+        // Chuẩn hóa dữ liệu lịch công tác sang camelCase theo contract frontend.
         $data = $lichCongTac->map(function ($item) {
             return [
                 'maPhanCong' => $item->ma_phan_cong_tour,
@@ -51,17 +51,15 @@ class NhanVienController extends Controller
                     'maTourMau' => $item->tourThucTe->ma_tour_mau,
                     'ngayKhoiHanh' => $item->tourThucTe->ngay_khoi_hanh,
                     'trangThai' => $item->tourThucTe->trang_thai,
-                ] : null
+                ] : null,
             ];
         });
 
-        return $this->successResponse($data, "Láº¥y lá»‹ch cÃ´ng tÃ¡c thÃ nh cÃ´ng");
+        return $this->successResponse($data, 'Lấy lịch công tác thành công');
     }
 
     /**
-     * Láº¥y thÃ´ng tin nÄƒng lá»±c cá»§a báº£n thÃ¢n
-     *
-     * @return JsonResponse
+     * Lấy thông tin năng lực của nhân viên đang đăng nhập.
      */
     public function layNangLuc(): JsonResponse
     {
@@ -70,7 +68,7 @@ class NhanVienController extends Controller
         $nangLuc = $this->nhanVienService->layNangLuc($nhanVien->ma_nhan_vien);
 
         if (!$nangLuc) {
-            return $this->successResponse(null, "NhÃ¢n viÃªn chÆ°a cÃ³ há»“ sÆ¡ nÄƒng lá»±c");
+            return $this->successResponse(null, 'Nhân viên chưa có hồ sơ năng lực');
         }
 
         $data = [
@@ -82,7 +80,6 @@ class NhanVienController extends Controller
             'soDanhGia' => $nangLuc->so_danh_gia,
         ];
 
-        return $this->successResponse($data, "Láº¥y nÄƒng lá»±c nhÃ¢n viÃªn thÃ nh cÃ´ng");
+        return $this->successResponse($data, 'Lấy năng lực nhân viên thành công');
     }
 }
-

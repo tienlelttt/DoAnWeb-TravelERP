@@ -98,4 +98,45 @@ class VoucherAdminController extends Controller
             'data' => new \App\Http\Resources\KhuyenMaiKhResource($km)
         ], 201);
     }
+
+    public function khachHangDaPhanBo($maVoucher)
+    {
+        $items = \App\Models\KhuyenMaiKh::with(['voucher', 'khachHang.taiKhoan'])
+            ->where('ma_voucher', $maVoucher)
+            ->orderBy('ngay_nhan', 'desc')
+            ->get();
+
+        return response()->json([
+            'status' => 200,
+            'success' => true,
+            'message' => 'Thành công',
+            'data' => \App\Http\Resources\KhuyenMaiKhResource::collection($items)
+        ]);
+    }
+
+    public function thuHoi(Request $request, $maVoucher, $maKhachHang)
+    {
+        $khuyenMai = \App\Models\KhuyenMaiKh::with(['voucher', 'khachHang.taiKhoan'])
+            ->where('ma_voucher', $maVoucher)
+            ->where('ma_khach_hang', $maKhachHang)
+            ->first();
+
+        if (!$khuyenMai) {
+            throw \App\Exceptions\AppException::notFound('Không tìm thấy voucher đã phân bổ cho khách hàng');
+        }
+
+        if ($khuyenMai->trang_thai === 'DA_SU_DUNG') {
+            throw \App\Exceptions\AppException::badRequest('Không thể thu hồi voucher đã sử dụng');
+        }
+
+        $khuyenMai->trang_thai = 'THU_HOI';
+        $khuyenMai->save();
+
+        return response()->json([
+            'status' => 200,
+            'success' => true,
+            'message' => 'Thu hồi voucher thành công',
+            'data' => new \App\Http\Resources\KhuyenMaiKhResource($khuyenMai->fresh(['voucher', 'khachHang.taiKhoan']))
+        ]);
+    }
 }

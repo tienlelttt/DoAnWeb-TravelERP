@@ -16,6 +16,10 @@ use Illuminate\Support\Facades\DB;
  */
 class PowerBiService
 {
+    private const MAX_EXPORT_DAYS = 366;
+    private const DEFAULT_EXPORT_DAYS = 31;
+    private const MAX_EXPORT_ROWS = 5000;
+
     private $validKho = ['DOANH_THU', 'DON_DAT_TOUR', 'CHI_PHI', 'TOUR', 'GIAO_DICH'];
 
     public function __construct() {}
@@ -75,8 +79,8 @@ class PowerBiService
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', 3306),
             'serviceName' => env('DB_DATABASE', 'travel_erp'),
-            'username' => 'powerbi_readonly',
-            'password' => 'powerbi_secret_key',
+            'username' => env('POWERBI_READONLY_USERNAME', 'powerbi_readonly'),
+            'password' => env('POWERBI_READONLY_PASSWORD', ''),
             'jdbcUrl' => 'jdbc:mysql://' . env('DB_HOST', '127.0.0.1') . ':' . env('DB_PORT', 3306) . '/' . env('DB_DATABASE', 'travel_erp'),
             'hetHan' => 'Tài khoản read-only cố định, không tự động hết hạn',
             'huongDan' => "1. Mở Power BI Desktop → Get Data → MySQL Database\n2. Server: " . env('DB_HOST') . ":" . env('DB_PORT') . "\n3. Database: " . env('DB_DATABASE') . "\n4. Chọn 'Database' authentication, nhập Username và Password ở trên\n5. Chọn bảng cần phân tích → Load"
@@ -91,8 +95,7 @@ class PowerBiService
         $maKho = $request['maKho'];
         $this->validateMaKho($maKho);
 
-        $tuNgay = !empty($request['tuNgay']) ? Carbon::parse($request['tuNgay'])->startOfDay() : null;
-        $denNgay = !empty($request['denNgay']) ? Carbon::parse($request['denNgay'])->endOfDay() : null;
+        [$tuNgay, $denNgay] = $this->resolveDateRange($request);
 
         \App\Models\NhatKyHeThong::create([
             'ma_nhat_ky_he_thong' => app(\App\Services\MaTuDongService::class)->taoMaNhatKyHeThong(),
@@ -113,6 +116,7 @@ class PowerBiService
                 if ($tuNgay) $query->where('ngay_quyet_toan', '>=', $tuNgay);
                 if ($denNgay) $query->where('ngay_quyet_toan', '<=', $denNgay);
                 
+                $this->guardExportSize($query);
                 foreach ($query->get() as $qt) {
                     $dataRows[] = [
                         $qt->ma_quyet_toan,
@@ -133,6 +137,7 @@ class PowerBiService
                 if ($tuNgay) $query->where('ngay_dat', '>=', $tuNgay);
                 if ($denNgay) $query->where('ngay_dat', '<=', $denNgay);
                 
+                $this->guardExportSize($query);
                 foreach ($query->get() as $d) {
                     $dataRows[] = [
                         $d->ma_dat_tour,
@@ -151,6 +156,7 @@ class PowerBiService
                 if ($tuNgay) $query->where('ngay_khai', '>=', $tuNgay);
                 if ($denNgay) $query->where('ngay_khai', '<=', $denNgay);
                 
+                $this->guardExportSize($query);
                 foreach ($query->get() as $c) {
                     $dataRows[] = [
                         $c->ma_chi_phi_thuc_te,
@@ -169,6 +175,7 @@ class PowerBiService
                 if ($tuNgay) $query->where('ngay_khoi_hanh', '>=', $tuNgay);
                 if ($denNgay) $query->where('ngay_khoi_hanh', '<=', $denNgay);
                 
+                $this->guardExportSize($query);
                 foreach ($query->get() as $t) {
                     $dataRows[] = [
                         $t->ma_tour_thuc_te,
@@ -188,6 +195,7 @@ class PowerBiService
                 if ($tuNgay) $query->where('ngay_thanh_toan', '>=', $tuNgay);
                 if ($denNgay) $query->where('ngay_thanh_toan', '<=', $denNgay);
                 
+                $this->guardExportSize($query);
                 foreach ($query->get() as $g) {
                     $dataRows[] = [
                         $g->ma_giao_dich,
@@ -230,6 +238,36 @@ class PowerBiService
         }
         if (!in_array($maKho, $this->validKho)) {
             throw AppException::badRequest("Mã kho dữ liệu không hợp lệ. Hỗ trợ: " . implode(', ', $this->validKho));
+        }
+    }
+
+    private function resolveDateRange(array $request): array
+    {
+        $denNgay = !empty($request['denNgay'])
+            ? Carbon::parse($request['denNgay'])->endOfDay()
+            : now()->endOfDay();
+
+        $tuNgay = !empty($request['tuNgay'])
+            ? Carbon::parse($request['tuNgay'])->startOfDay()
+            : $denNgay->copy()->subDays(self::DEFAULT_EXPORT_DAYS - 1)->startOfDay();
+
+        if ($tuNgay->gt($denNgay)) {
+            throw AppException::badRequest('Ngày bắt đầu lọc (tuNgay) phải nhỏ hơn hoặc bằng ngày kết thúc (denNgay).');
+        }
+
+        if ($tuNgay->diffInDays($denNgay) + 1 > self::MAX_EXPORT_DAYS) {
+            throw AppException::badRequest('Khoảng thời gian xuất dữ liệu không được vượt quá ' . self::MAX_EXPORT_DAYS . ' ngày.');
+        }
+
+        return [$tuNgay, $denNgay];
+    }
+
+    private function guardExportSize($query): void
+    {
+        $totalRows = (clone $query)->count();
+
+        if ($totalRows > self::MAX_EXPORT_ROWS) {
+            throw AppException::badRequest('Dữ liệu quá lớn (' . $totalRows . ' dòng, vượt quá giới hạn ' . self::MAX_EXPORT_ROWS . ' dòng). Vui lòng thu hẹp khoảng thời gian lọc.');
         }
     }
 }
