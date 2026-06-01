@@ -114,6 +114,7 @@
             margin: 25px 0;
             text-align: center;
             page-break-inside: avoid;
+            page-break-after: always;
         }
         .chart-title {
             font-size: 10pt;

@@ -8,7 +8,7 @@
     @if(!empty($chartSvg))
         <div class="chart-container">
             <div class="chart-title">Biểu đồ tỷ lệ chi phí thực tế phát sinh theo Danh mục (Top 15 Danh mục)</div>
-            {!! $chartSvg !!}
+            <img src="data:image/svg+xml;base64,{{ base64_encode($chartSvg) }}" width="100%" style="width: 100%; height: auto;" />
         </div>
     @endif
 

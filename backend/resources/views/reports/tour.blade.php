@@ -8,7 +8,7 @@
     @if(!empty($chartSvg))
         <div class="chart-container">
             <div class="chart-title">Biểu đồ so sánh số lượng khách đã đặt (Top 15 Tour)</div>
-            {!! $chartSvg !!}
+            <img src="data:image/svg+xml;base64,{{ base64_encode($chartSvg) }}" width="100%" style="width: 100%; height: auto;" />
         </div>
     @endif
 

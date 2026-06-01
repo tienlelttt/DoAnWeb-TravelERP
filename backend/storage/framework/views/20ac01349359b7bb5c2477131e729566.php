@@ -6,8 +6,7 @@
     <?php if(!empty($chartSvg)): ?>
         <div class="chart-container">
             <div class="chart-title">Biểu đồ xu hướng số lượng đơn đặt tour theo ngày (Gần nhất)</div>
-            <?php echo $chartSvg; ?>
-
+            <img src="data:image/svg+xml;base64,<?php echo e(base64_encode($chartSvg)); ?>" width="100%" style="width: 100%; height: auto;" />
         </div>
     <?php endif; ?>
 

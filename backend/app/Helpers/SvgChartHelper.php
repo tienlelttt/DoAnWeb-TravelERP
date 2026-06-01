@@ -42,7 +42,7 @@ class SvgChartHelper
             $maxVal = $ceilFactor > 0 ? $ceilFactor : $maxVal;
         }
 
-        $svg = "<svg width=\"{$w}\" height=\"{$h}\" viewBox=\"0 0 {$w} {$h}\" xmlns=\"http://www.w3.org/2000/svg\" style=\"font-family: Arial, sans-serif;\">\n";
+        $svg = "<svg width=\"{$w}\" height=\"{$h}\" viewBox=\"0 0 {$w} {$h}\" xmlns=\"http://www.w3.org/2000/svg\" style=\"font-family: 'DejaVu Sans', sans-serif;\">\n";
         
         // Vẽ lưới và nhãn trục Y (5 vạch chia)
         for ($i = 0; $i <= 4; $i++) {
@@ -138,7 +138,7 @@ class SvgChartHelper
             $maxVal = $ceilFactor > 0 ? $ceilFactor : $maxVal;
         }
 
-        $svg = "<svg width=\"{$w}\" height=\"{$h}\" viewBox=\"0 0 {$w} {$h}\" xmlns=\"http://www.w3.org/2000/svg\" style=\"font-family: Arial, sans-serif;\">\n";
+        $svg = "<svg width=\"{$w}\" height=\"{$h}\" viewBox=\"0 0 {$w} {$h}\" xmlns=\"http://www.w3.org/2000/svg\" style=\"font-family: 'DejaVu Sans', sans-serif;\">\n";
 
         // Trục Y
         for ($i = 0; $i <= 4; $i++) {
@@ -212,7 +212,7 @@ class SvgChartHelper
         $total = array_sum($data);
         if ($total <= 0) $total = 1;
 
-        $svg = "<svg width=\"{$w}\" height=\"{$h}\" viewBox=\"0 0 {$w} {$h}\" xmlns=\"http://www.w3.org/2000/svg\" style=\"font-family: Arial, sans-serif;\">\n";
+        $svg = "<svg width=\"{$w}\" height=\"{$h}\" viewBox=\"0 0 {$w} {$h}\" xmlns=\"http://www.w3.org/2000/svg\" style=\"font-family: 'DejaVu Sans', sans-serif;\">\n";
 
         $currentAngle = 0.0;
         $numSlices = count($data);
@@ -300,7 +300,7 @@ class SvgChartHelper
             $maxVal = $ceilFactor > 0 ? $ceilFactor : $maxVal;
         }
 
-        $svg = "<svg width=\"{$w}\" height=\"{$h}\" viewBox=\"0 0 {$w} {$h}\" xmlns=\"http://www.w3.org/2000/svg\" style=\"font-family: Arial, sans-serif;\">\n";
+        $svg = "<svg width=\"{$w}\" height=\"{$h}\" viewBox=\"0 0 {$w} {$h}\" xmlns=\"http://www.w3.org/2000/svg\" style=\"font-family: 'DejaVu Sans', sans-serif;\">\n";
 
         // Vẽ vạch và lưới dọc trục X
         for ($i = 0; $i <= 4; $i++) {

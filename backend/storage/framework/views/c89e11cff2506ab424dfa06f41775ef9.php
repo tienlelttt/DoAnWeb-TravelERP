@@ -6,8 +6,7 @@
     <?php if(!empty($chartSvg)): ?>
         <div class="chart-container">
             <div class="chart-title">Biểu đồ so sánh doanh thu, chi phí và lợi nhuận (Top 15 Tour)</div>
-            <?php echo $chartSvg; ?>
-
+            <img src="data:image/svg+xml;base64,<?php echo e(base64_encode($chartSvg)); ?>" width="100%" style="width: 100%; height: auto;" />
         </div>
     <?php endif; ?>
 
