@@ -41,7 +41,9 @@ return Application::configure(basePath: dirname(__DIR__))
                 'success' => false,
                 'message' => $e->getMessage(),
                 'data' => null,
-                'error' => $e->getErrorCode()
+                'error' => $e->getErrorCode(),
+                'errors' => ['code' => $e->getErrorCode()],
+                'meta' => new \stdClass(),
             ], $e->getHttpStatus(), [], JSON_UNESCAPED_UNICODE);
         });
 
@@ -55,7 +57,9 @@ return Application::configure(basePath: dirname(__DIR__))
                 'success' => false,
                 'message' => $message,
                 'data' => null,
-                'error' => 'VALIDATION_ERROR'
+                'error' => 'VALIDATION_ERROR',
+                'errors' => $e->errors(),
+                'meta' => new \stdClass(),
             ], 400, [], JSON_UNESCAPED_UNICODE);
         });
 
@@ -65,7 +69,9 @@ return Application::configure(basePath: dirname(__DIR__))
                 'success' => false,
                 'message' => 'Sai tên đăng nhập hoặc mật khẩu hoặc Token hết hạn',
                 'data' => null,
-                'error' => 'AUTHENTICATION_FAILED'
+                'error' => 'AUTHENTICATION_FAILED',
+                'errors' => ['code' => 'AUTHENTICATION_FAILED'],
+                'meta' => new \stdClass(),
             ], 401, [], JSON_UNESCAPED_UNICODE);
         });
 
@@ -75,7 +81,9 @@ return Application::configure(basePath: dirname(__DIR__))
                 'success' => false,
                 'message' => 'Không tìm thấy đường dẫn: ' . $request->path(),
                 'data' => null,
-                'error' => 'NOT_FOUND'
+                'error' => 'NOT_FOUND',
+                'errors' => ['code' => 'NOT_FOUND'],
+                'meta' => new \stdClass(),
             ], 404, [], JSON_UNESCAPED_UNICODE);
         });
         
@@ -85,7 +93,9 @@ return Application::configure(basePath: dirname(__DIR__))
                 'success' => false,
                 'message' => 'Bạn không có quyền truy cập tài nguyên này',
                 'data' => null,
-                'error' => 'FORBIDDEN'
+                'error' => 'FORBIDDEN',
+                'errors' => ['code' => 'FORBIDDEN'],
+                'meta' => new \stdClass(),
             ], 403, [], JSON_UNESCAPED_UNICODE);
         });
     })->create();

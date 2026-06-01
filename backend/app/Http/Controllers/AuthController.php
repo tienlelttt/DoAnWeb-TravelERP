@@ -126,6 +126,44 @@ class AuthController extends Controller
     }
 
     /**
+     * Lấy thông tin tài khoản đang đăng nhập để frontend/PWA hydrate session.
+     */
+    public function me()
+    {
+        $user = Auth::guard('api')->user();
+        $vaiTro = $user->vaiTro;
+
+        return $this->ok("Lấy thông tin người dùng thành công", [
+            'maTaiKhoan' => $user->ma_tai_khoan,
+            'tenDangNhap' => $user->ten_dang_nhap,
+            'hoTen' => $user->ho_ten,
+            'email' => $user->email,
+            'soDienThoai' => $user->so_dien_thoai,
+            'maVaiTro' => $vaiTro ? $vaiTro->ma_vai_tro : $user->vai_tro,
+            'tenHienThi' => $vaiTro ? $vaiTro->ten_hien_thi : null,
+            'trangThai' => $user->trang_thai,
+        ]);
+    }
+
+    /**
+     * Gia hạn JWT mà không yêu cầu frontend đăng nhập lại.
+     */
+    public function refresh()
+    {
+        $token = JWTAuth::parseToken()->refresh();
+        $user = JWTAuth::setToken($token)->toUser();
+        $vaiTro = $user->vaiTro;
+
+        return $this->ok("Gia hạn phiên đăng nhập thành công", [
+            'accessToken' => $token,
+            'tokenType' => 'Bearer',
+            'maVaiTro' => $vaiTro ? $vaiTro->ma_vai_tro : null,
+            'tenHienThi' => $vaiTro ? $vaiTro->ten_hien_thi : null,
+            'hoTen' => $user->ho_ten
+        ]);
+    }
+
+    /**
      * Đổi mật khẩu cho người dùng đang đăng nhập
      */
     public function doiMatKhau(Request $request)
@@ -218,7 +256,7 @@ class AuthController extends Controller
             // Lấy payload từ JWT token mà không gán auth() login.
             $payload = JWTAuth::setToken($request->resetToken)->getPayload();
             
-            // Check custom claim
+            // Kiểm tra claim tùy chỉnh
             if (!$payload->get('is_reset_token')) {
                 throw AppException::unauthorized("Token không hợp lệ để reset mật khẩu", "UNAUTHORIZED");
             }

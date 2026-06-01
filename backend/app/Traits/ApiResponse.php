@@ -9,14 +9,16 @@ trait ApiResponse
     /**
      * Trả về định dạng JSON chuẩn của hệ thống.
      */
-    protected function formatResponse(int $status, bool $success, string $message, $data = null, $error = null): JsonResponse
+    protected function formatResponse(int $status, bool $success, string $message, $data = null, $error = null, $errors = null, array $meta = []): JsonResponse
     {
         return response()->json([
             'status' => $status,
             'success' => $success,
             'message' => $message,
             'data' => $data,
-            'error' => $error
+            'error' => $error,
+            'errors' => $errors,
+            'meta' => $meta,
         ], $status, [], JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION);
     }
 
