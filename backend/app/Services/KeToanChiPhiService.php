@@ -19,7 +19,8 @@ class KeToanChiPhiService
             $query->where("trang_thai_duyet", $filters["trangThaiDuyet"]);
         }
 
-        return $query->orderBy("ngay_khai", "desc")->paginate(15);
+        $size = max(1, min((int) ($filters['size'] ?? 15), 1000));
+        return $query->orderBy("ngay_khai", "desc")->paginate($size);
     }
 
     private function setTrangThaiChiPhi(string $maChiPhi, string $trangThaiMoi): ChiPhiThucTe

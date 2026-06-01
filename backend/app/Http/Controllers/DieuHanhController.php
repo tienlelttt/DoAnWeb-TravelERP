@@ -30,9 +30,10 @@ class DieuHanhController extends Controller
     /**
      * API Lấy danh sách tour cần phân công
      */
-    public function tourCanPhanCong(): JsonResponse
+    public function tourCanPhanCong(Request $request): JsonResponse
     {
-        $data = $this->phanCongService->danhSachTourCanPhanCong();
+        $size = (int) $request->query('size', 10);
+        $data = $this->phanCongService->danhSachTourCanPhanCong($size);
         return $this->successResponse($data);
     }
 

@@ -34,15 +34,17 @@ class KhachHangController extends Controller
         return $this->successResponse($data, "Cập nhật hồ sơ thành công");
     }
 
-    public function danhSachDatTour(): JsonResponse
+    public function danhSachDatTour(Request $request): JsonResponse
     {
-        $data = $this->khachHangService->danhSachDatTour($this->getMaTaiKhoan());
+        $size = (int) $request->query('size', 15);
+        $data = $this->khachHangService->danhSachDatTour($this->getMaTaiKhoan(), $size);
         return $this->successResponse($data, "Thành công");
     }
 
-    public function lichSuTour(): JsonResponse
+    public function lichSuTour(Request $request): JsonResponse
     {
-        $data = $this->khachHangService->lichSuTour($this->getMaTaiKhoan());
+        $size = (int) $request->query('size', 15);
+        $data = $this->khachHangService->lichSuTour($this->getMaTaiKhoan(), $size);
         return $this->successResponse($data, "Thành công");
     }
 
@@ -68,9 +70,10 @@ class KhachHangController extends Controller
         return $this->successResponse($res, "Gửi yêu cầu hủy tour thành công");
     }
 
-    public function yeuCauHoTroCanBoSung(): JsonResponse
+    public function yeuCauHoTroCanBoSung(Request $request): JsonResponse
     {
-        $data = $this->khachHangService->yeuCauHoTroCanBoSung($this->getMaTaiKhoan());
+        $size = (int) $request->query('size', 15);
+        $data = $this->khachHangService->yeuCauHoTroCanBoSung($this->getMaTaiKhoan(), $size);
         return $this->successResponse($data);
     }
 

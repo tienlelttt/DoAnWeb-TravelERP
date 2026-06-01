@@ -93,7 +93,7 @@ class KhachHangService
         return $this->layHoSo($maTaiKhoan);
     }
 
-    public function lichSuTour(string $maTaiKhoan)
+    public function lichSuTour(string $maTaiKhoan, int $size = 15)
     {
         $hcs = $this->getHoChieuSo($maTaiKhoan);
         // Lấy các tour đã đặt và đã thanh toán
@@ -101,16 +101,16 @@ class KhachHangService
             ->where("ma_khach_hang", $hcs->ma_khach_hang)
             ->whereIn("trang_thai", self::TRANG_THAI_DON_DA_THAM_GIA)
             ->orderBy("ngay_dat", "desc")
-            ->paginate(15);
+            ->paginate($size);
     }
 
-    public function danhSachDatTour(string $maTaiKhoan)
+    public function danhSachDatTour(string $maTaiKhoan, int $size = 15)
     {
         $hcs = $this->getHoChieuSo($maTaiKhoan);
         return DonDatTour::with(["tourThucTe.tourMau"])
             ->where("ma_khach_hang", $hcs->ma_khach_hang)
             ->orderBy("ngay_dat", "desc")
-            ->paginate(15);
+            ->paginate($size);
     }
 
     public function layDanhSachYeuCauHoTro(string $maTaiKhoan, array $filters = [])
@@ -179,13 +179,13 @@ class KhachHangService
         return $yeuCau;
     }
 
-    public function yeuCauHoTroCanBoSung(string $maTaiKhoan)
+    public function yeuCauHoTroCanBoSung(string $maTaiKhoan, int $size = 15)
     {
         $hcs = $this->getHoChieuSo($maTaiKhoan);
         return YeuCauHoTro::where("ma_khach_hang", $hcs->ma_khach_hang)
             ->whereIn("trang_thai", ["CHO_BO_SUNG", "YEU_CAU_BO_SUNG", "CAN_BO_SUNG"])
             ->orderBy("updated_at", "desc")
-            ->paginate(15);
+            ->paginate($size);
     }
 
     public function boSungYeuCauHoTro(string $maTaiKhoan, string $maYeuCau, array $data)

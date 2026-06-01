@@ -127,7 +127,7 @@ class PhanCongTourService
     /**
      * Lấy danh sách tour cần phân công
      */
-    public function danhSachTourCanPhanCong()
+    public function danhSachTourCanPhanCong(int $size = 10)
     {
         // Các tour chuẩn bị khởi hành và số lượng HDV < yêu cầu (nếu có logic đếm HDV)
         // Hiện tại chỉ lấy các tour trạng thái CHO_KICH_HOAT hoặc MO_BAN và chưa khởi hành
@@ -135,7 +135,7 @@ class PhanCongTourService
             ->whereIn('trang_thai', ['CHO_KICH_HOAT', 'MO_BAN'])
             ->where('ngay_khoi_hanh', '>', now())
             ->orderBy('ngay_khoi_hanh', 'asc')
-            ->paginate(10);
+            ->paginate($size);
     }
 
     /**

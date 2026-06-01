@@ -24,14 +24,14 @@ class DanhGiaController extends Controller
 
     public function danhSachDanhGia(Request $request, $maTourThucTe)
     {
-        $perPage = $request->query('per_page', 10);
+        $perPage = $request->query('size', $request->query('per_page', 10));
         $result = $this->danhGiaService->danhSachDanhGia($maTourThucTe, $perPage);
         return $this->successResponse($result, 'Lấy danh sách đánh giá thành công');
     }
 
     public function tatCaDanhGia(Request $request)
     {
-        $perPage = $request->query('per_page', 10);
+        $perPage = $request->query('size', $request->query('per_page', 10));
         $result = $this->danhGiaService->tatCaDanhGia($perPage);
         return $this->successResponse($result, 'Lấy danh sách đánh giá thành công');
     }
