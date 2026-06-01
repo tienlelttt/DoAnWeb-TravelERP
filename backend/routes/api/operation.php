@@ -68,4 +68,5 @@ Route::group(['prefix' => 'huong-dan-vien', 'middleware' => ['auth:api', 'role:H
     Route::get('/tour/{maTour}/chi-phi', [HdvController::class, 'chiPhiCuaTour']);
     Route::post('/tour/{maTour}/chi-phi', [HdvController::class, 'khaiChiPhi']);
     Route::put('/chi-phi/{maChiPhi}/bo-sung', [HdvController::class, 'boSungChiPhi']);
+    Route::delete('/chi-phi/{maChiPhi}', [HdvController::class, 'huyChiPhi']);
 });

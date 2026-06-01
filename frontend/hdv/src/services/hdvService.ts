@@ -156,5 +156,10 @@ export const hdvService = {
   layLichTrinhTourThucTe: async (maTourThucTe: string) => {
     const res = await api.get(`/huong-dan-vien/tour/${maTourThucTe}/lich-trinh`);
     return res.data;
+  },
+
+  huyChiPhi: async (maChiPhi: string) => {
+    const res = await api.delete(`/huong-dan-vien/chi-phi/${maChiPhi}`);
+    return res.data;
   }
 };

@@ -273,6 +273,7 @@ class VanHanhService
         $chiPhi->ghi_chu = $data['ghiChu'] ?? null;
         $chiPhi->trang_thai_duyet = 'CHO_DUYET';
         $chiPhi->ngay_khai = now();
+        $chiPhi->ngay_khai = now();
         $chiPhi->save();
 
         return $chiPhi;
@@ -294,5 +295,22 @@ class VanHanhService
         $chiPhi->save();
 
         return $chiPhi;
+    }
+
+    public function huyChiPhi(string $maChiPhi, string $maHdv)
+    {
+        $chiPhi = ChiPhiThucTe::where('ma_chi_phi_thuc_te', $maChiPhi)
+            ->where('ma_nhan_vien', $maHdv)
+            ->first();
+
+        if (!$chiPhi) {
+            throw AppException::notFound("Không tìm thấy chi phí này");
+        }
+        
+        if ($chiPhi->trang_thai_duyet !== 'CHO_DUYET') {
+            throw AppException::badRequest("Chỉ được hủy các chi phí đang chờ duyệt");
+        }
+
+        $chiPhi->delete();
     }
 }

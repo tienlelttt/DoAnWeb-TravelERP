@@ -124,6 +124,13 @@ class HdvController extends Controller
         return $this->successResponse($res, "Bổ sung chi phí thành công");
     }
 
+    public function huyChiPhi(string $maChiPhi): JsonResponse
+    {
+        $maHdv = $this->getHdvId();
+        $this->vanHanhService->huyChiPhi($maChiPhi, $maHdv);
+        return $this->successResponse(null, "Hủy chi phí thành công");
+    }
+
     /**
      * Lấy danh sách tour được phân công của bản thân (Dành cho HDV)
      * GET /api/huong-dan-vien/tour-cua-toi

@@ -183,8 +183,18 @@ export default function QuanLyChiPhi({ maTour, currentTour, pastTours = [], expe
   };
 
   // Delete Expense
-  const handleDeleteExpense = (id: string) => {
-    setExpenses(prev => prev.filter(e => e.id !== id));
+  const handleDeleteExpense = async (id: string) => {
+    try {
+      await hdvService.huyChiPhi(id);
+      setExpenses(prev => prev.filter(e => e.id !== id));
+      setExpenseToast(`Đã hủy yêu cầu chi phí!`);
+      setTimeout(() => {
+        setExpenseToast(null);
+      }, 3000);
+    } catch (error) {
+      console.error(error);
+      setFormError("Không thể hủy chi phí này.");
+    }
   };
 
   return (
