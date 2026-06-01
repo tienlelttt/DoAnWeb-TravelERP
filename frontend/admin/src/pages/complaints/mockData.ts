@@ -69,12 +69,13 @@ export interface Complaint {
   code: string;
   customerName: string;
   maDatTour?: string;
+  maTourThucTe?: string;
   customerPhone: string;
   tourName: string;
   guideName?: string;
   sentDate: string;
   severity: 'THAP' | 'SOS';
-  status: 'pending' | 'processing' | 'pending_info' | 'pending_guide' | 'pending_review' | 'resolved' | 'rejected' | 'cancelled';
+  status: 'pending' | 'processing' | 'pending_info' | 'pending_guide' | 'resolved' | 'rejected' | 'cancelled';
   description: string;
   attachments?: string[];
   timeline: { action: string; timestamp: string }[];

@@ -3,6 +3,7 @@ import { X, MessageSquare, AlertCircle, XCircle, Check } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import type { Complaint } from './mockData';
 import { ordersService } from '../../services/orders';
+import { tourInstanceService } from '../../services/tour-instance';
 import { formatDate, formatDateTime } from '../../utils/dateHelpers';
 
 interface ComplaintDrawerProps {
@@ -29,7 +30,6 @@ const ComplaintDrawer: React.FC<ComplaintDrawerProps> = ({ isOpen, onClose, comp
       case 'processing': return 'Đang xử lý';
       case 'pending_info': return 'Chờ bổ sung';
       case 'pending_guide': return 'Chờ giải trình';
-      case 'pending_review': return 'Chờ duyệt';
       case 'resolved': return 'Đã giải quyết';
       case 'rejected': return 'Từ chối';
       case 'cancelled': return 'Đã hủy';
@@ -52,13 +52,23 @@ const ComplaintDrawer: React.FC<ComplaintDrawerProps> = ({ isOpen, onClose, comp
     setRealCustomerName('');
     setGuideName('');
 
-    if (isOpen && complaint?.maDatTour) {
-      ordersService.chiTietDatTour(complaint.maDatTour).then(res => {
-        setTourName(res.tieuDeTour || '');
-        setDepartureDate(res.ngayKhoiHanh ? formatDate(res.ngayKhoiHanh) : '');
-        setRealCustomerName(res.tenKhachHang ? (res.maKhachHang ? `${res.maKhachHang} - ${res.tenKhachHang}` : res.tenKhachHang) : '');
-        setGuideName(res.tenHuongDanVien ? (res.maHuongDanVien ? `${res.maHuongDanVien} - ${res.tenHuongDanVien}` : res.tenHuongDanVien) : '');
-      }).catch(e => console.error(e));
+    if (isOpen && complaint) {
+      if (complaint.source === 'complaint' && complaint.maDatTour) {
+        ordersService.chiTietDatTour(complaint.maDatTour).then(res => {
+          setTourName(res.tieuDeTour || '');
+          setDepartureDate(res.ngayKhoiHanh ? formatDate(res.ngayKhoiHanh) : '');
+          setRealCustomerName(res.tenKhachHang ? (res.maKhachHang ? `${res.maKhachHang} - ${res.tenKhachHang}` : res.tenKhachHang) : '');
+          setGuideName(res.tenHuongDanVien ? (res.maHuongDanVien ? `${res.maHuongDanVien} - ${res.tenHuongDanVien}` : res.tenHuongDanVien) : '');
+        }).catch(e => console.error(e));
+      } else if (complaint.source === 'incident' && complaint.maTourThucTe) {
+        tourInstanceService.chiTiet(complaint.maTourThucTe).then(res => {
+          if (res) {
+            setTourName(res.tieuDeTour || '');
+            setDepartureDate(res.ngayKhoiHanh ? formatDate(res.ngayKhoiHanh) : '');
+            // For incidents, the customer and guide are usually directly attached to the complaint itself from the list API
+          }
+        }).catch(e => console.error(e));
+      }
     }
   }, [isOpen, complaint]);
 
@@ -166,8 +176,8 @@ const ComplaintDrawer: React.FC<ComplaintDrawerProps> = ({ isOpen, onClose, comp
               </h3>
               <div className="grid grid-cols-1 gap-2.5 text-sm text-gray-700">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-500">Mã đơn hàng:</span>
-                  <span className="font-medium">{complaint.maDatTour || '—'}</span>
+                  <span className="text-gray-500">{complaint.source === 'incident' ? 'Mã tour thực tế:' : 'Mã đơn hàng:'}</span>
+                  <span className="font-medium">{complaint.source === 'incident' ? complaint.maTourThucTe : (complaint.maDatTour || '—')}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-500">Tên Tour:</span>
@@ -183,7 +193,7 @@ const ComplaintDrawer: React.FC<ComplaintDrawerProps> = ({ isOpen, onClose, comp
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-500">Nhân viên phụ trách:</span>
-                  <span className="font-medium text-right">{guideName || '—'}</span>
+                  <span className="font-medium text-right">{guideName || complaint.guideName || '—'}</span>
                 </div>
               </div>
             </div>
@@ -191,9 +201,38 @@ const ComplaintDrawer: React.FC<ComplaintDrawerProps> = ({ isOpen, onClose, comp
             {/* Nội dung phản ánh */}
             <div className="mb-6">
               <h3 className="font-bold text-[#121C2C] mb-3 text-sm">Nội dung phản ánh</h3>
-              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200 text-sm text-gray-700 whitespace-pre-wrap leading-relaxed shadow-inner">
-                {formatComplaintContent(complaint.description)}
-              </div>
+              {(() => {
+                const fullContent = formatComplaintContent(complaint.description);
+                const lines = fullContent.split('\n');
+                let category = '';
+                let subject = '';
+                let startIndex = 0;
+                
+                if (lines[0]?.startsWith('Danh mục: ')) {
+                  category = lines[0].replace('Danh mục: ', '').trim();
+                  startIndex++;
+                }
+                if (lines[startIndex]?.startsWith('Tiêu đề: ')) {
+                  subject = lines[startIndex].replace('Tiêu đề: ', '').trim();
+                  startIndex++;
+                }
+                
+                const body = lines.slice(startIndex).join('\n').trim();
+
+                return (
+                  <div className="flex flex-col gap-3">
+                    {(category || subject) && (
+                      <div className="grid grid-cols-1 gap-2 p-3 bg-blue-50 rounded-lg border border-blue-100 text-sm">
+                        {category && <div><span className="text-gray-500 mr-2">Danh mục:</span><span className="font-semibold text-blue-900">{category}</span></div>}
+                        {subject && <div><span className="text-gray-500 mr-2">Tiêu đề:</span><span className="font-semibold text-blue-900">{subject}</span></div>}
+                      </div>
+                    )}
+                    <div className="p-4 bg-gray-50 rounded-lg border border-gray-200 text-sm text-gray-700 whitespace-pre-wrap leading-relaxed shadow-inner">
+                      {body || 'Không có nội dung'}
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
 
             {/* Ảnh đính kèm */}
