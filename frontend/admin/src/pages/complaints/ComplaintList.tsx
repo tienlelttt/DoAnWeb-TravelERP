@@ -100,7 +100,7 @@ const ComplaintList: React.FC = () => {
     try {
       const [complaintsRes, incidents] = await Promise.all([
         (async () => {
-          const pageSize = 100;
+          const pageSize = 1000;
           const firstPage = await complaintsService.danhSachYeuCauHoTro({ page: 0, size: pageSize });
           const totalPages = firstPage?.totalPages ?? 1;
           if (totalPages <= 1) return firstPage?.content ?? [];
@@ -364,3 +364,4 @@ const ComplaintList: React.FC = () => {
 };
 
 export default ComplaintList;
+

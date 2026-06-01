@@ -31,7 +31,7 @@ export const dispatchService = {
 
   tourCanPhanCong: async (): Promise<PageTourThucTeResponse | undefined> => {
     const response = await api.get<ApiResponsePageTourThucTeResponse>('/api/dieu-hanh/tour-can-phan-cong', {
-      params: { page: 0, size: 200 },
+      params: { page: 0, size: 1000 },
     });
     return unwrapApiData(response);
   },
@@ -73,3 +73,4 @@ export const dispatchService = {
     return unwrapApiData(response);
   },
 };
+

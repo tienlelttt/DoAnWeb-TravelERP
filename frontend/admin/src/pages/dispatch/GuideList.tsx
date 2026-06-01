@@ -64,7 +64,7 @@ const GuideList: React.FC = () => {
       let guides: NhanVienResponse[] = [];
 
       if (isAdmin) {
-        const res = await accountsService.danhSachNhanVien({ maVaiTro: 'HDV', page: 0, size: 200 });
+        const res = await accountsService.danhSachNhanVien({ maVaiTro: 'HDV', page: 0, size: 1000 });
         guides = unwrapPageContent(res).filter((nv) => nv.maVaiTro === 'HDV' || nv.maVaiTro === 'ROLE_HDV');
       } else {
         const tours = await tourInstanceService.danhSach({ trangThai: 'CHO_KICH_HOAT', page: 0, size: 1 });
@@ -266,3 +266,4 @@ const GuideList: React.FC = () => {
 };
 
 export default GuideList;
+

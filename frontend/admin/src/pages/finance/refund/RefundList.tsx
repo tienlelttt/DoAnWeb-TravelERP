@@ -46,7 +46,7 @@ const RefundList: React.FC = () => {
   const getAll = async () => {
     if (!hasAccess(user?.maVaiTro, 'finance')) return;
     try {
-      const refundPageSize = 100;
+      const refundPageSize = 1000;
       const firstPage = await financeService.danhSachChoHoanTien({ page: 0, size: refundPageSize });
       const totalPages = firstPage?.totalPages ?? 1;
       const remainingPages = totalPages > 1
@@ -57,7 +57,7 @@ const RefundList: React.FC = () => {
           )
         : [];
       const allRefunds = [firstPage, ...remainingPages].flatMap(page => page?.content ?? []);
-      const ordersRes = await ordersService.danhSachTatCa({ page: 0, size: 500 }).catch(() => null);
+      const ordersRes = await ordersService.danhSachTatCa({ page: 0, size: 1000 }).catch(() => null);
       const orders = ordersRes?.content || [];
 
       const mapped = allRefunds.map((t: ThanhToanResponse): RefundRequest => {
@@ -262,3 +262,4 @@ const RefundList: React.FC = () => {
 };
 
 export default RefundList;
+

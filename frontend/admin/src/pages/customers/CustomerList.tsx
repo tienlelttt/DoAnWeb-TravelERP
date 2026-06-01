@@ -62,7 +62,7 @@ const CustomerList: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await customersService.timKiemKhachHang();
+      const res = await customersService.timKiemKhachHang({ page: 0, size: 1000 });
       setData(res && res.content ? res.content.map(mapToUI) : []);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Lỗi khi tải dữ liệu';

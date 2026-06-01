@@ -45,7 +45,7 @@ export const ordersService = {
 
   /** Backend chưa có GET /api/kinh-doanh/dat-tour/{id} — lấy từ danh sách theo mã đơn */
   chiTietDatTour: async (maDatTour: string): Promise<DonDatTourResponse> => {
-    const page = await ordersService.danhSachTatCa({ page: 0, size: 500 });
+    const page = await ordersService.danhSachTatCa({ page: 0, size: 1000 });
     const found = page?.content?.find((d) => d.maDatTour === maDatTour);
     if (!found) {
       throw new Error(`Không tìm thấy đơn đặt tour: ${maDatTour}`);
@@ -69,3 +69,4 @@ export const ordersService = {
     return unwrapApiData(response);
   },
 };
+

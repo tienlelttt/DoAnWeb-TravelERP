@@ -60,7 +60,7 @@ export interface NhatKyHeThongQueryParams extends PageQueryParams {
 export const logsService = {
   nhatKyHeThong: async (params?: NhatKyHeThongQueryParams): Promise<PageNhatKyHeThongResponse | undefined> => {
     const response = await api.get<ApiResponsePageNhatKyHeThongResponse>('/api/quan-tri/nhat-ky-he-thong', {
-      params: { page: 0, size: 500, sort: 'taiKhoan,desc', ...params },
+      params: { page: 0, size: 1000, sort: 'taiKhoan,desc', ...params },
     });
     return unwrapApiData(response);
   },

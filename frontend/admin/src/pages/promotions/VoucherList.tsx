@@ -60,7 +60,7 @@ const VoucherList: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const pageSize = 100;
+      const pageSize = 1000;
       const firstPage = await promotionsService.danhSach_4({ page: 0, size: pageSize });
       const totalPages = firstPage?.totalPages ?? 1;
       const remainingPages = totalPages > 1
@@ -278,3 +278,4 @@ const VoucherList: React.FC = () => {
 };
 
 export default VoucherList;
+

@@ -32,7 +32,7 @@ export interface TourThucTeListParams extends PageQueryParams {
 export const tourInstanceService = {
   danhSach: async (params?: TourThucTeListParams): Promise<PageTourThucTeResponse | undefined> => {
     const response = await api.get<ApiResponsePageTourThucTeResponse>('/api/dieu-hanh/tour-thuc-te', {
-      params: { page: 0, size: 200, ...params },
+      params: { page: 0, size: 1000, ...params },
     });
     return unwrapApiData(response);
   },
@@ -66,3 +66,4 @@ export const tourInstanceService = {
 
   danhSach_5: (params?: TourThucTeListParams) => tourInstanceService.danhSach(params),
 };
+

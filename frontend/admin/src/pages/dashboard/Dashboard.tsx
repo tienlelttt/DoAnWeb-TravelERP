@@ -125,7 +125,7 @@ const Dashboard: React.FC = () => {
         }));
 
         // Fetch larger batch for featured calculation & top destinations
-        const allToursResp = await tourInstanceService.danhSach({ page: 0, size: 500 }).catch(() => null);
+        const allToursResp = await tourInstanceService.danhSach({ page: 0, size: 1000 }).catch(() => null);
         if (allToursResp && allToursResp.content) {
           // 1. Gói Tour Nổi Bật (Featured Tours)
           // Lọc các tour đang mở bán và còn chỗ

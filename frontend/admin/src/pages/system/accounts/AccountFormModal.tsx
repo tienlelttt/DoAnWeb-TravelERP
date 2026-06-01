@@ -3,7 +3,7 @@ import { Modal } from '../../../components/ui/Modal';
 import { Button } from '../../../components/ui/Button';
 import { Select } from '../../../components/ui/Select';
 import type { Account } from './mockData';
-import { allRoles, initialAccounts } from './mockData';
+import { allRoles } from './mockData';
 import { accountsService } from '../../../services/system/accounts';
 import { ROLE_VALUE_MAP } from './AccountList';
 
@@ -13,6 +13,7 @@ interface AccountFormModalProps {
   mode: 'create' | 'edit';
   initialData?: Account;
   onSubmit: () => void;
+  existingAccounts?: Account[];
 }
 
 interface FormErrors {
@@ -29,6 +30,7 @@ const AccountFormModal: React.FC<AccountFormModalProps> = ({
   mode,
   initialData,
   onSubmit,
+  existingAccounts = [],
 }) => {
   const [formData, setFormData] = useState<Account>({
     id: '',
@@ -38,7 +40,7 @@ const AccountFormModal: React.FC<AccountFormModalProps> = ({
     phone: '',
     username: '',
     role: '',
-    status: 'active',
+    status: 'HOAT_DONG',
   });
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<FormErrors>({});
@@ -53,7 +55,7 @@ const AccountFormModal: React.FC<AccountFormModalProps> = ({
         phone: initialData?.phone ?? '',
         username: initialData?.username ?? '',
         role: initialData?.role ?? '',
-        status: initialData?.status ?? 'active',
+        status: initialData?.status ?? 'HOAT_DONG',
       });
       setPassword('');
       setErrors({});
@@ -81,7 +83,7 @@ const AccountFormModal: React.FC<AccountFormModalProps> = ({
       nextErrors.username = 'Username chỉ gồm a-z, 0-9 và ký tự . _ -';
     } else {
       const normalized = formData.username.trim().toLowerCase();
-      const existingUsernames = initialAccounts.map((account) =>
+      const existingUsernames = existingAccounts.map((account) =>
         account.username.toLowerCase()
       );
       const isDuplicate =
@@ -113,7 +115,7 @@ const AccountFormModal: React.FC<AccountFormModalProps> = ({
           maVaiTro: ROLE_VALUE_MAP[formData.role] || 'KINHDOANH',
         });
         if (formData.status !== initialData?.status) {
-          if (formData.status === 'active') {
+          if (formData.status === 'HOAT_DONG') {
             await accountsService.moKhoaTaiKhoan(formData.id);
           } else {
             await accountsService.khoaTaiKhoan(formData.id);
@@ -256,9 +258,9 @@ const AccountFormModal: React.FC<AccountFormModalProps> = ({
           <div className="mt-2 inline-flex rounded-lg border border-[#C5EAFF] bg-[#F9F9FF] p-1">
             <button
               type="button"
-              onClick={() => setFormData((prev) => ({ ...prev, status: 'active' }))}
+              onClick={() => setFormData((prev) => ({ ...prev, status: 'HOAT_DONG' }))}
               className={`px-4 py-1.5 text-sm rounded-md transition-colors ${
-                formData.status === 'active'
+                formData.status === 'HOAT_DONG'
                   ? 'bg-[#89D4FF] text-white'
                   : 'text-gray-600 hover:text-[#00668A]'
               }`}
@@ -267,9 +269,9 @@ const AccountFormModal: React.FC<AccountFormModalProps> = ({
             </button>
             <button
               type="button"
-              onClick={() => setFormData((prev) => ({ ...prev, status: 'locked' }))}
+              onClick={() => setFormData((prev) => ({ ...prev, status: 'KHOA' }))}
               className={`px-4 py-1.5 text-sm rounded-md transition-colors ${
-                formData.status === 'locked'
+                formData.status === 'KHOA'
                   ? 'bg-[#BA1A1A] text-white'
                   : 'text-gray-600 hover:text-[#BA1A1A]'
               }`}

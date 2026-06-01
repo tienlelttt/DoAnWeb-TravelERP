@@ -23,7 +23,7 @@ const TourTemplateList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
   const pageSize = 5;
-  const apiPageSize = 100;
+  const apiPageSize = 1000;
 
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
@@ -382,3 +382,4 @@ const TourTemplateList: React.FC = () => {
 };
 
 export default TourTemplateList;
+

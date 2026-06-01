@@ -106,8 +106,8 @@ const SettlementModal: React.FC<SettlementModalProps> = ({ isOpen, onClose, tour
     setLoading(true);
     try {
       const [expenseRes, warningRes] = await Promise.all([
-        financeService.danhSachChiPhi({ maTour, size: 100 }),
-        financeService.danhSachCanhBao({ maTour, size: 100 }).catch(() => ({ content: [] }))
+        financeService.danhSachChiPhi({ maTour, size: 1000 }),
+        financeService.danhSachCanhBao({ maTour, size: 1000 }).catch(() => ({ content: [] }))
       ]);
       const expenseList = (expenseRes?.content || []).map(mapExpense);
       setExpenses(expenseList);
@@ -691,3 +691,4 @@ const SettlementModal: React.FC<SettlementModalProps> = ({ isOpen, onClose, tour
 };
 
 export default SettlementModal;
+

@@ -75,7 +75,7 @@ const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({ isOpen, onClo
       setComplaintsLoading(true);
       setComplaintsError(false);
       
-      api.get<{ data: { content?: any[] } }>('/api/kinh-doanh/don-dat-tour', { params: { size: 100 } })
+      api.get<{ data: { content?: any[] } }>('/api/kinh-doanh/don-dat-tour', { params: { size: 1000 } })
         .then((res) => {
           const allOrders = res.data?.data?.content ?? [];
           const customerOrders = allOrders.filter(o => o.maKhachHang === customer.id);
@@ -91,7 +91,7 @@ const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({ isOpen, onClo
           setTourHistory(mappedHistory);
           
           const customerOrderCodes = customerOrders.map(o => o.maDatTour);
-          api.get<{ data: { content?: YeuCauHoTroItem[] } }>('/api/kinh-doanh/yeu-cau-ho-tro', { params: { size: 100 } })
+          api.get<{ data: { content?: YeuCauHoTroItem[] } }>('/api/kinh-doanh/yeu-cau-ho-tro', { params: { size: 1000 } })
             .then((res2) => {
               const allComplaints = res2.data?.data?.content ?? [];
               const customerComplaints = allComplaints.filter(c => customerOrderCodes.includes(c.maDatTour));

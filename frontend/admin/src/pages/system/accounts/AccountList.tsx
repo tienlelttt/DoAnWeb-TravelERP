@@ -107,8 +107,8 @@ const AccountList: React.FC = () => {
     try {
       setLoading(true);
       const [resNhanVien, resKhachHang] = await Promise.all([
-        accountsService.danhSachNhanVien({ page: 0, size: 200 }),
-        customersService.timKiemKhachHang({ page: 0, size: 200 }).catch(() => null)
+        accountsService.danhSachNhanVien({ page: 0, size: 1000 }),
+        customersService.timKiemKhachHang({ page: 0, size: 1000 }).catch(() => null)
       ]);
       const mappedNV = (resNhanVien?.content || []).map((nv: NhanVienResponse): Account => ({
         id: nv.maNhanVien || '',
@@ -429,6 +429,7 @@ const AccountList: React.FC = () => {
         mode={formMode}
         initialData={selectedAccount}
         onSubmit={handleFormSubmit}
+        existingAccounts={accounts}
       />
 
       <PermissionModal
@@ -442,3 +443,4 @@ const AccountList: React.FC = () => {
 };
 
 export default AccountList;
+

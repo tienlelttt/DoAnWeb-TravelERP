@@ -50,7 +50,7 @@ const SettlementList: React.FC = () => {
       
       let res;
       try {
-        res = await financeService.danhSach_6({ page: 0, size: 100 });
+        res = await financeService.danhSach_6({ page: 0, size: 1000 });
       } catch (e) {
         console.error('Lỗi tải danh sách quyết toán:', e);
         res = { content: [] };
@@ -58,7 +58,7 @@ const SettlementList: React.FC = () => {
 
       let pendingRes;
       try {
-        pendingRes = await financeService.tourCanQuyetToan({ page: 0, size: 100 });
+        pendingRes = await financeService.tourCanQuyetToan({ page: 0, size: 1000 });
       } catch (e) {
         console.error('Lỗi tải tour cần quyết toán:', e);
         setError('Không thể tải danh sách tour cần quyết toán. Vui lòng thử lại sau.');
@@ -327,3 +327,4 @@ const SettlementList: React.FC = () => {
 };
 
 export default SettlementList;
+

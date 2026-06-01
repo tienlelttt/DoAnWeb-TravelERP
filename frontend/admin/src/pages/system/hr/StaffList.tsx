@@ -37,7 +37,7 @@ const StaffList: React.FC = () => {
       if (!hasAccess(user?.maVaiTro, 'hr')) return;
       try {
         setLoading(true);
-        const res = await accountsService.danhSachNhanVien({ page: 0, size: 200 });
+        const res = await accountsService.danhSachNhanVien({ page: 0, size: 1000 });
         const mapped = (res?.content || []).map((nv: NhanVienResponse): Staff => ({
           id: nv.maNhanVien || '',
           code: nv.maNhanVien || '',
@@ -279,3 +279,4 @@ const StaffList: React.FC = () => {
 };
 
 export default StaffList;
+
