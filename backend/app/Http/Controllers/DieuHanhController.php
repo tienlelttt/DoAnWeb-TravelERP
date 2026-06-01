@@ -126,7 +126,7 @@ class DieuHanhController extends Controller
      */
     public function layLichCongTacNhanVien(string $maNhanVien): JsonResponse
     {
-        $lichCongTac = \App\Models\PhanCongTour::with('tourThucTe')
+        $lichCongTac = \App\Models\PhanCongTour::with('tourThucTe.tourMau')
             ->where('ma_nhan_vien', $maNhanVien)
             ->orderBy('ngay_phan_cong', 'desc')
             ->get();
@@ -138,6 +138,9 @@ class DieuHanhController extends Controller
                 'ngayPhanCong' => $item->ngay_phan_cong,
                 'ngayPhanHoi' => $item->ngay_phan_hoi,
                 'trangThaiChapNhan' => $item->trang_thai_chap_nhan,
+                'tenTour' => $item->tourThucTe && $item->tourThucTe->tourMau ? $item->tourThucTe->tourMau->tieu_de : null,
+                'ngayKhoiHanh' => $item->tourThucTe ? $item->tourThucTe->ngay_khoi_hanh : null,
+                'trangThaiTour' => $item->tourThucTe ? $item->tourThucTe->trang_thai : null,
                 'tourThucTe' => $item->tourThucTe ? [
                     'maTourThucTe' => $item->tourThucTe->ma_tour_thuc_te,
                     'maTourMau' => $item->tourThucTe->ma_tour_mau,
