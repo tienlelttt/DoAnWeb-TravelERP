@@ -68,11 +68,11 @@ export const financeService = {
         return response.data.data;
     },
     danhSach_6: async (params?: Record<string, any>) => {
-        const response = await api.get<ApiResponsePageQuyetToanResponse>('/api/ke-toan/quyet-toan', { params });
+        const response = await api.get<ApiResponsePageQuyetToanResponse>('/api/ke-toan/quyet-toan', { params: { page: 0, size: 1000, ...params } });
         return response.data.data;
     },
     tourCanQuyetToan: async (params?: Record<string, any>) => {
-        const response = await api.get<ApiResponsePageQuyetToanResponse>('/api/ke-toan/tour-can-quyet-toan', { params });
+        const response = await api.get<ApiResponsePageQuyetToanResponse>('/api/ke-toan/tour-can-quyet-toan', { params: { page: 0, size: 1000, ...params } });
         return response.data.data;
     },
     chiTiet_4: async (maQuyetToan: string) => {
@@ -80,15 +80,15 @@ export const financeService = {
         return response.data.data;
     },
     danhSachChoHoanTien: async (params?: Record<string, any>) => {
-        const response = await api.get<ApiResponsePageThanhToanResponse>('/api/ke-toan/giao-dich-hoan', { params });
+        const response = await api.get<ApiResponsePageThanhToanResponse>('/api/ke-toan/giao-dich-hoan', { params: { page: 0, size: 1000, ...params } });
         return response.data.data;
     },
     danhSachChiPhi: async (params?: Record<string, any>) => {
-        const response = await api.get<ApiResponsePageChiPhiThucTeResponse>('/api/ke-toan/chi-phi', { params });
+        const response = await api.get<ApiResponsePageChiPhiThucTeResponse>('/api/ke-toan/chi-phi', { params: { page: 0, size: 1000, ...params } });
         return response.data.data;
     },
     danhSachCanhBao: async (params?: Record<string, any>) => {
-        const response = await api.get('/api/ke-toan/canh-bao-chi-phi', { params });
+        const response = await api.get('/api/ke-toan/canh-bao-chi-phi', { params: { page: 0, size: 1000, ...params } });
         return response.data.data;
     },
     tinhToan: async (maTour: string) => {

@@ -20,7 +20,9 @@ export type {
 
 export const customersService = {
     timKiemKhachHang: async (params?: Record<string, any>) => {
-        const response = await api.get<ApiResponsePageHoChieuSoResponse>('/api/kinh-doanh/khach-hang', { params });
+        const response = await api.get<ApiResponsePageHoChieuSoResponse>('/api/kinh-doanh/khach-hang', { 
+            params: { page: 0, size: 1000, ...params } 
+        });
         return response.data.data;
     },
     chiTietKhachHang: async (maKhachHang: string) => {

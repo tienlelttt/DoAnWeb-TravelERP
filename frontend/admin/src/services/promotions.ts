@@ -41,7 +41,7 @@ export const promotionsService = {
         return response.data.data;
     },
     danhSach_4: async (params?: PageQueryParams) => {
-        const response = await api.get<ApiResponsePageVoucherResponse>('/api/kinh-doanh/voucher', { params });
+        const response = await api.get<ApiResponsePageVoucherResponse>('/api/kinh-doanh/voucher', { params: { page: 0, size: 1000, ...params } });
         return response.data.data;
     },
     taoVoucher: async (data: VoucherRequest) => {

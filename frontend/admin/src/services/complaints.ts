@@ -40,7 +40,7 @@ export const complaintsService = {
         return response.data.data;
     },
     danhSachYeuCauHoTro: async (params?: Record<string, any>) => {
-        const response = await api.get<ApiResponsePageYeuCauHoTroResponse>('/api/kinh-doanh/yeu-cau-ho-tro', { params });
+        const response = await api.get<ApiResponsePageYeuCauHoTroResponse>('/api/kinh-doanh/yeu-cau-ho-tro', { params: { page: 0, size: 1000, ...params } });
         return response.data.data;
     }
 };

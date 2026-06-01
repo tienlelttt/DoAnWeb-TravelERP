@@ -56,7 +56,7 @@ export const tourTemplateService = {
         return response.data.data;
     },
     danhSach: async (params?: Record<string, any>) => {
-        const response = await api.get<ApiResponsePageTourMauResponse>('/api/san-pham/tour-mau', { params });
+        const response = await api.get<ApiResponsePageTourMauResponse>('/api/san-pham/tour-mau', { params: { page: 0, size: 1000, ...params } });
         return response.data.data;
     },
     taoMoi: async (data: TaoTourMauRequest) => {
