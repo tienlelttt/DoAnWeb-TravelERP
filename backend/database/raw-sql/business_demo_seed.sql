@@ -3400,3 +3400,102 @@ SET so_danh_gia = (SELECT COUNT(*) FROM tour_thuc_tes ttt JOIN danh_gia_khs dg O
 
 
 -- ============================================================;
+
+-- ==========================================
+-- TỰ ĐỘNG BỔ SUNG DỮ LIỆU HÀNH KHÁCH 
+-- ==========================================
+
+-- ==========================================
+-- CẬP NHẬT CHỖ CÒN LẠI DỰA TRÊN NGƯỜI ĐỒNG HÀNH
+-- ==========================================
+UPDATE tour_thuc_tes SET cho_con_lai = 16 WHERE ma_tour_thuc_te = 'TTT_26_CANTHO_DG';
+UPDATE tour_thuc_tes SET cho_con_lai = 30 WHERE ma_tour_thuc_te = 'TTT_26_CANTHO_OCT';
+UPDATE tour_thuc_tes SET cho_con_lai = 34 WHERE ma_tour_thuc_te = 'TTT_26_DANANG_DEC';
+UPDATE tour_thuc_tes SET cho_con_lai = 32 WHERE ma_tour_thuc_te = 'TTT_26_DANANG_JUL';
+UPDATE tour_thuc_tes SET cho_con_lai = 16 WHERE ma_tour_thuc_te = 'TTT_26_HALONG_DG';
+UPDATE tour_thuc_tes SET cho_con_lai = 30 WHERE ma_tour_thuc_te = 'TTT_26_HALONG_SEP';
+UPDATE tour_thuc_tes SET cho_con_lai = 16 WHERE ma_tour_thuc_te = 'TTT_26_HOIAN_DG';
+UPDATE tour_thuc_tes SET cho_con_lai = 28 WHERE ma_tour_thuc_te = 'TTT_26_HOIAN_SEP';
+UPDATE tour_thuc_tes SET cho_con_lai = 26 WHERE ma_tour_thuc_te = 'TTT_26_HUE_AUG';
+UPDATE tour_thuc_tes SET cho_con_lai = 16 WHERE ma_tour_thuc_te = 'TTT_26_MUINE_DG';
+UPDATE tour_thuc_tes SET cho_con_lai = 30 WHERE ma_tour_thuc_te = 'TTT_26_MUINE_NOV';
+UPDATE tour_thuc_tes SET cho_con_lai = 28 WHERE ma_tour_thuc_te = 'TTT_26_PHUQUOC_AUG';
+UPDATE tour_thuc_tes SET cho_con_lai = 28 WHERE ma_tour_thuc_te = 'TTT_26_SAPA_JUL';
+UPDATE tour_thuc_tes SET cho_con_lai = 28 WHERE ma_tour_thuc_te = 'TTT_26_SAPA_NOV';
+UPDATE tour_thuc_tes SET cho_con_lai = 16 WHERE ma_tour_thuc_te = 'TTT_BSLK_ACTIVE_QN';
+UPDATE tour_thuc_tes SET cho_con_lai = 18 WHERE ma_tour_thuc_te = 'TTT_BSLK_CANCEL_HG';
+UPDATE tour_thuc_tes SET cho_con_lai = 20 WHERE ma_tour_thuc_te = 'TTT_BSLK_DONE_CT';
+UPDATE tour_thuc_tes SET cho_con_lai = 17 WHERE ma_tour_thuc_te = 'TTT_BSLK_OPEN_FAM';
+UPDATE tour_thuc_tes SET cho_con_lai = 22 WHERE ma_tour_thuc_te = 'TTT_BSLK_SETTLE_HA';
+UPDATE tour_thuc_tes SET cho_con_lai = 18 WHERE ma_tour_thuc_te = 'TTT_BUONMATHUOT';
+UPDATE tour_thuc_tes SET cho_con_lai = 16 WHERE ma_tour_thuc_te = 'TTT_BUONMATHUOT_DDR_02';
+UPDATE tour_thuc_tes SET cho_con_lai = 22 WHERE ma_tour_thuc_te = 'TTT_BUONMATHUOT_OPEN_03';
+UPDATE tour_thuc_tes SET cho_con_lai = 26 WHERE ma_tour_thuc_te = 'TTT_CANTHO';
+UPDATE tour_thuc_tes SET cho_con_lai = 12 WHERE ma_tour_thuc_te = 'TTT_CANTHO_KT_02';
+UPDATE tour_thuc_tes SET cho_con_lai = 29 WHERE ma_tour_thuc_te = 'TTT_CANTHO_OPEN_03';
+UPDATE tour_thuc_tes SET cho_con_lai = 20 WHERE ma_tour_thuc_te = 'TTT_CHOKH_BABE';
+UPDATE tour_thuc_tes SET cho_con_lai = 22 WHERE ma_tour_thuc_te = 'TTT_CHOKH_CAMAU';
+UPDATE tour_thuc_tes SET cho_con_lai = 18 WHERE ma_tour_thuc_te = 'TTT_CKH';
+UPDATE tour_thuc_tes SET cho_con_lai = 16 WHERE ma_tour_thuc_te = 'TTT_CONDAO';
+UPDATE tour_thuc_tes SET cho_con_lai = 18 WHERE ma_tour_thuc_te = 'TTT_CONDAO_OPEN_03';
+UPDATE tour_thuc_tes SET cho_con_lai = 18 WHERE ma_tour_thuc_te = 'TTT_DALAT_MB_02';
+UPDATE tour_thuc_tes SET cho_con_lai = 22 WHERE ma_tour_thuc_te = 'TTT_DALAT_OPEN_03';
+UPDATE tour_thuc_tes SET cho_con_lai = 28 WHERE ma_tour_thuc_te = 'TTT_DANANG_OPEN_03';
+UPDATE tour_thuc_tes SET cho_con_lai = 31 WHERE ma_tour_thuc_te = 'TTT_DANANG_OPEN_04';
+UPDATE tour_thuc_tes SET cho_con_lai = 20 WHERE ma_tour_thuc_te = 'TTT_DANANG_REVIEW_03';
+UPDATE tour_thuc_tes SET cho_con_lai = 14 WHERE ma_tour_thuc_te = 'TTT_DDR';
+UPDATE tour_thuc_tes SET cho_con_lai = 26 WHERE ma_tour_thuc_te = 'TTT_H11_HUE_SKH';
+UPDATE tour_thuc_tes SET cho_con_lai = 22 WHERE ma_tour_thuc_te = 'TTT_H11_QUYNHON_LS';
+UPDATE tour_thuc_tes SET cho_con_lai = 24 WHERE ma_tour_thuc_te = 'TTT_H12_CANTHO_LS';
+UPDATE tour_thuc_tes SET cho_con_lai = 28 WHERE ma_tour_thuc_te = 'TTT_H12_CANTHO_SKH';
+UPDATE tour_thuc_tes SET cho_con_lai = 16 WHERE ma_tour_thuc_te = 'TTT_HAGIANG_HUY_02';
+UPDATE tour_thuc_tes SET cho_con_lai = 14 WHERE ma_tour_thuc_te = 'TTT_HAGIANG_KT_HDV10';
+UPDATE tour_thuc_tes SET cho_con_lai = 19 WHERE ma_tour_thuc_te = 'TTT_HAGIANG_OPEN_03';
+UPDATE tour_thuc_tes SET cho_con_lai = 19 WHERE ma_tour_thuc_te = 'TTT_HALONG';
+UPDATE tour_thuc_tes SET cho_con_lai = 24 WHERE ma_tour_thuc_te = 'TTT_HALONG_OLD';
+UPDATE tour_thuc_tes SET cho_con_lai = 28 WHERE ma_tour_thuc_te = 'TTT_HALONG_OPEN_03';
+UPDATE tour_thuc_tes SET cho_con_lai = 17 WHERE ma_tour_thuc_te = 'TTT_HOIAN';
+UPDATE tour_thuc_tes SET cho_con_lai = 22 WHERE ma_tour_thuc_te = 'TTT_HOIAN_OLD';
+UPDATE tour_thuc_tes SET cho_con_lai = 22 WHERE ma_tour_thuc_te = 'TTT_HOIAN_OPEN_03';
+UPDATE tour_thuc_tes SET cho_con_lai = 26 WHERE ma_tour_thuc_te = 'TTT_HUE_OPEN_03';
+UPDATE tour_thuc_tes SET cho_con_lai = 27 WHERE ma_tour_thuc_te = 'TTT_HUE_OPEN_04';
+UPDATE tour_thuc_tes SET cho_con_lai = 17 WHERE ma_tour_thuc_te = 'TTT_HUE_QT_02';
+UPDATE tour_thuc_tes SET cho_con_lai = 15 WHERE ma_tour_thuc_te = 'TTT_HUE_REVIEW_03';
+UPDATE tour_thuc_tes SET cho_con_lai = 18 WHERE ma_tour_thuc_te = 'TTT_HUY';
+UPDATE tour_thuc_tes SET cho_con_lai = 28 WHERE ma_tour_thuc_te = 'TTT_KT';
+UPDATE tour_thuc_tes SET cho_con_lai = 14 WHERE ma_tour_thuc_te = 'TTT_MB';
+UPDATE tour_thuc_tes SET cho_con_lai = 22 WHERE ma_tour_thuc_te = 'TTT_MOCCHAU';
+UPDATE tour_thuc_tes SET cho_con_lai = 24 WHERE ma_tour_thuc_te = 'TTT_MOCCHAU_OPEN_03';
+UPDATE tour_thuc_tes SET cho_con_lai = 23 WHERE ma_tour_thuc_te = 'TTT_MUINE';
+UPDATE tour_thuc_tes SET cho_con_lai = 24 WHERE ma_tour_thuc_te = 'TTT_MUINE_OLD';
+UPDATE tour_thuc_tes SET cho_con_lai = 27 WHERE ma_tour_thuc_te = 'TTT_MUINE_OPEN_03';
+UPDATE tour_thuc_tes SET cho_con_lai = 22 WHERE ma_tour_thuc_te = 'TTT_NINHBINH_CKH_02';
+UPDATE tour_thuc_tes SET cho_con_lai = 19 WHERE ma_tour_thuc_te = 'TTT_NINHBINH_KT_HDV10';
+UPDATE tour_thuc_tes SET cho_con_lai = 29 WHERE ma_tour_thuc_te = 'TTT_NINHBINH_OPEN_03';
+UPDATE tour_thuc_tes SET cho_con_lai = 22 WHERE ma_tour_thuc_te = 'TTT_PHUQUOC_OPEN_03';
+UPDATE tour_thuc_tes SET cho_con_lai = 24 WHERE ma_tour_thuc_te = 'TTT_PHUQUOC_OPEN_04';
+UPDATE tour_thuc_tes SET cho_con_lai = 15 WHERE ma_tour_thuc_te = 'TTT_PHUQUOC_REVIEW_03';
+UPDATE tour_thuc_tes SET cho_con_lai = 21 WHERE ma_tour_thuc_te = 'TTT_PHUQUOC_SDR_02';
+UPDATE tour_thuc_tes SET cho_con_lai = 16 WHERE ma_tour_thuc_te = 'TTT_PULUONG';
+UPDATE tour_thuc_tes SET cho_con_lai = 18 WHERE ma_tour_thuc_te = 'TTT_PULUONG_OPEN_03';
+UPDATE tour_thuc_tes SET cho_con_lai = 20 WHERE ma_tour_thuc_te = 'TTT_QT';
+UPDATE tour_thuc_tes SET cho_con_lai = 20 WHERE ma_tour_thuc_te = 'TTT_QUYNHON';
+UPDATE tour_thuc_tes SET cho_con_lai = 23 WHERE ma_tour_thuc_te = 'TTT_QUYNHON_OPEN_03';
+UPDATE tour_thuc_tes SET cho_con_lai = 13 WHERE ma_tour_thuc_te = 'TTT_SAPA_OLD';
+UPDATE tour_thuc_tes SET cho_con_lai = 25 WHERE ma_tour_thuc_te = 'TTT_SAPA_OPEN_03';
+UPDATE tour_thuc_tes SET cho_con_lai = 26 WHERE ma_tour_thuc_te = 'TTT_SAPA_OPEN_04';
+UPDATE tour_thuc_tes SET cho_con_lai = 18 WHERE ma_tour_thuc_te = 'TTT_SAPA_REVIEW_03';
+UPDATE tour_thuc_tes SET cho_con_lai = 16 WHERE ma_tour_thuc_te = 'TTT_SDR';
+UPDATE tour_thuc_tes SET cho_con_lai = 16 WHERE ma_tour_thuc_te = 'TTT_TMNEW_BB_ACTIVE';
+UPDATE tour_thuc_tes SET cho_con_lai = 22 WHERE ma_tour_thuc_te = 'TTT_TMNEW_CM_DONE';
+UPDATE tour_thuc_tes SET cho_con_lai = 24 WHERE ma_tour_thuc_te = 'TTT_TMNEW_PN_OPEN';
+UPDATE tour_thuc_tes SET cho_con_lai = 20 WHERE ma_tour_thuc_te = 'TTT_TMNEW_PN_QT';
+
+-- ==========================================
+-- TỰ ĐỘNG BỔ SUNG ĐỂ TOUR GẦN HẾT CHỖ 
+-- ==========================================
+UPDATE tour_thuc_tes SET cho_con_lai = 1 WHERE ma_tour_thuc_te = 'TTT_HUE_OPEN_03';
+UPDATE tour_thuc_tes SET cho_con_lai = 3 WHERE ma_tour_thuc_te = 'TTT_PULUONG_OPEN_03';
+UPDATE tour_thuc_tes SET cho_con_lai = 3 WHERE ma_tour_thuc_te = 'TTT_26_SAPA_NOV';
+UPDATE tour_thuc_tes SET cho_con_lai = 2 WHERE ma_tour_thuc_te = 'TTT_NINHBINH_OPEN_03';
+UPDATE tour_thuc_tes SET cho_con_lai = 2 WHERE ma_tour_thuc_te = 'TTT_PHUQUOC_SDR_02';
