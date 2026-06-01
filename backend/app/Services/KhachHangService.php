@@ -147,6 +147,10 @@ class KhachHangService
         $yeuCau->trang_thai = "CHO_XU_LY";
         $yeuCau->save();
 
+        // Cập nhật trạng thái đơn đặt tour thành CHO_HUY
+        $don->trang_thai = "CHO_HUY";
+        $don->save();
+
         return $yeuCau;
     }
 
@@ -175,6 +179,10 @@ class KhachHangService
         $yeuCau->noi_dung = $data["lyDoHuy"] ?? "Khách hàng yêu cầu hủy tour";
         $yeuCau->trang_thai = "CHO_XU_LY";
         $yeuCau->save();
+
+        // Cập nhật trạng thái đơn đặt tour thành CHO_HUY
+        $don->trang_thai = "CHO_HUY";
+        $don->save();
 
         return $yeuCau;
     }
@@ -207,6 +215,10 @@ class KhachHangService
         $yeuCau->noi_dung = $yeuCau->noi_dung . "\n\n[KHÁCH HÀNG BỔ SUNG]: " . $data["noiDungBoSung"];
         $yeuCau->trang_thai = "CHUA_XU_LY";
         $yeuCau->save();
+
+        // Cập nhật trạng thái đơn đặt tour thành CHO_HUY
+        $don->trang_thai = "CHO_HUY";
+        $don->save();
 
         return $yeuCau;
     }
