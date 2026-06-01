@@ -67,6 +67,18 @@ interface ComplaintTicket {
   history: string[];
 }
 
+const normalizeComplaintStatus = (status?: string): ComplaintTicket['status'] => {
+  const normalized = status || 'CHUA_XU_LY';
+  const statusMap: Record<string, ComplaintTicket['status']> = {
+    CHO_XU_LY: 'CHUA_XU_LY',
+    CAN_BO_SUNG: 'CHO_BO_SUNG',
+    YEU_CAU_BO_SUNG: 'CHO_BO_SUNG',
+    CHO_HDV_GIAI_TRINH: 'CHO_GIAI_TRINH'
+  };
+
+  return statusMap[normalized] || (normalized as ComplaintTicket['status']);
+};
+
 export default function HoChieuSo() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<Tab>('profile');
@@ -110,12 +122,12 @@ export default function HoChieuSo() {
       try {
         const profileRes = await khService.layHoChieuSo();
         const [bookingsRes, pastToursRes, vouchersRes, redeemableVouchersRes, toursRes, complaintsRes] = await Promise.all([
-          khService.getMyBookings({ size: 200 }).catch(() => ({ data: { content: [] } })),
-          khService.getPastTours({ size: 200 }).catch(() => ({ data: { content: [] } })),
+          khService.getMyBookings({ size: 1000 }).catch(() => ({ data: { content: [] } })),
+          khService.getPastTours({ size: 1000 }).catch(() => ({ data: { content: [] } })),
           khService.getVouchers().catch(() => ({ data: { content: [] } })),
           khService.getRedeemableVouchers().catch(() => ({ data: { content: [] } })),
           khService.layDanhSachTour().catch(() => ({ data: [] })),
-          khService.layYeuCauHoTro().catch(() => ({ data: { content: [] } }))
+          khService.layYeuCauHoTro({ size: 1000 }).catch(() => ({ data: { content: [] } }))
         ]);
 
         const profileData = unwrapData(profileRes);
@@ -145,6 +157,7 @@ export default function HoChieuSo() {
 
         // Lọc bỏ các tour trong pastBks đã có trong activeBks (tránh trùng lặp do 2 API trả về cùng 1 maDatTour)
         const uniquePastBks = pastBks.filter((pb: any) => !activeBks.some(ab => ab.id === pb.id));
+        const bookingById = new Map([...activeBks, ...uniquePastBks].map((booking: any) => [booking.id, booking]));
         setBookings([...activeBks, ...uniquePastBks]);
         setVouchers(unwrapPageContent(vouchersRes).map(mapVoucher));
         setRedeemableVouchers(unwrapPageContent(redeemableVouchersRes).map(mapVoucher));
@@ -156,18 +169,28 @@ export default function HoChieuSo() {
             HUY_TOUR: 'Hủy tour & Hoàn tiền'
           };
           const requestType = c.loaiYeuCau || 'HO_TRO';
+          const relatedBooking = c.maDatTour ? bookingById.get(c.maDatTour) : null;
+          const tourName =
+            relatedBooking?.tourName ||
+            c.donDatTour?.tourThucTe?.tourMau?.tenTour ||
+            c.donDatTour?.tourThucTe?.tourMau?.tieuDeTour ||
+            c.donDatTour?.tourThucTe?.tourMau?.tieuDe ||
+            c.donDatTour?.tourThucTe?.tourMau?.tenGoi ||
+            c.maDatTour ||
+            'Đơn đặt tour';
+          const status = normalizeComplaintStatus(c.trangThai);
 
           return {
             id: c.maYeuCau,
             bookingId: c.maDatTour || '',
-            tourName: c.maDatTour || 'Đơn đặt tour',
+            tourName,
             category: requestTypeLabels[requestType] || 'Hỗ trợ',
             subject: requestTypeLabels[requestType] || requestType || 'Yêu cầu hỗ trợ',
             content: c.noiDung || '',
-            status: c.trangThai || 'CHUA_XU_LY',
-            createdAt: '',
-            updatedAt: '',
-            history: [`Trạng thái hiện tại: ${c.trangThai || 'CHUA_XU_LY'}`]
+            status,
+            createdAt: c.createdAt || c.thoiDiemTao || '',
+            updatedAt: c.updatedAt || c.thoiDiemCapNhat || '',
+            history: [`Trạng thái hiện tại: ${status}`]
           };
         }));
       } catch (err) {
@@ -728,7 +751,7 @@ export default function HoChieuSo() {
         category: complaintCategory,
         subject: complaintSubject,
         content: complaintContent,
-        status: c.trangThai || 'CHUA_XU_LY',
+        status: normalizeComplaintStatus(c.trangThai),
         createdAt: new Date().toISOString().split('T')[0],
         updatedAt: new Date().toISOString().split('T')[0],
         history: ['Khách hàng gửi khiếu nại lên hệ thống.']

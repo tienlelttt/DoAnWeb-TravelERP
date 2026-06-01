@@ -39,7 +39,7 @@ export const hdvService = {
 
   // 2. Tour
   layDanhSachTour: async () => {
-    const res = await api.get('/huong-dan-vien/tour-cua-toi');
+    const res = await api.get('/huong-dan-vien/tour-cua-toi', { params: { size: 1000 } });
     return res.data;
   },
 
@@ -54,7 +54,7 @@ export const hdvService = {
   },
 
   layYeuCauGiaiTrinh: async () => {
-    const res = await api.get('/huong-dan-vien/yeu-cau-giai-trinh');
+    const res = await api.get('/huong-dan-vien/yeu-cau-giai-trinh', { params: { size: 1000 } });
     return res.data;
   },
 
@@ -64,7 +64,7 @@ export const hdvService = {
   },
 
   layQuyetToanCanBoSung: async () => {
-    const res = await api.get('/huong-dan-vien/quyet-toan/can-bo-sung');
+    const res = await api.get('/huong-dan-vien/quyet-toan/can-bo-sung', { params: { size: 1000 } });
     return res.data;
   },
 
@@ -75,7 +75,7 @@ export const hdvService = {
 
   layChiTietTour: async (_maTour: string) => {
     // Hiện chưa có endpoint chi tiết tour riêng cho HDV, tạm dùng danh sách tour.
-    const res = await api.get('/huong-dan-vien/tour-cua-toi');
+    const res = await api.get('/huong-dan-vien/tour-cua-toi', { params: { size: 1000 } });
     return res.data;
   },
 
@@ -108,12 +108,12 @@ export const hdvService = {
 
   // 4. Sự cố
   laySuCo: async (maTour: string) => {
-    const res = await api.get(`/huong-dan-vien/tour/${maTour}/su-co`);
+    const res = await api.get(`/huong-dan-vien/tour/${maTour}/su-co`, { params: { size: 1000 } });
     return res.data;
   },
 
   layTatCaSuCo: async () => {
-    const res = await api.get('/huong-dan-vien/su-co');
+    const res = await api.get('/huong-dan-vien/su-co', { params: { size: 1000 } });
     return res.data;
   },
 
@@ -124,12 +124,12 @@ export const hdvService = {
 
   // 5. Chi phí
   layChiPhi: async (maTour: string) => {
-    const res = await api.get(`/huong-dan-vien/tour/${maTour}/chi-phi`);
+    const res = await api.get(`/huong-dan-vien/tour/${maTour}/chi-phi`, { params: { size: 1000 } });
     return res.data;
   },
 
   layTatCaChiPhi: async () => {
-    const res = await api.get('/huong-dan-vien/chi-phi');
+    const res = await api.get('/huong-dan-vien/chi-phi', { params: { size: 1000 } });
     return res.data;
   },
 

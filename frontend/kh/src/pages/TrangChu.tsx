@@ -24,7 +24,7 @@ export default function TrangChu() {
 
     const fetchTours = async () => {
       try {
-        const pageSize = 10;
+        const pageSize = 1000;
         const firstResponse = await khService.layDanhSachTour({ page: 1, size: pageSize });
         const allItems = [...unwrapPageContent<any>(firstResponse)];
         const totalPages = getTotalPages(firstResponse);
@@ -519,7 +519,7 @@ export default function TrangChu() {
                 </button>
               </span>
             ) : (
-              'Được yêu thích nhất bởi khách hàng'
+              `Hiện có ${filteredTours.length} tour đang mở bán`
             )}
           </p>
         </div>

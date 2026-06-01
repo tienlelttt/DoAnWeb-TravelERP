@@ -1,7 +1,7 @@
 import { useCallback, useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router';
 import {
-  Star, ArrowLeft, Check, X, Leaf, Eye, Utensils, ChevronRight, Compass, MapPin, ThumbsUp
+  Star, ArrowLeft, Check, X, Leaf, Eye, Utensils, ChevronLeft, ChevronRight, Compass, MapPin, ThumbsUp
 } from 'lucide-react';
 import type { Tour } from '../types';
 import { khService } from '../services/khService';
@@ -11,6 +11,7 @@ import CuaSoXacThuc from '../components/modals/CuaSoXacThuc';
 import { hasActiveSession } from '../services/api';
 
 export default function ChiTietTour() {
+  const REVIEWS_PER_PAGE = 6;
   const { tourId } = useParams();
   const [tour, setTour] = useState<Tour | null>(null);
   const [loading, setLoading] = useState(true);
@@ -29,6 +30,7 @@ export default function ChiTietTour() {
 
   // Reviews filters and likes state
   const [activeReviewFilter, setActiveReviewFilter] = useState<'all' | 'images' | '5star' | '4star' | '3star' | '2star' | '1star'>('all');
+  const [reviewPage, setReviewPage] = useState(1);
   const [helpfulCounts, setHelpfulCounts] = useState<Record<number, number>>({});
   const [pendingHelpfulIndex, setPendingHelpfulIndex] = useState<number | null>(null);
 
@@ -240,11 +242,45 @@ export default function ChiTietTour() {
     if (activeReviewFilter === '1star') return review.rating === 1;
     return true;
   });
+  const totalReviewPages = Math.ceil(filteredReviewsList.length / REVIEWS_PER_PAGE);
+  const currentReviewPage = Math.min(reviewPage, Math.max(totalReviewPages, 1));
+  const reviewPageStartIndex = (currentReviewPage - 1) * REVIEWS_PER_PAGE;
+  const paginatedReviewsList = filteredReviewsList.slice(reviewPageStartIndex, reviewPageStartIndex + REVIEWS_PER_PAGE);
+  const reviewPageItems = (() => {
+    if (totalReviewPages <= 5) {
+      return Array.from({ length: totalReviewPages }, (_, index) => index + 1);
+    }
+
+    const visiblePages = new Set(
+      [1, totalReviewPages, currentReviewPage - 1, currentReviewPage, currentReviewPage + 1]
+        .filter((page) => page >= 1 && page <= totalReviewPages)
+    );
+
+    return Array.from(visiblePages)
+      .sort((a, b) => a - b)
+      .reduce<(number | 'ellipsis')[]>((items, page, index, pages) => {
+        if (index > 0 && page - pages[index - 1] > 1) {
+          items.push('ellipsis');
+        }
+        items.push(page);
+        return items;
+      }, []);
+  })();
   const actualReviewCount = tourReviewsList.length;
   const displayReviewCount = actualReviewCount > 0 ? actualReviewCount : (tour?.reviews || 0);
   const actualRating = actualReviewCount
     ? (tourReviewsList.reduce((sum, review) => sum + Number(review.rating || 0), 0) / actualReviewCount).toFixed(1)
     : (tour?.rating ? tour.rating.toFixed(2) : '0.00');
+
+  useEffect(() => {
+    setReviewPage(1);
+  }, [activeReviewFilter, tourReviewsList.length]);
+
+  useEffect(() => {
+    if (reviewPage > totalReviewPages && totalReviewPages > 0) {
+      setReviewPage(totalReviewPages);
+    }
+  }, [reviewPage, totalReviewPages]);
 
   if (loading) {
     return (
@@ -667,13 +703,13 @@ export default function ChiTietTour() {
 
               {/* Clean Reviews List */}
               <div className="divide-y divide-slate-100">
-                {filteredReviewsList.map((review, idx) => {
-                  const originalIdx = tourReviewsList.findIndex(r => r.name === review.name);
+                {paginatedReviewsList.map((review, idx) => {
+                  const originalIdx = tourReviewsList.findIndex(r => r.id === review.id);
                   const likes = helpfulCounts[originalIdx] !== undefined ? helpfulCounts[originalIdx] : review.helpful;
                   const hasLiked = helpfulCounts[originalIdx] !== undefined && helpfulCounts[originalIdx] > review.helpful;
 
                   return (
-                    <article key={idx} className="py-5 first:pt-2 last:pb-2">
+                    <article key={review.id || `${review.name}-${reviewPageStartIndex + idx}`} className="py-5 first:pt-2 last:pb-2">
                       <div className="flex items-start gap-3">
                         <div className="relative mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-slate-100 text-sm font-semibold text-slate-700">
                           {review.name.charAt(0).toUpperCase()}
@@ -763,6 +799,57 @@ export default function ChiTietTour() {
                   </div>
                 )}
               </div>
+
+              {totalReviewPages > 1 && (
+                <div className="flex flex-col items-center gap-3 border-t border-slate-100 pt-5">
+                  <p className="text-[11px] font-bold text-slate-400">
+                    Trang {currentReviewPage}/{totalReviewPages} - {filteredReviewsList.length} đánh giá
+                  </p>
+                  <nav aria-label="Phân trang đánh giá" className="inline-flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setReviewPage(prev => Math.max(1, prev - 1))}
+                      disabled={currentReviewPage === 1}
+                      className="flex size-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-400 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600 disabled:pointer-events-none disabled:bg-slate-100 disabled:text-slate-300"
+                      aria-label="Trang đánh giá trước"
+                    >
+                      <ChevronLeft className="size-3.5" />
+                    </button>
+
+                    {reviewPageItems.map((item, index) => item === 'ellipsis' ? (
+                      <span
+                        key={`review-ellipsis-${index}`}
+                        className="flex size-9 items-center justify-center rounded-lg border border-slate-100 bg-white text-sm font-semibold text-slate-400"
+                      >
+                        ...
+                      </span>
+                    ) : (
+                      <button
+                        key={item}
+                        type="button"
+                        onClick={() => setReviewPage(item)}
+                        className={`size-9 rounded-lg border bg-white text-sm font-semibold transition-colors ${item === currentReviewPage
+                          ? 'border-blue-600 bg-blue-50 text-blue-700 ring-1 ring-blue-600'
+                          : 'border-slate-100 text-slate-700 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700'
+                          }`}
+                        aria-current={item === currentReviewPage ? 'page' : undefined}
+                      >
+                        {item}
+                      </button>
+                    ))}
+
+                    <button
+                      type="button"
+                      onClick={() => setReviewPage(prev => Math.min(totalReviewPages, prev + 1))}
+                      disabled={currentReviewPage === totalReviewPages}
+                      className="flex size-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-400 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600 disabled:pointer-events-none disabled:bg-slate-100 disabled:text-slate-300"
+                      aria-label="Trang đánh giá sau"
+                    >
+                      <ChevronRight className="size-3.5" />
+                    </button>
+                  </nav>
+                </div>
+              )}
             </div>
 
           </div>

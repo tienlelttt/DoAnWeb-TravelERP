@@ -74,7 +74,7 @@ export default function Header() {
   useEffect(() => {
     const fetchSuggestions = async () => {
       try {
-        const res = await khService.layDanhSachTour({ size: 20 });
+        const res = await khService.layDanhSachTour({ size: 1000 });
         const titles = unwrapPageContent(res)
           .map((tour: any) => tour.tieuDeTour)
           .filter(Boolean);
@@ -95,10 +95,10 @@ export default function Header() {
 
     try {
       const [res, profileResponse, supportResponse, complaintResponse] = await Promise.all([
-        khService.getMyBookings({ size: 50 }),
+        khService.getMyBookings({ size: 1000 }),
         khService.layHoChieuSo(),
         khService.layYeuCauCanBoSung().catch(() => ({ data: [] })),
-        khService.layYeuCauHoTro({ loaiYeuCau: 'KHIEU_NAI', size: 50 }).catch(() => ({ data: { content: [] } }))
+        khService.layYeuCauHoTro({ loaiYeuCau: 'KHIEU_NAI', size: 1000 }).catch(() => ({ data: { content: [] } }))
       ]);
       localStorage.setItem('userProfile', JSON.stringify(mapProfile(unwrapData(profileResponse))));
       const readNotificationIds = layThongBaoDaDoc();
@@ -122,7 +122,7 @@ export default function Header() {
         };
       });
 
-      const supportItems: HeaderNotification[] = (supportResponse?.data || []).map((request: any) => {
+      const supportItems: HeaderNotification[] = unwrapPageContent(supportResponse).map((request: any) => {
         const id = `support-${request.maYeuCau}-${request.trangThai}-${request.noiDung || ''}`;
         return {
           id,

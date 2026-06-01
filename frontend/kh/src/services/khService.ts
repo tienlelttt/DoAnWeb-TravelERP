@@ -131,7 +131,7 @@ export const khService = {
   },
 
   boSungYeuCauHoTro: async (maYeuCau: string, noiDung: string) => {
-    const res = await api.put(`/khach-hang/yeu-cau-ho-tro/${maYeuCau}/bo-sung`, { noiDung });
+    const res = await api.put(`/khach-hang/yeu-cau-ho-tro/${maYeuCau}/bo-sung`, { noiDungBoSung: noiDung });
     return res.data;
   },
 
