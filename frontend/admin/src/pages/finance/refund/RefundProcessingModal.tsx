@@ -72,20 +72,6 @@ const RefundProcessingModal: React.FC<RefundProcessingModalProps> = ({
     setProcessing(true);
 
     try {
-      const order = await ordersService.chiTietDatTour(refund.orderCode);
-      if (order.trangThai !== 'CHO_HUY') {
-        setErrorMessage(`Chỉ có thể từ chối hoàn tiền cho đơn hàng ở trạng thái Chờ Hủy. Trạng thái hiện tại: ${order.trangThai}`);
-        setProcessing(false);
-        return;
-      }
-    } catch (e) {
-      console.error(e);
-      setErrorMessage('Không thể kiểm tra trạng thái đơn hàng.');
-      setProcessing(false);
-      return;
-    }
-
-    try {
       await onProcessRefund?.(refund.id, 'reject');
       onClose();
     } catch (err: any) {
@@ -97,20 +83,6 @@ const RefundProcessingModal: React.FC<RefundProcessingModalProps> = ({
   const handleConfirmRefund = async () => {
     setErrorMessage('');
     setProcessing(true);
-
-    try {
-      const order = await ordersService.chiTietDatTour(refund.orderCode);
-      if (order.trangThai !== 'CHO_HUY') {
-        setErrorMessage(`Chỉ có thể hoàn tiền cho đơn hàng ở trạng thái Chờ Hủy. Trạng thái hiện tại: ${order.trangThai}`);
-        setProcessing(false);
-        return;
-      }
-    } catch (e) {
-      console.error(e);
-      setErrorMessage('Không thể kiểm tra trạng thái đơn hàng.');
-      setProcessing(false);
-      return;
-    }
 
     if (method === 'manual') {
       let hasError = false;
@@ -167,10 +139,11 @@ const RefundProcessingModal: React.FC<RefundProcessingModalProps> = ({
             <Button variant="danger" icon={<Ban size={16} />} onClick={handleReject}>Từ chối Yêu cầu</Button>
             <Button
               variant="primary"
-              className="bg-emerald-600 hover:bg-emerald-700"
+              className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50"
               icon={<CheckCircle size={16} />}
               onClick={handleConfirmRefund}
-              disabled={processing}
+              disabled={processing || (orderInfo && orderInfo.trangThai !== 'CHO_HUY')}
+              title={orderInfo && orderInfo.trangThai !== 'CHO_HUY' ? 'Đơn hàng không ở trạng thái Chờ Hủy' : ''}
             >
               {processing ? 'Đang kiểm tra...' : 'Xác nhận Hoàn Tiền'}
             </Button>
@@ -226,6 +199,15 @@ const RefundProcessingModal: React.FC<RefundProcessingModalProps> = ({
         </div>
 
         <div className="flex flex-col gap-4">
+          {orderInfo && orderInfo.trangThai !== 'CHO_HUY' && !readonly && (
+            <div className="bg-amber-50 border border-amber-200 rounded-[16px] p-4 text-sm text-amber-700 flex gap-2">
+              <AlertTriangle size={18} className="mt-0.5 flex-shrink-0" />
+              <div>
+                <strong>Chú ý:</strong> Đơn hàng này đang ở trạng thái <strong>{orderInfo.trangThai}</strong>. Bạn chỉ có thể xác nhận hoàn tiền cho đơn hàng <strong>CHO_HUY</strong>. Nút xác nhận đã bị khóa để đảm bảo an toàn. Bạn vẫn có thể <strong>Từ chối</strong> yêu cầu này để dọn dẹp giao dịch lỗi.
+              </div>
+            </div>
+          )}
+
           {errorMessage && (
             <div className="bg-red-50 border border-red-200 rounded-[16px] p-4 text-sm text-red-700 flex gap-2">
               <AlertTriangle size={18} className="mt-0.5 flex-shrink-0" />
@@ -240,6 +222,13 @@ const RefundProcessingModal: React.FC<RefundProcessingModalProps> = ({
                 <div className="text-xs text-gray-500">Mã giao dịch hoàn</div>
                 <div className="text-sm font-medium text-[#121C2C]">{refund.code}</div>
               </div>
+
+              {refund.reason && (
+                <div>
+                  <div className="text-xs text-gray-500">Lý do hủy (Nội dung)</div>
+                  <div className="text-sm font-medium text-[#121C2C]">{refund.reason}</div>
+                </div>
+              )}
 
               {refund.attachments?.length ? (
                 <div>

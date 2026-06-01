@@ -9,7 +9,7 @@ class KeToanChiPhiService
 {
     public function danhSachChiPhi(array $filters = [])
     {
-        $query = ChiPhiThucTe::with(["tourThucTe", "nhanVien"]);
+        $query = ChiPhiThucTe::with(["tourThucTe.tourMau", "nhanVien.taiKhoan"]);
 
         if (!empty($filters["maTour"])) {
             $query->where("ma_tour_thuc_te", $filters["maTour"]);

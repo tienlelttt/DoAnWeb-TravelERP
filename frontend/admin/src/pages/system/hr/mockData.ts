@@ -34,6 +34,7 @@ export interface Competency {
 }
 
 export interface TourHistory {
+  tourCode?: string;
   tourName: string;
   startDate: string;
   status: 'completed' | 'upcoming' | 'cancelled';

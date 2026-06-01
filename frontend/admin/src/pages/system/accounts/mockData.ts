@@ -53,6 +53,7 @@ export interface NhanVienResponse {
   thoiDiemTao?: string;
   cccd?: string;
   diaChi?: string;
+  tourHistory?: any[]; // added for tour history
 }
 
 export interface PageNhanVienResponse {

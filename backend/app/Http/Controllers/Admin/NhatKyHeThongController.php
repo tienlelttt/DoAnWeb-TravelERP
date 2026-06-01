@@ -17,7 +17,7 @@ class NhatKyHeThongController extends Controller
      */
     public function danhSach(Request $request): JsonResponse
     {
-        $query = NhatKyHeThong::query();
+        $query = NhatKyHeThong::with('taiKhoan');
 
         if ($request->has('maTaiKhoan')) {
             $query->where('ma_tai_khoan', $request->maTaiKhoan);

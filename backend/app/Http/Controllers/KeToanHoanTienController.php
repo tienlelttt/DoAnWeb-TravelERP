@@ -22,6 +22,10 @@ class KeToanHoanTienController extends Controller
 
         // Map data để giống ThanhToanResponse
         $list->getCollection()->transform(function($gd) {
+            $yeuCau = \App\Models\YeuCauHoTro::where('ma_dat_tour', $gd->ma_dat_tour)
+                ->where('loai_yeu_cau', 'HUY_TOUR')
+                ->first();
+
             return (object) [
                 'maGiaoDich' => $gd->ma_giao_dich,
                 'maDatTour' => $gd->ma_dat_tour,
@@ -29,7 +33,8 @@ class KeToanHoanTienController extends Controller
                 'phuongThuc' => $gd->phuong_thuc,
                 'loaiGiaoDich' => $gd->loai_giao_dich,
                 'trangThai' => $gd->trang_thai,
-                'ngayThanhToan' => $gd->ngay_thanh_toan
+                'ngayThanhToan' => $gd->ngay_thanh_toan,
+                'noiDung' => $yeuCau ? $yeuCau->noi_dung : null
             ];
         });
 
