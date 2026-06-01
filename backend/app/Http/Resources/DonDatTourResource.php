@@ -153,6 +153,9 @@ class DonDatTourResource extends JsonResource
             'tenHuongDanVien'         => ($phanCong && $phanCong->nhanVien && $phanCong->nhanVien->taiKhoan)
                                             ? $phanCong->nhanVien->taiKhoan->ho_ten
                                             : null,
+            'maHuongDanVien'          => ($phanCong && $phanCong->nhanVien)
+                                            ? $phanCong->nhanVien->ma_nhan_vien
+                                            : null,
             'soDienThoaiHuongDanVien' => ($phanCong && $phanCong->nhanVien && $phanCong->nhanVien->taiKhoan)
                                             ? $phanCong->nhanVien->taiKhoan->so_dien_thoai
                                             : null,

@@ -31,7 +31,23 @@ class KeToanChiPhiController extends Controller
 
         $data = $this->keToanChiPhiService->danhSachChiPhi($filters);
 
-        return $this->successResponse($data, 'Lấy danh sách chi phí thành công');
+        $data->getCollection()->transform(function ($cp) {
+            return (object) [
+                'maChiPhi' => $cp->ma_chi_phi_thuc_te,
+                'maTour' => $cp->ma_tour_thuc_te,
+                'tenTour' => $cp->tourThucTe && $cp->tourThucTe->tourMau ? $cp->tourThucTe->tourMau->tieu_de : null,
+                'maNhanVien' => $cp->ma_nhan_vien,
+                'tenNhanVien' => $cp->nhanVien && $cp->nhanVien->taiKhoan ? $cp->nhanVien->taiKhoan->ho_ten : null,
+                'soDienThoai' => $cp->nhanVien && $cp->nhanVien->taiKhoan ? $cp->nhanVien->taiKhoan->so_dien_thoai : null,
+                'danhMuc' => $cp->danh_muc,
+                'thanhTien' => (float)$cp->thanh_tien,
+                'hoaDonAnh' => $cp->hoa_don_anh,
+                'trangThaiDuyet' => $cp->trang_thai_duyet,
+                'ngayKhai' => $cp->ngay_khai,
+            ];
+        });
+
+        return $this->successResponse(new \App\Http\Resources\ContractPaginationResource($data), 'Lấy danh sách chi phí thành công');
     }
 
     /**

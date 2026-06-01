@@ -42,6 +42,7 @@ export const mapOrderStatus = (status?: string): StatusMapping => {
     case 'TU_CHOI_HOAN_TIEN': return { label: 'Từ chối hoàn tiền', variant: 'error' };
     case 'HET_HAN_GIU_CHO': return { label: 'Hết hạn giữ chỗ', variant: 'neutral' };
     case 'THANH_TOAN_THAT_BAI': return { label: 'Thanh toán thất bại', variant: 'error' };
+    case 'KET_THUC': return { label: 'Kết thúc', variant: 'success' };
     default: return { label: status || 'Không xác định', variant: 'neutral' };
   }
 };
@@ -116,7 +117,7 @@ export const mapCustomerRank = (rank?: string): StatusMapping => {
 
 export const mapVoucherStatus = (status?: string): StatusMapping => {
   switch (status) {
-    case 'SAN_SANG': return { label: 'Sẵn sàng', variant: 'success' };
+    case 'SAN_SANG': return { label: 'Hiệu lực', variant: 'success' };
     case 'HET_HAN': return { label: 'Hết hạn', variant: 'neutral' };
     case 'VO_HIEU_HOA': return { label: 'Vô hiệu hóa', variant: 'error' };
     default: return { label: status || 'Không xác định', variant: 'neutral' };

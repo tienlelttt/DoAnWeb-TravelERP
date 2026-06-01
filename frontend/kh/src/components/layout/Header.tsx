@@ -123,15 +123,20 @@ export default function Header() {
       });
 
       const supportItems: HeaderNotification[] = unwrapPageContent(supportResponse).map((request: any) => {
-        const id = `support-${request.maYeuCau}-${request.trangThai}-${request.noiDung || ''}`;
+        const maYeuCau = request.maYeuCauHoTro || request.ma_yeu_cau_ho_tro || request.maYeuCau;
+        const maDatTour = request.maDatTour || request.ma_dat_tour;
+        const trangThai = request.trangThai || request.trang_thai;
+        const noiDung = request.noiDung || request.noi_dung;
+        
+        const id = `support-${maYeuCau}-${trangThai}-${noiDung || ''}`;
         return {
           id,
           title: 'Yêu cầu bổ sung thông tin',
-          desc: `${request.maYeuCau}${request.maDatTour ? ` · ${request.maDatTour}` : ''}`,
+          desc: `${maYeuCau}${maDatTour ? ` · ${maDatTour}` : ''}`,
           time: 'Chờ bạn phản hồi',
           unread: !readNotificationIds.includes(id),
           type: 'SUPPORT_NEED_INFO',
-          supportRequest: request
+          supportRequest: { ...request, maYeuCau, maDatTour, trangThai, noiDung }
         };
       });
 

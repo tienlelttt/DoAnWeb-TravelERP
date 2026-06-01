@@ -28,6 +28,7 @@ interface YeuCauHoTroItem {
   trangThai: string;
   maDatTour: string;
   ngayTao?: string;
+  thoiDiemTao?: string;
 }
 
 interface CustomerDetailModalProps {
@@ -79,15 +80,29 @@ const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({ isOpen, onClo
         .then((res) => {
           const allOrders = res.data?.data?.content ?? [];
           const customerOrders = allOrders.filter(o => o.maKhachHang === customer.id);
-          const mappedHistory: LichSuTourItem[] = customerOrders.map(o => ({
-            maLichSuTour: o.maDatTour,
-            maTourThucTe: o.maTourThucTe,
-            tieuDeTour: o.tieuDeTour,
-            ngayKhoiHanh: o.ngayKhoiHanh ? formatDate(o.ngayKhoiHanh) : '',
-            thoiLuong: o.thoiLuong,
-            ngayThamGia: o.ngayDat ? formatDate(o.ngayDat) : '',
-            trangThai: o.trangThai
-          }));
+          const mappedHistory: LichSuTourItem[] = customerOrders.map(o => {
+            const orderStatus = o.trangThai || '';
+            const tourStatus = o.trangThaiTour || '';
+            let finalStatus = orderStatus;
+            
+            if (orderStatus === 'DA_XAC_NHAN' && ['KET_THUC', 'DA_QUYET_TOAN'].includes(tourStatus)) {
+              finalStatus = 'KET_THUC';
+            } else if (orderStatus === 'HOAN_THANH' || orderStatus === 'DA_QUYET_TOAN') {
+              finalStatus = 'KET_THUC';
+            } else if (orderStatus === 'DA_THANH_TOAN') {
+              finalStatus = 'DA_XAC_NHAN';
+            }
+
+            return {
+              maLichSuTour: o.maDatTour,
+              maTourThucTe: o.maTourThucTe,
+              tieuDeTour: o.tieuDeTour,
+              ngayKhoiHanh: o.ngayKhoiHanh ? formatDate(o.ngayKhoiHanh) : '',
+              thoiLuong: o.thoiLuong,
+              ngayThamGia: o.ngayDat ? formatDate(o.ngayDat) : '',
+              trangThai: finalStatus
+            };
+          });
           setTourHistory(mappedHistory);
           
           const customerOrderCodes = customerOrders.map(o => o.maDatTour);
@@ -191,7 +206,14 @@ const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({ isOpen, onClo
     switch (type) {
       case 'THANH_TOAN': return 'Thanh toán';
       case 'DICH_VU': return 'Dịch vụ';
+      case 'DICH_VU_THEM': return 'Dịch vụ thêm';
+      case 'DOI_DICH_VU': return 'Đổi dịch vụ';
       case 'HUY_TOUR': return 'Hủy tour';
+      case 'HOAN_TIEN': return 'Hoàn tiền';
+      case 'HOA_DON': return 'Xuất hóa đơn';
+      case 'AN_UONG': return 'Ẩm thực/Ăn uống';
+      case 'PHAN_HOI_SAU_TOUR': return 'Phản hồi sau tour';
+      case 'THONG_TIN_HANH_KHACH': return 'Sửa thông tin khách';
       case 'KHAC': return 'Khác';
       default: return type || '—';
     }
@@ -227,7 +249,10 @@ const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({ isOpen, onClo
     {
       key: 'ngayTao',
       title: 'Ngày tạo',
-      render: (record) => <span className="text-sm text-gray-600">{record.ngayTao ? formatDate(record.ngayTao) : '—'}</span>,
+      render: (record) => {
+        const dateStr = record.ngayTao || record.thoiDiemTao;
+        return <span className="text-sm text-gray-600">{dateStr ? formatDate(dateStr) : '—'}</span>;
+      },
     },
   ];
 

@@ -38,9 +38,9 @@ const CreateTourInstanceWizard: React.FC<CreateTourInstanceWizardProps> = ({ isO
 
   useEffect(() => {
     if (isOpen) {
-      tourTemplateService.danhSach().then(res => {
-        if (res && res.content) {
-          setTemplates(res.content);
+      tourTemplateService.danhSach().then((res: any) => {
+        if (res && (res.data || res.content)) {
+          setTemplates(res.data || res.content);
         }
       }).catch(console.error);
       setStep(1);

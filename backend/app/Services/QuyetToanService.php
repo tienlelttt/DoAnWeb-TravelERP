@@ -26,7 +26,8 @@ class QuyetToanService
         // Danh sách tour KET_THUC nhưng chưa có trong quyet_toans
         $daQuyetToan = QuyetToan::pluck('ma_tour_thuc_te')->toArray();
 
-        $tours = TourThucTe::whereIn('trang_thai', ['KET_THUC', 'DA_QUYET_TOAN'])
+        $tours = TourThucTe::with('tourMau')
+            ->whereIn('trang_thai', ['KET_THUC', 'DA_QUYET_TOAN'])
             ->whereNotIn('ma_tour_thuc_te', $daQuyetToan)
             ->paginate($perPage);
 
@@ -175,7 +176,7 @@ class QuyetToanService
     public function danhSachChoHoanTien($perPage = 10)
     {
         return GiaoDich::where('loai_giao_dich', 'HOAN_TIEN')
-            ->where('trang_thai', 'CHO_THANH_TOAN')
+            ->orderBy('created_at', 'desc')
             ->paginate($perPage);
     }
 
@@ -190,6 +191,8 @@ class QuyetToanService
             if ($gd->trang_thai !== 'CHO_THANH_TOAN') throw AppException::badRequest("Chỉ có thể xác nhận giao dịch ở trạng thái CHO_THANH_TOAN");
 
             $don = DonDatTour::lockForUpdate()->find($gd->ma_dat_tour);
+            if (!$don) throw AppException::badRequest("Không tìm thấy thông tin đơn đặt tour liên kết với giao dịch này. Bạn chỉ có thể Từ chối giao dịch bị mồ côi này.");
+
             if ($don->trang_thai !== 'CHO_HUY') throw AppException::badRequest("Chỉ có thể xác nhận hoàn tiền cho đơn ở trạng thái CHO_HUY. Trạng thái hiện tại: " . $don->trang_thai);
 
             $gd->trang_thai = 'DA_HOAN_TIEN';
@@ -197,9 +200,11 @@ class QuyetToanService
             $gd->save();
 
             $tour = TourThucTe::lockForUpdate()->find($don->ma_tour_thuc_te);
-            $soKhach = DB::table('chi_tiet_dat_tours')->where('ma_dat_tour', $don->ma_dat_tour)->count();
-            $tour->cho_con_lai = min($tour->cho_con_lai + $soKhach, $tour->so_khach_toi_da);
-            $tour->save();
+            if ($tour) {
+                $soKhach = DB::table('chi_tiet_dat_tours')->where('ma_dat_tour', $don->ma_dat_tour)->count();
+                $tour->cho_con_lai = min($tour->cho_con_lai + $soKhach, $tour->so_khach_toi_da);
+                $tour->save();
+            }
 
             $don->trang_thai = 'DA_HUY';
             $don->save();
@@ -218,14 +223,15 @@ class QuyetToanService
             if ($gd->trang_thai !== 'CHO_THANH_TOAN') throw AppException::badRequest("Chỉ có thể từ chối giao dịch hoàn tiền ở trạng thái CHO_THANH_TOAN");
 
             $don = DonDatTour::lockForUpdate()->find($gd->ma_dat_tour);
-            if ($don->trang_thai !== 'CHO_HUY') throw AppException::badRequest("Chỉ có thể từ chối hoàn tiền cho đơn ở trạng thái CHO_HUY. Trạng thái hiện tại: " . $don->trang_thai);
 
             $gd->trang_thai = 'THAT_BAI';
             $gd->ngay_thanh_toan = Carbon::now();
             $gd->save();
 
-            $don->trang_thai = 'TU_CHOI_HOAN_TIEN';
-            $don->save();
+            if ($don && $don->trang_thai === 'CHO_HUY') {
+                $don->trang_thai = 'TU_CHOI_HOAN_TIEN';
+                $don->save();
+            }
 
             return $gd;
         });
@@ -252,7 +258,7 @@ class QuyetToanService
 
     private function getKetThucTour($maTour)
     {
-        $tour = TourThucTe::find($maTour);
+        $tour = TourThucTe::with('tourMau')->find($maTour);
         if (!$tour) throw AppException::notFound("Không tìm thấy tour: " . $maTour);
 
         if (!in_array($tour->trang_thai, ['KET_THUC', 'DA_QUYET_TOAN'])) {

@@ -17,10 +17,11 @@ const ComplaintDrawer: React.FC<ComplaintDrawerProps> = ({ isOpen, onClose, comp
   const [activeAction, setActiveAction] = useState<string | null>(null);
   const [noteContent, setNoteContent] = useState('');
   const [finalNote, setFinalNote] = useState('');
-  
+
   const [tourName, setTourName] = useState<string>('');
   const [departureDate, setDepartureDate] = useState<string>('');
   const [realCustomerName, setRealCustomerName] = useState<string>('');
+  const [guideName, setGuideName] = useState<string>('');
 
   const getStatusDisplay = (status: string) => {
     switch (status) {
@@ -38,23 +39,25 @@ const ComplaintDrawer: React.FC<ComplaintDrawerProps> = ({ isOpen, onClose, comp
 
   const formatComplaintContent = (content: string) => {
     return content
-      .replace(/lúc (\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})(?:\.\d+)?/g, 'lúc $1 $2')
-      .replace(/(\[(?:Yêu cầu HDV giải trình|HDV giải trình|Yêu cầu KH bổ sung) lúc [^\]]+\]:)\s*/g, '$1 \n')
-      .replace(/(\[Bổ sung ngày [^\]]+\]:)\s*/g, '$1\n');
+      .replace(/\[(Yêu cầu KH bổ sung.*?|Yêu cầu HDV giải trình.*?|KHÁCH HÀNG BỔ SUNG.*?|HDV giải trình.*?)\]:?\s*(.*?)(?=\s*\[(?:Yêu cầu KH bổ sung|Yêu cầu HDV giải trình|KHÁCH HÀNG BỔ SUNG|HDV giải trình)|$)/gs, '')
+      .trim();
   };
-  
+
   useEffect(() => {
     setActiveAction(null);
     setNoteContent('');
     setFinalNote('');
     setTourName('');
     setDepartureDate('');
-    
+    setRealCustomerName('');
+    setGuideName('');
+
     if (isOpen && complaint?.maDatTour) {
       ordersService.chiTietDatTour(complaint.maDatTour).then(res => {
         setTourName(res.tieuDeTour || '');
         setDepartureDate(res.ngayKhoiHanh ? formatDate(res.ngayKhoiHanh) : '');
-        setRealCustomerName(res.tenKhachHang || '');
+        setRealCustomerName(res.tenKhachHang ? (res.maKhachHang ? `${res.maKhachHang} - ${res.tenKhachHang}` : res.tenKhachHang) : '');
+        setGuideName(res.tenHuongDanVien ? (res.maHuongDanVien ? `${res.maHuongDanVien} - ${res.tenHuongDanVien}` : res.tenHuongDanVien) : '');
       }).catch(e => console.error(e));
     }
   }, [isOpen, complaint]);
@@ -92,9 +95,9 @@ const ComplaintDrawer: React.FC<ComplaintDrawerProps> = ({ isOpen, onClose, comp
         status: newStatus,
         timeline: [
           ...complaint.timeline,
-          { 
-            action: `${actionTitle}: ${noteContent}`, 
-            timestamp: formatDateTime(new Date()) 
+          {
+            action: `${actionTitle}: ${noteContent}`,
+            timestamp: formatDateTime(new Date())
           }
         ]
       };
@@ -115,9 +118,9 @@ const ComplaintDrawer: React.FC<ComplaintDrawerProps> = ({ isOpen, onClose, comp
         resolution: finalNote,
         timeline: [
           ...complaint.timeline,
-          { 
-            action: `Hoàn tất xử lý: ${status === 'resolved' ? 'Đã giải quyết' : 'Từ chối'}`, 
-            timestamp: formatDateTime(new Date()) 
+          {
+            action: `Hoàn tất xử lý: ${status === 'resolved' ? 'Đã giải quyết' : 'Từ chối'}`,
+            timestamp: formatDateTime(new Date())
           }
         ]
       };
@@ -131,14 +134,14 @@ const ComplaintDrawer: React.FC<ComplaintDrawerProps> = ({ isOpen, onClose, comp
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Overlay */}
-      <div 
+      <div
         className="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
-      
+
       {/* Panel */}
       <div className="relative w-full max-w-[900px] max-h-[90vh] bg-white shadow-2xl rounded-2xl flex flex-col transform transition-transform duration-300 overflow-hidden">
-        
+
         {/* Header */}
         <div className="px-6 py-4 flex items-center justify-between border-b border-[#E1F1FF]">
           <div className="flex items-center gap-3">
@@ -152,10 +155,10 @@ const ComplaintDrawer: React.FC<ComplaintDrawerProps> = ({ isOpen, onClose, comp
 
         {/* Body */}
         <div className="flex-1 overflow-hidden flex flex-col md:flex-row">
-          
+
           {/* Cột trái (60%) */}
           <div className="w-full md:w-[60%] flex flex-col h-full overflow-y-auto p-6 border-r border-[#E1F1FF]">
-            
+
             {/* Thông tin Tour */}
             <div className="mb-6 bg-white border border-[#E1F1FF] rounded-lg p-4 shadow-sm">
               <h3 className="font-bold text-[#121C2C] mb-3 text-sm flex items-center gap-2">
@@ -175,8 +178,12 @@ const ComplaintDrawer: React.FC<ComplaintDrawerProps> = ({ isOpen, onClose, comp
                   <span className="font-medium">{departureDate || '—'}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-500">Tên khách hàng:</span>
+                  <span className="text-gray-500">Khách hàng:</span>
                   <span className="font-medium text-right">{realCustomerName || complaint.customerName || '—'}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-500">Nhân viên phụ trách:</span>
+                  <span className="font-medium text-right">{guideName || '—'}</span>
                 </div>
               </div>
             </div>
@@ -192,14 +199,14 @@ const ComplaintDrawer: React.FC<ComplaintDrawerProps> = ({ isOpen, onClose, comp
             {/* Ảnh đính kèm */}
             {complaint.attachments && complaint.attachments.length > 0 && (
               <div className="mb-6">
-                 <h3 className="font-bold text-[#121C2C] mb-3 text-sm">Ảnh đính kèm</h3>
-                 <div className="grid grid-cols-3 gap-3">
-                   {complaint.attachments.map((img, idx) => (
-                     <div key={idx} className="aspect-square bg-gray-200 rounded-lg overflow-hidden border border-gray-300 cursor-pointer hover:opacity-90">
-                       <img src={img} alt="attachment" className="w-full h-full object-cover" />
-                     </div>
-                   ))}
-                 </div>
+                <h3 className="font-bold text-[#121C2C] mb-3 text-sm">Ảnh đính kèm</h3>
+                <div className="grid grid-cols-3 gap-3">
+                  {complaint.attachments.map((img, idx) => (
+                    <div key={idx} className="aspect-square bg-gray-200 rounded-lg overflow-hidden border border-gray-300 cursor-pointer hover:opacity-90">
+                      <img src={img} alt="attachment" className="w-full h-full object-cover" />
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 
@@ -228,19 +235,19 @@ const ComplaintDrawer: React.FC<ComplaintDrawerProps> = ({ isOpen, onClose, comp
 
           {/* Cột phải (40%) */}
           <div className="w-full md:w-[40%] bg-[#F9F9FF] h-full overflow-y-auto p-6 flex flex-col">
-            
+
             <h3 className="font-bold text-[#121C2C] mb-4 text-sm">Hướng Xử Lý</h3>
-            
+
             <div className="flex flex-col gap-3 mb-6">
-              <button 
+              <button
                 onClick={() => setActiveAction('Yêu cầu KH bổ sung')}
                 disabled={isView}
                 className="w-full text-left p-3 rounded-lg border border-[#93C5FD] bg-[#EFF6FF] text-[#1E3A8A] flex items-center gap-3 hover:bg-[#DBEAFE] disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium text-sm"
               >
                 <MessageSquare size={18} /> Yêu cầu KH bổ sung
               </button>
-              
-              <button 
+
+              <button
                 onClick={() => setActiveAction('Yêu cầu HDV giải trình')}
                 disabled={isView}
                 className="w-full text-left p-3 rounded-lg border border-[#FDBA74] bg-[#FFF7ED] text-[#9A3412] flex items-center gap-3 hover:bg-[#FFEDD5] disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium text-sm"
@@ -248,7 +255,7 @@ const ComplaintDrawer: React.FC<ComplaintDrawerProps> = ({ isOpen, onClose, comp
                 <AlertCircle size={18} /> Yêu cầu HDV giải trình
               </button>
 
-              <button 
+              <button
                 onClick={() => setActiveAction('Từ chối khiếu nại')}
                 disabled={isView}
                 className="w-full text-left p-3 rounded-lg border border-[#FCA5A5] bg-[#FEF2F2] text-[#991B1B] flex items-center gap-3 hover:bg-[#FEE2E2] disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium text-sm"
@@ -261,7 +268,7 @@ const ComplaintDrawer: React.FC<ComplaintDrawerProps> = ({ isOpen, onClose, comp
             {activeAction && !isView && (
               <div className="mb-6 p-4 bg-white border border-[#E1F1FF] rounded-lg shadow-sm">
                 <p className="text-sm font-semibold text-gray-800 mb-2">{actionContentLabels[activeAction]}</p>
-                <textarea 
+                <textarea
                   className="w-full p-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:border-[#00668A] resize-none mb-3"
                   rows={3}
                   value={noteContent}
@@ -277,39 +284,39 @@ const ComplaintDrawer: React.FC<ComplaintDrawerProps> = ({ isOpen, onClose, comp
 
             {/* Phần chốt: Ghi chú và Hoàn tất */}
             <div className="mt-auto border-t border-[#E1F1FF] pt-4">
-               <h3 className="font-bold text-[#121C2C] mb-2 text-sm">Ghi chú xử lý (Kết luận)</h3>
-               {isView ? (
-                 <div className="p-3 bg-gray-100 rounded-md text-sm text-gray-700 min-h-[80px]">
-                   {complaint.resolution || 'Không có ghi chú.'}
-                 </div>
-               ) : (
-                 <>
-                   <textarea 
+              <h3 className="font-bold text-[#121C2C] mb-2 text-sm">Ghi chú xử lý (Kết luận)</h3>
+              {isView ? (
+                <div className="p-3 bg-gray-100 rounded-md text-sm text-gray-700 min-h-[80px]">
+                  {complaint.resolution || 'Không có ghi chú.'}
+                </div>
+              ) : (
+                <>
+                  <textarea
                     className="w-full p-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-[#00668A] resize-none mb-4"
                     rows={4}
                     value={finalNote}
                     onChange={(e) => setFinalNote(e.target.value)}
                     placeholder="Tóm tắt kết quả xử lý trước khi hoàn tất..."
-                   />
-                   <div className="flex flex-col gap-2">
-                    <Button 
-                      variant="primary" 
+                  />
+                  <div className="flex flex-col gap-2">
+                    <Button
+                      variant="primary"
                       className="w-full justify-center"
                       onClick={() => handleFinalize('resolved')}
                       icon={<Check size={18} />}
                     >
                       Hoàn tất xử lý
                     </Button>
-                    <Button 
-                      variant="danger" 
+                    <Button
+                      variant="danger"
                       className="w-full justify-center"
                       onClick={() => handleFinalize('rejected')}
                     >
                       Từ chối khiếu nại
                     </Button>
-                   </div>
-                 </>
-               )}
+                  </div>
+                </>
+              )}
             </div>
 
           </div>

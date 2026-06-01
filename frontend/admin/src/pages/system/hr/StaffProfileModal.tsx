@@ -64,7 +64,7 @@ const StaffProfileModal: React.FC<StaffProfileModalProps> = ({
           setNangLuc(nangLucRes || null);
           
           const mockGuide = mockStaff.find(s => s.code === staff.code || s.email === staff.email || (chiTietRes && s.code === chiTietRes.maNhanVien));
-          const history = mockGuide?.tourHistory || staff.tourHistory || [];
+          const history = (chiTietRes as any)?.tourHistory || mockGuide?.tourHistory || staff.tourHistory || [];
           
           if (chiTietRes) {
             setFullStaff({
@@ -275,10 +275,10 @@ const StaffProfileModal: React.FC<StaffProfileModalProps> = ({
                 <table className="w-full text-sm">
                   <thead className="bg-white">
                     <tr className="text-left text-xs text-gray-500">
+                      <th className="px-4 py-3">Mã tour</th>
                       <th className="px-4 py-3">Tên tour</th>
                       <th className="px-4 py-3">Ngày đi</th>
                       <th className="px-4 py-3">Trạng thái</th>
-                      <th className="px-4 py-3 text-right">Tổng tiền</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -287,17 +287,14 @@ const StaffProfileModal: React.FC<StaffProfileModalProps> = ({
                       return (
                         <tr key={`${tour.tourName}-${index}`} className="border-t border-[#E1F1FF]">
                           <td className="px-4 py-3">
+                            <div className="font-medium text-[#00668A]">{tour.tourCode || tour.tourName}</div>
+                          </td>
+                          <td className="px-4 py-3">
                             <div className="font-medium text-gray-800">{tour.tourName}</div>
-                            {tour.guideName && (
-                              <div className="text-xs text-gray-500">HDV: {tour.guideName}</div>
-                            )}
                           </td>
                           <td className="px-4 py-3 text-gray-600">{tour.startDate}</td>
                           <td className="px-4 py-3">
                             <Badge label={statusInfo.label} variant={statusInfo.variant} />
-                          </td>
-                          <td className="px-4 py-3 text-right font-semibold text-gray-800">
-                            {tour.amount.toLocaleString('vi-VN')} đ
                           </td>
                         </tr>
                       );

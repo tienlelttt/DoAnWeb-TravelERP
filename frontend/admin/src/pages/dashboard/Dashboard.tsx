@@ -16,20 +16,7 @@ import PowerBIConnectionModal from './PowerBIConnectionModal';
 import { formatDate } from '../../utils/dateHelpers';
 import { useAuth } from '../../context/AuthContext';
 
-const revenueData = [
-  { name: 'T1', value: 120000000 },
-  { name: 'T2', value: 250000000 },
-  { name: 'T3', value: 380000000 },
-  { name: 'T4', value: 500000000 },
-  { name: 'T5', value: 420000000 },
-  { name: 'T6', value: 650000000 },
-  { name: 'T7', value: 800000000 },
-  { name: 'T8', value: 950000000 },
-  { name: 'T9', value: 720000000 },
-  { name: 'T10', value: 550000000 },
-  { name: 'T11', value: 680000000 },
-  { name: 'T12', value: 1250000000 },
-];
+
 
 const pieData = [
   { name: 'Đã xác nhận', value: 65, color: '#3B82F6' },
@@ -87,6 +74,7 @@ function formatTrangThaiTour(status: string | undefined): string {
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
+  const [chartData, setChartData] = useState<any[]>([]);
   const [stats, setStats] = useState({
     customers: 834245,
     orders: 31684,
@@ -110,36 +98,71 @@ const Dashboard: React.FC = () => {
         const canViewTours = true;
         const canViewIncidents = ['HDV', 'ADMIN', 'KINHDOANH', 'DIEUHANH', 'KETOAN', 'SANPHAM'].includes(user?.maVaiTro || '');
 
-        const [customers, orders, tours, incidents] = await Promise.all([
+        const [customers, tours, incidents] = await Promise.all([
           canViewCustomers ? customersService.timKiemKhachHang({ page: 0, size: 1 }).catch(() => null) : Promise.resolve(null),
-          canViewOrders ? ordersService.danhSachTatCa({ page: 0, size: 1 }).catch(() => null) : Promise.resolve(null),
           canViewTours ? tourInstanceService.danhSach({ page: 0, size: 1 }).catch(() => null) : Promise.resolve(null),
           canViewIncidents ? incidentService.lichSuSuCoCuaHdv().catch(() => null) : Promise.resolve(null)
         ]);
 
+        const allOrdersResp = canViewOrders ? await ordersService.danhSachTatCa({ page: 0, size: 1000 }).catch(() => null) : null;
+
         setStats(prev => ({
           ...prev,
           customers: customers?.totalElements || prev.customers,
-          orders: orders?.totalElements || prev.orders,
+          orders: allOrdersResp?.totalElements || prev.orders,
           tours: tours?.totalElements || prev.tours
         }));
 
+        const allOrdersList = allOrdersResp?.content || allOrdersResp?.data;
+        if (allOrdersResp && allOrdersList) {
+          const mayRevenue = new Map<number, number>();
+          for (let i = 1; i <= 31; i++) mayRevenue.set(i, 0);
+
+          let totalRevenue = 0;
+          let validOrdersCount = 0;
+
+          allOrdersList.forEach((order: any) => {
+            const status = order.trangThai || order.trang_thai;
+            const dateStr = order.ngayDat || order.ngay_dat || order.ngayTao || order.ngay_tao || order.thoiGianTao || order.thoi_gian_tao;
+            
+            if (['DA_XAC_NHAN', 'HOAN_THANH', 'DA_THANH_TOAN'].includes(status) && dateStr) {
+              const date = new Date(dateStr);
+              if (date.getFullYear() === 2026 && date.getMonth() === 4) { // Month 4 is May
+                const day = date.getDate();
+                const amount = Number(order.tongTien ?? order.tong_tien ?? 0);
+                mayRevenue.set(day, (mayRevenue.get(day) || 0) + amount);
+                totalRevenue += amount;
+                validOrdersCount++;
+              }
+            }
+          });
+
+          const newChartData = [];
+          for (let i = 1; i <= 31; i++) {
+            newChartData.push({ name: `${i}/5`, value: mayRevenue.get(i) });
+          }
+          setChartData(newChartData);
+          setStats(prev => ({ ...prev, revenue: totalRevenue }));
+        }
+
         // Fetch larger batch for featured calculation & top destinations
         const allToursResp = await tourInstanceService.danhSach({ page: 0, size: 1000 }).catch(() => null);
-        if (allToursResp && allToursResp.content) {
+        const allToursList = allToursResp?.content || allToursResp?.data;
+        if (allToursResp && allToursList) {
           // 1. Gói Tour Nổi Bật (Featured Tours)
           // Lọc các tour đang mở bán và còn chỗ
-          const activeTours = allToursResp.content.filter(t => t.trangThai === 'MO_BAN' && typeof t.choConLai === 'number' && t.choConLai > 0);
+          const activeTours = allToursList.filter((t: any) => (t.trangThai || t.trang_thai) === 'MO_BAN' && Number(t.choConLai ?? t.cho_con_lai ?? 0) > 0);
           
           // Sắp xếp theo chỗ còn lại tăng dần (gần full nhất lên đầu)
-          activeTours.sort((a, b) => (a.choConLai || 0) - (b.choConLai || 0));
+          activeTours.sort((a: any, b: any) => Number(a.choConLai ?? a.cho_con_lai ?? 0) - Number(b.choConLai ?? b.cho_con_lai ?? 0));
 
           // Loại bỏ các tour trùng mẫu để đa dạng
           const uniqueFeatured: TourThucTeResponse[] = [];
           const seenMau = new Set<string>();
-          for (const t of activeTours) {
-            if (t.maTourMau && !seenMau.has(t.maTourMau)) {
-              seenMau.add(t.maTourMau);
+          for (const t of activeTours as any) {
+            const maTourMau = t.maTourMau || t.ma_tour_mau;
+            if (maTourMau && !seenMau.has(maTourMau)) {
+              seenMau.add(maTourMau);
               uniqueFeatured.push(t);
             }
           }
@@ -149,28 +172,31 @@ const Dashboard: React.FC = () => {
 
           // 2. Top Điểm Đến (Tính tổng khách đặt của các tour thực tế theo từng tour mẫu)
           const validStatuses = ['DA_QUYET_TOAN', 'KET_THUC', 'MO_BAN', 'DANG_THUC_HIEN'];
-          const validTours = allToursResp.content.filter(t => t.trangThai && validStatuses.includes(t.trangThai.toUpperCase()));
+          const validTours = allToursList.filter((t: any) => {
+            const status = t.trangThai || t.trang_thai;
+            return status && validStatuses.includes(status.toUpperCase());
+          });
 
           const templateStats = new Map<string, { name: string, booked: number }>();
           let totalBookedAll = 0;
 
-          for (const t of validTours) {
-            if (!t.maTourMau) continue;
+          for (const t of validTours as any) {
+            const maTourMau = t.maTourMau || t.ma_tour_mau;
+            if (!maTourMau) continue;
             
-            const soKhachToiDa = t.soKhachToiDa || 0;
-            const choConLai = t.choConLai || 0;
+            const soKhachToiDa = Number(t.soKhachToiDa ?? t.so_khach_toi_da ?? 0);
+            const choConLai = Number(t.choConLai ?? t.cho_con_lai ?? 0);
             let booked = soKhachToiDa - choConLai;
             if (booked < 0) booked = 0;
             
             if (booked > 0) {
-              // Lấy tên tour từ tieuDeTour, cắt chuỗi trước dấu '-' để lấy tên điểm đến ngắn gọn
-              const fullName = t.tieuDeTour || 'Chưa có tên';
+              const fullName = (t.tieuDeTour || t.tieu_de_tour) || 'Chưa có tên';
               const shortName = fullName.split('-')[0].trim();
               
-              if (!templateStats.has(t.maTourMau)) {
-                templateStats.set(t.maTourMau, { name: shortName, booked: 0 });
+              if (!templateStats.has(maTourMau)) {
+                templateStats.set(maTourMau, { name: shortName, booked: 0 });
               }
-              const stat = templateStats.get(t.maTourMau)!;
+              const stat = templateStats.get(maTourMau)!;
               stat.booked += booked;
               totalBookedAll += booked;
             }
@@ -375,8 +401,10 @@ const Dashboard: React.FC = () => {
                     className="flex gap-4 transition-transform duration-500 ease-in-out w-full"
                     style={{ transform: `translateX(calc(-${currentFeaturedIndex * 100}% - ${currentFeaturedIndex * 16}px))` }}
                   >
-                  {featuredTours.length > 0 ? featuredTours.map((tour, idx) => {
-                    const days = tour.ngayKhoiHanh && tour.ngayKetThuc ? Math.max(1, Math.round((new Date(tour.ngayKetThuc).getTime() - new Date(tour.ngayKhoiHanh).getTime()) / (1000 * 3600 * 24))) : 1;
+                  {featuredTours.length > 0 ? featuredTours.map((tour: any, idx) => {
+                    const ngayKhoiHanh = tour.ngayKhoiHanh || tour.ngay_khoi_hanh;
+                    const ngayKetThuc = tour.ngayKetThuc || tour.ngay_ket_thuc;
+                    const days = ngayKhoiHanh && ngayKetThuc ? Math.max(1, Math.round((new Date(ngayKetThuc).getTime() - new Date(ngayKhoiHanh).getTime()) / (1000 * 3600 * 24))) : 1;
                     const natureImages = [
                       'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=400&q=80',
                       'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=400&q=80',
@@ -387,9 +415,9 @@ const Dashboard: React.FC = () => {
                       <div key={idx} className="w-[calc(25%-12px)] shrink-0 flex flex-col gap-2 cursor-pointer hover:opacity-80 transition-opacity" onClick={() => setSelectedTour(tour)}>
                         <div className="h-32 bg-gray-200 rounded-xl bg-cover bg-center relative shadow-sm" style={{ backgroundImage: `url('${natureImages[idx % natureImages.length]}')` }}>
                         </div>
-                      <p className="font-semibold text-sm text-gray-800 truncate" title={tour.tieuDeTour}>{tour.tieuDeTour || 'Tour Thực Tế'}</p>
+                      <p className="font-semibold text-sm text-gray-800 truncate" title={tour.tieuDeTour || tour.tieu_de_tour}>{(tour.tieuDeTour || tour.tieu_de_tour) || 'Tour Thực Tế'}</p>
                       <p className="text-xs text-gray-500 flex items-center gap-1"><CalendarIcon size={12} /> {days} Ngày {Math.max(0, days - 1)} Đêm</p>
-                      <p className="font-bold text-sm text-blue-600 mt-1">₫{(tour.giaHienHanh || 0).toLocaleString('vi-VN')}</p>
+                      <p className="font-bold text-sm text-blue-600 mt-1">₫{Number(tour.giaHienHanh ?? tour.gia_hien_hanh ?? 0).toLocaleString('vi-VN')}</p>
                     </div>
                   );
                 }) : (
@@ -486,12 +514,12 @@ const Dashboard: React.FC = () => {
 
             <div className="bg-white p-6 rounded-[20px] shadow-sm border border-gray-100 col-span-2 flex flex-col">
               <div className="flex justify-between items-center mb-6">
-                <h3 className="font-bold text-lg text-gray-800 text-center w-full">Doanh thu năm 2025</h3>
+                <h3 className="font-bold text-lg text-gray-800 text-center w-full">Doanh thu Tháng 5/2026</h3>
               </div>
               <div className="flex-1 min-h-[200px]" style={{ minWidth: 0, minHeight: 0 }}>
                 <ResponsiveContainer width="99%" height="100%">
-                  <LineChart data={revenueData}>
-                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#9CA3AF', fontSize: 12 }} dy={10} />
+                  <LineChart data={chartData}>
+                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#9CA3AF', fontSize: 12 }} dy={10} interval="preserveStartEnd" minTickGap={20} />
                     <Tooltip
                       contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                       cursor={{ stroke: '#E5E7EB', strokeWidth: 2 }}
@@ -551,25 +579,25 @@ const Dashboard: React.FC = () => {
             </button>
             <div className="h-48 bg-gray-200 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80')" }}></div>
             <div className="p-6 overflow-y-auto">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2 leading-tight">{selectedTour.tieuDeTour || 'Tour Thực Tế'}</h2>
-              <p className="text-gray-500 flex items-center gap-2 text-sm mb-6"><MapPin size={16} /> Mã Tour: {selectedTour.maTourThucTe}</p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2 leading-tight">{(selectedTour as any).tieuDeTour || (selectedTour as any).tieu_de_tour || 'Tour Thực Tế'}</h2>
+              <p className="text-gray-500 flex items-center gap-2 text-sm mb-6"><MapPin size={16} /> Mã Tour: {(selectedTour as any).maTourThucTe || (selectedTour as any).ma_tour_thuc_te}</p>
 
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="bg-gray-50 p-4 rounded-xl">
                   <p className="text-xs text-gray-500 mb-1">Ngày khởi hành</p>
-                  <p className="font-semibold text-gray-800 flex items-center gap-1.5"><CalendarIcon size={14} className="text-blue-500" /> {formatDate(selectedTour.ngayKhoiHanh)}</p>
+                  <p className="font-semibold text-gray-800 flex items-center gap-1.5"><CalendarIcon size={14} className="text-blue-500" /> {formatDate((selectedTour as any).ngayKhoiHanh || (selectedTour as any).ngay_khoi_hanh)}</p>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-xl">
                   <p className="text-xs text-gray-500 mb-1">Giá hiện hành</p>
-                  <p className="font-bold text-blue-600 flex items-center gap-1.5"><Wallet size={14} /> ₫{(selectedTour.giaHienHanh || 0).toLocaleString('vi-VN')}</p>
+                  <p className="font-bold text-blue-600 flex items-center gap-1.5"><Wallet size={14} /> ₫{Number((selectedTour as any).giaHienHanh ?? (selectedTour as any).gia_hien_hanh ?? 0).toLocaleString('vi-VN')}</p>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-xl">
                   <p className="text-xs text-gray-500 mb-1">Chỗ còn lại</p>
-                  <p className="font-semibold text-gray-800 flex items-center gap-1.5"><Users size={14} className="text-emerald-500" /> {selectedTour.choConLai || 0} / {selectedTour.soKhachToiDa || 0}</p>
+                  <p className="font-semibold text-gray-800 flex items-center gap-1.5"><Users size={14} className="text-emerald-500" /> {(selectedTour as any).choConLai ?? (selectedTour as any).cho_con_lai ?? 0} / {(selectedTour as any).soKhachToiDa ?? (selectedTour as any).so_khach_toi_da ?? 0}</p>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-xl">
                   <p className="text-xs text-gray-500 mb-1">Trạng thái tour</p>
-                  <p className="font-semibold text-gray-800 flex items-center gap-1.5"><CheckCircle2 size={14} className="text-orange-500" /> {formatTrangThaiTour(selectedTour.trangThai)}</p>
+                  <p className="font-semibold text-gray-800 flex items-center gap-1.5"><CheckCircle2 size={14} className="text-orange-500" /> {formatTrangThaiTour((selectedTour as any).trangThai || (selectedTour as any).trang_thai)}</p>
                 </div>
               </div>
 

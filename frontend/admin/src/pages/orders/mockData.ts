@@ -50,6 +50,11 @@ export interface DonDatTourResponse {
   thoiGianHetHan?: string;
   ghiChu?: string;
   thoiDiemTao?: string;
+  maHuongDanVien?: string;
+  tenHuongDanVien?: string;
+  soDienThoaiHuongDanVien?: string;
+  danhGiaHuongDanVien?: number;
+  soDanhGiaHuongDanVien?: number;
   capNhatVao?: string;
   chiTietKhach?: ChiTietDatTourResponse[];
   chiTietDichVu?: ChiTietDichVuResponse[];

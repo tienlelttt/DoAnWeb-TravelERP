@@ -71,7 +71,7 @@ const DistributeVoucherModal: React.FC<DistributeVoucherModalProps> = ({ isOpen,
             tier: customer.hangThanhVien || 'THANH_VIEN',
             phone: customer.soDienThoaiKhachHang || '',
             hasVoucher: true,
-            voucherStatus: customer.trangThai || 'CO_HIEU_LUC',
+            voucherStatus: customer.trangThai || (customer as any).trang_thai || 'CO_HIEU_LUC',
           })).filter((customer) => customer.id));
           return;
         }
@@ -79,7 +79,7 @@ const DistributeVoucherModal: React.FC<DistributeVoucherModalProps> = ({ isOpen,
         const distributedStatusByCustomer = new Map(
           distributedCustomers
             .filter((item) => item.maKhachHang)
-            .map((item) => [item.maKhachHang as string, item.trangThai || 'CO_HIEU_LUC'])
+            .map((item) => [item.maKhachHang as string, item.trangThai || (item as any).trang_thai || 'CO_HIEU_LUC'])
         );
         setCustomers((res?.content || []).map((customer) => ({
           id: customer.maKhachHang || '',
@@ -125,6 +125,20 @@ const DistributeVoucherModal: React.FC<DistributeVoucherModalProps> = ({ isOpen,
       return (
         <span className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
           Có hiệu lực
+        </span>
+      );
+    }
+    if (status === 'THU_HOI' || status === 'DA_THU_HOI') {
+      return (
+        <span className="inline-flex items-center rounded-full border border-red-200 bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700">
+          Đã thu hồi
+        </span>
+      );
+    }
+    if (status === 'HET_HAN') {
+      return (
+        <span className="inline-flex items-center rounded-full border border-gray-300 bg-gray-50 px-2.5 py-1 text-xs font-semibold text-gray-500">
+          Hết hạn
         </span>
       );
     }

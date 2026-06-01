@@ -1096,7 +1096,7 @@ VALUES ('DG_MOCCHAU_KH11', 'TTT_MOCCHAU', 'KH_11', 4, 'Cảnh đẹp, lịch tr�
 
 -- Goi 5: Quy Nhon - tour bi huy, don da thanh toan se sinh ho tro hoan tien.
 INSERT INTO don_dat_tours (ma_dat_tour, ma_tour_thuc_te, ma_khach_hang, ngay_dat, tong_tien, trang_thai, thoi_gian_het_han, ghi_chu, hanh_dong_xanh)
-VALUES ('DDT_QUYNHON_HUY', 'TTT_QUYNHON', 'KH_07', NOW() - INTERVAL 6 DAY, 11350000, 'CHO_XAC_NHAN',
+VALUES ('DDT_QUYNHON_HUY', 'TTT_QUYNHON', 'KH_07', NOW() - INTERVAL 6 DAY, 11350000, 'CHO_HUY',
         NOW() + INTERVAL 1 DAY, 'Tour dự kiến hủy do điều kiện thời tiết biển.', 'HDX_BOTTLE:1');
 
 INSERT INTO ds_nguoi_dong_hanhs (ma_nguoi_dong_hanh, ma_dat_tour, ho_ten, cccd, so_dien_thoai, ngay_sinh, gioi_tinh, ghi_chu)
@@ -1798,7 +1798,7 @@ INSERT INTO danh_gia_khs (ma_danh_gia_khach_hang, ma_tour_thuc_te, ma_khach_hang
 VALUES ('DG_CANTHO_KT_02_KH06', 'TTT_CANTHO_KT_02', 'KH_06', 5, 'Hướng dẫn viên nhiệt tình và hỗ trợ xe đưa đón rất rõ ràng.', NOW() - INTERVAL 8 DAY);
 
 INSERT INTO don_dat_tours (ma_dat_tour, ma_tour_thuc_te, ma_khach_hang, ngay_dat, tong_tien, trang_thai, thoi_gian_het_han, ghi_chu, hanh_dong_xanh)
-VALUES ('DDT_HAGIANG_HUY_02_OK', 'TTT_HAGIANG_HUY_02', 'KH_10', NOW() - INTERVAL 9 DAY, 12720000, 'CHO_XAC_NHAN',
+VALUES ('DDT_HAGIANG_HUY_02_OK', 'TTT_HAGIANG_HUY_02', 'KH_10', NOW() - INTERVAL 9 DAY, 12720000, 'CHO_HUY',
         NOW() - INTERVAL 7 DAY, 'Hai khách đã thanh toán, tour bị hủy do sạt lở đường đèo.', 'HDX_TREE:1');
 INSERT INTO ds_nguoi_dong_hanhs (ma_nguoi_dong_hanh, ma_dat_tour, ho_ten, cccd, so_dien_thoai, ngay_sinh, gioi_tinh, ghi_chu)
 VALUES ('NDH_HAGIANG_HUY_02_01', 'DDT_HAGIANG_HUY_02_OK', 'Mai Hoàng Long', '079299000506', '0922000506', '1991-04-04', 'NAM', NULL);

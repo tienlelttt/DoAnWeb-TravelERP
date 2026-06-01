@@ -18,26 +18,27 @@ import { hasAccess } from '../../config/rolePermissions';
 import { formatApiError } from '../../utils/apiHelpers';
 import { mapVoucherStatus } from '../../utils/statusMapping';
 import { useNotification } from '../../context/NotificationContext';
+import { formatDate } from '../../utils/dateHelpers';
 
 const statusOptions = [
   { value: 'all', label: 'Tất cả trạng thái' },
-  { value: 'SAN_SANG', label: 'Sẵn sàng' },
+  { value: 'SAN_SANG', label: 'Hiệu lực' },
   { value: 'HET_HAN', label: 'Hết hạn' },
   { value: 'VO_HIEU_HOA', label: 'Vô hiệu hóa' },
 ];
 
-const mapToUI = (api: VoucherResponse): Voucher => ({
-  id: api.maVoucher || '',
-  code: api.maCode || '',
-  name: api.dieuKienApDung || api.maCode || '',
-  discountType: api.loaiUuDai?.toUpperCase() === 'PHAN_TRAM' || api.loaiUuDai?.toUpperCase() === 'PERCENT' ? 'percent' : 'amount',
-  discountValue: api.giaTriGiam || 0,
-  maxDiscount: api.mucGiamToiDa,
-  quantity: api.soLuotPhatHanh || 0,
-  distributed: api.soLuotDaPhanBo ?? 0,
-  startDate: api.ngayHieuLuc || '',
-  expiryDate: api.ngayHetHan || '',
-  status: api.trangThai || 'SAN_SANG',
+const mapToUI = (api: any): Voucher => ({
+  id: api.maVoucher || api.ma_voucher || '',
+  code: api.maCode || api.ma_code || '',
+  name: api.dieuKienApDung || api.dieu_kien_ap_dung || api.maCode || api.ma_code || '',
+  discountType: (api.loaiUuDai || api.loai_uu_dai)?.toUpperCase() === 'PHAN_TRAM' || (api.loaiUuDai || api.loai_uu_dai)?.toUpperCase() === 'PERCENT' ? 'percent' : 'amount',
+  discountValue: api.giaTriGiam || api.gia_tri_giam || 0,
+  maxDiscount: api.mucGiamToiDa || api.muc_giam_toi_da,
+  quantity: api.soLuotPhatHanh || api.so_luot_phat_hanh || 0,
+  distributed: api.soLuotDaPhanBo ?? api.so_luot_da_phan_bo ?? api.soLuotDaDung ?? api.so_luot_da_dung ?? 0,
+  startDate: formatDate(api.ngayHieuLuc || api.ngay_hieu_luc),
+  expiryDate: formatDate(api.ngayHetHan || api.ngay_het_han),
+  status: (api.trangThai || api.trang_thai) === 'HIEU_LUC' ? 'SAN_SANG' : (api.trangThai || api.trang_thai || 'SAN_SANG'),
 });
 
 const VoucherList: React.FC = () => {
@@ -179,7 +180,7 @@ const VoucherList: React.FC = () => {
             onClick={(e) => { e.stopPropagation(); setDistributeVoucher(record); }}
             disabled={record.status !== 'SAN_SANG' || record.distributed >= record.quantity}
             className="p-2 text-gray-500 hover:text-[#00668A] hover:bg-[#E1F1FF] rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-gray-500"
-            title={record.status !== 'SAN_SANG' ? 'Chỉ phân phối voucher sẵn sàng' : record.distributed >= record.quantity ? 'Đã phân phối đủ số lượng' : 'Phân phối'}
+            title={record.status !== 'SAN_SANG' ? 'Chỉ phân phối voucher có hiệu lực' : record.distributed >= record.quantity ? 'Đã phân phối đủ số lượng' : 'Phân phối'}
           >
             <Send size={18} />
           </button>

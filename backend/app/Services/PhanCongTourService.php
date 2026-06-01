@@ -152,10 +152,10 @@ class PhanCongTourService
         $ngayKhoiHanh = Carbon::parse($tourThucTe->ngay_khoi_hanh);
         $ngayKetThuc = $ngayKhoiHanh->copy()->addDays($thoiLuong);
 
-        // Lấy tất cả nhân viên có vai trò HDV và đang DANG_LAM
-        $tatCaHdv = NhanVien::whereHas('taiKhoan', function($q) {
+        // Lấy tất cả nhân viên có vai trò HDV và đang HOAT_DONG, kèm thông tin tài khoản (để lấy họ tên)
+        $tatCaHdv = NhanVien::with('taiKhoan')->whereHas('taiKhoan', function($q) {
             $q->where('vai_tro', 'HDV');
-        })->where('trang_thai_lam_viec', 'DANG_LAM')->get();
+        })->where('trang_thai_lam_viec', 'HOAT_DONG')->get();
 
         $hdvKhaDung = collect();
 

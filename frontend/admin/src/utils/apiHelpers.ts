@@ -22,8 +22,8 @@ export function unwrapApiData<T>(response: { data: ApiEnvelope<T> }): T {
   return envelope.data;
 }
 
-export function unwrapPageContent<T>(page: { content?: T[] } | undefined | null): T[] {
-  return page?.content ?? [];
+export function unwrapPageContent<T>(page: any): T[] {
+  return page?.content ?? page?.data ?? [];
 }
 
 export function formatApiError(error: unknown, fallback = 'Lỗi khi gọi API'): string {

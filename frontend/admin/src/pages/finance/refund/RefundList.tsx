@@ -71,7 +71,7 @@ const RefundList: React.FC = () => {
           customerName: orderInfo?.tenKhachHang || 'Khách hàng',
           customerPhone: (orderInfo as any)?.soDienThoai || '',
           amount: t.soTien || 0,
-          reason: '',
+          reason: t.noiDung || '',
           status,
           refundMethod: t.phuongThuc === 'CHUYEN_KHOAN' ? 'gateway' : 'manual'
         };

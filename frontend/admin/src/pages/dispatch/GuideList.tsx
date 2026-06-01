@@ -27,16 +27,16 @@ const parseCommaList = (value?: string): string[] => {
   return value.split(',').map((s) => s.trim()).filter(Boolean);
 };
 
-const mapNhanVienToGuide = (g: NhanVienResponse, nangLuc?: NangLucResponse): Guide => ({
-  id: g.maNhanVien || '',
-  code: g.maNhanVien || '',
-  name: g.hoTen || g.tenDangNhap || '',
-  phone: g.soDienThoai || '',
-  languages: parseCommaList(nangLuc?.ngonNgu).length > 0 ? parseCommaList(nangLuc?.ngonNgu) : ['Tiếng Việt'],
-  skills: [...parseCommaList(nangLuc?.chuyenMon), ...parseCommaList(nangLuc?.chungChi)],
-  rating: nangLuc?.danhGia ?? 0,
-  status: g.trangThaiLamViec || 'Không xác định',
-  completedTours: nangLuc?.soDanhGia ?? 0,
+const mapNhanVienToGuide = (g: any, nangLuc?: NangLucResponse): Guide => ({
+  id: g.maNhanVien || g.ma_nhan_vien || '',
+  code: g.maNhanVien || g.ma_nhan_vien || '',
+  name: g.hoTen || g.ho_ten || g.taiKhoan?.hoTen || g.tai_khoan?.ho_ten || g.tenDangNhap || g.ten_dang_nhap || '',
+  phone: g.soDienThoai || g.so_dien_thoai || g.taiKhoan?.soDienThoai || g.tai_khoan?.so_dien_thoai || '',
+  languages: parseCommaList(nangLuc?.ngonNgu || (nangLuc as any)?.ngon_ngu).length > 0 ? parseCommaList(nangLuc?.ngonNgu || (nangLuc as any)?.ngon_ngu) : ['Tiếng Việt'],
+  skills: [...parseCommaList(nangLuc?.chuyenMon || (nangLuc as any)?.chuyen_mon), ...parseCommaList(nangLuc?.chungChi || (nangLuc as any)?.chung_chi)],
+  rating: nangLuc?.danhGia ?? (nangLuc as any)?.danh_gia ?? 0,
+  status: g.trangThaiLamViec || g.trang_thai_lam_viec || 'Không xác định',
+  completedTours: nangLuc?.soDanhGia ?? (nangLuc as any)?.so_danh_gia ?? 0,
 });
 
 const GuideList: React.FC = () => {
@@ -203,8 +203,8 @@ const GuideList: React.FC = () => {
   return (
     <MainLayout
       activeMenu="Danh Sách HDV"
-      expandedMenus={['Điều phối Hướng dẫn viên']}
-      breadcrumb={[{ label: 'Điều phối Hướng dẫn viên' }, { label: 'Danh Sách HDV' }]}
+      expandedMenus={['Điều phối HDV']}
+      breadcrumb={[{ label: 'Điều phối HDV' }, { label: 'Danh Sách HDV' }]}
     >
       <div className="flex flex-col h-full gap-6">
         <div className="flex flex-col gap-1">

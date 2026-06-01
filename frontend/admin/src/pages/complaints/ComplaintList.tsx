@@ -19,11 +19,10 @@ import { useAuth } from '../../context/AuthContext';
 import { hasAccess } from '../../config/rolePermissions';
 
 const mapStatus = (s?: string, noiDung?: string): Complaint['status'] => {
-  const isGuideExplanation = !!noiDung?.includes('[Yêu cầu HDV giải trình');
   switch (s?.toUpperCase()) {
     case 'DA_XU_LY': return 'resolved';
     case 'TU_CHOI': return 'rejected';
-    case 'CHO_BO_SUNG': return isGuideExplanation ? 'pending_guide' : 'pending_info';
+    case 'CHO_BO_SUNG': return 'pending_info';
     case 'CHO_GIAI_TRINH': return 'pending_guide';
     case 'CHO_DUYET': return 'pending_review';
     case 'CHUA_XU_LY': return 'pending';
@@ -50,10 +49,48 @@ const ComplaintList: React.FC = () => {
   const mapToUI = (api: YeuCauHoTroResponse): Complaint => {
     const savedResolution = localStorage.getItem(`complaint_res_${api.maYeuCau}`);
     const savedTimelineStr = localStorage.getItem(`complaint_timeline_${api.maYeuCau}`);
-    let savedTimeline = [];
+    let savedTimeline: any[] = [];
     try {
       if (savedTimelineStr) savedTimeline = JSON.parse(savedTimelineStr);
     } catch (e) {}
+
+    // Extract dynamic timeline from noiDung
+    const dynamicTimeline: { action: string, timestamp: string }[] = [];
+    const contentStr = api.noiDung || '';
+    
+    // Match specific tags, ignoring preceding whitespace/newlines
+    const regex = /\[(Yêu cầu KH bổ sung.*?|Yêu cầu HDV giải trình.*?|KHÁCH HÀNG BỔ SUNG.*?|HDV giải trình.*?)\]:?\s*(.*?)(?=\s*\[(?:Yêu cầu KH bổ sung|Yêu cầu HDV giải trình|KHÁCH HÀNG BỔ SUNG|HDV giải trình)|$)/gs;
+    let match;
+    while ((match = regex.exec(contentStr)) !== null) {
+      let header = match[1];
+      let text = match[2].trim();
+      
+      // If it's the old format [HDV giải trình: content] (no colon outside bracket)
+      if (header.includes(':') && !text) {
+         const parts = header.split(':');
+         header = parts[0];
+         text = parts.slice(1).join(':').trim();
+      }
+
+      let action = '';
+      let timestamp = '';
+      
+      const lucIndex = header.lastIndexOf(' lúc ');
+      if (lucIndex !== -1) {
+         action = header.substring(0, lucIndex) + ': ' + text;
+         timestamp = header.substring(lucIndex + 5);
+      } else {
+         action = header + ': ' + text;
+      }
+      
+      // Only include specific known actions in timeline to avoid matching random brackets
+      if (/Yêu cầu KH bổ sung|Yêu cầu HDV giải trình|KHÁCH HÀNG BỔ SUNG|HDV giải trình/i.test(header)) {
+        dynamicTimeline.push({ action, timestamp });
+      }
+    }
+
+    // Only use dynamic timeline to avoid duplication
+    const combinedTimeline = dynamicTimeline;
 
     return {
       id: api.maYeuCau || '',
@@ -66,11 +103,11 @@ const ComplaintList: React.FC = () => {
       sentDate: api.thoiDiemTao ? formatDate(api.thoiDiemTao) : '',
       severity: 'THAP',
       status: mapStatus(api.trangThai, api.noiDung),
-      description: (api.noiDung || '')
-        .replace(/\[Yêu cầu (?:KH bổ sung|HDV giải trình) lúc [^\]]+\]:.*?(?=\n\[|$)/gs, '')
+      description: contentStr
+        .replace(/\[(Yêu cầu KH bổ sung.*?|Yêu cầu HDV giải trình.*?|KHÁCH HÀNG BỔ SUNG.*?|HDV giải trình.*?)\]:?\s*(.*?)(?=(?:\n)?\[(?:Yêu cầu KH bổ sung|Yêu cầu HDV giải trình|KHÁCH HÀNG BỔ SUNG|HDV giải trình)|$)/gs, '')
         .trim(),
       resolution: savedResolution || undefined,
-      timeline: savedTimeline,
+      timeline: combinedTimeline,
       source: 'complaint',
     };
   };
@@ -161,14 +198,7 @@ const ComplaintList: React.FC = () => {
       width: '12%',
       render: (record) => <span className="font-bold text-[#00668A]">{record.code}</span>
     },
-    {
-      key: 'guideName',
-      title: 'Tên nhân viên',
-      width: '15%',
-      render: (record) => (
-        <span className="font-medium text-gray-800">{record.guideName || '—'}</span>
-      )
-    },
+
     {
       key: 'description',
       title: 'Nội dung',
@@ -219,7 +249,16 @@ const ComplaintList: React.FC = () => {
       align: 'center',
       render: (record) => {
         if (record.source === 'incident') {
-          return <Badge label="Sự cố" variant="neutral" />;
+          return (
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => handleOpenDrawer(record, 'view')}
+              icon={<Eye size={16} />}
+            >
+              Xem
+            </Button>
+          );
         }
         const isDone = record.status === 'resolved' || record.status === 'rejected' || record.status === 'cancelled';
         return (
@@ -237,7 +276,6 @@ const ComplaintList: React.FC = () => {
   ];
 
   const handleOpenDrawer = (complaint: Complaint, mode: 'edit' | 'view') => {
-    if (complaint.source === 'incident') return;
     setSelectedComplaint(complaint);
     setDrawerMode(mode);
     setDrawerOpen(true);
@@ -281,9 +319,6 @@ const ComplaintList: React.FC = () => {
       // Save local state to persist across API reloads since Backend doesn't support these fields yet
       if (updatedComplaint.resolution) {
         localStorage.setItem(`complaint_res_${updatedComplaint.id}`, updatedComplaint.resolution);
-      }
-      if (updatedComplaint.timeline && updatedComplaint.timeline.length > 0) {
-        localStorage.setItem(`complaint_timeline_${updatedComplaint.id}`, JSON.stringify(updatedComplaint.timeline));
       }
       setSelectedComplaint(updatedComplaint);
       getAll();
