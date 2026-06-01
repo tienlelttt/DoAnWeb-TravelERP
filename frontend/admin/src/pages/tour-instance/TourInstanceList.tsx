@@ -17,6 +17,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
 import { hasAccess } from '../../config/rolePermissions';
 import { mapTourInstanceStatus } from '../../utils/statusMapping';
+import { formatDate, toDateInputValue } from '../../utils/dateHelpers';
 
 const TourInstanceList: React.FC = () => {
   const { user } = useAuth();
@@ -41,9 +42,9 @@ const TourInstanceList: React.FC = () => {
     id: api.maTourThucTe || '',
     code: api.maTourThucTe || '',
     name: api.tieuDeTour || '',
-    startDate: api.ngayKhoiHanh || '',
-    endDate: api.ngayKetThuc || '',
-    departureDate: api.ngayKhoiHanh || '',
+    startDate: toDateInputValue(api.ngayKhoiHanh),
+    endDate: toDateInputValue(api.ngayKetThuc),
+    departureDate: toDateInputValue(api.ngayKhoiHanh),
     vehicle: '',
     maxSeats: api.soKhachToiDa || 0,
     bookedSeats: api.soKhachToiDa != null && api.choConLai != null
@@ -197,8 +198,7 @@ const TourInstanceList: React.FC = () => {
       title: 'Ngày khởi hành',
       width: '12%',
       render: (record) => {
-        const [year, month, day] = record.startDate.split('-');
-        return <span>{`${day}/${month}/${year}`}</span>;
+        return <span>{formatDate(record.startDate)}</span>;
       }
     },
     {
