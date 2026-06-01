@@ -264,8 +264,8 @@ export default function QuanLyChiPhi({ maTour, currentTour, pastTours = [], expe
               Chưa có chi phí nào trong lịch sử tour đã dẫn.
             </div>
           )}
-          {paginatedExpenses.map((e) => (
-            <div key={e.id} className="relative bg-white rounded-2xl border border-slate-100/80 hover:shadow-md transition shadow-sm overflow-hidden">
+          {paginatedExpenses.map((e, index) => (
+            <div key={e.id || `expense-${index}`} className="relative bg-white rounded-2xl border border-slate-100/80 hover:shadow-md transition shadow-sm overflow-hidden">
               {/* Clickable card row wrapper */}
               <div
                 onClick={() => setExpandedExpense(expandedExpense === e.id ? null : e.id)}

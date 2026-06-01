@@ -303,13 +303,15 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:api', 'role:ADMIN,KETO
     Route::post('/report/pdf/{type}', [\App\Http\Controllers\Admin\ReportPdfController::class, 'exportPDF']);
 });
 
+Route::group(['prefix' => 'quan-tri', 'middleware' => ['auth:api', 'role:ADMIN,DIEUHANH,KINHDOANH,KETOAN,SANPHAM', 'audit_log']], function () {
+    // Compatibility routes for Staff Management (accountsService) - Read Only
+    Route::get('/nhan-vien', [\App\Http\Controllers\QuanTriCompatController::class, 'danhSachNhanVien']);
+    Route::get('/nhan-vien/{nhanVien}', [\App\Http\Controllers\QuanTriCompatController::class, 'chiTietNhanVien']);
+});
+
 Route::group(['prefix' => 'quan-tri', 'middleware' => ['auth:api', 'role:ADMIN', 'audit_log']], function () {
     Route::get('/nhat-ky-he-thong', [\App\Http\Controllers\Admin\NhatKyHeThongController::class, 'danhSach']);
     Route::post('/dang-ky-nhan-vien', [\App\Http\Controllers\QuanTriCompatController::class, 'dangKyNhanVien']);
-    
-    // Compatibility routes for Staff Management (accountsService)
-    Route::get('/nhan-vien', [\App\Http\Controllers\QuanTriCompatController::class, 'danhSachNhanVien']);
-    Route::get('/nhan-vien/{nhanVien}', [\App\Http\Controllers\QuanTriCompatController::class, 'chiTietNhanVien']);
     Route::put('/nhan-vien/{nhanVien}/vai-tro', [\App\Http\Controllers\QuanTriCompatController::class, 'ganVaiTro']);
     Route::put('/nhan-vien/{nhanVien}/mo-khoa', [\App\Http\Controllers\QuanTriCompatController::class, 'moKhoaTaiKhoan']);
     Route::put('/nhan-vien/{nhanVien}/khoa', [\App\Http\Controllers\QuanTriCompatController::class, 'khoaTaiKhoan']);
