@@ -42,6 +42,7 @@ export const mapOrderStatus = (status?: string): StatusMapping => {
     case 'TU_CHOI_HOAN_TIEN': return { label: 'Từ chối hoàn tiền', variant: 'error' };
     case 'HET_HAN_GIU_CHO': return { label: 'Hết hạn giữ chỗ', variant: 'neutral' };
     case 'THANH_TOAN_THAT_BAI': return { label: 'Thanh toán thất bại', variant: 'error' };
+    case 'KET_THUC': return { label: 'Kết thúc', variant: 'success' };
     default: return { label: status || 'Không xác định', variant: 'neutral' };
   }
 };
