@@ -8,6 +8,7 @@ import { mockStaff } from './mockData';
 import { hrService } from '../../../services/system/hr';
 import type { NangLucResponse } from '../../../services/system/hr';
 import { accountsService } from '../../../services/system/accounts';
+import { formatDate } from '../../../utils/dateHelpers';
 
 interface StaffProfileModalProps {
   isOpen: boolean;
@@ -68,8 +69,8 @@ const StaffProfileModal: React.FC<StaffProfileModalProps> = ({
           if (chiTietRes) {
             setFullStaff({
               ...staff,
-              birthday: chiTietRes.ngaySinh || staff.birthday,
-              joinDate: chiTietRes.ngayVaoLam || staff.joinDate,
+              birthday: chiTietRes.ngaySinh ? formatDate(chiTietRes.ngaySinh) : staff.birthday,
+              joinDate: chiTietRes.ngayVaoLam ? formatDate(chiTietRes.ngayVaoLam) : staff.joinDate,
               cccd: chiTietRes.cccd || staff.cccd,
               phone: chiTietRes.soDienThoai || staff.phone,
               email: chiTietRes.email || staff.email,

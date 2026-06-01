@@ -25,6 +25,7 @@ import QuanLyChiPhi from './pages/QuanLyChiPhi';
 import BaoCaoSuCo from './pages/BaoCaoSuCo';
 import HoSoCaNhan from './pages/HoSoCaNhan';
 import { hdvService } from './services/hdvService';
+import { formatDisplayDate } from './utils/dateHelpers';
 
 type TabType = 'dashboard' | 'schedule' | 'attendance' | 'green' | 'expense' | 'incident' | 'profile';
 
@@ -177,7 +178,7 @@ export default function App() {
       maPhanCong: assignment.maPhanCong,
       trangThaiChapNhan: assignment.trangThaiChapNhan,
       name: assignment.tenTour || assignment.maTourThucTe,
-      departureDate: assignment.ngayKhoiHanh ? new Date(assignment.ngayKhoiHanh).toLocaleDateString('vi-VN') : '-',
+      departureDate: formatDisplayDate(assignment.ngayKhoiHanh, '-'),
       startDate: assignment.ngayKhoiHanh,
       endDate: assignment.ngayKetThuc || assignment.ngayKhoiHanh,
       destination: 'Chưa cập nhật',

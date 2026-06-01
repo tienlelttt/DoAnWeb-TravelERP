@@ -1,6 +1,7 @@
 import { Shield, Award, Star, Compass, CheckCircle, ArrowLeft, LockKeyhole, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { hdvService } from '../services/hdvService';
+import { formatDisplayDate } from '../utils/dateHelpers';
 
 interface ProfileProps {
   onBack: () => void;
@@ -64,7 +65,7 @@ export default function HoSoCaNhan({ onBack, onLogout }: ProfileProps) {
   if (!profile) return <div className="text-center p-4 mt-10 text-red-500">Lỗi không thể tải hồ sơ!</div>;
 
   const initials = profile.hoTen ? profile.hoTen.split(' ').map((n: string) => n[0]).slice(-2).join('').toUpperCase() : 'HD';
-  const formatDate = (value?: string) => value ? new Date(value).toLocaleDateString('vi-VN') : 'Đang cập nhật';
+  const formatDate = (value?: string) => formatDisplayDate(value);
 
   const resetPasswordForm = () => {
     setOldPassword('');
