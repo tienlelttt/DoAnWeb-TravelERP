@@ -251,8 +251,8 @@ export default function App() {
   });
 
   const mapExpense = (e: any): Expense => ({
-    id: e.maChiPhi,
-    tourCode: e.maTour,
+    id: e.maChiPhiThucTe || e.maChiPhi,
+    tourCode: e.maTourThucTe || e.maTour,
     category: e.danhMuc,
     amount: e.thanhTien,
     status: e.trangThaiDuyet,

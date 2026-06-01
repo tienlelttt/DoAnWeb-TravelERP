@@ -88,26 +88,56 @@ class VanHanhService
     {
         $donDatTours = DonDatTour::where('ma_tour_thuc_te', $maTourThucTe)
             ->whereIn('trang_thai', self::TRANG_THAI_DON_DA_XAC_NHAN)
-            ->with(['chiTietDatTours.khachHang', 'chiTietDatTours.nguoiDongHanh'])
+            ->with([
+                'chiTietDatTours.khachHang.taiKhoan',
+                'chiTietDatTours.nguoiDongHanh',
+            ])
             ->get();
-            
+
+        // Lấy trạng thái điểm danh mới nhất của tour
+        $diemDanhMap = \App\Models\DiemDanh::where('ma_tour_thuc_te', $maTourThucTe)
+            ->orderBy('thoi_gian', 'desc')
+            ->get()
+            ->keyBy(function ($dd) {
+                return $dd->ma_khach_hang ?? $dd->ma_nguoi_dong_hanh;
+            });
+
         $danhSach = [];
         foreach ($donDatTours as $don) {
             foreach ($don->chiTietDatTours as $ct) {
                 if ($ct->khachHang) {
+                    $kh = $ct->khachHang;
+                    $tk = $kh->taiKhoan;
+                    $dd = $diemDanhMap[$kh->ma_khach_hang] ?? null;
                     $danhSach[] = [
-                        'loai_khach' => 'KHACH_CHINH',
-                        'ma_khach_hang' => $ct->ma_khach_hang,
-                        'ho_ten' => $ct->khachHang->ho_ten ?? '',
-                        'ghi_chu' => $ct->ghi_chu
+                        'maDatTour'       => $ct->ma_dat_tour,
+                        'maKhachHang'     => $kh->ma_khach_hang,
+                        'maNguoiDongHanh' => null,
+                        'loaiKhach'       => $ct->loai_khach ?? 'NGUOI_DAT',
+                        'hoTenKhachHang'  => $tk->ho_ten ?? $kh->ho_ten ?? '',
+                        'soDienThoai'     => $tk->so_dien_thoai ?? '',
+                        'hangThanhVien'   => $kh->hang_thanh_vien ?? 'THANH_VIEN',
+                        'diemXanh'        => $kh->diem_xanh ?? 0,
+                        'ghiChuYTe'       => $kh->ghi_chu_y_te ?? null,
+                        'diUng'           => $kh->di_ung ?? null,
+                        'trangThai'       => $dd ? $dd->trang_thai : 'CHUA_DIEM_DANH',
                     ];
                 }
                 if ($ct->nguoiDongHanh) {
+                    $ndh = $ct->nguoiDongHanh;
+                    $dd = $diemDanhMap[$ndh->ma_nguoi_dong_hanh] ?? null;
                     $danhSach[] = [
-                        'loai_khach' => 'NGUOI_DONG_HANH',
-                        'ma_nguoi_dong_hanh' => $ct->ma_nguoi_dong_hanh,
-                        'ho_ten' => $ct->nguoiDongHanh->ho_ten ?? '',
-                        'ghi_chu' => $ct->ghi_chu
+                        'maDatTour'       => $ct->ma_dat_tour,
+                        'maKhachHang'     => null,
+                        'maNguoiDongHanh' => $ndh->ma_nguoi_dong_hanh,
+                        'loaiKhach'       => 'NGUOI_DONG_HANH',
+                        'hoTenKhachHang'  => $ndh->ho_ten ?? '',
+                        'soDienThoai'     => $ndh->so_dien_thoai ?? '',
+                        'hangThanhVien'   => 'THANH_VIEN',
+                        'diemXanh'        => 0,
+                        'ghiChuYTe'       => $ndh->ghi_chu ?? null,
+                        'diUng'           => null,
+                        'trangThai'       => $dd ? $dd->trang_thai : 'CHUA_DIEM_DANH',
                     ];
                 }
             }
