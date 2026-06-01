@@ -67,9 +67,9 @@ const TourInstanceDetailModal: React.FC<TourInstanceFormProps> = ({
 
   useEffect(() => {
     if (mode === 'create') {
-      tourTemplateService.danhSach().then(res => {
-        if (res && res.content) {
-          setTemplates(res.content);
+      tourTemplateService.danhSach().then((res: any) => {
+        if (res && (res.data || res.content)) {
+          setTemplates(res.data || res.content);
         }
       }).catch(console.error);
     }
@@ -94,13 +94,22 @@ const TourInstanceDetailModal: React.FC<TourInstanceFormProps> = ({
              try {
                const templateDetail = await tourTemplateService.chiTiet(res.maTourMau);
                if (templateDetail && templateDetail.lichTrinh) {
-                 parsedSchedule = templateDetail.lichTrinh.map((lt: any) => {
-                   let meals = { breakfast: '', lunch: '', dinner: '' };
-                   if (lt.thucDon) {
-                     try { meals = JSON.parse(lt.thucDon); } catch { /* ignore */ }
-                   } else if (lt.meals) {
-                     meals = lt.meals;
-                   }
+                  parsedSchedule = templateDetail.lichTrinh.map((lt: any) => {
+                    let meals = { breakfast: '', lunch: '', dinner: '' };
+                    if (lt.thucDon) {
+                      try { meals = JSON.parse(lt.thucDon); } catch {
+                        const parts = lt.thucDon.split('|').map((p: string) => p.trim());
+                        parts.forEach((part: string) => {
+                          const lowerPart = part.toLowerCase();
+                          if (lowerPart.startsWith('sáng:')) meals.breakfast = part.substring(5).trim();
+                          else if (lowerPart.startsWith('trưa:')) meals.lunch = part.substring(5).trim();
+                          else if (lowerPart.startsWith('tối:') || lowerPart.startsWith('chiều:')) meals.dinner = part.substring(part.indexOf(':') + 1).trim();
+                        });
+                        if (!meals.breakfast && !meals.lunch && !meals.dinner) meals.lunch = lt.thucDon;
+                      }
+                    } else if (lt.meals) {
+                      meals = lt.meals;
+                    }
                    return {
                      title: lt.hoatDong || lt.title || `Ngày ${lt.ngayThu || ''}`,
                      description: lt.moTa || lt.description || '',
@@ -195,7 +204,16 @@ const TourInstanceDetailModal: React.FC<TourInstanceFormProps> = ({
         const parsedSchedule = (detail.lichTrinh || []).map((lt: any) => {
           let meals = { breakfast: '', lunch: '', dinner: '' };
           if (lt.thucDon) {
-            try { meals = JSON.parse(lt.thucDon); } catch { /* ignore */ }
+            try { meals = JSON.parse(lt.thucDon); } catch {
+              const parts = lt.thucDon.split('|').map((p: string) => p.trim());
+              parts.forEach((part: string) => {
+                const lowerPart = part.toLowerCase();
+                if (lowerPart.startsWith('sáng:')) meals.breakfast = part.substring(5).trim();
+                else if (lowerPart.startsWith('trưa:')) meals.lunch = part.substring(5).trim();
+                else if (lowerPart.startsWith('tối:') || lowerPart.startsWith('chiều:')) meals.dinner = part.substring(part.indexOf(':') + 1).trim();
+              });
+              if (!meals.breakfast && !meals.lunch && !meals.dinner) meals.lunch = lt.thucDon;
+            }
           }
           return {
             title: lt.hoatDong || `Ngày ${lt.ngayThu}`,

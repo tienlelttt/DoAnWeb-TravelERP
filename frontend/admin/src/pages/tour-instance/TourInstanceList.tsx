@@ -90,9 +90,10 @@ const TourInstanceList: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await tourInstanceService.danhSach_5();
-      if (res && res.content) {
-        setData(res.content.map(mapToUI));
+      const res = await tourInstanceService.danhSach_5() as any;
+      if (res && (res.data || res.content)) {
+        const items = res.data || res.content;
+        setData(items.map(mapToUI));
       } else {
         setData([]);
       }

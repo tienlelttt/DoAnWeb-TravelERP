@@ -42,7 +42,7 @@ const TourTemplateList: React.FC = () => {
     },
     basePrice: apiData.giaSan || 0,
     status: apiData.trangThai || 'HOAT_DONG',
-    image: 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=500&q=80',
+    image: `https://picsum.photos/seed/${encodeURIComponent(apiData.maTourMau || 'digital-travel')}/900/650`,
     tags: 'Tour Mẫu',
     schedule: [],
   });
@@ -54,13 +54,13 @@ const TourTemplateList: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const firstPage = await tourTemplateService.danhSach({ page: 0, size: apiPageSize });
-      const allTours = [...(firstPage?.content || [])];
-      const totalPages = firstPage?.totalPages || 0;
+      const firstPage = await tourTemplateService.danhSach({ page: 1, size: apiPageSize }) as any;
+      const allTours = [...(firstPage?.data || firstPage?.content || [])];
+      const totalPages = firstPage?.meta?.last_page || firstPage?.last_page || firstPage?.totalPages || 0;
 
-      for (let pageIndex = 1; pageIndex < totalPages; pageIndex++) {
-        const res = await tourTemplateService.danhSach({ page: pageIndex, size: apiPageSize });
-        allTours.push(...(res?.content || []));
+      for (let pageIndex = 2; pageIndex <= totalPages; pageIndex++) {
+        const res = await tourTemplateService.danhSach({ page: pageIndex, size: apiPageSize }) as any;
+        allTours.push(...(res?.data || res?.content || []));
       }
 
       // Need to load without schedule first, schedule will be loaded on demand
@@ -87,7 +87,18 @@ const TourTemplateList: React.FC = () => {
         dinner: parsed.dinner || '',
       };
     } catch {
-      return { breakfast: '', lunch: '', dinner: '' };
+      const meals = { breakfast: '', lunch: '', dinner: '' };
+      const parts = thucDonStr.split('|').map(p => p.trim());
+      parts.forEach(part => {
+        const lowerPart = part.toLowerCase();
+        if (lowerPart.startsWith('sáng:')) meals.breakfast = part.substring(5).trim();
+        else if (lowerPart.startsWith('trưa:')) meals.lunch = part.substring(5).trim();
+        else if (lowerPart.startsWith('tối:') || lowerPart.startsWith('chiều:')) meals.dinner = part.substring(part.indexOf(':') + 1).trim();
+      });
+      if (!meals.breakfast && !meals.lunch && !meals.dinner) {
+         meals.lunch = thucDonStr;
+      }
+      return meals;
     }
   };
 
