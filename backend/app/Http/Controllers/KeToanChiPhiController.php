@@ -42,6 +42,7 @@ class KeToanChiPhiController extends Controller
                 'danhMuc' => $cp->danh_muc,
                 'thanhTien' => (float)$cp->thanh_tien,
                 'hoaDonAnh' => $cp->hoa_don_anh,
+                'ghiChu' => $cp->ghi_chu,
                 'trangThaiDuyet' => $cp->trang_thai_duyet,
                 'ngayKhai' => $cp->ngay_khai,
             ];
@@ -101,9 +102,9 @@ class KeToanChiPhiController extends Controller
     /**
      * Duyệt một khoản chi phí thực tế.
      */
-    public function duyetChiPhi(string $maChiPhi): JsonResponse
+    public function duyetChiPhi(Request $request, string $maChiPhi): JsonResponse
     {
-        $chiPhi = $this->keToanChiPhiService->duyetChiPhi($maChiPhi);
+        $chiPhi = $this->keToanChiPhiService->duyetChiPhi($maChiPhi, $request->input('ghiChu'));
 
         return $this->successResponse($chiPhi, 'Đã duyệt khoản chi phí');
     }
@@ -111,9 +112,9 @@ class KeToanChiPhiController extends Controller
     /**
      * Từ chối một khoản chi phí thực tế.
      */
-    public function tuChoiChiPhi(string $maChiPhi): JsonResponse
+    public function tuChoiChiPhi(Request $request, string $maChiPhi): JsonResponse
     {
-        $chiPhi = $this->keToanChiPhiService->tuChoiChiPhi($maChiPhi);
+        $chiPhi = $this->keToanChiPhiService->tuChoiChiPhi($maChiPhi, $request->input('ghiChu'));
 
         return $this->successResponse($chiPhi, 'Đã từ chối khoản chi phí');
     }
@@ -121,9 +122,9 @@ class KeToanChiPhiController extends Controller
     /**
      * Yêu cầu HDV bổ sung chứng từ cho khoản chi phí.
      */
-    public function yeuCauBoSungChiPhi(string $maChiPhi): JsonResponse
+    public function yeuCauBoSungChiPhi(Request $request, string $maChiPhi): JsonResponse
     {
-        $chiPhi = $this->keToanChiPhiService->yeuCauBoSungChiPhi($maChiPhi);
+        $chiPhi = $this->keToanChiPhiService->yeuCauBoSungChiPhi($maChiPhi, $request->input('ghiChu'));
 
         return $this->successResponse($chiPhi, 'Đã yêu cầu bổ sung chứng từ chi phí');
     }

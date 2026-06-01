@@ -55,12 +55,12 @@ export const financeService = {
         const response = await api.put<ApiResponseThanhToanResponse>(`/api/ke-toan/giao-dich-hoan/${maGiaoDich}/tu-choi`, {});
         return response.data.data;
     },
-    tuChoiChiPhi: async (maChiPhi: string) => {
-        const response = await api.put<ApiResponseChiPhiThucTeResponse>(`/api/ke-toan/chi-phi/${maChiPhi}/tu-choi`);
+    tuChoiChiPhi: async (maChiPhi: string, ghiChu?: string) => {
+        const response = await api.put<ApiResponseChiPhiThucTeResponse>(`/api/ke-toan/chi-phi/${maChiPhi}/tu-choi`, { ghiChu });
         return response.data.data;
     },
-    duyetChiPhi: async (maChiPhi: string) => {
-        const response = await api.put<ApiResponseChiPhiThucTeResponse>(`/api/ke-toan/chi-phi/${maChiPhi}/duyet`);
+    duyetChiPhi: async (maChiPhi: string, ghiChu?: string) => {
+        const response = await api.put<ApiResponseChiPhiThucTeResponse>(`/api/ke-toan/chi-phi/${maChiPhi}/duyet`, { ghiChu });
         return response.data.data;
     },
     taoQuyetToan: async (maTour: string, data: QuyetToanRequest) => {

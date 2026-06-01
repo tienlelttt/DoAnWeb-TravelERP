@@ -92,6 +92,7 @@ export interface ChiPhiThucTeResponse {
   danhMuc?: string;
   thanhTien?: number;
   hoaDonAnh?: string;
+  ghiChu?: string;
   trangThaiDuyet?: string;
   ngayKhai?: string;
 }

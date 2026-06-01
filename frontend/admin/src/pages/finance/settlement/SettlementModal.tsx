@@ -18,6 +18,7 @@ interface ExpenseItem {
   danhMuc?: string;
   thanhTien: number;
   hoaDonAnh?: string;
+  ghiChu?: string;
   trangThaiDuyet: string;
   ngayKhai?: string;
 }
@@ -68,6 +69,7 @@ const mapExpense = (expense: ChiPhiThucTeResponse, index: number): ExpenseItem =
   danhMuc: expense.danhMuc || 'Chưa phân loại',
   thanhTien: expense.thanhTien || 0,
   hoaDonAnh: expense.hoaDonAnh,
+  ghiChu: expense.ghiChu,
   trangThaiDuyet: expense.trangThaiDuyet || 'CHO_DUYET',
   ngayKhai: expense.ngayKhai,
 });
@@ -574,6 +576,10 @@ const SettlementModal: React.FC<SettlementModalProps> = ({ isOpen, onClose, tour
               <div>
                 <span className="text-gray-500 block">Thời gian nhập</span>
                 <p className="font-semibold text-gray-800 mt-1">{formatDateTime(selectedExpense.ngayKhai)}</p>
+              </div>
+              <div className="col-span-2">
+                <span className="text-gray-500 block">Ghi chú</span>
+                <p className="font-medium text-gray-800 mt-1 whitespace-pre-wrap">{selectedExpense.ghiChu || 'Không có ghi chú'}</p>
               </div>
               <div>
                 <span className="text-gray-500 block">Trạng thái</span>

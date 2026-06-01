@@ -23,7 +23,7 @@ class KeToanChiPhiService
         return $query->orderBy("ngay_khai", "desc")->paginate($size);
     }
 
-    private function setTrangThaiChiPhi(string $maChiPhi, string $trangThaiMoi): ChiPhiThucTe
+    private function setTrangThaiChiPhi(string $maChiPhi, string $trangThaiMoi, ?string $ghiChu = null): ChiPhiThucTe
     {
         $chiPhi = ChiPhiThucTe::where("ma_chi_phi_thuc_te", $maChiPhi)->first();
         
@@ -36,23 +36,34 @@ class KeToanChiPhiService
         }
 
         $chiPhi->trang_thai_duyet = $trangThaiMoi;
+        
+        if ($ghiChu) {
+            $prefix = match ($trangThaiMoi) {
+                'TU_CHOI' => '[Kế toán từ chối]: ',
+                'YEU_CAU_BO_SUNG' => '[Kế toán yêu cầu bổ sung]: ',
+                'DA_DUYET' => '[Kế toán duyệt]: ',
+                default => '[Kế toán ghi chú]: '
+            };
+            $chiPhi->ghi_chu = $chiPhi->ghi_chu ? $chiPhi->ghi_chu . "\n\n" . $prefix . $ghiChu : $prefix . $ghiChu;
+        }
+
         $chiPhi->save();
 
         return $chiPhi;
     }
 
-    public function duyetChiPhi(string $maChiPhi)
+    public function duyetChiPhi(string $maChiPhi, ?string $ghiChu = null)
     {
-        return $this->setTrangThaiChiPhi($maChiPhi, "DA_DUYET");
+        return $this->setTrangThaiChiPhi($maChiPhi, "DA_DUYET", $ghiChu);
     }
 
-    public function tuChoiChiPhi(string $maChiPhi)
+    public function tuChoiChiPhi(string $maChiPhi, ?string $ghiChu = null)
     {
-        return $this->setTrangThaiChiPhi($maChiPhi, "TU_CHOI");
+        return $this->setTrangThaiChiPhi($maChiPhi, "TU_CHOI", $ghiChu);
     }
 
-    public function yeuCauBoSungChiPhi(string $maChiPhi)
+    public function yeuCauBoSungChiPhi(string $maChiPhi, ?string $ghiChu = null)
     {
-        return $this->setTrangThaiChiPhi($maChiPhi, "YEU_CAU_BO_SUNG");
+        return $this->setTrangThaiChiPhi($maChiPhi, "YEU_CAU_BO_SUNG", $ghiChu);
     }
 }
