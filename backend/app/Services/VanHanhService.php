@@ -270,6 +270,7 @@ class VanHanhService
         $chiPhi->danh_muc = $data['danhMuc'];
         $chiPhi->thanh_tien = $data['thanhTien'];
         $chiPhi->hoa_don_anh = $data['hoaDonAnh'] ?? null;
+        $chiPhi->ghi_chu = $data['ghiChu'] ?? null;
         $chiPhi->trang_thai_duyet = 'CHO_DUYET';
         $chiPhi->ngay_khai = now();
         $chiPhi->save();

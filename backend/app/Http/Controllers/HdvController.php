@@ -157,7 +157,7 @@ class HdvController extends Controller
                 'trangThaiChapNhan' => $item->trang_thai_chap_nhan,
                 'tenTour' => $tourMau ? $tourMau->tieu_de : ($tourThucTe ? $tourThucTe->ma_tour_thuc_te : 'Tour không tên'),
                 'ngayKhoiHanh' => $tourThucTe ? $tourThucTe->ngay_khoi_hanh : null,
-                'ngayKetThuc' => $tourThucTe && $tourMau ? \Carbon\Carbon::parse($tourThucTe->ngay_khoi_hanh)->addDays($tourMau->thoi_luong)->toDateString() : null,
+                'ngayKetThuc' => $tourThucTe && $tourMau ? \Carbon\Carbon::parse($tourThucTe->ngay_khoi_hanh)->addDays(max((int) $tourMau->thoi_luong - 1, 0))->toDateString() : null,
                 'soKhachDaXacNhan' => $guestsCount,
                 'trangThaiTour' => $tourThucTe ? $tourThucTe->trang_thai : 'CHO_KICH_HOAT',
                 'danhSachHanhKhach' => [] // Sẽ được tải lazy qua layDanhSachDoan
@@ -217,7 +217,7 @@ class HdvController extends Controller
             ->where('trang_thai_chap_nhan', 'DA_DONG_Y')
             ->pluck('ma_tour_thuc_te');
 
-        $requests = \App\Models\YeuCauHoTro::where('trang_thai', 'CHO_HDV_GIAI_TRINH')
+        $requests = \App\Models\YeuCauHoTro::whereIn('trang_thai', ['CHO_GIAI_TRINH', 'CHO_HDV_GIAI_TRINH'])
             ->whereHas('donDatTour', function ($q) use ($tourCodes) {
                 $q->whereIn('ma_tour_thuc_te', $tourCodes);
             })
@@ -255,7 +255,7 @@ class HdvController extends Controller
         }
 
         $yc->noi_dung = $yc->noi_dung . "\n[HDV giải trình: " . $request->input('noiDung') . "]";
-        $yc->trang_thai = 'CHO_XU_LY';
+        $yc->trang_thai = 'CHUA_XU_LY';
         $yc->save();
 
         return response()->json([

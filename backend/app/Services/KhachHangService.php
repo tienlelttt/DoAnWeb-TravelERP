@@ -116,7 +116,8 @@ class KhachHangService
     public function layDanhSachYeuCauHoTro(string $maTaiKhoan, array $filters = [])
     {
         $hcs = $this->getHoChieuSo($maTaiKhoan);
-        $query = YeuCauHoTro::where("ma_khach_hang", $hcs->ma_khach_hang);
+        $query = YeuCauHoTro::with('donDatTour.tourThucTe.tourMau')
+            ->where("ma_khach_hang", $hcs->ma_khach_hang);
 
         if (!empty($filters['loaiYeuCau'])) {
             $query->where('loai_yeu_cau', $filters['loaiYeuCau']);
@@ -126,7 +127,10 @@ class KhachHangService
             $query->where('trang_thai', $filters['trangThai']);
         }
 
-        return $query->orderBy('created_at', 'desc')->paginate(15);
+        $page = max((int) ($filters['page'] ?? 1), 1);
+        $size = max(1, min((int) ($filters['size'] ?? 15), 1000));
+
+        return $query->orderBy('created_at', 'desc')->paginate($size, ['*'], 'page', $page);
     }
 
     public function taoYeuCauHoTro(string $maTaiKhoan, array $data)
@@ -179,7 +183,7 @@ class KhachHangService
     {
         $hcs = $this->getHoChieuSo($maTaiKhoan);
         return YeuCauHoTro::where("ma_khach_hang", $hcs->ma_khach_hang)
-            ->where("trang_thai", "CAN_BO_SUNG")
+            ->whereIn("trang_thai", ["CHO_BO_SUNG", "YEU_CAU_BO_SUNG", "CAN_BO_SUNG"])
             ->orderBy("updated_at", "desc")
             ->paginate(15);
     }
@@ -196,12 +200,12 @@ class KhachHangService
             throw AppException::notFound("Không tìm thấy yêu cầu hỗ trợ này");
         }
 
-        if ($yeuCau->trang_thai !== "CAN_BO_SUNG") {
+        if (!in_array($yeuCau->trang_thai, ["CHO_BO_SUNG", "YEU_CAU_BO_SUNG", "CAN_BO_SUNG"], true)) {
             throw AppException::badRequest("Yêu cầu này không ở trạng thái cần bổ sung thông tin");
         }
 
         $yeuCau->noi_dung = $yeuCau->noi_dung . "\n\n[KHÁCH HÀNG BỔ SUNG]: " . $data["noiDungBoSung"];
-        $yeuCau->trang_thai = "CHO_XU_LY";
+        $yeuCau->trang_thai = "CHUA_XU_LY";
         $yeuCau->save();
 
         return $yeuCau;

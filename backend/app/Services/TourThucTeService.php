@@ -21,7 +21,7 @@ class TourThucTeService
 
     public function danhSach($trangThai, $maTourMau, $giaTu, $giaDen, $perPage)
     {
-        $query = TourThucTe::with('tourMau');
+        $query = TourThucTe::with(['tourMau', 'dichVuThems', 'hanhDongXanhs']);
 
         if (!empty($trangThai)) {
             $query->where('trang_thai', $trangThai);
@@ -46,7 +46,7 @@ class TourThucTeService
     {
         $query = TourThucTe::with(['tourMau' => function($q) {
             $q->with('lichTrinhTours');
-        }])
+        }, 'dichVuThems', 'hanhDongXanhs'])
         ->where('trang_thai', 'MO_BAN')
         ->where('cho_con_lai', '>', 0)
         ->where('ngay_khoi_hanh', '>', now());
@@ -73,7 +73,7 @@ class TourThucTeService
 
     public function chiTiet($id)
     {
-        $tour = TourThucTe::with('tourMau')->find($id);
+        $tour = TourThucTe::with(['tourMau', 'dichVuThems', 'hanhDongXanhs'])->find($id);
         if (!$tour) {
             throw AppException::notFound("Không tìm th?y tour th?c t?: {$id}");
         }
@@ -82,7 +82,7 @@ class TourThucTeService
 
     public function chiTietCongKhai($id)
     {
-        $tour = TourThucTe::with(['tourMau.lichTrinhTours'])->find($id);
+        $tour = TourThucTe::with(['tourMau.lichTrinhTours', 'dichVuThems', 'hanhDongXanhs'])->find($id);
         if (!$tour) {
             throw AppException::notFound("Không tìm th?y tour: {$id}");
         }
@@ -126,7 +126,10 @@ class TourThucTeService
 
             // B? qua D?ch v? thêm & Hành d?ng xanh trong giai do?n 3.1
             
-            $ttt->load('tourMau');
+            $ttt->dichVuThems()->sync($data['maDichVuThem'] ?? []);
+            $ttt->hanhDongXanhs()->sync($data['maHanhDongXanh'] ?? []);
+            
+            $ttt->load(['tourMau', 'dichVuThems', 'hanhDongXanhs']);
             return new TourThucTeResource($ttt);
         });
     }
@@ -161,8 +164,15 @@ class TourThucTeService
             }
 
             $ttt->save();
+
+            if (array_key_exists('maDichVuThem', $data)) {
+                $ttt->dichVuThems()->sync($data['maDichVuThem'] ?? []);
+            }
+            if (array_key_exists('maHanhDongXanh', $data)) {
+                $ttt->hanhDongXanhs()->sync($data['maHanhDongXanh'] ?? []);
+            }
             
-            $ttt->load('tourMau');
+            $ttt->load(['tourMau', 'dichVuThems', 'hanhDongXanhs']);
             return new TourThucTeResource($ttt);
         });
     }

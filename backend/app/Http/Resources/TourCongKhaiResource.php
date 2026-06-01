@@ -23,9 +23,8 @@ class TourCongKhaiResource extends JsonResource
             'diemDanhGia' => $this->tourMau ? ($this->tourMau->danh_gia ? (float) $this->tourMau->danh_gia : null) : null,
             'soDanhGia' => $this->tourMau ? ($this->tourMau->so_danh_gia ? (int) $this->tourMau->so_danh_gia : null) : null,
             'lichTrinh' => $this->tourMau ? LichTrinhResource::collection($this->tourMau->lichTrinhTours) : [],
-            // Skip dichVu and hanhDongXanh for now
-            'dichVu' => [],
-            'hanhDongXanh' => [],
+            'dichVu' => DichVuThemResource::collection($this->whenLoaded('dichVuThems')),
+            'hanhDongXanh' => HanhDongXanhResource::collection($this->whenLoaded('hanhDongXanhs')),
         ];
     }
 }

@@ -48,7 +48,7 @@ class KhachHangController extends Controller
 
     public function layDanhSachYeuCauHoTro(Request $request): JsonResponse
     {
-        $filters = $request->only(['loaiYeuCau', 'trangThai']);
+        $filters = $request->only(['loaiYeuCau', 'trangThai', 'page', 'size']);
         $data = $this->khachHangService->layDanhSachYeuCauHoTro($this->getMaTaiKhoan(), $filters);
         return $this->successResponse($data, "Thành công");
     }

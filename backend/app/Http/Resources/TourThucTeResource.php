@@ -24,9 +24,8 @@ class TourThucTeResource extends JsonResource
             'thoiLuong' => $this->tourMau ? (int) $this->tourMau->thoi_luong : null,
             'diemDanhGia' => $this->tourMau ? ($this->tourMau->danh_gia ? (float) $this->tourMau->danh_gia : null) : null,
             'soDanhGia' => $this->tourMau ? ($this->tourMau->so_danh_gia ? (int) $this->tourMau->so_danh_gia : null) : null,
-            // Skip dichVu and hanhDongXanh for now
-            'dichVu' => [],
-            'hanhDongXanh' => [],
+            'dichVu' => DichVuThemResource::collection($this->whenLoaded('dichVuThems')),
+            'hanhDongXanh' => HanhDongXanhResource::collection($this->whenLoaded('hanhDongXanhs')),
         ];
     }
 }

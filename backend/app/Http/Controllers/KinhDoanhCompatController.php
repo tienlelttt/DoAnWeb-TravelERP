@@ -375,7 +375,7 @@ class KinhDoanhCompatController extends Controller
             throw AppException::notFound("Không tìm thấy yêu cầu hỗ trợ");
         }
 
-        $yc->trang_thai = 'CHO_HDV_GIAI_TRINH';
+        $yc->trang_thai = 'CHO_GIAI_TRINH';
         $yc->save();
 
         return response()->json([
@@ -405,7 +405,7 @@ class KinhDoanhCompatController extends Controller
             throw AppException::notFound("Không tìm thấy yêu cầu hỗ trợ");
         }
 
-        $yc->trang_thai = 'YEU_CAU_BO_SUNG';
+        $yc->trang_thai = 'CHO_BO_SUNG';
         $yc->save();
 
         return response()->json([
