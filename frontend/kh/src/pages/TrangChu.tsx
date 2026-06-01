@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Search, MapPin, Calendar, Clock, DollarSign, Star, Users } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router';
 import { khService } from '../services/khService';
-import { mapPublicTour, unwrapData, unwrapPageContent } from '../services/apiHelpers';
+import { getTotalPages, mapPublicTour, unwrapPageContent } from '../services/apiHelpers';
 import type { Tour } from '../types';
 
 export default function TrangChu() {
@@ -25,12 +25,11 @@ export default function TrangChu() {
     const fetchTours = async () => {
       try {
         const pageSize = 10;
-        const firstResponse = await khService.layDanhSachTour({ page: 0, size: pageSize });
-        const firstPage = unwrapData<any>(firstResponse);
+        const firstResponse = await khService.layDanhSachTour({ page: 1, size: pageSize });
         const allItems = [...unwrapPageContent<any>(firstResponse)];
-        const totalPages = Number(firstPage?.totalPages || 1);
+        const totalPages = getTotalPages(firstResponse);
 
-        for (let page = 1; page < totalPages; page += 1) {
+        for (let page = 2; page <= totalPages; page += 1) {
           const response = await khService.layDanhSachTour({ page, size: pageSize });
           allItems.push(...unwrapPageContent<any>(response));
         }

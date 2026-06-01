@@ -3,14 +3,38 @@ import type { Booking, Tour, Voucher } from '../types';
 type ApiRecord = Record<string, any>;
 
 export const unwrapData = <T = any>(response: any): T => {
-  return (response?.data ?? response) as T;
+  const payload = response?.data ?? response;
+  if (
+    payload &&
+    typeof payload === 'object' &&
+    'data' in payload &&
+    ('status' in payload || 'success' in payload)
+  ) {
+    return (payload as { data: T }).data;
+  }
+  return payload as T;
 };
 
 export const unwrapPageContent = <T = any>(response: any): T[] => {
   const data = unwrapData<any>(response);
   if (Array.isArray(data)) return data as T[];
   if (Array.isArray(data?.content)) return data.content as T[];
+  if (Array.isArray(data?.data)) return data.data as T[];
+  if (Array.isArray(data?.items)) return data.items as T[];
   return [];
+};
+
+export const getTotalPages = (response: any): number => {
+  const data = unwrapData<any>(response);
+  const totalPages =
+    data?.totalPages ??
+    data?.total_pages ??
+    data?.last_page ??
+    data?.meta?.last_page ??
+    data?.pageable?.totalPages ??
+    data?.pagination?.totalPages;
+  const parsed = Number(totalPages);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
 };
 
 const toNumber = (value: any, fallback = 0): number => {
