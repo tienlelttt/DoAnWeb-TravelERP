@@ -223,7 +223,7 @@ export default function QuanLyChiPhi({ maTour, currentTour, pastTours = [], expe
           <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
             <div
               className="bg-gradient-to-r from-sky-500 to-blue-500 h-1.5 rounded-full"
-              style={{ width: `${Math.min((visibleExpenses.reduce((sum, e) => sum + e.amount, 0) / 15000000) * 100, 100)}%` }}
+              style={{ width: `${Math.min((visibleExpenses.reduce((sum, e) => sum + Number(e.amount), 0) / 15000000) * 100, 100)}%` }}
             ></div>
           </div>
         </div>
@@ -231,11 +231,11 @@ export default function QuanLyChiPhi({ maTour, currentTour, pastTours = [], expe
         <div className="grid grid-cols-2 gap-2 text-xs border-t border-slate-200/40 pt-2 mt-0.5">
           <div>
             <span className="text-[12px] text-slate-400 block mb-0.5 font-medium leading-none">Đã quyết toán</span>
-            <strong className="text-sm font-black text-slate-700 block mt-0.5">{formatCurrency(visibleExpenses.filter(e => e.status === 'DA_DUYET').reduce((sum, e) => sum + e.amount, 0))}</strong>
+            <strong className="text-sm font-black text-slate-700 block mt-0.5">{formatCurrency(visibleExpenses.filter(e => e.status === 'DA_DUYET').reduce((sum, e) => sum + Number(e.amount), 0))}</strong>
           </div>
           <div>
             <span className="text-[12px] text-slate-400 block mb-0.5 font-medium leading-none">Chờ duyệt</span>
-            <strong className="text-sm font-black text-amber-500 block mt-0.5">{formatCurrency(visibleExpenses.filter(e => e.status === 'CHO_DUYET').reduce((sum, e) => sum + e.amount, 0))}</strong>
+            <strong className="text-sm font-black text-amber-500 block mt-0.5">{formatCurrency(visibleExpenses.filter(e => e.status === 'CHO_DUYET').reduce((sum, e) => sum + Number(e.amount), 0))}</strong>
           </div>
         </div>
       </div>

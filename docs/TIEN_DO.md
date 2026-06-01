@@ -114,3 +114,5 @@ Tài liệu này dùng để theo dõi toàn bộ lộ trình và tiến độ p
    - Cấm code nhảy cóc, cấm làm nhiều tính năng cùng lúc khi chưa được xác nhận.
 4. **Cập nhật Tiến độ:**
    - **[BẮT BUỘC]** Bất cứ khi nào hoàn thành xong một tính năng nhỏ hoặc một Giai đoạn, Lập trình viên AI **phải tự động cập nhật đánh dấu `[x]` vào file `TIEN_DO.md` này** trước khi thông báo cho Người Dùng.
+5. **Dọn dẹp code tạm:**
+   - **[BẮT BUỘC]** Khi tạo ra các file tạm thời (ví dụ: file log, file dump, file test_models.php, file remove_bom.php...) để fix lỗi hoặc kiểm tra dữ liệu, nếu file đó không còn dùng thì **PHẢI XÓA ĐI** ngay lập tức để giữ workspace sạch sẽ.

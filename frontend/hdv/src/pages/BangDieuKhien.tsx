@@ -230,7 +230,7 @@ export default function BangDieuKhien({
           </div>
           <div>
             <h3 className="text-xl font-bold text-slate-800">
-              {formatCurrency(expenses.reduce((sum, e) => sum + e.amount, 0))}
+              {formatCurrency(expenses.reduce((sum, e) => sum + Number(e.amount), 0))}
             </h3>
             <p className="text-[11px] text-slate-400 mt-1">
               {expenses.filter(e => e.status === 'CHO_DUYET').length} yêu cầu chờ duyệt
