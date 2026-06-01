@@ -147,44 +147,13 @@ class KhachHangService
         $yeuCau->trang_thai = "CHO_XU_LY";
         $yeuCau->save();
 
-        // Cập nhật trạng thái đơn đặt tour thành CHO_HUY
-        $don->trang_thai = "CHO_HUY";
-        $don->save();
-
         return $yeuCau;
     }
 
     public function yeuCauHuyTour(string $maTaiKhoan, string $maDatTour, array $data)
     {
-        $hcs = $this->getHoChieuSo($maTaiKhoan);
-        
-        $don = DonDatTour::where("ma_dat_tour", $maDatTour)
-            ->where("ma_khach_hang", $hcs->ma_khach_hang)
-            ->first();
-
-        if (!$don) {
-            throw AppException::notFound("Không tìm thấy đơn đặt tour này của bạn");
-        }
-
-        if (in_array($don->trang_thai, ["DA_HUY", "CHO_HOAN_TIEN", "DA_HOAN_TIEN"])) {
-            throw AppException::badRequest("Đơn đặt tour đã ở trạng thái hủy");
-        }
-
-        $maYeuCau = $this->maTuDongService->taoMaYeuCauHoTro();
-        $yeuCau = new YeuCauHoTro();
-        $yeuCau->ma_yeu_cau_ho_tro = $maYeuCau;
-        $yeuCau->ma_dat_tour = $maDatTour;
-        $yeuCau->ma_khach_hang = $hcs->ma_khach_hang;
-        $yeuCau->loai_yeu_cau = "HUY_TOUR";
-        $yeuCau->noi_dung = $data["lyDoHuy"] ?? "Khách hàng yêu cầu hủy tour";
-        $yeuCau->trang_thai = "CHO_XU_LY";
-        $yeuCau->save();
-
-        // Cập nhật trạng thái đơn đặt tour thành CHO_HUY
-        $don->trang_thai = "CHO_HUY";
-        $don->save();
-
-        return $yeuCau;
+        $lyDo = $data['lyDoHuy'] ?? "Khách hàng yêu cầu hủy tour";
+        return app(\App\Services\HuyDonService::class)->yeuCauHuyDon($maDatTour, $lyDo, $maTaiKhoan);
     }
 
     public function yeuCauHoTroCanBoSung(string $maTaiKhoan, int $size = 15)

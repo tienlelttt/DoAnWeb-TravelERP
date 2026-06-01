@@ -121,9 +121,9 @@ class HuyDonService
                 throw AppException::forbidden("Bạn không có quyền yêu cầu hủy đơn hàng này");
             }
 
-            // Chỉ cho hủy đơn đã xác nhận
-            if ($don->trang_thai !== 'DA_XAC_NHAN') {
-                throw AppException::badRequest("Chỉ có thể yêu cầu hủy đơn ở trạng thái 'Đã xác nhận'");
+            // Chỉ cho hủy đơn đã xác nhận hoặc chờ xác nhận
+            if (!in_array($don->trang_thai, ['DA_XAC_NHAN', 'CHO_XAC_NHAN'])) {
+                throw AppException::badRequest("Chỉ có thể yêu cầu hủy đơn ở trạng thái 'Đã xác nhận' hoặc 'Chờ xác nhận'");
             }
 
             // 2. Tính số ngày còn lại trước khởi hành
@@ -216,8 +216,14 @@ class HuyDonService
                 $maChiTietDats = ChiTietDatTour::where('ma_dat_tour', $don->ma_dat_tour)->pluck('ma_chi_tiet_dat')->toArray();
                 LichSuTour::whereIn('ma_chi_tiet_dat', $maChiTietDats)->delete();
             } else {
-                // Từ chối duyệt hủy đơn -> Đơn quay lại DA_XAC_NHAN
-                $this->huyDonRepository->capNhatTrangThai($don, 'DA_XAC_NHAN');
+                // Từ chối duyệt hủy đơn -> Đơn quay lại trạng thái cũ
+                $giaoDichThanhToan = GiaoDich::where('ma_dat_tour', $don->ma_dat_tour)
+                    ->where('loai_giao_dich', 'THANH_TOAN')
+                    ->where('trang_thai', 'THANH_CONG')
+                    ->first();
+                
+                $trangThaiCu = $giaoDichThanhToan ? 'DA_XAC_NHAN' : 'CHO_XAC_NHAN';
+                $this->huyDonRepository->capNhatTrangThai($don, $trangThaiCu);
 
                 $ticket->trang_thai = 'TU_CHOI';
                 $ticket->ma_nhan_vien_xu_ly = $maNhanVien;

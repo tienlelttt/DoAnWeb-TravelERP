@@ -177,22 +177,48 @@ class TourThucTeService
         });
     }
 
-    public function xoa($id)
+        public function xoa($id, $lyDoHuy = null)
     {
-        return DB::transaction(function () use ($id) {
+        return DB::transaction(function () use ($id, $lyDoHuy) {
             $ttt = TourThucTe::find($id);
             if (!$ttt) {
-                throw AppException::notFound("Kh�ng t�m th?y tour th?c t?: {$id}");
+                throw AppException::notFound("Không tìm thấy tour thực tế: {$id}");
             }
 
             if ($ttt->trang_thai !== 'CHO_KICH_HOAT' && $ttt->trang_thai !== 'MO_BAN') {
-                throw AppException::badRequest("Ch? c� th? x�a tour th?c t? ? tr?ng th�i CHO_KICH_HOAT ho?c MO_BAN");
+                throw AppException::badRequest("Chỉ có thể xóa/hủy tour thực tế ở trạng thái CHO_KICH_HOAT hoặc MO_BAN");
             }
 
-            // Ki?m tra xem c� don d?t tour n�o kh�ng (b? qua cho Giai do?n 3.1 v� DonDatTour thu?c Giai do?n 4, nhung t?m th?i c�i d?t ki?m tra co b?n)
-            if (DonDatTour::where('ma_tour_thuc_te', $id)->whereNotIn('trang_thai', ['DA_HUY'])->exists()) {
-                throw AppException::badRequest("Kh�ng th? x�a tour th?c t? d� ph�t sinh don d?t tour");
+            $dons = \App\Models\DonDatTour::where('ma_tour_thuc_te', $id)->whereNotIn('trang_thai', ['DA_HUY', 'TU_CHOI_HOAN_TIEN', 'DA_HOAN_TIEN', 'CHO_HOAN_TIEN'])->get();
+            $tuDong = app(\App\Services\MaTuDongService::class);
+            $user = auth()->user();
+            $maNhanVien = null;
+            if ($user && $user->vai_tro !== 'KHACHHANG') {
+                $nv = \App\Models\NhanVien::where('ma_tai_khoan', $user->ma_tai_khoan)->first();
+                $maNhanVien = $nv ? $nv->ma_nhan_vien : null;
             }
+
+            foreach ($dons as $don) {
+                if ($don->trang_thai === 'CHO_XAC_NHAN' || $don->trang_thai === 'DA_XAC_NHAN') {
+                    $giaoDich = \App\Models\GiaoDich::where('ma_dat_tour', $don->ma_dat_tour)->where('loai_giao_dich', 'THANH_TOAN')->where('trang_thai', 'THANH_CONG')->first();
+                    if ($giaoDich) {
+                        $maGiaoDich = $tuDong->taoMaGiaoDich();
+                        \App\Models\GiaoDich::create(['ma_giao_dich' => $maGiaoDich, 'ma_dat_tour' => $don->ma_dat_tour, 'loai_giao_dich' => 'HOAN_TIEN', 'phuong_thuc' => 'CHUYEN_KHOAN', 'so_tien' => $don->tong_tien, 'ma_gdnh' => null, 'trang_thai' => 'CHO_THANH_TOAN', 'ngay_thanh_toan' => null]);
+                        $don->trang_thai = 'CHO_HUY';
+                    } else {
+                        $don->trang_thai = 'DA_HUY';
+                    }
+                    $maYeuCau = $tuDong->taoMaYeuCauHoTro();
+                    $lyDo = $lyDoHuy ? $lyDoHuy : "Hệ thống tự động hủy tour.";
+                    \App\Models\YeuCauHoTro::create(['ma_yeu_cau_ho_tro' => $maYeuCau, 'ma_dat_tour' => $don->ma_dat_tour, 'ma_khach_hang' => $don->ma_khach_hang, 'loai_yeu_cau' => 'HUY_TOUR', 'noi_dung' => "Tour thực tế bị hủy bởi quản trị. Lý do: {$lyDo}", 'trang_thai' => 'DA_XU_LY', 'ma_nhan_vien_xu_ly' => $maNhanVien]);
+                } else {
+                    $don->trang_thai = 'DA_HUY';
+                }
+                $don->save();
+            }
+
+            // Giai phong HDV (neu co)
+            \App\Models\PhanCongTour::where('ma_tour_thuc_te', $id)->delete();
 
             $ttt->trang_thai = 'HUY';
             $ttt->save();

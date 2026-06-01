@@ -220,7 +220,7 @@ const OrderList: React.FC = () => {
       render: (record) => {
         switch (record.paymentStatus) {
           case 'paid':
-            return <Badge label="Thành công" variant="success" />;
+            return <Badge label="Đã thanh toán" variant="success" />;
           case 'unpaid':
             return <Badge label="Chờ thanh toán" variant="warning" />;
           case 'failed':
@@ -308,7 +308,7 @@ const OrderList: React.FC = () => {
             <Select
               options={[
                 { label: 'Tất cả TT', value: 'all' },
-                { label: 'Thành công', value: 'paid' },
+                { label: 'Đã thanh toán', value: 'paid' },
                 { label: 'Chờ thanh toán', value: 'unpaid' },
                 { label: 'Thất bại', value: 'failed' },
                 { label: 'Đã hoàn tiền', value: 'refunded' },

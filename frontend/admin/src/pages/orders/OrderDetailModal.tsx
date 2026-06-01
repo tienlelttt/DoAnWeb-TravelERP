@@ -109,7 +109,7 @@ const isChildPassenger = (passenger: ChiTietDatTourResponse, referenceDate?: str
 const getPaymentStatusLabel = (status: Order['paymentStatus']) => {
   switch (status) {
     case 'paid':
-      return 'Thành công';
+      return 'Đã thanh toán';
     case 'unpaid':
       return 'Chờ thanh toán';
     case 'failed':
@@ -221,7 +221,7 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ isOpen, onClose, ma
   const renderPaymentBadge = (status: string) => {
     switch (status) {
       case 'paid':
-        return <Badge label="Thành công" variant="success" />;
+        return <Badge label="Đã thanh toán" variant="success" />;
       case 'unpaid':
         return <Badge label="Chờ thanh toán" variant="warning" />;
       case 'failed':

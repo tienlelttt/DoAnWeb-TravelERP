@@ -164,8 +164,8 @@ class ThanhToanService
                 throw AppException::notFound("Không tìm thấy đơn đặt tour: " . $maDatTour);
             }
 
-            if ($don->trang_thai !== 'CHO_XAC_NHAN') {
-                throw AppException::badRequest("Đơn đặt tour không ở trạng thái 'Chờ xác nhận'");
+            if ($don->trang_thai !== 'CHO_XAC_NHAN' && $don->trang_thai !== 'CHO_HUY') {
+                throw AppException::badRequest("Đơn đặt tour không ở trạng thái 'Chờ xác nhận' hoặc 'Chờ hủy'");
             }
 
             // 2. Tìm giao dịch báo chuyển khoản đang chờ
@@ -189,9 +189,11 @@ class ThanhToanService
                 $giaoDich->ma_gdnh = str_replace('KHXN:', '', $giaoDich->ma_gdnh);
                 $giaoDich->save();
 
-                // Cập nhật trạng thái đơn hàng sang DA_XAC_NHAN
-                $don->trang_thai = 'DA_XAC_NHAN';
-                $don->save();
+                // Cập nhật trạng thái đơn hàng sang DA_XAC_NHAN nếu đang ở trạng thái CHO_XAC_NHAN
+                if ($don->trang_thai === 'CHO_XAC_NHAN') {
+                    $don->trang_thai = 'DA_XAC_NHAN';
+                    $don->save();
+                }
 
                 // Tạo bản ghi lich_su_tours cho khách hàng chính
                 $ctNguoiDat = ChiTietDatTour::where('ma_dat_tour', $don->ma_dat_tour)

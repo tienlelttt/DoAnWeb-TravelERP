@@ -63,7 +63,7 @@ class TourThucTeController extends Controller implements HasMiddleware
 
     public function taoMoi(TaoTourThucTeRequest $request)
     {
-        $this->checkRole(['DIEUHANH', 'ADMIN']);
+        $this->checkRole(['SANPHAM', 'DIEUHANH', 'ADMIN']);
         
         return $this->created(
             $this->tourThucTeService->taoMoi($request->validated())
@@ -72,18 +72,19 @@ class TourThucTeController extends Controller implements HasMiddleware
 
     public function capNhat(CapNhatTourThucTeRequest $request, $id)
     {
-        $this->checkRole(['DIEUHANH', 'ADMIN']);
+        $this->checkRole(['SANPHAM', 'DIEUHANH', 'ADMIN']);
         
         return $this->ok("Cập nhật thành công", 
             $this->tourThucTeService->capNhat($id, $request->validated())
         );
     }
 
-    public function xoa($id)
+    public function xoa($id, Request $request)
     {
-        $this->checkRole(['DIEUHANH', 'ADMIN']);
+        $this->checkRole(['SANPHAM', 'DIEUHANH', 'ADMIN']);
         
-        $this->tourThucTeService->xoa($id);
+        $lyDo = $request->input('ly_do_huy');
+        $this->tourThucTeService->xoa($id, $lyDo);
         return $this->noContent('Hủy tour thực tế thành công');
     }
 
@@ -91,7 +92,7 @@ class TourThucTeController extends Controller implements HasMiddleware
     {
         $userRole = auth()->user()->vai_tro;
         if (!in_array($userRole, $roles)) {
-            throw new \App\Exceptions\AppException(403, "Bạn không có quyền truy cập");
+            throw \App\Exceptions\AppException::forbidden("Bạn không có quyền truy cập");
         }
     }
 }
