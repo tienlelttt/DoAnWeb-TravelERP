@@ -1,4 +1,4 @@
-import type { Booking, Tour, Voucher } from '../types';
+﻿import type { Booking, Tour, Voucher } from '../types';
 
 type ApiRecord = Record<string, any>;
 
@@ -300,7 +300,10 @@ export const mapCustomerBookingStatus = (b: ApiRecord): Booking['status'] => {
     return 'KET_THUC';
   }
 
-  return (orderStatus || tourStatus || 'DA_XAC_NHAN') as Booking['status'];
+  let finalStatus = (orderStatus || tourStatus || 'DA_XAC_NHAN') as Booking['status'];
+  if (finalStatus === 'HOAN_THANH') finalStatus = 'KET_THUC';
+  if (finalStatus === 'DA_THANH_TOAN') finalStatus = 'DA_XAC_NHAN';
+  return finalStatus;
 };
 
 export const mapBooking = (b: ApiRecord): Booking => {

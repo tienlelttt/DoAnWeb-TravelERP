@@ -34,7 +34,7 @@ export const khService = {
 
   // 2. Tours
   layDanhSachTour: async (params?: any) => {
-    const res = await api.get('/public/tour', { params });
+    const res = await api.get('/public/tour', { params: { size: 1000, ...params } });
     return res.data;
   },
 
@@ -50,7 +50,7 @@ export const khService = {
   },
 
   getMyBookings: async (params?: any) => {
-    const res = await api.get('/khach-hang/dat-tour', { params });
+    const res = await api.get('/khach-hang/dat-tour', { params: { size: 1000, ...params } });
     return res.data;
   },
 
@@ -70,7 +70,7 @@ export const khService = {
   },
 
   getPastTours: async (params?: any) => {
-    const res = await api.get('/khach-hang/lich-su-tour', { params });
+    const res = await api.get('/khach-hang/lich-su-tour', { params: { size: 1000, ...params } });
     return res.data;
   },
 
@@ -87,12 +87,12 @@ export const khService = {
 
   // 5. Vouchers
   getVouchers: async (params?: any) => {
-    const res = await api.get('/khach-hang/vi-voucher', { params });
+    const res = await api.get('/khach-hang/vi-voucher', { params: { size: 1000, ...params } });
     return res.data;
   },
 
   getRedeemableVouchers: async (params?: any) => {
-    const res = await api.get('/khach-hang/voucher-co-the-doi', { params });
+    const res = await api.get('/khach-hang/voucher-co-the-doi', { params: { size: 1000, ...params } });
     return res.data;
   },
 
@@ -116,12 +116,12 @@ export const khService = {
 
   // 7. Support & Complaints
   layYeuCauHoTro: async (params?: any) => {
-    const res = await api.get('/khach-hang/yeu-cau-ho-tro', { params });
+    const res = await api.get('/khach-hang/yeu-cau-ho-tro', { params: { size: 1000, ...params } });
     return res.data;
   },
 
   layYeuCauCanBoSung: async () => {
-    const res = await api.get('/khach-hang/yeu-cau-ho-tro/can-bo-sung');
+    const res = await api.get('/khach-hang/yeu-cau-ho-tro/can-bo-sung', { params: { size: 1000 } });
     return res.data;
   },
 

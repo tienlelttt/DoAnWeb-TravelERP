@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import {
   User, Calendar, Wallet,
   MapPin, Star, Clock, CreditCard,
@@ -27,12 +27,14 @@ type BookingFilter =
   | 'all'
   | 'CHO_XAC_NHAN'
   | 'DA_XAC_NHAN'
+  | 'DA_THANH_TOAN'
+  | 'HOAN_THANH'
   | 'KET_THUC'
   | 'CHO_HUY'
   | 'DA_HUY'
   | 'TU_CHOI_HOAN_TIEN'
   | 'HET_HAN_GIU_CHO'
-  | 'THANH_TOAN_THAT_BAI';
+  ;
 
 const taoDanhSachTrang = (totalPages: number, currentPage: number) => {
   if (totalPages <= 5) {
@@ -181,7 +183,7 @@ export default function HoChieuSo() {
           const status = normalizeComplaintStatus(c.trangThai);
 
           return {
-            id: c.maYeuCau,
+            id: c.maYeuCauHoTro || c.maYeuCau,
             bookingId: c.maDatTour || '',
             tourName,
             category: requestTypeLabels[requestType] || 'Hỗ trợ',
@@ -550,7 +552,7 @@ export default function HoChieuSo() {
     }
   };
 
-  // UC32: Handle open cancel modal & calculate penalty
+  // UC32: Xử lý mở modal hủy tour & tính phí phạt
   const handleOpenCancelModal = (booking: Booking) => {
     setSelectedBookingForCancel(booking);
     setCancellationReason('');
@@ -575,7 +577,7 @@ export default function HoChieuSo() {
     setCancellationPenalty({ percent, amount: penaltyAmount, refund: refundAmount });
   };
 
-  // Confirm tour cancellation (UC32 / UC33)
+  // Xác nhận hủy chuyến đi (UC32 / UC33)
   const handleConfirmCancel = async () => {
     if (!selectedBookingForCancel) return;
 
@@ -610,7 +612,7 @@ export default function HoChieuSo() {
   const isComplaintResolved = (status?: string) => ['DA_XU_LY', 'TU_CHOI'].includes(status || '');
   const hasPendingComplaint = (booking: Booking) => Boolean(booking.hasComplaint && !isComplaintResolved(booking.complaintStatus));
 
-  // UC35: Open review modal
+  // UC35: Mở modal đánh giá tour
   const handleOpenReviewModal = (booking: Booking) => {
     if (booking.hasReviewed) {
       setToast({ message: 'Bạn đã đánh giá chuyến đi này rồi. Mỗi tour chỉ được đánh giá một lần.', type: 'info' });
@@ -674,18 +676,18 @@ export default function HoChieuSo() {
     }
   };
 
-  // Toggle review tag selection
+  // Bật/tắt chọn thẻ đánh giá
   const handleToggleReviewTag = (tag: string) => {
     setSelectedReviewTags(prev =>
       prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
     );
   };
 
-  // Submit tour review (UC35)
+  // Gửi đánh giá chuyến đi (UC35)
   const handleSubmitReview = async () => {
     if (!selectedBookingForReview) return;
 
-    // Award +50 Green Points for submitting review
+    // Tặng +50 Điểm Xanh khi gửi đánh giá thành công
     try {
       const nhanXet = [
         reviewComment.trim(),
@@ -710,7 +712,7 @@ export default function HoChieuSo() {
     }
   };
 
-  // UC36: Open complaint modal
+  // UC36: Mở modal gửi khiếu nại
   const handleOpenComplaintModal = (booking: Booking) => {
     if (booking.hasComplaint) {
       setToast({ message: 'Bạn đã gửi khiếu nại cho chuyến đi này. Màn hình Khiếu nại sẽ cập nhật trạng thái xử lý.', type: 'info' });
@@ -723,7 +725,7 @@ export default function HoChieuSo() {
     setComplaintFileName('');
   };
 
-  // Submit complaint ticket (UC36)
+  // Gửi yêu cầu khiếu nại (UC36)
   const handleSubmitComplaint = async () => {
     if (!selectedBookingForComplaint) return;
 
@@ -745,7 +747,7 @@ export default function HoChieuSo() {
       });
       const c = unwrapData<any>(response);
       const newTicket: ComplaintTicket = {
-        id: c.maYeuCau || `comp-${Date.now()}`,
+        id: c.maYeuCauHoTro || c.maYeuCau || `comp-${Date.now()}`,
         bookingId: c.maDatTour || selectedBookingForComplaint.id,
         tourName: selectedBookingForComplaint.tourName,
         category: complaintCategory,
@@ -1106,7 +1108,8 @@ export default function HoChieuSo() {
                         <option value="CHO_HUY">Chờ hủy</option>
                         <option value="DA_HUY">Đã hủy</option>
                         <option value="TU_CHOI_HOAN_TIEN">Từ chối hoàn tiền</option>
-                        <option value="HET_HAN_GIU_CHO">Hết hạn thanh toán</option>
+                        <option value="HET_HAN_GIU_CHO">Hết hạn giữ chỗ</option>
+                          
                       </select>
                       <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
                         <ChevronDown className="w-3.5 h-3.5" />
