@@ -14,7 +14,7 @@ Route::prefix('dieu-hanh')->group(function () {
         Route::get('/{id}', [TourThucTeController::class, 'chiTiet']);
     });
 
-    Route::group(['prefix' => 'tour-thuc-te', 'middleware' => ['auth:api', 'role:DIEUHANH,ADMIN']], function () {
+    Route::group(['prefix' => 'tour-thuc-te', 'middleware' => ['auth:api', 'role:SANPHAM,DIEUHANH,ADMIN']], function () {
         Route::post('/', [TourThucTeController::class, 'taoMoi']);
         Route::put('/{id}', [TourThucTeController::class, 'capNhat']);
         Route::delete('/{id}', [TourThucTeController::class, 'xoa']);

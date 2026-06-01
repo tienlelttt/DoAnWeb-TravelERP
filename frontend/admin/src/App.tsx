@@ -20,7 +20,7 @@ import Dashboard from './pages/dashboard/Dashboard'
 import Login from './pages/Login'
 import ProtectedRoute from './components/ProtectedRoute'
 
-const ROLES_DASHBOARD = ['ADMIN', 'SANPHAM', 'KINHDOANH', 'SALES', 'DIEUHANH', 'MANAGER', 'KETOAN'];
+const ROLES_DASHBOARD = ['ADMIN', 'KETOAN'];
 const ROLES_SANPHAM = ['SANPHAM', 'ADMIN'];
 const ROLES_KINHDOANH = ['KINHDOANH', 'SALES', 'ADMIN'];
 const ROLES_ORDERS = ['KINHDOANH', 'SALES', 'KETOAN', 'ADMIN'];
@@ -30,11 +30,29 @@ const ROLES_KETOAN = ['KETOAN', 'ADMIN'];
 const ROLES_ADMIN = ['ADMIN'];
 const ROLES_HR = ['ADMIN', 'DIEUHANH', 'MANAGER'];
 
+import { useAuth } from './context/AuthContext'
+
+const getDefaultRoute = (role?: string) => {
+  if (!role) return '/login';
+  const r = role.toUpperCase().replace(/^ROLE_/, '');
+  if (r === 'ADMIN' || r === 'KETOAN') return '/dashboard';
+  if (r === 'SANPHAM') return '/tour-template';
+  if (r === 'KINHDOANH' || r === 'SALES') return '/orders';
+  if (r === 'DIEUHANH' || r === 'MANAGER') return '/dispatch/assign';
+  return '/login';
+};
+
+function RootRedirect() {
+  const { user, isAuthenticated } = useAuth();
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  return <Navigate to={getDefaultRoute(user?.maVaiTro)} replace />;
+}
+
 function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
-      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      <Route path="/" element={<RootRedirect />} />
       <Route path="/dashboard" element={
         <ProtectedRoute allowedRoles={ROLES_DASHBOARD}>
           <Dashboard />
