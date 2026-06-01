@@ -1666,7 +1666,7 @@ VALUES ('GD_PHUQUOC_SDR_02_PAY', 'DDT_PHUQUOC_SDR_02_OK', 'THANH_TOAN', 'THE_QUO
 UPDATE tour_thuc_tes SET trang_thai = 'MO_BAN' WHERE ma_tour_thuc_te = 'TTT_PHUQUOC_SDR_02';
 
 INSERT INTO don_dat_tours (ma_dat_tour, ma_tour_thuc_te, ma_khach_hang, ngay_dat, tong_tien, trang_thai, thoi_gian_het_han, ghi_chu, hanh_dong_xanh)
-VALUES ('DDT_BMT_DDR_02_OK', 'TTT_BUONMATHUOT_DDR_02', 'KH_08', NOW() - INTERVAL 10 DAY, 8680000, 'CHO_XAC_NHAN',
+VALUES ('DDT_BMT_DDR_02_OK', 'TTT_BUONMATHUOT_DDR_02', 'KH_08', NOW() - INTERVAL 10 DAY, 8680000, 'DA_THANH_TOAN',
         NOW() - INTERVAL 8 DAY, 'Hai khách đang tham gia tour Buôn Ma Thuột.', 'HDX_LOCAL:1');
 INSERT INTO ds_nguoi_dong_hanhs (ma_nguoi_dong_hanh, ma_dat_tour, ho_ten, cccd, so_dien_thoai, ngay_sinh, gioi_tinh, ghi_chu)
 VALUES ('NDH_BMT_DDR_02_01', 'DDT_BMT_DDR_02_OK', 'Vũ Hải Đăng', '079299000504', '0922000504', '1989-12-12', 'NAM', NULL);
@@ -3092,6 +3092,298 @@ END;
 
 -- Kiểm tra một khách hàng không xuất hiện ở hai đơn thuộc cùng một tour thực tế.;
 
+-- ============================================================
+-- BỔ SUNG: DỮ LIỆU TOUR QUÁ KHỨ - ĐẢM BẢO >= 2 HÀNH KHÁCH
+-- ============================================================
+
+-- ----------------------------------------------------------------
+-- A. TOUR QUÁ KHỨ CỦA HDV10 (NV_HDV10 - hdv10) - CHƯA CÓ TOUR LỊCH SỬ
+-- Thêm 2 tour đã kết thúc để HDV10 có lịch sử dẫn đoàn
+-- ----------------------------------------------------------------
+
+-- A1. Tour Ninh Bình đã kết thúc (HDV10 dẫn 3 khách)
+INSERT INTO tour_thuc_tes (ma_tour_thuc_te, ma_tour_mau, ngay_khoi_hanh, gia_hien_hanh, so_khach_toi_da, so_khach_toi_thieu, cho_con_lai, trang_thai)
+VALUES ('TTT_NINHBINH_KT_HDV10', 'TM_NINHBINH', DATE(NOW()) - INTERVAL 25 DAY, 3000000, 22, 8, 19, 'MO_BAN');
+
+INSERT INTO dich_vu_tour_thuc_tes (ma_tour_thuc_te, ma_dich_vu_them) VALUES ('TTT_NINHBINH_KT_HDV10', 'DVT_DINNER');
+INSERT INTO hdx_tour_thuc_tes (ma_tour_thuc_te, ma_hanh_dong_xanh) VALUES ('TTT_NINHBINH_KT_HDV10', 'HDX_BOTTLE');
+
+INSERT INTO phan_cong_tours (ma_phan_cong_tour, ma_tour_thuc_te, ma_nhan_vien, ngay_phan_cong, trang_thai_chap_nhan, ngay_phan_hoi)
+VALUES ('PC_NB_KT_HDV10', 'TTT_NINHBINH_KT_HDV10', 'NV_HDV10', NOW() - INTERVAL 40 DAY, 'DA_DONG_Y', NOW() - INTERVAL 39 DAY);
+
+-- Đơn 1: KH_11 + người đồng hành
+INSERT INTO don_dat_tours (ma_dat_tour, ma_tour_thuc_te, ma_khach_hang, ngay_dat, tong_tien, trang_thai, thoi_gian_het_han, ghi_chu, hanh_dong_xanh)
+VALUES ('DDT_NB_KT_HDV10_01', 'TTT_NINHBINH_KT_HDV10', 'KH_11', NOW() - INTERVAL 35 DAY, 6280000, 'HOAN_THANH', NOW() - INTERVAL 33 DAY, 'Cặp đôi tham quan Ninh Bình.', 'HDX_BOTTLE:1');
+INSERT INTO ds_nguoi_dong_hanhs (ma_nguoi_dong_hanh, ma_dat_tour, ho_ten, cccd, so_dien_thoai, ngay_sinh, gioi_tinh, ghi_chu)
+VALUES ('NDH_NB_KT_HDV10_01', 'DDT_NB_KT_HDV10_01', 'Lê Thị Hoa', '079299000601', '0933000601', '1993-04-10', 'NỮ', NULL);
+INSERT INTO chi_tiet_dat_tours (ma_chi_tiet_dat, ma_dat_tour, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, gia_tai_thoi_diem_dat)
+VALUES ('CTDT_NB_KT_HDV10_01_KH', 'DDT_NB_KT_HDV10_01', 'KH_11', NULL, 'NGUOI_DAT', 3000000);
+INSERT INTO chi_tiet_dat_tours (ma_chi_tiet_dat, ma_dat_tour, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, gia_tai_thoi_diem_dat)
+VALUES ('CTDT_NB_KT_HDV10_01_NDH', 'DDT_NB_KT_HDV10_01', NULL, 'NDH_NB_KT_HDV10_01', 'NGUOI_DONG_HANH', 3000000);
+INSERT INTO chi_tiet_dich_vus (ma_chi_tiet_dich_vu, ma_dat_tour, ma_dich_vu_them, so_luong, don_gia, thanh_tien)
+VALUES ('CTDV_NB_KT_HDV10_01_DIN', 'DDT_NB_KT_HDV10_01', 'DVT_DINNER', 2, 280000, 560000);
+INSERT INTO giao_diches (ma_giao_dich, ma_dat_tour, loai_giao_dich, phuong_thuc, so_tien, ma_gdnh, trang_thai, ngay_thanh_toan)
+VALUES ('GD_NB_KT_HDV10_01_PAY', 'DDT_NB_KT_HDV10_01', 'THANH_TOAN', 'CHUYEN_KHOAN', 6280000, 'BANK-NB-HDV10-01', 'THANH_CONG', NOW() - INTERVAL 34 DAY);
+
+-- Đơn 2: KH_12 (khách lẻ)
+INSERT INTO don_dat_tours (ma_dat_tour, ma_tour_thuc_te, ma_khach_hang, ngay_dat, tong_tien, trang_thai, thoi_gian_het_han, ghi_chu)
+VALUES ('DDT_NB_KT_HDV10_02', 'TTT_NINHBINH_KT_HDV10', 'KH_12', NOW() - INTERVAL 33 DAY, 3280000, 'HOAN_THANH', NOW() - INTERVAL 31 DAY, 'Khách lẻ thăm Tam Cốc.');
+INSERT INTO chi_tiet_dat_tours (ma_chi_tiet_dat, ma_dat_tour, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, gia_tai_thoi_diem_dat)
+VALUES ('CTDT_NB_KT_HDV10_02_KH', 'DDT_NB_KT_HDV10_02', 'KH_12', NULL, 'NGUOI_DAT', 3000000);
+INSERT INTO chi_tiet_dich_vus (ma_chi_tiet_dich_vu, ma_dat_tour, ma_dich_vu_them, so_luong, don_gia, thanh_tien)
+VALUES ('CTDV_NB_KT_HDV10_02_DIN', 'DDT_NB_KT_HDV10_02', 'DVT_DINNER', 1, 280000, 280000);
+INSERT INTO giao_diches (ma_giao_dich, ma_dat_tour, loai_giao_dich, phuong_thuc, so_tien, ma_gdnh, trang_thai, ngay_thanh_toan)
+VALUES ('GD_NB_KT_HDV10_02_PAY', 'DDT_NB_KT_HDV10_02', 'THANH_TOAN', 'THE_NOI_DIA', 3280000, 'BANK-NB-HDV10-02', 'THANH_CONG', NOW() - INTERVAL 32 DAY);
+
+-- Lịch sử tour và điểm danh
+INSERT INTO lich_su_tours (ma_lich_su_tour, ma_khach_hang, ma_tour_thuc_te, ma_chi_tiet_dat, ngay_tham_gia)
+VALUES ('LST_NB_HDV10_KH11', 'KH_11', 'TTT_NINHBINH_KT_HDV10', 'CTDT_NB_KT_HDV10_01_KH', DATE(NOW()) - INTERVAL 25 DAY);
+INSERT INTO lich_su_tours (ma_lich_su_tour, ma_khach_hang, ma_tour_thuc_te, ma_chi_tiet_dat, ngay_tham_gia)
+VALUES ('LST_NB_HDV10_KH12', 'KH_12', 'TTT_NINHBINH_KT_HDV10', 'CTDT_NB_KT_HDV10_02_KH', DATE(NOW()) - INTERVAL 25 DAY);
+
+INSERT INTO diem_danhs (ma_diem_danh, ma_tour_thuc_te, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, ma_nhan_vien, thoi_gian, dia_diem, trang_thai)
+VALUES ('DD_NB_HDV10_KH11', 'TTT_NINHBINH_KT_HDV10', 'KH_11', NULL, 'NGUOI_DAT', 'NV_HDV10', NOW() - INTERVAL 25 DAY, 'Cố đô Hoa Lư', 'DA_DIEM_DANH');
+INSERT INTO diem_danhs (ma_diem_danh, ma_tour_thuc_te, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, ma_nhan_vien, thoi_gian, dia_diem, trang_thai)
+VALUES ('DD_NB_HDV10_NDH01', 'TTT_NINHBINH_KT_HDV10', NULL, 'NDH_NB_KT_HDV10_01', 'NGUOI_DONG_HANH', 'NV_HDV10', NOW() - INTERVAL 25 DAY, 'Cố đô Hoa Lư', 'DA_DIEM_DANH');
+INSERT INTO diem_danhs (ma_diem_danh, ma_tour_thuc_te, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, ma_nhan_vien, thoi_gian, dia_diem, trang_thai)
+VALUES ('DD_NB_HDV10_KH12', 'TTT_NINHBINH_KT_HDV10', 'KH_12', NULL, 'NGUOI_DAT', 'NV_HDV10', NOW() - INTERVAL 25 DAY, 'Cố đô Hoa Lư', 'DA_DIEM_DANH');
+
+-- Chi phí HDV10 cho tour Ninh Bình
+INSERT INTO chi_phi_thuc_tes (ma_chi_phi_thuc_te, ma_tour_thuc_te, ma_nhan_vien, danh_muc, thanh_tien, hoa_don_anh, trang_thai_duyet, ngay_khai)
+VALUES ('CP_NB_HDV10_WATER', 'TTT_NINHBINH_KT_HDV10', 'NV_HDV10', 'Nước uống cho đoàn', 180000, 'https://seed.local/hoa-don/nb-water.jpg', 'DA_DUYET', NOW() - INTERVAL 25 DAY);
+INSERT INTO chi_phi_thuc_tes (ma_chi_phi_thuc_te, ma_tour_thuc_te, ma_nhan_vien, danh_muc, thanh_tien, hoa_don_anh, trang_thai_duyet, ngay_khai)
+VALUES ('CP_NB_HDV10_BOAT', 'TTT_NINHBINH_KT_HDV10', 'NV_HDV10', 'Phụ thu thuyền tay Tam Cốc', 360000, 'https://seed.local/hoa-don/nb-boat.jpg', 'DA_DUYET', NOW() - INTERVAL 24 DAY);
+
+-- Sự cố
+INSERT INTO nhat_ky_su_cos (ma_nhat_ky_su_co, ma_tour_thuc_te, ma_nhan_vien_bao_cao, mo_ta, giai_phap, muc_do, loai_su_co, thoi_gian_bao_cao)
+VALUES ('SC_NB_HDV10_RAIN', 'TTT_NINHBINH_KT_HDV10', 'NV_HDV10', 'Mưa nhỏ khi tham quan Tràng An.', 'Chuẩn bị áo mưa, điều chỉnh lịch trình vào điểm trú ẩn.', 'THAP', 'THOI_TIET', NOW() - INTERVAL 25 DAY);
+
+-- Đánh giá
+INSERT INTO danh_gia_khs (ma_danh_gia_khach_hang, ma_tour_thuc_te, ma_khach_hang, so_sao, nhan_xet, ngay_danh_gia)
+VALUES ('DG_NB_HDV10_KH11', 'TTT_NINHBINH_KT_HDV10', 'KH_11', 5, 'HDV nhiệt tình, cảnh thiên nhiên Ninh Bình rất đẹp.', NOW() - INTERVAL 22 DAY);
+INSERT INTO danh_gia_khs (ma_danh_gia_khach_hang, ma_tour_thuc_te, ma_khach_hang, so_sao, nhan_xet, ngay_danh_gia)
+VALUES ('DG_NB_HDV10_KH12', 'TTT_NINHBINH_KT_HDV10', 'KH_12', 4, 'Tour trọn gói tốt, chỉ tiếc trời hơi âm u.', NOW() - INTERVAL 21 DAY);
+
+-- Quyết toán cho tour Ninh Bình của HDV10
+INSERT INTO quyet_toans (ma_quyet_toan, ma_tour_thuc_te, tong_doanh_thu, tong_chi_phi, gia_cam_ket, loi_nhuan, ma_nhan_vien, ngay_quyet_toan, trang_thai, ghi_chu)
+VALUES ('QT_NB_HDV10', 'TTT_NINHBINH_KT_HDV10', 9560000, 540000, NULL, 9020000, 'NV_KT01', NOW() - INTERVAL 20 DAY, 'DA_QUYET_TOAN', 'Quyết toán tour Ninh Bình HDV10 hoàn tất.');
+
+UPDATE tour_thuc_tes SET trang_thai = 'DA_QUYET_TOAN' WHERE ma_tour_thuc_te = 'TTT_NINHBINH_KT_HDV10';
+
+-- ----------------------------------------------------------------
+-- A2. Tour Hà Giang đã kết thúc (HDV10 dẫn 4 khách) - 2 tháng trước
+-- ----------------------------------------------------------------
+INSERT INTO tour_thuc_tes (ma_tour_thuc_te, ma_tour_mau, ngay_khoi_hanh, gia_hien_hanh, so_khach_toi_da, so_khach_toi_thieu, cho_con_lai, trang_thai)
+VALUES ('TTT_HAGIANG_KT_HDV10', 'TM_HAGIANG', DATE(NOW()) - INTERVAL 65 DAY, 6300000, 18, 8, 14, 'MO_BAN');
+
+INSERT INTO dich_vu_tour_thuc_tes (ma_tour_thuc_te, ma_dich_vu_them) VALUES ('TTT_HAGIANG_KT_HDV10', 'DVT_INSURANCE');
+INSERT INTO dich_vu_tour_thuc_tes (ma_tour_thuc_te, ma_dich_vu_them) VALUES ('TTT_HAGIANG_KT_HDV10', 'DVT_DINNER');
+INSERT INTO hdx_tour_thuc_tes (ma_tour_thuc_te, ma_hanh_dong_xanh) VALUES ('TTT_HAGIANG_KT_HDV10', 'HDX_CLEANUP');
+INSERT INTO hdx_tour_thuc_tes (ma_tour_thuc_te, ma_hanh_dong_xanh) VALUES ('TTT_HAGIANG_KT_HDV10', 'HDX_LOCAL');
+
+INSERT INTO phan_cong_tours (ma_phan_cong_tour, ma_tour_thuc_te, ma_nhan_vien, ngay_phan_cong, trang_thai_chap_nhan, ngay_phan_hoi)
+VALUES ('PC_HG_KT_HDV10', 'TTT_HAGIANG_KT_HDV10', 'NV_HDV10', NOW() - INTERVAL 80 DAY, 'DA_DONG_Y', NOW() - INTERVAL 79 DAY);
+
+-- Đơn 1: KH_13 + 1 NDH
+INSERT INTO don_dat_tours (ma_dat_tour, ma_tour_thuc_te, ma_khach_hang, ngay_dat, tong_tien, trang_thai, thoi_gian_het_han, ghi_chu, hanh_dong_xanh)
+VALUES ('DDT_HG_KT_HDV10_01', 'TTT_HAGIANG_KT_HDV10', 'KH_13', NOW() - INTERVAL 75 DAY, 13100000, 'HOAN_THANH', NOW() - INTERVAL 73 DAY, 'Hai người bạn khám phá Hà Giang.', 'HDX_LOCAL:1');
+INSERT INTO ds_nguoi_dong_hanhs (ma_nguoi_dong_hanh, ma_dat_tour, ho_ten, cccd, so_dien_thoai, ngay_sinh, gioi_tinh, ghi_chu)
+VALUES ('NDH_HG_KT_HDV10_01', 'DDT_HG_KT_HDV10_01', 'Trần Văn Đức', '079299000701', '0944000701', '1991-07-07', 'NAM', NULL);
+INSERT INTO chi_tiet_dat_tours (ma_chi_tiet_dat, ma_dat_tour, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, gia_tai_thoi_diem_dat)
+VALUES ('CTDT_HG_KT_HDV10_01_KH', 'DDT_HG_KT_HDV10_01', 'KH_13', NULL, 'NGUOI_DAT', 6300000);
+INSERT INTO chi_tiet_dat_tours (ma_chi_tiet_dat, ma_dat_tour, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, gia_tai_thoi_diem_dat)
+VALUES ('CTDT_HG_KT_HDV10_01_NDH', 'DDT_HG_KT_HDV10_01', NULL, 'NDH_HG_KT_HDV10_01', 'NGUOI_DONG_HANH', 6300000);
+INSERT INTO chi_tiet_dich_vus (ma_chi_tiet_dich_vu, ma_dat_tour, ma_dich_vu_them, so_luong, don_gia, thanh_tien)
+VALUES ('CTDV_HG_KT_HDV10_01_INS', 'DDT_HG_KT_HDV10_01', 'DVT_INSURANCE', 2, 120000, 240000);
+INSERT INTO chi_tiet_dich_vus (ma_chi_tiet_dich_vu, ma_dat_tour, ma_dich_vu_them, so_luong, don_gia, thanh_tien)
+VALUES ('CTDV_HG_KT_HDV10_01_DIN', 'DDT_HG_KT_HDV10_01', 'DVT_DINNER', 2, 280000, 560000);
+INSERT INTO giao_diches (ma_giao_dich, ma_dat_tour, loai_giao_dich, phuong_thuc, so_tien, ma_gdnh, trang_thai, ngay_thanh_toan)
+VALUES ('GD_HG_KT_HDV10_01_PAY', 'DDT_HG_KT_HDV10_01', 'THANH_TOAN', 'THE_QUOC_TE', 13100000, 'BANK-HG-HDV10-01', 'THANH_CONG', NOW() - INTERVAL 74 DAY);
+
+-- Đơn 2: KH_14 + 1 NDH
+INSERT INTO don_dat_tours (ma_dat_tour, ma_tour_thuc_te, ma_khach_hang, ngay_dat, tong_tien, trang_thai, thoi_gian_het_han, ghi_chu, hanh_dong_xanh)
+VALUES ('DDT_HG_KT_HDV10_02', 'TTT_HAGIANG_KT_HDV10', 'KH_14', NOW() - INTERVAL 73 DAY, 12760000, 'HOAN_THANH', NOW() - INTERVAL 71 DAY, 'Cặp đôi trẻ khám phá cao nguyên đá.', 'HDX_CLEANUP:1');
+INSERT INTO ds_nguoi_dong_hanhs (ma_nguoi_dong_hanh, ma_dat_tour, ho_ten, cccd, so_dien_thoai, ngay_sinh, gioi_tinh, ghi_chu)
+VALUES ('NDH_HG_KT_HDV10_02', 'DDT_HG_KT_HDV10_02', 'Phạm Thu Hằng', '079299000702', '0944000702', '1995-11-30', 'NỮ', NULL);
+INSERT INTO chi_tiet_dat_tours (ma_chi_tiet_dat, ma_dat_tour, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, gia_tai_thoi_diem_dat)
+VALUES ('CTDT_HG_KT_HDV10_02_KH', 'DDT_HG_KT_HDV10_02', 'KH_14', NULL, 'NGUOI_DAT', 6300000);
+INSERT INTO chi_tiet_dat_tours (ma_chi_tiet_dat, ma_dat_tour, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, gia_tai_thoi_diem_dat)
+VALUES ('CTDT_HG_KT_HDV10_02_NDH', 'DDT_HG_KT_HDV10_02', NULL, 'NDH_HG_KT_HDV10_02', 'NGUOI_DONG_HANH', 6300000);
+INSERT INTO chi_tiet_dich_vus (ma_chi_tiet_dich_vu, ma_dat_tour, ma_dich_vu_them, so_luong, don_gia, thanh_tien)
+VALUES ('CTDV_HG_KT_HDV10_02_INS', 'DDT_HG_KT_HDV10_02', 'DVT_INSURANCE', 2, 120000, 240000);
+INSERT INTO chi_tiet_dich_vus (ma_chi_tiet_dich_vu, ma_dat_tour, ma_dich_vu_them, so_luong, don_gia, thanh_tien)
+VALUES ('CTDV_HG_KT_HDV10_02_DIN', 'DDT_HG_KT_HDV10_02', 'DVT_DINNER', 1, 280000, 280000);
+INSERT INTO giao_diches (ma_giao_dich, ma_dat_tour, loai_giao_dich, phuong_thuc, so_tien, ma_gdnh, trang_thai, ngay_thanh_toan)
+VALUES ('GD_HG_KT_HDV10_02_PAY', 'DDT_HG_KT_HDV10_02', 'THANH_TOAN', 'VI_DIEN_TU', 12760000, 'BANK-HG-HDV10-02', 'THANH_CONG', NOW() - INTERVAL 72 DAY);
+
+-- Lịch sử, điểm danh
+INSERT INTO lich_su_tours (ma_lich_su_tour, ma_khach_hang, ma_tour_thuc_te, ma_chi_tiet_dat, ngay_tham_gia)
+VALUES ('LST_HG_HDV10_KH13', 'KH_13', 'TTT_HAGIANG_KT_HDV10', 'CTDT_HG_KT_HDV10_01_KH', DATE(NOW()) - INTERVAL 65 DAY);
+INSERT INTO lich_su_tours (ma_lich_su_tour, ma_khach_hang, ma_tour_thuc_te, ma_chi_tiet_dat, ngay_tham_gia)
+VALUES ('LST_HG_HDV10_KH14', 'KH_14', 'TTT_HAGIANG_KT_HDV10', 'CTDT_HG_KT_HDV10_02_KH', DATE(NOW()) - INTERVAL 65 DAY);
+
+INSERT INTO diem_danhs (ma_diem_danh, ma_tour_thuc_te, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, ma_nhan_vien, thoi_gian, dia_diem, trang_thai)
+VALUES ('DD_HG_HDV10_KH13', 'TTT_HAGIANG_KT_HDV10', 'KH_13', NULL, 'NGUOI_DAT', 'NV_HDV10', NOW() - INTERVAL 65 DAY, 'Cột cờ Lũng Cú', 'DA_DIEM_DANH');
+INSERT INTO diem_danhs (ma_diem_danh, ma_tour_thuc_te, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, ma_nhan_vien, thoi_gian, dia_diem, trang_thai)
+VALUES ('DD_HG_HDV10_NDH01', 'TTT_HAGIANG_KT_HDV10', NULL, 'NDH_HG_KT_HDV10_01', 'NGUOI_DONG_HANH', 'NV_HDV10', NOW() - INTERVAL 65 DAY, 'Cột cờ Lũng Cú', 'DA_DIEM_DANH');
+INSERT INTO diem_danhs (ma_diem_danh, ma_tour_thuc_te, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, ma_nhan_vien, thoi_gian, dia_diem, trang_thai)
+VALUES ('DD_HG_HDV10_KH14', 'TTT_HAGIANG_KT_HDV10', 'KH_14', NULL, 'NGUOI_DAT', 'NV_HDV10', NOW() - INTERVAL 65 DAY, 'Cột cờ Lũng Cú', 'DA_DIEM_DANH');
+INSERT INTO diem_danhs (ma_diem_danh, ma_tour_thuc_te, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, ma_nhan_vien, thoi_gian, dia_diem, trang_thai)
+VALUES ('DD_HG_HDV10_NDH02', 'TTT_HAGIANG_KT_HDV10', NULL, 'NDH_HG_KT_HDV10_02', 'NGUOI_DONG_HANH', 'NV_HDV10', NOW() - INTERVAL 65 DAY, 'Cột cờ Lũng Cú', 'DA_DIEM_DANH');
+
+-- Hành động xanh
+INSERT INTO hanh_dongs (ma_ghi_nhan_hanh_dong, ma_tour_thuc_te, ma_khach_hang, ma_hanh_dong_xanh, ma_nhan_vien_xac_minh, thoi_gian, minh_chung)
+VALUES ('HD_HG_KT_HDV10_LOCAL', 'TTT_HAGIANG_KT_HDV10', 'KH_13', 'HDX_LOCAL', 'NV_HDV10', NOW() - INTERVAL 64 DAY, 'Khách mua quà thổ cẩm địa phương, không dùng túi nhựa.');
+INSERT INTO hanh_dongs (ma_ghi_nhan_hanh_dong, ma_tour_thuc_te, ma_khach_hang, ma_hanh_dong_xanh, ma_nhan_vien_xac_minh, thoi_gian, minh_chung)
+VALUES ('HD_HG_KT_HDV10_CLEANUP', 'TTT_HAGIANG_KT_HDV10', 'KH_14', 'HDX_CLEANUP', 'NV_HDV10', NOW() - INTERVAL 63 DAY, 'Cả đoàn tham gia dọn rác tại Mã Pì Lèng.');
+
+-- Chi phí HDV10
+INSERT INTO chi_phi_thuc_tes (ma_chi_phi_thuc_te, ma_tour_thuc_te, ma_nhan_vien, danh_muc, thanh_tien, hoa_don_anh, trang_thai_duyet, ngay_khai)
+VALUES ('CP_HG_HDV10_WATER', 'TTT_HAGIANG_KT_HDV10', 'NV_HDV10', 'Nước uống và đồ ăn nhẹ dọc đường', 450000, 'https://seed.local/hoa-don/hg-water.jpg', 'DA_DUYET', NOW() - INTERVAL 64 DAY);
+INSERT INTO chi_phi_thuc_tes (ma_chi_phi_thuc_te, ma_tour_thuc_te, ma_nhan_vien, danh_muc, thanh_tien, hoa_don_anh, trang_thai_duyet, ngay_khai)
+VALUES ('CP_HG_HDV10_PORTER', 'TTT_HAGIANG_KT_HDV10', 'NV_HDV10', 'Phí hướng dẫn viên địa phương (porter)', 800000, 'https://seed.local/hoa-don/hg-porter.jpg', 'DA_DUYET', NOW() - INTERVAL 63 DAY);
+
+-- Sự cố
+INSERT INTO nhat_ky_su_cos (ma_nhat_ky_su_co, ma_tour_thuc_te, ma_nhan_vien_bao_cao, mo_ta, giai_phap, muc_do, loai_su_co, thoi_gian_bao_cao)
+VALUES ('SC_HG_HDV10_TIRE', 'TTT_HAGIANG_KT_HDV10', 'NV_HDV10', 'Xe khách bị nổ lốp tại đèo Mã Pì Lèng.', 'Liên hệ đơn vị vận chuyển sửa chữa, hoàn thành sau 40 phút không ảnh hưởng lịch trình.', 'THAP', 'PHUONG_TIEN', NOW() - INTERVAL 63 DAY);
+
+-- Đánh giá
+INSERT INTO danh_gia_khs (ma_danh_gia_khach_hang, ma_tour_thuc_te, ma_khach_hang, so_sao, nhan_xet, ngay_danh_gia)
+VALUES ('DG_HG_HDV10_KH13', 'TTT_HAGIANG_KT_HDV10', 'KH_13', 5, 'Hành trình tuyệt vời! Đường đèo hùng vĩ, HDV chuyên nghiệp.', NOW() - INTERVAL 60 DAY);
+INSERT INTO danh_gia_khs (ma_danh_gia_khach_hang, ma_tour_thuc_te, ma_khach_hang, so_sao, nhan_xet, ngay_danh_gia)
+VALUES ('DG_HG_HDV10_KH14', 'TTT_HAGIANG_KT_HDV10', 'KH_14', 5, 'Cảnh đẹp nhất mình từng thấy. Sẽ đi lại lần nữa.', NOW() - INTERVAL 59 DAY);
+
+UPDATE tour_thuc_tes SET trang_thai = 'KET_THUC' WHERE ma_tour_thuc_te = 'TTT_HAGIANG_KT_HDV10';
+
+-- ----------------------------------------------------------------
+-- B. BỔ SUNG HÀNH KHÁCH THỨ 2 CHO CÁC TOUR QUÁ KHỨ CHỈ CÓ 1 KHÁCH
+-- TTT_HOIAN_OLD (NV_HDV04), TTT_MUINE_OLD (NV_HDV05), TTT_HALONG_OLD (NV_HDV06)
+-- ----------------------------------------------------------------
+
+-- B1. Thêm khách thứ 2 vào TTT_HOIAN_OLD (hiện chỉ có KH_06)
+INSERT INTO don_dat_tours (ma_dat_tour, ma_tour_thuc_te, ma_khach_hang, ngay_dat, tong_tien, trang_thai, thoi_gian_het_han, ghi_chu)
+VALUES ('DDT_HOIAN_OLD_KH2', 'TTT_HOIAN_OLD', 'KH_15', NOW() - INTERVAL 28 DAY, 5980000, 'DA_XAC_NHAN', NOW() - INTERVAL 25 DAY, 'Khách lẻ thăm Hội An cùng đoàn.');
+INSERT INTO chi_tiet_dat_tours (ma_chi_tiet_dat, ma_dat_tour, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, gia_tai_thoi_diem_dat)
+VALUES ('CTDT_HOIAN_OLD_KH2', 'DDT_HOIAN_OLD_KH2', 'KH_15', NULL, 'NGUOI_DAT', 5980000);
+INSERT INTO giao_diches (ma_giao_dich, ma_dat_tour, loai_giao_dich, phuong_thuc, so_tien, ma_gdnh, trang_thai, ngay_thanh_toan)
+VALUES ('GD_HOIAN_OLD_KH2', 'DDT_HOIAN_OLD_KH2', 'THANH_TOAN', 'VI_DIEN_TU', 5980000, 'BANK-HOIAN-02', 'THANH_CONG', NOW() - INTERVAL 27 DAY);
+INSERT INTO lich_su_tours (ma_lich_su_tour, ma_khach_hang, ma_tour_thuc_te, ma_chi_tiet_dat, ngay_tham_gia)
+VALUES ('LST_HOIAN_OLD_KH15', 'KH_15', 'TTT_HOIAN_OLD', 'CTDT_HOIAN_OLD_KH2', DATE(NOW()) - INTERVAL 20 DAY);
+INSERT INTO diem_danhs (ma_diem_danh, ma_tour_thuc_te, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, ma_nhan_vien, thoi_gian, dia_diem, trang_thai)
+VALUES ('DD_HOIAN_OLD_KH15', 'TTT_HOIAN_OLD', 'KH_15', NULL, 'NGUOI_DAT', 'NV_HDV04', NOW() - INTERVAL 20 DAY, 'Phố cổ Hội An', 'DA_DIEM_DANH');
+INSERT INTO danh_gia_khs (ma_danh_gia_khach_hang, ma_tour_thuc_te, ma_khach_hang, so_sao, nhan_xet, ngay_danh_gia)
+VALUES ('DG_HOIAN_OLD_KH15', 'TTT_HOIAN_OLD', 'KH_15', 5, 'Phố đèn lồng về đêm rất lãng mạn.', NOW() - INTERVAL 15 DAY);
+
+-- B2. Thêm khách thứ 2 vào TTT_MUINE_OLD (hiện chỉ có KH_07)
+INSERT INTO don_dat_tours (ma_dat_tour, ma_tour_thuc_te, ma_khach_hang, ngay_dat, tong_tien, trang_thai, thoi_gian_het_han, ghi_chu)
+VALUES ('DDT_MUINE_OLD_KH2', 'TTT_MUINE_OLD', 'KH_16', NOW() - INTERVAL 28 DAY, 5910000, 'DA_XAC_NHAN', NOW() - INTERVAL 25 DAY, 'Khách ghép đoàn Mũi Né.');
+INSERT INTO chi_tiet_dat_tours (ma_chi_tiet_dat, ma_dat_tour, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, gia_tai_thoi_diem_dat)
+VALUES ('CTDT_MUINE_OLD_KH2', 'DDT_MUINE_OLD_KH2', 'KH_16', NULL, 'NGUOI_DAT', 5910000);
+INSERT INTO giao_diches (ma_giao_dich, ma_dat_tour, loai_giao_dich, phuong_thuc, so_tien, ma_gdnh, trang_thai, ngay_thanh_toan)
+VALUES ('GD_MUINE_OLD_KH2', 'DDT_MUINE_OLD_KH2', 'THANH_TOAN', 'THE_NOI_DIA', 5910000, 'BANK-MUINE-02', 'THANH_CONG', NOW() - INTERVAL 27 DAY);
+INSERT INTO lich_su_tours (ma_lich_su_tour, ma_khach_hang, ma_tour_thuc_te, ma_chi_tiet_dat, ngay_tham_gia)
+VALUES ('LST_MUINE_OLD_KH16', 'KH_16', 'TTT_MUINE_OLD', 'CTDT_MUINE_OLD_KH2', DATE(NOW()) - INTERVAL 20 DAY);
+INSERT INTO diem_danhs (ma_diem_danh, ma_tour_thuc_te, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, ma_nhan_vien, thoi_gian, dia_diem, trang_thai)
+VALUES ('DD_MUINE_OLD_KH16', 'TTT_MUINE_OLD', 'KH_16', NULL, 'NGUOI_DAT', 'NV_HDV05', NOW() - INTERVAL 20 DAY, 'Đồi cát Mũi Né', 'DA_DIEM_DANH');
+INSERT INTO danh_gia_khs (ma_danh_gia_khach_hang, ma_tour_thuc_te, ma_khach_hang, so_sao, nhan_xet, ngay_danh_gia)
+VALUES ('DG_MUINE_OLD_KH16', 'TTT_MUINE_OLD', 'KH_16', 4, 'Bình minh đồi cát rất đẹp, HDV thân thiện.', NOW() - INTERVAL 14 DAY);
+
+-- B3. Thêm khách thứ 2 vào TTT_HALONG_OLD (hiện chỉ có KH_08)
+INSERT INTO don_dat_tours (ma_dat_tour, ma_tour_thuc_te, ma_khach_hang, ngay_dat, tong_tien, trang_thai, thoi_gian_het_han, ghi_chu)
+VALUES ('DDT_HALONG_OLD_KH2', 'TTT_HALONG_OLD', 'KH_17', NOW() - INTERVAL 27 DAY, 6790000, 'DA_XAC_NHAN', NOW() - INTERVAL 24 DAY, 'Khách ghép đoàn Hạ Long.');
+INSERT INTO chi_tiet_dat_tours (ma_chi_tiet_dat, ma_dat_tour, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, gia_tai_thoi_diem_dat)
+VALUES ('CTDT_HALONG_OLD_KH2', 'DDT_HALONG_OLD_KH2', 'KH_17', NULL, 'NGUOI_DAT', 6790000);
+INSERT INTO giao_diches (ma_giao_dich, ma_dat_tour, loai_giao_dich, phuong_thuc, so_tien, ma_gdnh, trang_thai, ngay_thanh_toan)
+VALUES ('GD_HALONG_OLD_KH2', 'DDT_HALONG_OLD_KH2', 'THANH_TOAN', 'CHUYEN_KHOAN', 6790000, 'BANK-HALONG-02', 'THANH_CONG', NOW() - INTERVAL 26 DAY);
+INSERT INTO lich_su_tours (ma_lich_su_tour, ma_khach_hang, ma_tour_thuc_te, ma_chi_tiet_dat, ngay_tham_gia)
+VALUES ('LST_HALONG_OLD_KH17', 'KH_17', 'TTT_HALONG_OLD', 'CTDT_HALONG_OLD_KH2', DATE(NOW()) - INTERVAL 20 DAY);
+INSERT INTO diem_danhs (ma_diem_danh, ma_tour_thuc_te, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, ma_nhan_vien, thoi_gian, dia_diem, trang_thai)
+VALUES ('DD_HALONG_OLD_KH17', 'TTT_HALONG_OLD', 'KH_17', NULL, 'NGUOI_DAT', 'NV_HDV06', NOW() - INTERVAL 20 DAY, 'Vịnh Hạ Long', 'DA_DIEM_DANH');
+INSERT INTO danh_gia_khs (ma_danh_gia_khach_hang, ma_tour_thuc_te, ma_khach_hang, so_sao, nhan_xet, ngay_danh_gia)
+VALUES ('DG_HALONG_OLD_KH17', 'TTT_HALONG_OLD', 'KH_17', 5, 'Du thuyền đẳng cấp, phong cảnh tuyệt vời không thể tả.', NOW() - INTERVAL 13 DAY);
+
+-- ----------------------------------------------------------------
+-- C. BỔ SUNG HÀNH KHÁCH CHO CÁC TOUR KET_THUC ĐANG THIẾU (0 KHÁCH)
+-- TTT_HUE_QT_02 (NV_HDV09), TTT_CANTHO_KT_02 (NV_HDV07)
+-- ----------------------------------------------------------------
+
+-- C1. TTT_HUE_QT_02 - HDV09 - thêm 3 khách
+INSERT INTO don_dat_tours (ma_dat_tour, ma_tour_thuc_te, ma_khach_hang, ngay_dat, tong_tien, trang_thai, thoi_gian_het_han, ghi_chu)
+VALUES ('DDT_HUE_QT_02_A', 'TTT_HUE_QT_02', 'KH_01', NOW() - INTERVAL 55 DAY, 4400000, 'HOAN_THANH', NOW() - INTERVAL 53 DAY, 'Khách tham quan cố đô Huế.');
+INSERT INTO chi_tiet_dat_tours (ma_chi_tiet_dat, ma_dat_tour, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, gia_tai_thoi_diem_dat)
+VALUES ('CTDT_HUE_QT_02_A_KH', 'DDT_HUE_QT_02_A', 'KH_01', NULL, 'NGUOI_DAT', 4400000);
+INSERT INTO giao_diches (ma_giao_dich, ma_dat_tour, loai_giao_dich, phuong_thuc, so_tien, ma_gdnh, trang_thai, ngay_thanh_toan)
+VALUES ('GD_HUE_QT_02_A', 'DDT_HUE_QT_02_A', 'THANH_TOAN', 'CHUYEN_KHOAN', 4400000, 'BANK-HUE02-A', 'THANH_CONG', NOW() - INTERVAL 54 DAY);
+
+INSERT INTO don_dat_tours (ma_dat_tour, ma_tour_thuc_te, ma_khach_hang, ngay_dat, tong_tien, trang_thai, thoi_gian_het_han, ghi_chu)
+VALUES ('DDT_HUE_QT_02_B', 'TTT_HUE_QT_02', 'KH_02', NOW() - INTERVAL 54 DAY, 9080000, 'HOAN_THANH', NOW() - INTERVAL 52 DAY, 'Cặp đôi đi Huế dịp lễ.');
+INSERT INTO ds_nguoi_dong_hanhs (ma_nguoi_dong_hanh, ma_dat_tour, ho_ten, cccd, so_dien_thoai, ngay_sinh, gioi_tinh, ghi_chu)
+VALUES ('NDH_HUE_QT_02_B01', 'DDT_HUE_QT_02_B', 'Trịnh Văn Sơn', '079299000801', '0955000801', '1987-08-15', 'NAM', NULL);
+INSERT INTO chi_tiet_dat_tours (ma_chi_tiet_dat, ma_dat_tour, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, gia_tai_thoi_diem_dat)
+VALUES ('CTDT_HUE_QT_02_B_KH', 'DDT_HUE_QT_02_B', 'KH_02', NULL, 'NGUOI_DAT', 4400000);
+INSERT INTO chi_tiet_dat_tours (ma_chi_tiet_dat, ma_dat_tour, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, gia_tai_thoi_diem_dat)
+VALUES ('CTDT_HUE_QT_02_B_NDH', 'DDT_HUE_QT_02_B', NULL, 'NDH_HUE_QT_02_B01', 'NGUOI_DONG_HANH', 4400000);
+INSERT INTO giao_diches (ma_giao_dich, ma_dat_tour, loai_giao_dich, phuong_thuc, so_tien, ma_gdnh, trang_thai, ngay_thanh_toan)
+VALUES ('GD_HUE_QT_02_B', 'DDT_HUE_QT_02_B', 'THANH_TOAN', 'THE_QUOC_TE', 9080000, 'BANK-HUE02-B', 'THANH_CONG', NOW() - INTERVAL 53 DAY);
+
+INSERT INTO lich_su_tours (ma_lich_su_tour, ma_khach_hang, ma_tour_thuc_te, ma_chi_tiet_dat, ngay_tham_gia)
+VALUES ('LST_HUE_QT_02_KH01', 'KH_01', 'TTT_HUE_QT_02', 'CTDT_HUE_QT_02_A_KH', DATE(NOW()) - INTERVAL 45 DAY);
+INSERT INTO lich_su_tours (ma_lich_su_tour, ma_khach_hang, ma_tour_thuc_te, ma_chi_tiet_dat, ngay_tham_gia)
+VALUES ('LST_HUE_QT_02_KH02', 'KH_02', 'TTT_HUE_QT_02', 'CTDT_HUE_QT_02_B_KH', DATE(NOW()) - INTERVAL 45 DAY);
+INSERT INTO diem_danhs (ma_diem_danh, ma_tour_thuc_te, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, ma_nhan_vien, thoi_gian, dia_diem, trang_thai)
+VALUES ('DD_HUE_QT_02_KH01', 'TTT_HUE_QT_02', 'KH_01', NULL, 'NGUOI_DAT', 'NV_HDV09', NOW() - INTERVAL 45 DAY, 'Đại Nội Huế', 'DA_DIEM_DANH');
+INSERT INTO diem_danhs (ma_diem_danh, ma_tour_thuc_te, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, ma_nhan_vien, thoi_gian, dia_diem, trang_thai)
+VALUES ('DD_HUE_QT_02_KH02', 'TTT_HUE_QT_02', 'KH_02', NULL, 'NGUOI_DAT', 'NV_HDV09', NOW() - INTERVAL 45 DAY, 'Đại Nội Huế', 'DA_DIEM_DANH');
+INSERT INTO diem_danhs (ma_diem_danh, ma_tour_thuc_te, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, ma_nhan_vien, thoi_gian, dia_diem, trang_thai)
+VALUES ('DD_HUE_QT_02_NDH01', 'TTT_HUE_QT_02', NULL, 'NDH_HUE_QT_02_B01', 'NGUOI_DONG_HANH', 'NV_HDV09', NOW() - INTERVAL 45 DAY, 'Đại Nội Huế', 'DA_DIEM_DANH');
+INSERT INTO danh_gia_khs (ma_danh_gia_khach_hang, ma_tour_thuc_te, ma_khach_hang, so_sao, nhan_xet, ngay_danh_gia)
+VALUES ('DG_HUE_QT_02_KH01', 'TTT_HUE_QT_02', 'KH_01', 5, 'Cố đô Huế lịch sử và ẩm thực tuyệt vời.', NOW() - INTERVAL 40 DAY);
+INSERT INTO danh_gia_khs (ma_danh_gia_khach_hang, ma_tour_thuc_te, ma_khach_hang, so_sao, nhan_xet, ngay_danh_gia)
+VALUES ('DG_HUE_QT_02_KH02', 'TTT_HUE_QT_02', 'KH_02', 4, 'Rất hài lòng, chỉ tiếc thời gian tự do hơi ít.', NOW() - INTERVAL 39 DAY);
+INSERT INTO chi_phi_thuc_tes (ma_chi_phi_thuc_te, ma_tour_thuc_te, ma_nhan_vien, danh_muc, thanh_tien, hoa_don_anh, trang_thai_duyet, ngay_khai)
+VALUES ('CP_HUE_QT_02_INCENSE', 'TTT_HUE_QT_02', 'NV_HDV09', 'Phụ thu thăm làng hương Thủy Xuân', 240000, 'https://seed.local/hoa-don/hue-incense.jpg', 'DA_DUYET', NOW() - INTERVAL 44 DAY);
+UPDATE tour_thuc_tes SET trang_thai = 'KET_THUC' WHERE ma_tour_thuc_te = 'TTT_HUE_QT_02';
+
+-- C2. TTT_CANTHO_KT_02 - HDV07 - thêm 3 khách
+INSERT INTO don_dat_tours (ma_dat_tour, ma_tour_thuc_te, ma_khach_hang, ngay_dat, tong_tien, trang_thai, thoi_gian_het_han, ghi_chu)
+VALUES ('DDT_CT_KT_02_A', 'TTT_CANTHO_KT_02', 'KH_03', NOW() - INTERVAL 20 DAY, 3800000, 'HOAN_THANH', NOW() - INTERVAL 18 DAY, 'Khách trải nghiệm sông nước miền Tây.');
+INSERT INTO chi_tiet_dat_tours (ma_chi_tiet_dat, ma_dat_tour, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, gia_tai_thoi_diem_dat)
+VALUES ('CTDT_CT_KT_02_A_KH', 'DDT_CT_KT_02_A', 'KH_03', NULL, 'NGUOI_DAT', 3800000);
+INSERT INTO giao_diches (ma_giao_dich, ma_dat_tour, loai_giao_dich, phuong_thuc, so_tien, ma_gdnh, trang_thai, ngay_thanh_toan)
+VALUES ('GD_CT_KT_02_A', 'DDT_CT_KT_02_A', 'THANH_TOAN', 'VI_DIEN_TU', 3800000, 'BANK-CT02-A', 'THANH_CONG', NOW() - INTERVAL 19 DAY);
+
+INSERT INTO don_dat_tours (ma_dat_tour, ma_tour_thuc_te, ma_khach_hang, ngay_dat, tong_tien, trang_thai, thoi_gian_het_han, ghi_chu)
+VALUES ('DDT_CT_KT_02_B', 'TTT_CANTHO_KT_02', 'KH_04', NOW() - INTERVAL 18 DAY, 7600000, 'HOAN_THANH', NOW() - INTERVAL 16 DAY, 'Cặp đôi chèo thuyền chợ nổi.');
+INSERT INTO ds_nguoi_dong_hanhs (ma_nguoi_dong_hanh, ma_dat_tour, ho_ten, cccd, so_dien_thoai, ngay_sinh, gioi_tinh, ghi_chu)
+VALUES ('NDH_CT_KT_02_B01', 'DDT_CT_KT_02_B', 'Lê Minh Nhật', '079299000901', '0966000901', '1994-02-20', 'NAM', NULL);
+INSERT INTO chi_tiet_dat_tours (ma_chi_tiet_dat, ma_dat_tour, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, gia_tai_thoi_diem_dat)
+VALUES ('CTDT_CT_KT_02_B_KH', 'DDT_CT_KT_02_B', 'KH_04', NULL, 'NGUOI_DAT', 3800000);
+INSERT INTO chi_tiet_dat_tours (ma_chi_tiet_dat, ma_dat_tour, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, gia_tai_thoi_diem_dat)
+VALUES ('CTDT_CT_KT_02_B_NDH', 'DDT_CT_KT_02_B', NULL, 'NDH_CT_KT_02_B01', 'NGUOI_DONG_HANH', 3800000);
+INSERT INTO giao_diches (ma_giao_dich, ma_dat_tour, loai_giao_dich, phuong_thuc, so_tien, ma_gdnh, trang_thai, ngay_thanh_toan)
+VALUES ('GD_CT_KT_02_B', 'DDT_CT_KT_02_B', 'THANH_TOAN', 'THE_NOI_DIA', 7600000, 'BANK-CT02-B', 'THANH_CONG', NOW() - INTERVAL 17 DAY);
+
+INSERT INTO lich_su_tours (ma_lich_su_tour, ma_khach_hang, ma_tour_thuc_te, ma_chi_tiet_dat, ngay_tham_gia)
+VALUES ('LST_CT_KT_02_KH03', 'KH_03', 'TTT_CANTHO_KT_02', 'CTDT_CT_KT_02_A_KH', DATE(NOW()) - INTERVAL 14 DAY);
+INSERT INTO lich_su_tours (ma_lich_su_tour, ma_khach_hang, ma_tour_thuc_te, ma_chi_tiet_dat, ngay_tham_gia)
+VALUES ('LST_CT_KT_02_KH04', 'KH_04', 'TTT_CANTHO_KT_02', 'CTDT_CT_KT_02_B_KH', DATE(NOW()) - INTERVAL 14 DAY);
+INSERT INTO diem_danhs (ma_diem_danh, ma_tour_thuc_te, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, ma_nhan_vien, thoi_gian, dia_diem, trang_thai)
+VALUES ('DD_CT_KT_02_KH03', 'TTT_CANTHO_KT_02', 'KH_03', NULL, 'NGUOI_DAT', 'NV_HDV07', NOW() - INTERVAL 14 DAY, 'Chợ nổi Cái Răng', 'DA_DIEM_DANH');
+INSERT INTO diem_danhs (ma_diem_danh, ma_tour_thuc_te, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, ma_nhan_vien, thoi_gian, dia_diem, trang_thai)
+VALUES ('DD_CT_KT_02_KH04', 'TTT_CANTHO_KT_02', 'KH_04', NULL, 'NGUOI_DAT', 'NV_HDV07', NOW() - INTERVAL 14 DAY, 'Chợ nổi Cái Răng', 'DA_DIEM_DANH');
+INSERT INTO diem_danhs (ma_diem_danh, ma_tour_thuc_te, ma_khach_hang, ma_nguoi_dong_hanh, loai_khach, ma_nhan_vien, thoi_gian, dia_diem, trang_thai)
+VALUES ('DD_CT_KT_02_NDH01', 'TTT_CANTHO_KT_02', NULL, 'NDH_CT_KT_02_B01', 'NGUOI_DONG_HANH', 'NV_HDV07', NOW() - INTERVAL 14 DAY, 'Chợ nổi Cái Răng', 'DA_DIEM_DANH');
+INSERT INTO danh_gia_khs (ma_danh_gia_khach_hang, ma_tour_thuc_te, ma_khach_hang, so_sao, nhan_xet, ngay_danh_gia)
+VALUES ('DG_CT_KT_02_KH03', 'TTT_CANTHO_KT_02', 'KH_03', 5, 'Chợ nổi Cái Răng sáng sớm thật đặc biệt!', NOW() - INTERVAL 10 DAY);
+INSERT INTO danh_gia_khs (ma_danh_gia_khach_hang, ma_tour_thuc_te, ma_khach_hang, so_sao, nhan_xet, ngay_danh_gia)
+VALUES ('DG_CT_KT_02_KH04', 'TTT_CANTHO_KT_02', 'KH_04', 4, 'Ẩm thực miền Tây tuyệt hảo, thuyền chèo yên bình.', NOW() - INTERVAL 9 DAY);
+INSERT INTO chi_phi_thuc_tes (ma_chi_phi_thuc_te, ma_tour_thuc_te, ma_nhan_vien, danh_muc, thanh_tien, hoa_don_anh, trang_thai_duyet, ngay_khai)
+VALUES ('CP_CT_KT_02_BOAT', 'TTT_CANTHO_KT_02', 'NV_HDV07', 'Phụ thu thuyền đặc sản trên sông', 320000, 'https://seed.local/hoa-don/ct-boat.jpg', 'DA_DUYET', NOW() - INTERVAL 13 DAY);
+UPDATE tour_thuc_tes SET trang_thai = 'KET_THUC' WHERE ma_tour_thuc_te = 'TTT_CANTHO_KT_02';
+
+-- ----------------------------------------------------------------
+-- TÍNH LẠI SỐ CHỖ CÒN LẠI VÀ ĐÁNH GIÁ TOUR MẪU
+-- ----------------------------------------------------------------
 -- Tính lại số chỗ còn lại sau toàn bộ cụm dữ liệu bổ sung.
 UPDATE chi_tiet_dat_tours
 SET ma_dat_tour = ma_dat_tour
