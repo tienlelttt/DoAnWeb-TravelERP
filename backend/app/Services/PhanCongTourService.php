@@ -100,10 +100,10 @@ class PhanCongTourService
             $phanCong->ngay_phan_hoi = now();
             $phanCong->save();
 
-            // Nếu đồng ý, kiểm tra và mở bán tour nếu đủ điều kiện (TRG_TTT_OPEN_REQUIRE_HDV)
-            if ($trangThaiTraLoi === 'DA_DONG_Y') {
-                $this->kiemTraVaMoBanTour($phanCong->ma_tour_thuc_te);
-            }
+            // Bỏ tự động mở bán tour, để nhân viên tự chuyển trạng thái
+            // if ($trangThaiTraLoi === 'DA_DONG_Y') {
+            //     $this->kiemTraVaMoBanTour($phanCong->ma_tour_thuc_te);
+            // }
 
             return $phanCong;
         });
@@ -134,6 +134,9 @@ class PhanCongTourService
         return TourThucTe::with('tourMau')
             ->whereIn('trang_thai', ['CHO_KICH_HOAT', 'MO_BAN'])
             ->where('ngay_khoi_hanh', '>', now())
+            ->whereDoesntHave('phanCongs', function ($query) {
+                $query->where('trang_thai_chap_nhan', '!=', 'TU_CHOI');
+            })
             ->orderBy('ngay_khoi_hanh', 'asc')
             ->paginate($size);
     }
