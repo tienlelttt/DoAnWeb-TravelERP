@@ -56,7 +56,7 @@ return new class extends Migration
             $table->string('ma_dat_tour', 50)->nullable();
             $table->string('ma_voucher', 50)->nullable();
             $table->decimal('so_tien_uu_dai', 18, 2);
-            $table->dateTime('ngay_ap_dung');
+            $table->dateTime('ngay_ap_dung')->nullable();
             $table->timestamps();
         });
 
@@ -181,7 +181,7 @@ return new class extends Migration
             $table->string('ma_tour_mau', 50);
             $table->integer('ngay_thu');
             $table->string('hoat_dong', 1000)->nullable();
-            $table->string('mo_ta', 255)->nullable();
+            $table->text('mo_ta')->nullable();
             $table->string('thuc_don', 1000)->nullable();
             $table->timestamps();
         });
@@ -232,7 +232,7 @@ return new class extends Migration
             $table->string('ma_nhan_vien_bao_cao', 50);
             $table->string('ma_khach_hang', 50)->nullable();
             $table->string('ma_nguoi_dong_hanh', 50)->nullable();
-            $table->string('mo_ta', 255);
+            $table->text('mo_ta');
             $table->string('giai_phap', 255)->nullable();
             $table->string('muc_do', 20);
             $table->string('loai_su_co', 30);
@@ -282,7 +282,7 @@ return new class extends Migration
         Schema::create('tour_maus', function (Blueprint $table) {
             $table->string('ma_tour_mau', 50)->primary();
             $table->string('tieu_de', 500);
-            $table->string('mo_ta', 255)->nullable();
+            $table->text('mo_ta')->nullable();
             $table->integer('thoi_luong');
             $table->decimal('gia_san', 18, 2);
             $table->decimal('danh_gia', 18, 2)->nullable();
