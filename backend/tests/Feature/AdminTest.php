@@ -68,6 +68,14 @@ class AdminTest extends TestCase
                  ]);
     }
 
+    public function testTaiKhoanModelKhongSerializeMatKhau()
+    {
+        $serialized = $this->adminUser->fresh()->toArray();
+
+        $this->assertArrayNotHasKey('matKhau', $serialized);
+        $this->assertArrayNotHasKey('mat_khau', $serialized);
+    }
+
     public function testAuditLogDuocGhiSauKhiTaoUser()
     {
         $payload = [

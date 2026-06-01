@@ -24,6 +24,7 @@ class KeToanChiPhiTest extends TestCase
         parent::setUp();
 
         VaiTro::create(["ma_vai_tro" => "KETOAN", "ten_hien_thi" => "Kế toán"]);
+        VaiTro::create(["ma_vai_tro" => "HDV", "ten_hien_thi" => "Hướng dẫn viên"]);
 
         $this->keToanTK = TaiKhoan::create([
             "ma_tai_khoan" => "TK_KT_001",
@@ -83,6 +84,20 @@ class KeToanChiPhiTest extends TestCase
                  ->assertJsonPath("data.data.0.maChiPhiThucTe", "CP_001");
     }
 
+    public function test_ke_toan_lay_canh_bao_chi_phi_theo_contract_frontend()
+    {
+        $token = JWTAuth::fromUser($this->keToanTK);
+
+        $response = $this->getJson("/api/ke-toan/canh-bao-chi-phi?maTour=TTT_003&size=10", [
+            "Authorization" => "Bearer $token"
+        ]);
+
+        $response->assertStatus(200)
+            ->assertJsonPath("data.content.0.maChiPhi", "CP_001")
+            ->assertJsonPath("data.content.0.loaiCanhBao", "VUOT_DINH_MUC")
+            ->assertJsonPath("data.totalElements", 1);
+    }
+
     public function test_ke_toan_duyet_chi_phi()
     {
         $token = JWTAuth::fromUser($this->keToanTK);
@@ -129,6 +144,29 @@ class KeToanChiPhiTest extends TestCase
         $this->assertDatabaseHas("chi_phi_thuc_tes", [
             "ma_chi_phi_thuc_te" => "CP_001",
             "trang_thai_duyet" => "YEU_CAU_BO_SUNG"
+        ]);
+    }
+
+    public function test_hdv_khong_duoc_duyet_chi_phi_cua_ke_toan()
+    {
+        $hdvTK = TaiKhoan::create([
+            "ma_tai_khoan" => "TK_HDV_RBAC_KT",
+            "ten_dang_nhap" => "hdv_rbac_ketoan",
+            "mat_khau" => bcrypt("password"),
+            "ho_ten" => "HDV RBAC",
+            "vai_tro" => "HDV",
+            "trang_thai" => "HOAT_DONG"
+        ]);
+
+        $token = JWTAuth::fromUser($hdvTK);
+
+        $this->putJson("/api/ke-toan/chi-phi/CP_001/duyet", [], [
+            "Authorization" => "Bearer $token"
+        ])->assertStatus(403);
+
+        $this->assertDatabaseHas("chi_phi_thuc_tes", [
+            "ma_chi_phi_thuc_te" => "CP_001",
+            "trang_thai_duyet" => "CHO_DUYET"
         ]);
     }
 }

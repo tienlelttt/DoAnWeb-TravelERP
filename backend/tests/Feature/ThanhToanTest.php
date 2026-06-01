@@ -2,17 +2,17 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Tests\TestCase;
-use App\Models\TaiKhoan;
+use App\Models\ChiTietDatTour;
+use App\Models\DonDatTour;
+use App\Models\GiaoDich;
 use App\Models\HoChieuSo;
+use App\Models\TaiKhoan;
 use App\Models\TourMau;
 use App\Models\TourThucTe;
-use App\Models\DonDatTour;
-use App\Models\ChiTietDatTour;
-use App\Models\GiaoDich;
-use App\Models\LichSuTour;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Config;
+use Tests\TestCase;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ThanhToanTest extends TestCase
@@ -30,79 +30,79 @@ class ThanhToanTest extends TestCase
     {
         parent::setUp();
 
-        // 1. Táº¡o tÃ i khoáº£n khÃ¡ch hÃ ng
+        // Tạo tài khoản khách hàng.
         $this->tkKh = TaiKhoan::create([
-            'ma_tai_khoan'   => 'TEST_TK_TT_KH',
-            'ten_dang_nhap'  => 'test_tt_khach',
-            'mat_khau'      => bcrypt('123456'),
-            'ho_ten'        => 'KhÃ¡ch HÃ ng Thanh ToÃ¡n',
-            'email'        => 'tt_khach_' . time() . '@test.com',
-            'so_dien_thoai'  => '0987555666',
-            'vai_tro'       => 'KHACHHANG',
-            'trang_thai'    => 'HOAT_DONG',
-            'ngay_sinh'     => '1990-01-01',
+            'ma_tai_khoan' => 'TEST_TK_TT_KH',
+            'ten_dang_nhap' => 'test_tt_khach',
+            'mat_khau' => bcrypt('123456'),
+            'ho_ten' => 'Khách Hàng Thanh Toán',
+            'email' => 'tt_khach_' . time() . '@test.com',
+            'so_dien_thoai' => '0987555666',
+            'vai_tro' => 'KHACHHANG',
+            'trang_thai' => 'HOAT_DONG',
+            'ngay_sinh' => '1990-01-01',
         ]);
 
         $this->hcs = HoChieuSo::create([
-            'ma_khach_hang'   => 'TEST_KH_TT',
-            'ma_tai_khoan'    => 'TEST_TK_TT_KH',
+            'ma_khach_hang' => 'TEST_KH_TT',
+            'ma_tai_khoan' => 'TEST_TK_TT_KH',
             'hang_thanh_vien' => 'THANH_VIEN',
-            'diem_xanh'      => 0,
+            'diem_xanh' => 0,
         ]);
 
         $this->tokenKh = JWTAuth::fromUser($this->tkKh);
 
-        // 2. Táº¡o tÃ i khoáº£n Sales (Kinh Doanh)
+        // Tạo tài khoản Sales/Kinh doanh.
         $this->tkKd = TaiKhoan::create([
-            'ma_tai_khoan'   => 'TEST_TK_TT_KD',
-            'ten_dang_nhap'  => 'test_tt_sales',
-            'mat_khau'      => bcrypt('123456'),
-            'ho_ten'        => 'NhÃ¢n ViÃªn Sales',
-            'email'        => 'tt_sales_' . time() . '@test.com',
-            'so_dien_thoai'  => '0987666777',
-            'vai_tro'       => 'KINHDOANH',
-            'trang_thai'    => 'HOAT_DONG',
-            'ngay_sinh'     => '1985-05-05',
+            'ma_tai_khoan' => 'TEST_TK_TT_KD',
+            'ten_dang_nhap' => 'test_tt_sales',
+            'mat_khau' => bcrypt('123456'),
+            'ho_ten' => 'Nhân Viên Sales',
+            'email' => 'tt_sales_' . time() . '@test.com',
+            'so_dien_thoai' => '0987666777',
+            'vai_tro' => 'KINHDOANH',
+            'trang_thai' => 'HOAT_DONG',
+            'ngay_sinh' => '1985-05-05',
         ]);
 
         $this->tokenKd = JWTAuth::fromUser($this->tkKd);
 
-        // 3. Táº¡o Tour Máº«u vÃ  Tour Thá»±c Táº¿
+        // Tạo tour mẫu và tour thực tế.
         TourMau::create([
             'ma_tour_mau' => 'TEST_TM_TT',
-            'tieu_de'    => 'Tour Test Thanh ToÃ¡n',
+            'tieu_de' => 'Tour Test Thanh Toán',
             'thoi_luong' => 3,
-            'gia_san'    => 1000000,
+            'gia_san' => 1000000,
         ]);
 
         $this->tourThucTe = TourThucTe::create([
-            'ma_tour_thuc_te'   => 'TEST_TTT_TT',
-            'ma_tour_mau'      => 'TEST_TM_TT',
-            'ngay_khoi_hanh'   => Carbon::now()->addDays(10)->format('Y-m-d'),
-            'gia_hien_hanh'    => 2000000,
-            'so_khach_toi_thieu'=> 2,
-            'so_khach_toi_da'   => 20,
-            'cho_con_lai'      => 10,
-            'trang_thai'      => 'MO_BAN',
+            'ma_tour_thuc_te' => 'TEST_TTT_TT',
+            'ma_tour_mau' => 'TEST_TM_TT',
+            'ngay_khoi_hanh' => Carbon::now()->addDays(10)->format('Y-m-d'),
+            'gia_hien_hanh' => 2000000,
+            'so_khach_toi_thieu' => 2,
+            'so_khach_toi_da' => 20,
+            'cho_con_lai' => 10,
+            'trang_thai' => 'MO_BAN',
         ]);
     }
 
     /**
-     * Test Thanh toÃ¡n trá»±c tuyáº¿n Mock thÃ nh cÃ´ng
+     * Test thanh toán trực tuyến mock thành công.
      */
     public function test_thanh_toan_mock_thanh_cong()
     {
-        // 1. Táº¡o Ä‘Æ¡n Ä‘áº·t tour á»Ÿ tráº¡ng thÃ¡i CHO_XAC_NHAN
-        $don = DonDatTour::create([
-            'ma_dat_tour'     => 'DDT_TEST_TT1',
-            'ma_tour_thuc_te'  => 'TEST_TTT_TT',
-            'ma_khach_hang'   => 'TEST_KH_TT',
-            'ngay_dat'       => Carbon::now(),
-            'tong_tien'      => 2000000.0,
-            'trang_thai'     => 'CHO_XAC_NHAN',
+        // Tạo đơn đặt tour ở trạng thái CHO_XAC_NHAN.
+        DonDatTour::create([
+            'ma_dat_tour' => 'DDT_TEST_TT1',
+            'ma_tour_thuc_te' => 'TEST_TTT_TT',
+            'ma_khach_hang' => 'TEST_KH_TT',
+            'ngay_dat' => Carbon::now(),
+            'tong_tien' => 2000000.0,
+            'trang_thai' => 'CHO_XAC_NHAN',
         ]);
 
-        // Táº¡o chi tiáº¿t Ä‘áº·t cá»§a ngÆ°á»i Ä‘áº·t Ä‘á»ƒ lÆ°u lá»‹ch sá»­ tour
+        // Tạo chi tiết đặt của người đặt để lưu lịch sử tour.
         ChiTietDatTour::create([
             'ma_chi_tiet_dat' => 'CTD_TEST_TT1',
             'ma_dat_tour' => 'DDT_TEST_TT1',
@@ -111,7 +111,7 @@ class ThanhToanTest extends TestCase
             'gia_tai_thoi_diem_dat' => 2000000.0,
         ]);
 
-        // 2. KhÃ¡ch hÃ ng gá»i API thanh toÃ¡n mock
+        // Khách hàng gọi API thanh toán mock.
         $response = $this->withHeader('Authorization', 'Bearer ' . $this->tokenKh)
             ->postJson('/api/thanh-toan/mock', [
                 'maDatTour' => 'DDT_TEST_TT1',
@@ -120,7 +120,6 @@ class ThanhToanTest extends TestCase
         $response->assertStatus(200);
         $response->assertJsonPath('data.trangThai', 'DA_XAC_NHAN');
 
-        // 3. Kiá»ƒm tra DB
         $this->assertDatabaseHas('don_dat_tours', [
             'ma_dat_tour' => 'DDT_TEST_TT1',
             'trang_thai' => 'DA_XAC_NHAN',
@@ -140,17 +139,17 @@ class ThanhToanTest extends TestCase
     }
 
     /**
-     * Test KhÃ¡ch bÃ¡o chuyá»ƒn khoáº£n thÃ nh cÃ´ng
+     * Test khách báo chuyển khoản thành công.
      */
     public function test_bao_chuyen_khoan_thanh_cong()
     {
-        $don = DonDatTour::create([
-            'ma_dat_tour'     => 'DDT_TEST_TT2',
-            'ma_tour_thuc_te'  => 'TEST_TTT_TT',
-            'ma_khach_hang'   => 'TEST_KH_TT',
-            'ngay_dat'       => Carbon::now(),
-            'tong_tien'      => 2000000.0,
-            'trang_thai'     => 'CHO_XAC_NHAN',
+        DonDatTour::create([
+            'ma_dat_tour' => 'DDT_TEST_TT2',
+            'ma_tour_thuc_te' => 'TEST_TTT_TT',
+            'ma_khach_hang' => 'TEST_KH_TT',
+            'ngay_dat' => Carbon::now(),
+            'tong_tien' => 2000000.0,
+            'trang_thai' => 'CHO_XAC_NHAN',
         ]);
 
         $response = $this->withHeader('Authorization', 'Bearer ' . $this->tokenKh)
@@ -171,17 +170,17 @@ class ThanhToanTest extends TestCase
     }
 
     /**
-     * Test Sales duyá»‡t chuyá»ƒn khoáº£n thÃ nh cÃ´ng (Äá»“ng Ã½)
+     * Test Sales duyệt chuyển khoản thành công khi đồng ý.
      */
     public function test_sales_xac_nhan_thanh_toan_dong_y()
     {
-        $don = DonDatTour::create([
-            'ma_dat_tour'     => 'DDT_TEST_TT3',
-            'ma_tour_thuc_te'  => 'TEST_TTT_TT',
-            'ma_khach_hang'   => 'TEST_KH_TT',
-            'ngay_dat'       => Carbon::now(),
-            'tong_tien'      => 2000000.0,
-            'trang_thai'     => 'CHO_XAC_NHAN',
+        DonDatTour::create([
+            'ma_dat_tour' => 'DDT_TEST_TT3',
+            'ma_tour_thuc_te' => 'TEST_TTT_TT',
+            'ma_khach_hang' => 'TEST_KH_TT',
+            'ngay_dat' => Carbon::now(),
+            'tong_tien' => 2000000.0,
+            'trang_thai' => 'CHO_XAC_NHAN',
         ]);
 
         ChiTietDatTour::create([
@@ -192,7 +191,7 @@ class ThanhToanTest extends TestCase
             'gia_tai_thoi_diem_dat' => 2000000.0,
         ]);
 
-        // Táº¡o sáºµn giao dá»‹ch KHXN:
+        // Tạo sẵn giao dịch khách đã báo chuyển khoản.
         GiaoDich::create([
             'ma_giao_dich' => 'GD_TEST_TT3',
             'ma_dat_tour' => 'DDT_TEST_TT3',
@@ -203,7 +202,6 @@ class ThanhToanTest extends TestCase
             'trang_thai' => 'CHO_THANH_TOAN',
         ]);
 
-        // Sales gá»i API xÃ¡c nháº­n
         $response = $this->withHeader('Authorization', 'Bearer ' . $this->tokenKd)
             ->postJson('/api/kinh-doanh/xac-nhan-thanh-toan', [
                 'maDatTour' => 'DDT_TEST_TT3',
@@ -231,17 +229,17 @@ class ThanhToanTest extends TestCase
     }
 
     /**
-     * Test Sales tá»« chá»‘i chuyá»ƒn khoáº£n
+     * Test Sales từ chối chuyển khoản.
      */
     public function test_sales_xac_nhan_thanh_toan_tu_choi()
     {
-        $don = DonDatTour::create([
-            'ma_dat_tour'     => 'DDT_TEST_TT4',
-            'ma_tour_thuc_te'  => 'TEST_TTT_TT',
-            'ma_khach_hang'   => 'TEST_KH_TT',
-            'ngay_dat'       => Carbon::now(),
-            'tong_tien'      => 2000000.0,
-            'trang_thai'     => 'CHO_XAC_NHAN',
+        DonDatTour::create([
+            'ma_dat_tour' => 'DDT_TEST_TT4',
+            'ma_tour_thuc_te' => 'TEST_TTT_TT',
+            'ma_khach_hang' => 'TEST_KH_TT',
+            'ngay_dat' => Carbon::now(),
+            'tong_tien' => 2000000.0,
+            'trang_thai' => 'CHO_XAC_NHAN',
         ]);
 
         GiaoDich::create([
@@ -264,7 +262,7 @@ class ThanhToanTest extends TestCase
 
         $this->assertDatabaseHas('don_dat_tours', [
             'ma_dat_tour' => 'DDT_TEST_TT4',
-            'trang_thai' => 'CHO_XAC_NHAN', // Váº«n chá» xÃ¡c nháº­n
+            'trang_thai' => 'CHO_XAC_NHAN',
         ]);
 
         $this->assertDatabaseHas('giao_diches', [
@@ -274,11 +272,11 @@ class ThanhToanTest extends TestCase
     }
 
     /**
-     * Test cháº·n phÃ¢n quyá»n sai vai trÃ²
+     * Test chặn phân quyền sai vai trò.
      */
     public function test_xac_nhan_thanh_toan_sai_vai_tro()
     {
-        $response = $this->withHeader('Authorization', 'Bearer ' . $this->tokenKh) // Gá»i báº±ng token KhÃ¡ch hÃ ng
+        $response = $this->withHeader('Authorization', 'Bearer ' . $this->tokenKh)
             ->postJson('/api/kinh-doanh/xac-nhan-thanh-toan', [
                 'maDatTour' => 'DDT_TEST_TT4',
                 'trangThai' => 'DONG_Y',
@@ -286,20 +284,21 @@ class ThanhToanTest extends TestCase
 
         $response->assertStatus(403);
     }
-    // ==========================================
-    // VNPAY TESTS
-    // ==========================================
+
+    /**
+     * Test tạo URL thanh toán VNPAY thành công.
+     */
     public function testTaoUrlVnpayThanhCong()
     {
-        // Mock DonDatTour
-        $don = DonDatTour::create([
-            'ma_dat_tour'     => 'DON_VNPAY_01',
-            'ma_tour_thuc_te'  => 'TEST_TTT_TT',
-            'ma_khach_hang'   => 'TEST_KH_TT',
-            'ngay_dat'       => Carbon::now(),
-            'tong_tien'      => 3000000.0,
-            'trang_thai'     => 'CHO_XAC_NHAN',
+        DonDatTour::create([
+            'ma_dat_tour' => 'DON_VNPAY_01',
+            'ma_tour_thuc_te' => 'TEST_TTT_TT',
+            'ma_khach_hang' => 'TEST_KH_TT',
+            'ngay_dat' => Carbon::now(),
+            'tong_tien' => 3000000.0,
+            'trang_thai' => 'CHO_XAC_NHAN',
         ]);
+
         ChiTietDatTour::create([
             'ma_chi_tiet_dat' => 'CTD_VNPAY_01',
             'ma_dat_tour' => 'DON_VNPAY_01',
@@ -308,45 +307,48 @@ class ThanhToanTest extends TestCase
             'gia_tai_thoi_diem_dat' => 3000000.0,
         ]);
 
-        \Illuminate\Support\Facades\Config::set('vnpay.tmn_code', 'TESTCODE');
-        \Illuminate\Support\Facades\Config::set('vnpay.hash_secret', 'TESTSECRETKEY1234567890123456789');
-        \Illuminate\Support\Facades\Config::set('vnpay.url', 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html');
-        \Illuminate\Support\Facades\Config::set('vnpay.return_url', 'http://localhost:3000/return');
+        Config::set('vnpay.tmn_code', 'TESTCODE');
+        Config::set('vnpay.hash_secret', 'TESTSECRETKEY1234567890123456789');
+        Config::set('vnpay.url', 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html');
+        Config::set('vnpay.return_url', 'http://localhost:3000/return');
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $this->tokenKh,
         ])->postJson('/api/thanh-toan/vnpay/tao-url', [
-            'maDatTour' => 'DON_VNPAY_01'
+            'maDatTour' => 'DON_VNPAY_01',
         ]);
 
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'success',
-                     'message',
-                     'data' => [
-                         'paymentUrl'
-                     ]
-                 ]);
+            ->assertJsonStructure([
+                'success',
+                'message',
+                'data' => [
+                    'paymentUrl',
+                ],
+            ]);
 
         $this->assertDatabaseHas('giao_diches', [
             'ma_dat_tour' => 'DON_VNPAY_01',
             'phuong_thuc' => 'VNPAY',
             'trang_thai' => 'CHO_THANH_TOAN',
-            'loai_giao_dich' => 'THANH_TOAN'
+            'loai_giao_dich' => 'THANH_TOAN',
         ]);
     }
 
+    /**
+     * Test callback return VNPAY thành công.
+     */
     public function testVnpayReturnThanhCong()
     {
-        // Setup DonDatTour
         DonDatTour::create([
-            'ma_dat_tour'     => 'DON_VNPAY_02',
-            'ma_tour_thuc_te'  => 'TEST_TTT_TT',
-            'ma_khach_hang'   => 'TEST_KH_TT',
-            'ngay_dat'       => Carbon::now(),
-            'tong_tien'      => 3000000.0,
-            'trang_thai'     => 'CHO_XAC_NHAN',
+            'ma_dat_tour' => 'DON_VNPAY_02',
+            'ma_tour_thuc_te' => 'TEST_TTT_TT',
+            'ma_khach_hang' => 'TEST_KH_TT',
+            'ngay_dat' => Carbon::now(),
+            'tong_tien' => 3000000.0,
+            'trang_thai' => 'CHO_XAC_NHAN',
         ]);
+
         ChiTietDatTour::create([
             'ma_chi_tiet_dat' => 'CTD_VNPAY_02',
             'ma_dat_tour' => 'DON_VNPAY_02',
@@ -355,7 +357,6 @@ class ThanhToanTest extends TestCase
             'gia_tai_thoi_diem_dat' => 3000000.0,
         ]);
 
-        // Setup GiaoDich
         GiaoDich::create([
             'ma_giao_dich' => 'GD_VNP_02',
             'ma_dat_tour' => 'DON_VNPAY_02',
@@ -367,8 +368,8 @@ class ThanhToanTest extends TestCase
             'ngay_thanh_toan' => Carbon::now(),
         ]);
 
-        \Illuminate\Support\Facades\Config::set('vnpay.tmn_code', 'TESTCODE');
-        \Illuminate\Support\Facades\Config::set('vnpay.hash_secret', 'TESTSECRETKEY1234567890123456789');
+        Config::set('vnpay.tmn_code', 'TESTCODE');
+        Config::set('vnpay.hash_secret', 'TESTSECRETKEY1234567890123456789');
 
         $inputData = [
             'vnp_Amount' => 300000000,
@@ -386,42 +387,46 @@ class ThanhToanTest extends TestCase
 
         ksort($inputData);
         $i = 0;
-        $hashData = "";
+        $hashData = '';
         foreach ($inputData as $key => $value) {
-            if ($i == 1) {
-                $hashData .= '&' . urlencode($key) . "=" . urlencode($value);
+            if ($i === 1) {
+                $hashData .= '&' . urlencode($key) . '=' . urlencode($value);
             } else {
-                $hashData .= urlencode($key) . "=" . urlencode($value);
+                $hashData .= urlencode($key) . '=' . urlencode($value);
                 $i = 1;
             }
         }
-        $vnp_SecureHash = hash_hmac('sha512', $hashData, 'TESTSECRETKEY1234567890123456789');
-        $inputData['vnp_SecureHash'] = $vnp_SecureHash;
+
+        $inputData['vnp_SecureHash'] = hash_hmac('sha512', $hashData, 'TESTSECRETKEY1234567890123456789');
 
         $response = $this->getJson('/api/thanh-toan/vnpay/return?' . http_build_query($inputData));
 
         $response->assertStatus(200)
-                 ->assertJson([
-                     'success' => true,
-                 ]);
+            ->assertJson([
+                'success' => true,
+            ]);
 
         $this->assertDatabaseHas('giao_diches', [
             'ma_giao_dich' => 'GD_VNP_02',
             'trang_thai' => 'THANH_CONG',
         ]);
+
         $this->assertDatabaseHas('don_dat_tours', [
             'ma_dat_tour' => 'DON_VNPAY_02',
-            'trang_thai' => 'DA_XAC_NHAN'
+            'trang_thai' => 'DA_XAC_NHAN',
         ]);
     }
 
+    /**
+     * Test callback return VNPAY thất bại khi sai chữ ký.
+     */
     public function testVnpayReturnThatBaiSaiChuKy()
     {
         $response = $this->getJson('/api/thanh-toan/vnpay/return?vnp_TxnRef=123&vnp_SecureHash=FAKE');
 
         $response->assertStatus(400)
-                 ->assertJson([
-                     'success' => false,
-                 ]);
+            ->assertJson([
+                'success' => false,
+            ]);
     }
 }

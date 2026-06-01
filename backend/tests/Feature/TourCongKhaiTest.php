@@ -67,8 +67,6 @@ class TourCongKhaiTest extends TestCase
     public function testLayDanhGiaTour()
     {
         $response = $this->getJson("/api/public/tour/TTT_CK/danh-gia");
-        $response->dump();
-
         $response->assertStatus(200)
                  ->assertJsonFragment(["nhanXet" => "Tuyệt vời"]);
     }

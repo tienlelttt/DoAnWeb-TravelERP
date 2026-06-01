@@ -137,4 +137,42 @@ class KhachHangTest extends TestCase
             "trang_thai" => "CHO_XU_LY"
         ]);
     }
+
+    public function test_khach_hang_khong_duoc_xem_hoac_huy_don_cua_nguoi_khac()
+    {
+        $token = JWTAuth::fromUser($this->khachHangTK);
+
+        $khachKhacTK = TaiKhoan::create([
+            "ma_tai_khoan" => "TK_KH_002",
+            "ten_dang_nhap" => "khachhang2",
+            "mat_khau" => bcrypt("password"),
+            "ho_ten" => "Khách hàng khác",
+            "vai_tro" => "KHACHHANG",
+            "trang_thai" => "HOAT_DONG"
+        ]);
+
+        HoChieuSo::create([
+            "ma_khach_hang" => "KH_002",
+            "ma_tai_khoan" => $khachKhacTK->ma_tai_khoan,
+            "hang_thanh_vien" => "THANH_VIEN",
+            "diem_xanh" => 0
+        ]);
+
+        DonDatTour::create([
+            "ma_dat_tour" => "DAT_CUA_NGUOI_KHAC",
+            "ma_tour_thuc_te" => "TTT_004",
+            "ma_khach_hang" => "KH_002",
+            "ngay_dat" => Carbon::now(),
+            "trang_thai" => "CHO_XAC_NHAN",
+            "tong_tien" => 1200000
+        ]);
+
+        $this->getJson("/api/khach-hang/dat-tour/DAT_CUA_NGUOI_KHAC", [
+            "Authorization" => "Bearer $token"
+        ])->assertStatus(404);
+
+        $this->putJson("/api/khach-hang/don-dat-tour/DAT_CUA_NGUOI_KHAC/huy", [], [
+            "Authorization" => "Bearer $token"
+        ])->assertStatus(404);
+    }
 }

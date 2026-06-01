@@ -89,6 +89,81 @@ class PhanCongTourTest extends TestCase
         ]);
     }
 
+    public function test_hdv_khong_duoc_phan_cong_tour_thay_dieu_hanh()
+    {
+        TourThucTe::create([
+            "ma_tour_thuc_te" => "TTT_RBAC_DH",
+            "ma_tour_mau" => "TM_001",
+            "ngay_khoi_hanh" => Carbon::now()->addDays(10),
+            "gia_hien_hanh" => 1200000,
+            "so_khach_toi_da" => 20,
+            "so_khach_toi_thieu" => 10,
+            "cho_con_lai" => 20,
+            "trang_thai" => "CHO_KICH_HOAT"
+        ]);
+
+        $token = JWTAuth::fromUser($this->hdvTK);
+
+        $this->postJson("/api/dieu-hanh/phan-cong-tour", [
+            "maTourThucTe" => "TTT_RBAC_DH",
+            "maNhanVien" => "NV_HDV_001"
+        ], ["Authorization" => "Bearer $token"])->assertStatus(403);
+
+        $this->assertDatabaseMissing("phan_cong_tours", [
+            "ma_tour_thuc_te" => "TTT_RBAC_DH",
+            "ma_nhan_vien" => "NV_HDV_001"
+        ]);
+    }
+
+    public function test_hdv_khong_duoc_cap_nhat_nang_luc_nhan_vien()
+    {
+        $token = JWTAuth::fromUser($this->hdvTK);
+
+        $this->putJson("/api/dieu-hanh/nhan-vien/NV_HDV_001/nang-luc", [
+            "ngonNgu" => "Tiếng Anh",
+            "chungChi" => "HDV Quốc tế",
+            "chuyenMon" => "Leo núi"
+        ], ["Authorization" => "Bearer $token"])->assertStatus(403);
+
+        $this->assertDatabaseMissing("nang_luc_nhan_viens", [
+            "ma_nhan_vien" => "NV_HDV_001",
+            "ngon_ngu" => "Tiếng Anh"
+        ]);
+    }
+
+    public function test_dieu_hanh_co_the_huy_phan_cong()
+    {
+        TourThucTe::create([
+            "ma_tour_thuc_te" => "TTT_HUY_PC",
+            "ma_tour_mau" => "TM_001",
+            "ngay_khoi_hanh" => Carbon::now()->addDays(10),
+            "gia_hien_hanh" => 1200000,
+            "so_khach_toi_da" => 20,
+            "so_khach_toi_thieu" => 10,
+            "cho_con_lai" => 20,
+            "trang_thai" => "CHO_KICH_HOAT"
+        ]);
+
+        PhanCongTour::create([
+            "ma_phan_cong_tour" => "PCT_HUY_PC",
+            "ma_tour_thuc_te" => "TTT_HUY_PC",
+            "ma_nhan_vien" => "NV_HDV_001",
+            "ngay_phan_cong" => Carbon::now(),
+            "trang_thai_chap_nhan" => "CHO_PHAN_HOI"
+        ]);
+
+        $token = JWTAuth::fromUser($this->dieuHanhTK);
+
+        $this->deleteJson("/api/dieu-hanh/phan-cong/PCT_HUY_PC", [], [
+            "Authorization" => "Bearer $token"
+        ])->assertStatus(200)
+          ->assertJsonPath("data", null);
+
+        $this->assertDatabaseMissing("phan_cong_tours", [
+            "ma_phan_cong_tour" => "PCT_HUY_PC"
+        ]);
+    }
+
     public function test_phan_cong_that_bai_do_trung_lich_12_tieng()
     {
         $tour1 = TourThucTe::create([

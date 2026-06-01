@@ -4,6 +4,9 @@ namespace Tests\Feature;
 
 use App\Models\TaiKhoan;
 use App\Models\VaiTro;
+use App\Models\TourMau;
+use App\Models\TourThucTe;
+use App\Models\DonDatTour;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -96,6 +99,74 @@ class ApiContractCompatibilityTest extends TestCase
         $this->getJson('/api/kinh-doanh/khach-hang')->assertStatus(401);
         $this->getJson('/api/kinh-doanh/khach-hang/KH001')->assertStatus(401);
         $this->getJson('/api/huong-dan-vien/su-co')->assertStatus(401);
+    }
+
+    public function test_frontend_kinh_doanh_chi_tiet_don_dat_tour_alias(): void
+    {
+        TourMau::create([
+            'ma_tour_mau' => 'TM_KD_ALIAS',
+            'tieu_de' => 'Tour KD Alias',
+            'thoi_luong' => 3,
+            'gia_san' => 1000000,
+        ]);
+
+        TourThucTe::create([
+            'ma_tour_thuc_te' => 'TTT_KD_ALIAS',
+            'ma_tour_mau' => 'TM_KD_ALIAS',
+            'ngay_khoi_hanh' => now()->addDays(10),
+            'gia_hien_hanh' => 1200000,
+            'so_khach_toi_da' => 20,
+            'so_khach_toi_thieu' => 10,
+            'cho_con_lai' => 20,
+            'trang_thai' => 'MO_BAN',
+        ]);
+
+        DonDatTour::create([
+            'ma_dat_tour' => 'DDT_KD_ALIAS',
+            'ma_tour_thuc_te' => 'TTT_KD_ALIAS',
+            'ma_khach_hang' => 'KH_KD_ALIAS',
+            'ngay_dat' => now(),
+            'trang_thai' => 'CHO_XAC_NHAN',
+            'tong_tien' => 1200000,
+        ]);
+
+        $this->actingAs($this->kinhdoanhUser, 'api')
+            ->getJson('/api/kinh-doanh/dat-tour/DDT_KD_ALIAS')
+            ->assertStatus(200)
+            ->assertJsonPath('data.maDatTour', 'DDT_KD_ALIAS');
+    }
+
+    public function test_frontend_san_pham_loai_phong_crud_contract(): void
+    {
+        $created = $this->actingAs($this->sanphamUser, 'api')
+            ->postJson('/api/san-pham/loai-phong', [
+                'tenLoai' => 'Phòng đơn',
+                'mucPhuThu' => 500000,
+                'trangThai' => 'HOAT_DONG',
+            ]);
+
+        $created->assertStatus(201)
+            ->assertJsonPath('data.tenLoai', 'Phòng đơn');
+
+        $maLoaiPhong = $created->json('data.maLoaiPhong');
+
+        $this->actingAs($this->sanphamUser, 'api')
+            ->getJson('/api/san-pham/loai-phong')
+            ->assertStatus(200)
+            ->assertJsonPath('data.0.maLoaiPhong', $maLoaiPhong);
+
+        $this->actingAs($this->sanphamUser, 'api')
+            ->putJson('/api/san-pham/loai-phong/' . $maLoaiPhong, [
+                'tenLoai' => 'Phòng đôi',
+                'mucPhuThu' => 700000,
+                'trangThai' => 'HOAT_DONG',
+            ])
+            ->assertStatus(200)
+            ->assertJsonPath('data.tenLoai', 'Phòng đôi');
+
+        $this->actingAs($this->sanphamUser, 'api')
+            ->deleteJson('/api/san-pham/loai-phong/' . $maLoaiPhong)
+            ->assertStatus(200);
     }
 
     public function test_rbac_unauthorized_role_returns_403(): void

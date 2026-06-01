@@ -80,4 +80,20 @@ class PowerBiTest extends TestCase
         // Kiểm tra có chứa BOM UTF-8 không
         $this->assertTrue(strpos($content, "\xEF\xBB\xBF") === 0);
     }
+
+    public function testPowerBiChanKhoangNgayQuaDai()
+    {
+        $payload = [
+            'maKho' => 'TOUR',
+            'tuNgay' => '2024-01-01',
+            'denNgay' => '2025-12-31',
+            'dinhDang' => 'CSV'
+        ];
+
+        $response = $this->actingAs($this->keToanUser, 'api')
+                         ->postJson('/api/ke-toan/power-bi/xuat-du-lieu', $payload);
+
+        $response->assertStatus(400);
+        $this->assertStringContainsString('366 ngày', $response->json('message'));
+    }
 }

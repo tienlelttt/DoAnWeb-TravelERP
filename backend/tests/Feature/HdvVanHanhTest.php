@@ -15,6 +15,8 @@ use App\Models\PhanCongTour;
 use App\Models\DonDatTour;
 use App\Models\ChiTietDatTour;
 use App\Models\HoChieuSo;
+use App\Models\NhatKySuCo;
+use App\Models\ChiPhiThucTe;
 use Carbon\Carbon;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -130,5 +132,92 @@ class HdvVanHanhTest extends TestCase
             "thanh_tien" => 5000000,
             "trang_thai_duyet" => "CHO_DUYET"
         ]);
+    }
+
+    public function test_hdv_list_su_co_va_chi_phi_co_phan_trang()
+    {
+        $token = JWTAuth::fromUser($this->hdvTK);
+
+        NhatKySuCo::create([
+            'ma_nhat_ky_su_co' => 'SC_PAGE_001',
+            'ma_tour_thuc_te' => 'TTT_002',
+            'ma_nhan_vien_bao_cao' => 'NV_002',
+            'mo_ta' => 'Sự cố test 1',
+            'muc_do' => 'THAP',
+            'loai_su_co' => 'KHACH_HANG',
+            'thoi_gian_bao_cao' => now()->subMinute(),
+        ]);
+
+        NhatKySuCo::create([
+            'ma_nhat_ky_su_co' => 'SC_PAGE_002',
+            'ma_tour_thuc_te' => 'TTT_002',
+            'ma_nhan_vien_bao_cao' => 'NV_002',
+            'mo_ta' => 'Sự cố test 2',
+            'muc_do' => 'SOS',
+            'loai_su_co' => 'KHACH_HANG',
+            'thoi_gian_bao_cao' => now(),
+        ]);
+
+        ChiPhiThucTe::create([
+            'ma_chi_phi_thuc_te' => 'CP_PAGE_001',
+            'ma_tour_thuc_te' => 'TTT_002',
+            'ma_nhan_vien' => 'NV_002',
+            'danh_muc' => 'Ăn uống',
+            'thanh_tien' => 100000,
+            'trang_thai_duyet' => 'CHO_DUYET',
+            'ngay_khai' => now()->subMinute(),
+        ]);
+
+        ChiPhiThucTe::create([
+            'ma_chi_phi_thuc_te' => 'CP_PAGE_002',
+            'ma_tour_thuc_te' => 'TTT_002',
+            'ma_nhan_vien' => 'NV_002',
+            'danh_muc' => 'Di chuyển',
+            'thanh_tien' => 200000,
+            'trang_thai_duyet' => 'CHO_DUYET',
+            'ngay_khai' => now(),
+        ]);
+
+        $suCoResponse = $this->getJson('/api/huong-dan-vien/tour/TTT_002/su-co?size=1', [
+            'Authorization' => "Bearer $token",
+        ]);
+
+        $suCoResponse->assertStatus(200)
+            ->assertJsonPath('meta.pagination.perPage', 1)
+            ->assertJsonPath('meta.pagination.total', 2)
+            ->assertJsonCount(1, 'data');
+
+        $chiPhiResponse = $this->getJson('/api/huong-dan-vien/tour/TTT_002/chi-phi?size=1', [
+            'Authorization' => "Bearer $token",
+        ]);
+
+        $chiPhiResponse->assertStatus(200)
+            ->assertJsonPath('meta.pagination.perPage', 1)
+            ->assertJsonPath('meta.pagination.total', 2)
+            ->assertJsonCount(1, 'data');
+    }
+
+    public function test_hdv_khong_duoc_xem_du_lieu_tour_khong_duoc_phan_cong()
+    {
+        $token = JWTAuth::fromUser($this->hdvTK);
+
+        TourThucTe::create([
+            "ma_tour_thuc_te" => "TTT_KHONG_PHAN_CONG",
+            "ma_tour_mau" => "TM_002",
+            "ngay_khoi_hanh" => Carbon::now()->addDays(5),
+            "gia_hien_hanh" => 1200000,
+            "so_khach_toi_da" => 20,
+            "so_khach_toi_thieu" => 10,
+            "cho_con_lai" => 20,
+            "trang_thai" => "DANG_DIEN_RA"
+        ]);
+
+        $this->getJson('/api/huong-dan-vien/tour/TTT_KHONG_PHAN_CONG/su-co', [
+            'Authorization' => "Bearer $token",
+        ])->assertStatus(403);
+
+        $this->getJson('/api/huong-dan-vien/tour/TTT_KHONG_PHAN_CONG/chi-phi', [
+            'Authorization' => "Bearer $token",
+        ])->assertStatus(403);
     }
 }
