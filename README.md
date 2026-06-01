@@ -54,7 +54,7 @@ Digital-Travel_ERP/
 ├── backend/                  # Backend PHP Laravel
 │ ├── app/
 │ ├── config/                 # Tệp cấu hình ứng dụng
-│ ├── database/
+│ ├── database/               # Migrations, Seeders
 │ ├── routes/                 # Cấu hình định tuyến API
 │ ├── tests/                  # Bộ kiểm thử tự động (PHPUnit)
 │ └── artisan                 # Công cụ CLI của Laravel
@@ -62,8 +62,7 @@ Digital-Travel_ERP/
 │ ├── admin/                  # Giao diện quản trị/nhân viên nội bộ
 │ ├── hdv/                    # Giao diện hướng dẫn viên
 │ └── kh/                     # Giao diện khách hàng
-├── database-scripts/         # Các DB script độc lập 
-└── docs/ 
+└── docs/                     # Tài liệu dự án (Quy trình, Kiến trúc, API)
 ```
 
 ---
@@ -157,13 +156,20 @@ Khuyến nghị sử dụng **Laragon** để cài đặt trọn gói PHP, MySQL
 
 - Chạy migration để khởi tạo cấu trúc bảng:
   ```bash
-  php artisan migrate
-```
+  php artisan migrate:fresh
+  ```
 
-- Nạp dữ liệu mẫu:
+- Nạp dữ liệu cốt lõi (Bắt buộc cho Production - Tài khoản admin & Vai trò):
   ```bash
   php artisan db:seed
-```
+  ```
+
+- Nạp dữ liệu nghiệp vụ gốc (Dành cho Local / Dev / Testing):
+  Hệ thống cung cấp một công cụ import dữ liệu chuyên biệt để nạp thẳng các tệp RAW SQL khổng lồ vào DB mà không qua Seeder:
+  ```bash
+  php artisan db:import-sql
+  ```
+  *(Lệnh này sẽ tự động quét thư mục `database/raw-sql/` và import `accounts_seed.sql`, `business_demo_seed.sql`)*
 
 
 ### 2. Chạy Backend

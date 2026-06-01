@@ -73,6 +73,9 @@ Tài liệu này dùng để theo dõi toàn bộ lộ trình và tiến độ p
 - [x] Chuẩn hóa toàn bộ bình luận, tài liệu và tên kỹ thuật theo ngữ cảnh Laravel độc lập.
 - [x] Áp dụng `CamelCaseJsonResponse` Middleware để map JSON trả về Frontend tự động làm lớp bảo vệ tối ưu.
 - [x] Refactor toàn bộ truy vấn `where('PascalCase')` sang `where('snake_case')` ở tất cả Controller và Service sử dụng Tokenizer an toàn.
+- [x] Chuẩn hóa toàn bộ các file SQL Oracle sang MySQL thuần (`snake_case`) lưu tại `database/raw-sql/`.
+- [x] Xóa sạch thư mục legacy `database-scripts` và script parser cũ để loại bỏ hoàn toàn dấu vết công nghệ cũ.
+- [x] Phân tách kiến trúc Seeder chuyên nghiệp: `CoreSystemSeeder` cho cấu hình Production và `DatabaseDemoSeeder` cho môi trường Test.
 
 ## ✅ TÁI CẤU TRÚC MONOREPO (Hoàn thành 100%)
 - [x] Phân chia cấu trúc monorepo chuẩn: `backend/`, `frontend/`, `database-scripts/`, `docs/`.

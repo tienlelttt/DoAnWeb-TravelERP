@@ -1,4 +1,10 @@
 # Backend Laravel
+.env
+.env.*
+bootstrap/
+database/database.sqlite
+storage/
+tests/
 backend/vendor/
 backend/.env
 backend/.env.*
@@ -6,6 +12,7 @@ backend/.env.*
 backend/.phpunit.result.cache
 backend/storage/*.key
 backend/bootstrap/cache/
+backend/storage/framework/views/
 backend/storage/logs/
 backend/*.log
 backend/public/hot
