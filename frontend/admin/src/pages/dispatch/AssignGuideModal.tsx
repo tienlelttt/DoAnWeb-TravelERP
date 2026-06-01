@@ -57,8 +57,8 @@ const AssignGuideModal: React.FC<AssignGuideModalProps> = ({
 
   const suggestedGuides = availableGuides.map((g) => {
     const status = 'available';
-
-    const cap = guideCaps[g.maNhanVien || ''] || {};
+    const maNhanVien = g.maNhanVien || (g as any).ma_nhan_vien || '';
+    const cap = guideCaps[maNhanVien] || {};
     
     // Parse language and specializations into an array of skills
     let realSkills: string[] = [];
@@ -76,8 +76,9 @@ const AssignGuideModal: React.FC<AssignGuideModalProps> = ({
 
   const handleSelectGuide = async (guide: any) => {
     setConflictGuideId(null);
-    if (await confirm(`Phân công HDV ${guide.hoTen} cho tour ${tour.name}?`)) {
-      onAssign(tour.id, guide.maNhanVien || '');
+    const hoTen = guide.hoTen || guide.ho_ten || guide.taiKhoan?.hoTen || guide.tai_khoan?.ho_ten;
+    if (await confirm(`Phân công HDV ${hoTen} cho tour ${tour.name}?`)) {
+      onAssign(tour.id, guide.maNhanVien || guide.ma_nhan_vien || '');
     }
   };
 
@@ -203,11 +204,13 @@ const AssignGuideModal: React.FC<AssignGuideModalProps> = ({
             ) : null}
             {!guidesLoading &&
             suggestedGuides.map(guide => {
-              const isConflict = conflictGuideId === guide.maNhanVien;
+              const maNhanVien = guide.maNhanVien || (guide as any).ma_nhan_vien;
+              const hoTen = guide.hoTen || (guide as any).ho_ten || (guide as any).taiKhoan?.hoTen || (guide as any).tai_khoan?.ho_ten;
+              const isConflict = conflictGuideId === maNhanVien;
               
               return (
                 <div 
-                  key={guide.maNhanVien} 
+                  key={maNhanVien} 
                   className={`flex flex-col gap-2 p-3 rounded-[12px] border transition-colors ${
                     isConflict ? 'bg-[#FFF4F4] border-[#BA1A1A]' : 'bg-white border-[#E1F1FF] hover:border-[#89D4FF]'
                   }`}
@@ -216,18 +219,18 @@ const AssignGuideModal: React.FC<AssignGuideModalProps> = ({
                     
                     <div className="flex gap-3">
                       <div className="w-12 h-12 bg-[#F4F9FF] text-[#00668A] text-lg font-bold rounded-full flex items-center justify-center border-2 border-white shadow-sm shrink-0">
-                        {guide.hoTen?.charAt(0) || 'U'}
+                        {hoTen?.charAt(0) || 'U'}
                       </div>
                       <div className="flex flex-col">
                         <div className="flex items-center gap-2 mb-0.5">
-                          <p className="font-bold text-[#121C2C]">{guide.hoTen}</p>
+                          <p className="font-bold text-[#121C2C]">{hoTen}</p>
                           <Badge 
                             label={guide.status === 'available' ? 'Sẵn sàng' : guide.status === 'busy' ? 'Đang đi tour' : 'Đang nghỉ'} 
                             variant={guide.status === 'available' ? 'success' : guide.status === 'busy' ? 'warning' : 'neutral'} 
                           />
                         </div>
                         <div className="flex items-center gap-3 text-xs text-gray-500">
-                          <span>{guide.maNhanVien}</span>
+                          <span>{maNhanVien}</span>
                           <span className="flex items-center gap-0.5 text-amber-500 font-medium">
                             <Star size={12} fill="currentColor" /> {guide.rating ? guide.rating.toFixed(1) : 'Chưa có'}
                           </span>

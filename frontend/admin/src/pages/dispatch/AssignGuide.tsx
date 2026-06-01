@@ -20,7 +20,8 @@ import { formatDate } from '../../utils/dateHelpers';
 
 const PENDING_STATUSES = new Set(['CHO_KICH_HOAT']);
 
-const calcDurationDays = (start?: string, end?: string): string => {
+const calcDurationDays = (start?: string, end?: string, thoiLuong?: number): string => {
+  if (thoiLuong) return `${thoiLuong} ngày`;
   if (!start || !end) return '—';
   const s = new Date(start);
   const e = new Date(end);
@@ -29,18 +30,29 @@ const calcDurationDays = (start?: string, end?: string): string => {
   return `${days} ngày`;
 };
 
-const mapTourToUI = (t: TourThucTeResponse): TourNeedGuide => ({
-  id: t.maTourThucTe || '',
-  code: t.maTourThucTe || '',
-  name: t.tieuDeTour || '',
-  startDate: t.ngayKhoiHanh ? formatDate(t.ngayKhoiHanh) : '',
-  endDate: t.ngayKetThuc ? formatDate(t.ngayKetThuc) : '',
-  duration: calcDurationDays(t.ngayKhoiHanh, t.ngayKetThuc),
-  passengers: t.soKhachToiDa || 0,
-  requiredSkills: [],
-  status: PENDING_STATUSES.has(t.trangThai || '') ? 'pending' : 'assigned',
-  location: '',
-});
+const mapTourToUI = (t: any): TourNeedGuide => {
+  let endDateStr = t.ngayKetThuc;
+  if (!endDateStr && t.ngayKhoiHanh && t.tourMau?.thoiLuong) {
+    const s = new Date(t.ngayKhoiHanh);
+    if (!Number.isNaN(s.getTime())) {
+      s.setDate(s.getDate() + t.tourMau.thoiLuong - 1);
+      endDateStr = s.toISOString();
+    }
+  }
+
+  return {
+    id: t.maTourThucTe || '',
+    code: t.maTourThucTe || '',
+    name: t.tieuDeTour || t.tourMau?.tieuDe || '',
+    startDate: t.ngayKhoiHanh ? formatDate(t.ngayKhoiHanh) : '',
+    endDate: endDateStr ? formatDate(endDateStr) : '',
+    duration: calcDurationDays(t.ngayKhoiHanh, endDateStr, t.tourMau?.thoiLuong),
+    passengers: t.soKhachToiDa || 0,
+    requiredSkills: [],
+    status: PENDING_STATUSES.has(t.trangThai || t.trang_thai || '') ? 'pending' : 'assigned',
+    location: '',
+  };
+};
 
 const AssignGuide: React.FC = () => {
   const [data, setData] = useState<TourNeedGuide[]>([]);
@@ -108,7 +120,7 @@ const AssignGuide: React.FC = () => {
     try {
       await dispatchService.phanCong({ maTourThucTe: tourId, maNhanVien: guideId });
 
-      const assignedGuide = availableGuides.find((g) => g.maNhanVien === guideId);
+      const assignedGuide = availableGuides.find((g) => (g.maNhanVien || (g as any).ma_nhan_vien) === guideId);
       if (assignedGuide && selectedTour) {
         setSuccessData({ tour: selectedTour, guide: assignedGuide });
       }
@@ -192,8 +204,8 @@ const AssignGuide: React.FC = () => {
   return (
     <MainLayout
       activeMenu="Phân công HDV"
-      expandedMenus={['Điều phối Hướng dẫn viên']}
-      breadcrumb={[{ label: 'Điều phối Hướng dẫn viên' }, { label: 'Phân công HDV' }]}
+      expandedMenus={['Điều phối HDV']}
+      breadcrumb={[{ label: 'Điều phối HDV' }, { label: 'Phân công HDV' }]}
     >
       <div className="flex flex-col h-full gap-6">
         <div className="flex flex-col gap-1">
@@ -298,15 +310,15 @@ const AssignGuide: React.FC = () => {
               </div>
               <div className="flex items-center gap-4">
                 <div className="w-14 h-14 bg-[#E1EFFE] text-[#1A56DB] font-bold text-xl rounded-full flex items-center justify-center shrink-0 border-2 border-[#BFDBFE]">
-                  {successData.guide.hoTen?.charAt(0) || 'U'}
+                  {((successData.guide.hoTen || (successData.guide as any).ho_ten || (successData.guide as any).taiKhoan?.hoTen || (successData.guide as any).tai_khoan?.ho_ten) as string)?.charAt(0) || 'U'}
                 </div>
                 <div className="flex flex-col gap-1">
-                  <p className="font-bold text-[#121C2C] text-base">{successData.guide.hoTen}</p>
+                  <p className="font-bold text-[#121C2C] text-base">{successData.guide.hoTen || (successData.guide as any).ho_ten || (successData.guide as any).taiKhoan?.hoTen || (successData.guide as any).tai_khoan?.ho_ten}</p>
                   <div className="flex items-center gap-2">
                     <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded text-xs font-medium border border-gray-200">
-                      {successData.guide.maNhanVien}
+                      {successData.guide.maNhanVien || (successData.guide as any).ma_nhan_vien}
                     </span>
-                    <span className="text-xs text-gray-500">{successData.guide.soDienThoai}</span>
+                    <span className="text-xs text-gray-500">{successData.guide.soDienThoai || (successData.guide as any).so_dien_thoai || (successData.guide as any).taiKhoan?.soDienThoai || (successData.guide as any).tai_khoan?.so_dien_thoai}</span>
                   </div>
                 </div>
               </div>
