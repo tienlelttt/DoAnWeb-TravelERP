@@ -18,16 +18,10 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      const isAuthUrl = error.config?.url && (
-        error.config.url.includes('/auth/dang-nhap') || 
-        error.config.url.includes('/auth/quen-mat-khau') || 
-        error.config.url.includes('/auth/dat-lai-mat-khau')
-      );
-      if (!isAuthUrl) {
-        localStorage.removeItem('token');
-        window.location.reload();
-      }
+    if (error.response?.status === 401 && !error.config?.url?.includes('/auth/')) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userProfile');
+      window.location.href = '/login';
     }
     return Promise.reject(error);
   }
