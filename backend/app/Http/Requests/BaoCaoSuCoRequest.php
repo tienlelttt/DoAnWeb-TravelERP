@@ -19,7 +19,7 @@ class BaoCaoSuCoRequest extends FormRequest
             "moTa" => "required|string",
             "giaiPhap" => "nullable|string",
             "mucDo" => "required|string|in:THAP,SOS",
-            "loaiSuCo" => "required|string|in:Y_TE,THOI_TIET,KHACH_HANG,DICH_VU,KHAC"
+            "loaiSuCo" => "required|string|in:Y_TE,THOI_TIET,PHUONG_TIEN,AN_UONG,KHACH_HANG,DICH_VU,KHAC"
         ];
     }
 }

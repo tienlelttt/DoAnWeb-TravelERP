@@ -16,7 +16,7 @@ class TaoYeuCauHoTroRequest extends FormRequest
         return [
             "maDatTour" => "nullable|string",
             "loaiYeuCau" => "required|string|max:100",
-            "noiDung" => "required|string|max:255"
+            "noiDung" => "required|string|max:2000"
         ];
     }
 }

@@ -16,7 +16,8 @@ class KhaiBaoChiPhiRequest extends FormRequest
         return [
             "danhMuc" => "required|string",
             "thanhTien" => "required|numeric|min:0",
-            "hoaDonAnh" => "nullable|string"
+            "hoaDonAnh" => "nullable|string",
+            "ghiChu" => "nullable|string"
         ];
     }
 }

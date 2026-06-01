@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('danh_muc', 200);
             $table->decimal('thanh_tien', 18, 2);
             $table->string('hoa_don_anh', 1000)->nullable();
+            $table->text('ghi_chu')->nullable();
             $table->string('trang_thai_duyet', 20);
             $table->dateTime('ngay_khai');
             $table->timestamps();
@@ -328,7 +329,7 @@ return new class extends Migration
             $table->string('ma_dat_tour', 50)->nullable();
             $table->string('ma_khach_hang', 50);
             $table->string('loai_yeu_cau', 100);
-            $table->string('noi_dung', 255);
+            $table->text('noi_dung');
             $table->string('trang_thai', 20);
             $table->string('ma_nhan_vien_xu_ly', 50)->nullable();
             $table->timestamps();
