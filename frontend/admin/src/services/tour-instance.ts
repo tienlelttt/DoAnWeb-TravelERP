@@ -54,8 +54,9 @@ export const tourInstanceService = {
     return unwrapApiData(response);
   },
 
-  xoa: async (id: string): Promise<void> => {
-    const response = await api.delete<ApiResponseVoid>(`/api/dieu-hanh/tour-thuc-te/${id}`);
+  xoa: async (id: string, lyDoHuy?: string): Promise<void> => {
+    const params = lyDoHuy ? { ly_do_huy: lyDoHuy } : {};
+    const response = await api.delete<ApiResponseVoid>(`/api/dieu-hanh/tour-thuc-te/${id}`, { params });
     unwrapApiData(response);
   },
 

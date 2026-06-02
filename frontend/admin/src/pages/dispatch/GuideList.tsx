@@ -11,10 +11,7 @@ import { Search, RotateCcw, Eye, UserPlus, Star } from 'lucide-react';
 import type { Guide } from './mockData';
 import { useNavigate } from 'react-router-dom';
 import GuideProfileModal from './GuideProfileModal';
-import { dispatchService } from '../../services/dispatch';
-import type { NhanVienResponse } from '../../services/dispatch';
 import { accountsService } from '../../services/system/accounts';
-import { tourInstanceService } from '../../services/tour-instance';
 import { useAuth } from '../../context/AuthContext';
 import { hasAccess } from '../../config/rolePermissions';
 import { formatApiError, unwrapPageContent } from '../../utils/apiHelpers';
@@ -54,28 +51,14 @@ const GuideList: React.FC = () => {
   const [selectedGuide, setSelectedGuide] = useState<Guide | null>(null);
 
   const { user } = useAuth();
-  const isAdmin = user?.maVaiTro === 'ADMIN';
 
   const getAll = async () => {
     if (!hasAccess(user?.maVaiTro, 'dispatch')) return;
     setLoading(true);
     setError(null);
     try {
-      let guides: NhanVienResponse[] = [];
-
-      if (isAdmin) {
-        const res = await accountsService.danhSachNhanVien({ maVaiTro: 'HDV', page: 0, size: 1000 });
-        guides = unwrapPageContent(res).filter((nv) => nv.maVaiTro === 'HDV' || nv.maVaiTro === 'ROLE_HDV');
-      } else {
-        const tours = await tourInstanceService.danhSach({ trangThai: 'CHO_KICH_HOAT', page: 0, size: 1 });
-        const refTour = unwrapPageContent(tours)[0];
-        if (!refTour?.maTourThucTe) {
-          setError('Chưa có tour thực tế để tham chiếu. Vui lòng tạo tour trước.');
-          setData([]);
-          return;
-        }
-        guides = await dispatchService.hdvKhaDung({ maTourThucTe: refTour.maTourThucTe });
-      }
+      const res = await accountsService.danhSachNhanVien({ maVaiTro: 'HDV', page: 0, size: 1000 });
+      const guides = unwrapPageContent(res).filter((nv) => nv.maVaiTro === 'HDV' || nv.maVaiTro === 'ROLE_HDV');
 
       const mappedGuides = await Promise.all(
         guides.map(async (g) => {
@@ -83,7 +66,7 @@ const GuideList: React.FC = () => {
             if (!g.maNhanVien) return mapNhanVienToGuide(g);
             const nangLuc = await hrService.layNangLuc(g.maNhanVien);
             return mapNhanVienToGuide(g, nangLuc);
-          } catch (e) {
+          } catch {
             return mapNhanVienToGuide(g);
           }
         })

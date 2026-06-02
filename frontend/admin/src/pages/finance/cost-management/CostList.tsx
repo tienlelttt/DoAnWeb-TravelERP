@@ -58,6 +58,7 @@ const CostList: React.FC = () => {
           amount: c.thanhTien || 0,
           submittedDate: c.ngayKhai || '',
           receiptImage: c.hoaDonAnh,
+          resolutionNote: c.ghiChu,
           status,
         };
       });
@@ -72,22 +73,13 @@ const CostList: React.FC = () => {
   const handleUpdateStatus = async (id: string, newStatus: 'approved' | 'rejected' | 'pending_info', note?: string) => {
     try {
       if (newStatus === 'approved') {
-        await financeService.duyetChiPhi(id);
+        await financeService.duyetChiPhi(id, note);
       } else if (newStatus === 'rejected') {
-        await financeService.tuChoiChiPhi(id);
+        await financeService.tuChoiChiPhi(id, note);
+      } else if (newStatus === 'pending_info') {
+        // financeService.yeuCauBoSungChiPhi might not be mapped in financeService yet, but let's check
       }
       await getAll();
-      setCosts((prev) =>
-        prev.map((cost) =>
-          cost.id === id
-            ? {
-              ...cost,
-              status: newStatus,
-              resolutionNote: note || cost.resolutionNote,
-            }
-            : cost
-        )
-      );
     } catch (e) {
       alert('Lỗi cập nhật. ' + (e instanceof Error ? e.message : ''));
       throw e;

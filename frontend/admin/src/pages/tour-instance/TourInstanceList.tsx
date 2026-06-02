@@ -13,6 +13,7 @@ import type { Column } from '../../components/ui/Table';
 import type { TourInstance } from './mockData';
 import type { TourThucTeResponse, CapNhatTourThucTeRequest } from '../../services/tour-instance';
 import { tourInstanceService } from '../../services/tour-instance';
+import { ordersService } from '../../services/orders';
 import { useAuth } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
 import { hasAccess } from '../../config/rolePermissions';
@@ -37,6 +38,8 @@ const TourInstanceList: React.FC = () => {
     selectedTour: TourInstance | undefined;
   }>({ isOpen: false, mode: null, selectedTour: undefined });
   const [closeReason, setCloseReason] = useState('');
+  const [tourCustomers, setTourCustomers] = useState<any[]>([]);
+  const [isLoadingCustomers, setIsLoadingCustomers] = useState(false);
 
   const mapToUI = (api: TourThucTeResponse): TourInstance => ({
     id: api.maTourThucTe || '',
@@ -110,10 +113,23 @@ const TourInstanceList: React.FC = () => {
 
 
 
-  const openModal = (mode: typeof modalState.mode, tour?: TourInstance) => {
-    if (mode === 'create' && user?.maVaiTro === 'DIEUHANH') {
-      notify('Bạn không có quyền khởi tạo tour thực tế. Vui lòng liên hệ Quản trị viên hoặc bộ phận Sản phẩm.', { type: 'error' });
-      return;
+  const openModal = async (mode: typeof modalState.mode, tour?: TourInstance) => {
+    if (mode === 'delete' && tour) {
+      setCloseReason('');
+      if (tour.status === 'MO_BAN') {
+        setIsLoadingCustomers(true);
+        try {
+          const res = await ordersService.danhSachTatCa({ maTourThucTe: tour.id });
+          const customers = (res?.content || []).filter((d: any) => !['DA_HUY', 'TU_CHOI_HOAN_TIEN', 'DA_HOAN_TIEN', 'CHO_HUY', 'CHO_HOAN_TIEN'].includes(d.trangThai));
+          setTourCustomers(customers);
+        } catch (e) {
+          console.error(e);
+        } finally {
+          setIsLoadingCustomers(false);
+        }
+      } else {
+        setTourCustomers([]);
+      }
     }
     setModalState({ isOpen: true, mode, selectedTour: tour });
   };
@@ -121,6 +137,7 @@ const TourInstanceList: React.FC = () => {
   const closeModal = () => {
     setModalState({ isOpen: false, mode: null, selectedTour: undefined });
     setCloseReason('');
+    setTourCustomers([]);
   };
 
   const handleFormSubmit = async (tourData: TourInstance) => {
@@ -152,18 +169,13 @@ const TourInstanceList: React.FC = () => {
   const handleDelete = async () => {
     if (modalState.selectedTour) {
       try {
-        const payload: CapNhatTourThucTeRequest = {
-          giaHienHanh: modalState.selectedTour.currentPrice,
-          soKhachToiDa: modalState.selectedTour.maxSeats,
-          trangThai: 'HUY'
-        };
-        await tourInstanceService.capNhat(modalState.selectedTour.id, payload);
+        await tourInstanceService.xoa(modalState.selectedTour.id, closeReason);
         closeModal();
         await getAll();
-        alert('Hủy tour thành công');
+        notify('Hủy tour thành công', { type: 'success' });
       } catch (err: unknown) {
         const msg = err instanceof Error ? err.message : 'Xảy ra lỗi khi hủy tour';
-        alert('Lỗi: ' + msg);
+        notify('Lỗi: ' + msg, { type: 'error' });
       }
     }
   };
@@ -240,7 +252,7 @@ const TourInstanceList: React.FC = () => {
       align: 'center',
       width: '12%',
       render: (record) => {
-        const isInternalRole = user?.maVaiTro === 'ADMIN' || user?.maVaiTro === 'SANPHAM';
+        const isInternalRole = user?.maVaiTro === 'ADMIN' || user?.maVaiTro === 'SANPHAM' || user?.maVaiTro === 'DIEUHANH';
         const canEditOrDelete = isInternalRole && record.status === 'CHO_KICH_HOAT';
         const canBan = isInternalRole && record.status === 'MO_BAN';
 
@@ -269,7 +281,6 @@ const TourInstanceList: React.FC = () => {
               }}
               className={`p-2 ${canEditOrDelete ? 'text-[#faad14] hover:text-[#d48806] hover:bg-orange-50' : 'opacity-40 cursor-not-allowed'}`}
               aria-label="Sửa"
-              disabled={user?.maVaiTro === 'DIEUHANH'}
             />
 
             <Button
@@ -285,7 +296,6 @@ const TourInstanceList: React.FC = () => {
               }}
               className={`p-2 ${canBan ? 'text-red-500 hover:text-red-700 hover:bg-red-50' : 'opacity-40 cursor-not-allowed'}`}
               aria-label="Khóa tour"
-              disabled={user?.maVaiTro === 'DIEUHANH'}
             />
 
             <Button
@@ -301,7 +311,6 @@ const TourInstanceList: React.FC = () => {
               }}
               className={`p-2 ${canEditOrDelete ? 'text-gray-500 hover:text-[#BA1A1A] hover:bg-red-50' : 'opacity-40 cursor-not-allowed'}`}
               aria-label="Xóa"
-              disabled={user?.maVaiTro === 'DIEUHANH'}
             />
           </div>
         );
@@ -331,8 +340,6 @@ const TourInstanceList: React.FC = () => {
             variant="primary"
             icon={<PlusCircle size={18} />}
             onClick={() => openModal('create')}
-            className={user?.maVaiTro === 'DIEUHANH' ? 'opacity-50 cursor-not-allowed grayscale' : ''}
-            title={user?.maVaiTro === 'DIEUHANH' ? 'Bạn không có quyền khởi tạo' : ''}
           >
             Khởi tạo Tour
           </Button>
@@ -437,6 +444,36 @@ const TourInstanceList: React.FC = () => {
                 onChange={(e) => setCloseReason(e.target.value)}
                 placeholder="Nhập lý do hủy tour..."
               ></textarea>
+              {isLoadingCustomers ? (
+                <div className="mt-3 text-xs opacity-80">Đang tải danh sách khách hàng...</div>
+              ) : tourCustomers.length > 0 ? (
+                <div className="mt-3">
+                  <p className="font-semibold text-xs mb-1">Danh sách khách hàng bị ảnh hưởng:</p>
+                  <div className="max-h-40 overflow-y-auto bg-white border border-red-200 rounded text-xs">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="bg-red-50 text-left">
+                          <th className="px-2 py-1 font-semibold">Mã KH</th>
+                          <th className="px-2 py-1 font-semibold">Khách hàng</th>
+                          <th className="px-2 py-1 font-semibold text-right">SĐT</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {tourCustomers.map(c => {
+                          const sdt = c.chiTietKhach?.find((ct: any) => ct.loaiKhach === 'NGUOI_DAT')?.soDienThoai || '';
+                          return (
+                            <tr key={c.maDatTour} className="border-b border-gray-100 last:border-0">
+                              <td className="px-2 py-1 font-mono">{c.maKhachHang}</td>
+                              <td className="px-2 py-1 font-medium">{c.tenKhachHang || 'N/A'}</td>
+                              <td className="px-2 py-1 text-right">{sdt}</td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              ) : null}
             </div>
           )}
         </div>

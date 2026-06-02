@@ -24,7 +24,6 @@ const mapStatus = (s?: string, noiDung?: string): Complaint['status'] => {
     case 'TU_CHOI': return 'rejected';
     case 'CHO_BO_SUNG': return 'pending_info';
     case 'CHO_GIAI_TRINH': return 'pending_guide';
-    case 'CHO_DUYET': return 'pending_review';
     case 'CHUA_XU_LY': return 'pending';
     default: return 'pending';
   }
@@ -116,6 +115,7 @@ const ComplaintList: React.FC = () => {
     id: api.maNhatKySuCo || '',
     code: api.maNhatKySuCo || '',
     maDatTour: '',
+    maTourThucTe: api.maTour || '',
     customerName: api.hoTenKhachHang || api.maKhachHang || '',
     customerPhone: '',
     tourName: api.loaiSuCo || '',
@@ -203,11 +203,23 @@ const ComplaintList: React.FC = () => {
       key: 'description',
       title: 'Nội dung',
       width: '33%',
-      render: (record) => (
-        <span className="text-sm text-gray-700 line-clamp-2" title={record.description}>
-          {record.description || '—'}
-        </span>
-      )
+      render: (record) => {
+        let content = record.description || '';
+        const lines = content.split('\n');
+        let subject = '';
+        if (lines[0]?.startsWith('Danh mục: ')) lines.shift();
+        if (lines[0]?.startsWith('Tiêu đề: ')) {
+           subject = lines.shift()?.replace('Tiêu đề: ', '').trim() || '';
+        }
+        content = lines.join('\n').trim();
+
+        return (
+          <div className="flex flex-col" title={record.description}>
+            {subject && <span className="font-semibold text-gray-800 text-sm mb-0.5">{subject}</span>}
+            <span className="text-sm text-gray-500 line-clamp-1">{content || '—'}</span>
+          </div>
+        );
+      }
     },
     {
       key: 'severity',
@@ -233,7 +245,6 @@ const ComplaintList: React.FC = () => {
           case 'processing': label = 'Đang xử lý'; variant = 'info'; break;
           case 'pending_info': label = 'Chờ bổ sung'; variant = 'warning'; break;
           case 'pending_guide': label = 'Chờ giải trình'; variant = 'warning'; break;
-          case 'pending_review': label = 'Chờ duyệt'; variant = 'warning'; break;
           case 'resolved': label = 'Đã giải quyết'; variant = 'success'; break;
           case 'rejected': label = 'Từ chối'; variant = 'error'; break;
           case 'cancelled': label = 'Đã hủy'; variant = 'neutral'; break;
@@ -294,7 +305,6 @@ const ComplaintList: React.FC = () => {
         case 'rejected': apiStatus = 'TU_CHOI'; break;
         case 'pending_info': apiStatus = 'CHO_BO_SUNG'; break;
         case 'pending_guide': apiStatus = 'CHO_GIAI_TRINH'; break;
-        case 'pending_review': apiStatus = 'CHO_DUYET'; break;
         case 'pending': apiStatus = 'CHUA_XU_LY'; break;
         default: apiStatus = 'CHUA_XU_LY';
       }
@@ -359,7 +369,6 @@ const ComplaintList: React.FC = () => {
               { value: 'pending', label: 'Chờ xử lý' },
               { value: 'pending_info', label: 'Chờ bổ sung' },
               { value: 'pending_guide', label: 'Chờ giải trình' },
-              { value: 'pending_review', label: 'Chờ duyệt' },
               { value: 'resolved', label: 'Đã giải quyết' },
               { value: 'rejected', label: 'Từ chối' }
             ]}

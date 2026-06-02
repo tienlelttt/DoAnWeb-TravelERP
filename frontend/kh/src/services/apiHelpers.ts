@@ -1,4 +1,4 @@
-﻿import type { Booking, Tour, Voucher } from '../types';
+import type { Booking, Tour, Voucher } from '../types';
 
 type ApiRecord = Record<string, any>;
 
@@ -286,7 +286,7 @@ export const mapProfile = (p: ApiRecord) => ({
 
 export const mapCustomerBookingStatus = (b: ApiRecord): Booking['status'] => {
   const orderStatus = b.trangThai || '';
-  const tourStatus = b.trangThaiTour || '';
+  const tourStatus = b.trangThaiTour || b.tourThucTe?.trangThai || '';
 
   if (orderStatus === 'DA_XAC_NHAN' && ['KET_THUC', 'DA_QUYET_TOAN'].includes(tourStatus)) {
     return 'KET_THUC';
@@ -308,13 +308,13 @@ export const mapCustomerBookingStatus = (b: ApiRecord): Booking['status'] => {
 
 export const mapBooking = (b: ApiRecord): Booking => {
   const id = b.maDatTour || b.maLichSuTour || '';
-  const tourId = b.maTourThucTe || '';
+  const tourId = b.maTourThucTe || b.tourThucTe?.maTourThucTe || '';
   return {
     id,
     tourId,
-    tourName: b.tieuDeTour || 'Tour du lịch',
+    tourName: b.tieuDeTour || b.tourThucTe?.tourMau?.tieuDe || 'Tour du lịch',
     bookingDate: b.ngayDat || b.ngayThamGia || '',
-    departureDate: b.ngayKhoiHanh || '',
+    departureDate: b.ngayKhoiHanh || b.tourThucTe?.ngayKhoiHanh || '',
     totalAmount: toNumber(b.tongTien, 0),
     status: mapCustomerBookingStatus(b),
     guests: Array.isArray(b.chiTietKhach) ? b.chiTietKhach.length : 1,

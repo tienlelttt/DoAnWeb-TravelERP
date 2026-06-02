@@ -7,7 +7,7 @@ use App\Http\Controllers\KinhDoanhController;
 use App\Http\Controllers\XuLyHuyController;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['prefix' => 'kinh-doanh', 'middleware' => ['auth:api', 'role:KINHDOANH,KETOAN,ADMIN']], function () {
+Route::group(['prefix' => 'kinh-doanh', 'middleware' => ['auth:api', 'role:KINHDOANH,KETOAN,ADMIN,SANPHAM,DIEUHANH']], function () {
     Route::get('dat-tour', [KinhDoanhCompatController::class, 'danhSachDonDatTour']);
     Route::get('don-dat-tour', [KinhDoanhCompatController::class, 'danhSachDonDatTour']);
     Route::get('dat-tour/{maDatTour}', [KinhDoanhCompatController::class, 'chiTietDonDatTour']);

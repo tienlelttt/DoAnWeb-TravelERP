@@ -93,8 +93,8 @@ const Dashboard: React.FC = () => {
     // Fetch actual data from backend based on user role permissions
     const fetchStats = async () => {
       try {
-        const canViewCustomers = user?.maVaiTro === 'KINHDOANH' || user?.maVaiTro === 'ADMIN';
-        const canViewOrders = user?.maVaiTro === 'KINHDOANH' || user?.maVaiTro === 'ADMIN';
+        const canViewCustomers = ['KINHDOANH', 'SALES', 'KETOAN', 'ADMIN'].includes(user?.maVaiTro || '');
+        const canViewOrders = ['KINHDOANH', 'SALES', 'KETOAN', 'ADMIN'].includes(user?.maVaiTro || '');
         const canViewTours = true;
         const canViewIncidents = ['HDV', 'ADMIN', 'KINHDOANH', 'DIEUHANH', 'KETOAN', 'SANPHAM'].includes(user?.maVaiTro || '');
 

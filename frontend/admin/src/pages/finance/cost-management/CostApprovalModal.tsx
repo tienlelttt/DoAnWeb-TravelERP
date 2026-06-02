@@ -92,7 +92,7 @@ const CostApprovalModal: React.FC<CostApprovalModalProps> = ({ isOpen, onClose, 
   const handleApprove = async () => {
     setIsSubmitting(true);
     try {
-      await onUpdateStatus?.(cost.id, 'approved');
+      await onUpdateStatus?.(cost.id, 'approved', note.trim());
       onClose();
     } finally {
       setIsSubmitting(false);
@@ -234,9 +234,9 @@ const CostApprovalModal: React.FC<CostApprovalModalProps> = ({ isOpen, onClose, 
             </div>
           )}
 
-          {isReadonly && cost.resolutionNote && (
+          {cost.resolutionNote && (
             <div className="bg-white rounded-[16px] shadow-[0px_4px_20px_rgba(137,212,255,0.08)] p-6">
-              <h3 className="text-[16px] font-semibold text-gray-900 mb-2">Ghi chú duyệt</h3>
+              <h3 className="text-[16px] font-semibold text-gray-900 mb-2">Ghi chú chi phí</h3>
               <div className="bg-gray-50 rounded-[12px] p-4 border border-gray-100 text-sm text-gray-700 whitespace-pre-wrap">
                 {cost.resolutionNote}
               </div>

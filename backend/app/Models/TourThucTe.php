@@ -24,4 +24,9 @@ class TourThucTe extends BaseModel
     {
         return $this->belongsToMany(HanhDongXanh::class, 'hdx_tour_thuc_tes', 'ma_tour_thuc_te', 'ma_hanh_dong_xanh')->withTimestamps();
     }
+
+    public function phanCongs()
+    {
+        return $this->hasMany(PhanCongTour::class, 'ma_tour_thuc_te', 'ma_tour_thuc_te');
+    }
 }

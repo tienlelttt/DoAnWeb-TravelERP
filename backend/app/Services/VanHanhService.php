@@ -174,6 +174,15 @@ class VanHanhService
     {
         $this->checkQuyenHDV($maTourThucTe, $maNhanVien);
 
+        $exists = HanhDong::where('ma_tour_thuc_te', $maTourThucTe)
+            ->where('ma_khach_hang', $data['maKhachHang'])
+            ->where('ma_hanh_dong_xanh', $data['maHanhDongXanh'])
+            ->exists();
+
+        if ($exists) {
+            throw AppException::badRequest("Khách hàng này đã được xác nhận điểm cho hành động xanh này rồi!");
+        }
+
         $maGhiNhan = $this->maTuDongService->taoMaGhiNhanHanhDong();
         $hanhDong = new HanhDong();
         $hanhDong->ma_ghi_nhan_hanh_dong = $maGhiNhan;

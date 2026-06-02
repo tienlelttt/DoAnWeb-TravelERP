@@ -88,7 +88,9 @@ class DonDatTourResource extends JsonResource
         $phuongThuc        = null;
         $daBaoChuyenKhoan  = false;
         try {
-            $giaoDich = GiaoDich::where('ma_dat_tour', $this->ma_dat_tour)->first();
+            $giaoDich = GiaoDich::where('ma_dat_tour', $this->ma_dat_tour)
+                ->orderBy('created_at', 'desc')
+                ->first();
             if ($giaoDich) {
                 $maGiaoDich       = $giaoDich->ma_giao_dich;
                 $phuongThuc       = $giaoDich->phuong_thuc;

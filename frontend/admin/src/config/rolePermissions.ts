@@ -8,11 +8,11 @@ export type MenuKey = typeof MENU_KEYS[number];
 
 export const ROLE_MENU_ACCESS: Record<string, string[]> = {
   ADMIN: [...MENU_KEYS],
-  SANPHAM: ['dashboard', 'tour-template', 'tour-instance'],
-  KINHDOANH: ['dashboard', 'orders', 'customers', 'complaints', 'promotions'],
-  SALES: ['dashboard', 'orders', 'customers', 'complaints', 'promotions'],
-  DIEUHANH: ['dashboard', 'tour-instance', 'dispatch', 'hr'],
-  MANAGER: ['dashboard', 'tour-instance', 'dispatch', 'hr'],
+  SANPHAM: ['tour-template', 'tour-instance'],
+  KINHDOANH: ['orders', 'customers', 'complaints', 'promotions'],
+  SALES: ['orders', 'customers', 'complaints', 'promotions'],
+  DIEUHANH: ['tour-instance', 'dispatch', 'hr'],
+  MANAGER: ['tour-instance', 'dispatch', 'hr'],
   KETOAN: ['dashboard', 'orders', 'finance'],
 };
 

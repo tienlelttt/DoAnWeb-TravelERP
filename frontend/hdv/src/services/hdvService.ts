@@ -97,10 +97,11 @@ export const hdvService = {
   ) => {
     const payload = {
       ...(data.maNguoiDongHanh || data.maKhachHang?.startsWith('NDH')
-        ? { maNguoiDongHanh: data.maNguoiDongHanh || data.maKhachHang }
-        : { maKhachHang: data.maKhachHang }),
+        ? { maNguoiDongHanh: data.maNguoiDongHanh || data.maKhachHang, loaiKhach: 'NGUOI_DONG_HANH' }
+        : { maKhachHang: data.maKhachHang, loaiKhach: 'KHACH_CHINH' }),
       diaDiem: data.diaDiem,
-      trangThai: data.trangThai
+      trangThai: data.trangThai,
+      ghiChu: data.ghiChu
     };
     const res = await api.post(`/huong-dan-vien/tour/${maTour}/diem-danh`, payload);
     return res.data;
