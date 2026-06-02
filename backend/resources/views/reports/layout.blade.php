@@ -77,6 +77,7 @@
             border-collapse: collapse;
             margin-bottom: 20px;
             page-break-inside: auto;
+            table-layout: fixed;
         }
         tr {
             page-break-inside: avoid;
@@ -93,12 +94,14 @@
             text-align: left;
             font-size: 8pt;
             color: #1f2937;
+            word-wrap: break-word;
         }
         td {
             border: 1px solid #e5e7eb;
             padding: 6px 5px;
             font-size: 7.5pt;
             vertical-align: middle;
+            word-wrap: break-word;
         }
         .text-right {
             text-align: right;

@@ -57,11 +57,11 @@ const GuideList: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await accountsService.danhSachNhanVien({ maVaiTro: 'HDV', page: 0, size: 1000 });
-      const guides = unwrapPageContent(res).filter((nv) => nv.maVaiTro === 'HDV' || nv.maVaiTro === 'ROLE_HDV');
+      const res = await accountsService.danhSachNhanVien({ vaiTro: 'HDV', page: 0, size: 1000 });
+      const guides = unwrapPageContent<any>(res);
 
       const mappedGuides = await Promise.all(
-        guides.map(async (g) => {
+        guides.map(async (g: any) => {
           try {
             if (!g.maNhanVien) return mapNhanVienToGuide(g);
             const nangLuc = await hrService.layNangLuc(g.maNhanVien);

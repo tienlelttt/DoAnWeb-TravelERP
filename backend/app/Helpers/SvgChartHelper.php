@@ -18,12 +18,12 @@ class SvgChartHelper
      */
     public static function groupedBar(array $data, array $labels, array $legend = ['Doanh thu', 'Chi phí', 'Lợi nhuận']): string
     {
-        $w = 680;
-        $h = 280;
-        $padLeft = 80;
-        $padRight = 120;
-        $padTop = 30;
-        $padBottom = 40;
+        $w = 510;
+        $h = 240;
+        $padLeft = 50;
+        $padRight = 90;
+        $padTop = 20;
+        $padBottom = 65;
 
         $plotW = $w - $padLeft - $padRight;
         $plotH = $h - $padTop - $padBottom;
@@ -70,8 +70,8 @@ class SvgChartHelper
                 $group = $data[$i] ?? [0, 0, 0];
                 $label = $labels[$i];
                 // Cắt nhãn nếu quá dài
-                if (mb_strlen($label) > 15) {
-                    $label = mb_substr($label, 0, 13) . '...';
+                if (mb_strlen($label) > 13) {
+                    $label = mb_substr($label, 0, 12) . '...';
                 }
 
                 $groupX = $padLeft + ($i * $groupW) + $gap;
@@ -88,10 +88,10 @@ class SvgChartHelper
                     $svg .= "  <rect x=\"{$bx}\" y=\"{$by}\" width=\"" . ($barW - 1) . "\" height=\"{$barH}\" fill=\"{$color}\" rx=\"2\" />\n";
                 }
 
-                // Nhãn trục X (tên Tour) xoay nhẹ hoặc nằm ngang
-                $labelX = $groupX + ($groupW * 0.35);
-                $labelY = $h - $padBottom + 18;
-                $svg .= "  <text x=\"{$labelX}\" y=\"{$labelY}\" font-size=\"9\" fill=\"#374151\" text-anchor=\"middle\">{$label}</text>\n";
+                // Nhãn trục X (tên Tour) xoay nghiêng -45 độ
+                $labelX = $groupX + ($groupW * 0.5);
+                $labelY = $h - $padBottom + 12;
+                $svg .= "  <text x=\"{$labelX}\" y=\"{$labelY}\" font-size=\"8\" fill=\"#374151\" text-anchor=\"end\" transform=\"rotate(-45 {$labelX} {$labelY})\">{$label}</text>\n";
             }
         }
 
@@ -100,12 +100,12 @@ class SvgChartHelper
         $svg .= "  <line x1=\"{$padLeft}\" y1=\"{$padTop}\" x2=\"{$padLeft}\" y2=\"" . ($h - $padBottom) . "\" stroke=\"#d1d5db\" stroke-width=\"1.5\" />\n";
 
         // Vẽ Legend bên phải biểu đồ
-        $lx = $w - $padRight + 15;
+        $lx = $w - $padRight + 10;
         for ($k = 0; $k < count($legend); $k++) {
-            $ly = $padTop + ($k * 22) + 10;
+            $ly = $padTop + ($k * 20) + 5;
             $color = self::$colors[$k];
-            $svg .= "  <rect x=\"{$lx}\" y=\"{$ly}\" width=\"12\" height=\"12\" fill=\"{$color}\" rx=\"2\" />\n";
-            $svg .= "  <text x=\"" . ($lx + 18) . "\" y=\"" . ($ly + 10) . "\" font-size=\"10\" fill=\"#4b5563\" font-weight=\"bold\">{$legend[$k]}</text>\n";
+            $svg .= "  <rect x=\"{$lx}\" y=\"{$ly}\" width=\"10\" height=\"10\" fill=\"{$color}\" rx=\"2\" />\n";
+            $svg .= "  <text x=\"" . ($lx + 15) . "\" y=\"" . ($ly + 9) . "\" font-size=\"9\" fill=\"#4b5563\" font-weight=\"bold\">{$legend[$k]}</text>\n";
         }
 
         $svg .= "</svg>\n";
@@ -118,8 +118,8 @@ class SvgChartHelper
      */
     public static function line(array $data, array $labels, string $lineLabel = 'Số lượng'): string
     {
-        $w = 680;
-        $h = 240;
+        $w = 510;
+        $h = 200;
         $padLeft = 70;
         $padRight = 40;
         $padTop = 20;
@@ -203,11 +203,11 @@ class SvgChartHelper
      */
     public static function pie(array $data, array $labels): string
     {
-        $w = 680;
+        $w = 510;
         $h = 240;
-        $cx = 240;
+        $cx = 130;
         $cy = 120;
-        $r = 90;
+        $r = 85;
 
         $total = array_sum($data);
         if ($total <= 0) $total = 1;
@@ -251,22 +251,22 @@ class SvgChartHelper
         }
 
         // Vẽ Legend và tỉ lệ % bên phải biểu đồ
-        $lx = 420;
+        $lx = 245;
         for ($i = 0; $i < $numSlices; $i++) {
             $val = (float) $data[$i];
             $pct = $total > 0 ? ($val / $total) * 100 : 0;
             $color = self::$colors[$i % count(self::$colors)];
             $label = $labels[$i];
-            if (mb_strlen($label) > 18) {
-                $label = mb_substr($label, 0, 16) . '...';
+            if (mb_strlen($label) > 17) {
+                $label = mb_substr($label, 0, 15) . '...';
             }
 
-            $ly = 30 + ($i * 20);
-            $valText = number_format($val, 0, '', ',');
+            $ly = 20 + ($i * 14);
+            $valText = self::formatShortNumber($val); // Using short number format
             $pctText = number_format($pct, 1) . '%';
 
-            $svg .= "  <rect x=\"{$lx}\" y=\"{$ly}\" width=\"12\" height=\"12\" fill=\"{$color}\" rx=\"2\" />\n";
-            $svg .= "  <text x=\"" . ($lx + 18) . "\" y=\"" . ($ly + 10) . "\" font-size=\"10\" fill=\"#374151\">{$label} ({$pctText} - {$valText})</text>\n";
+            $svg .= "  <rect x=\"{$lx}\" y=\"{$ly}\" width=\"10\" height=\"10\" fill=\"{$color}\" rx=\"2\" />\n";
+            $svg .= "  <text x=\"" . ($lx + 15) . "\" y=\"" . ($ly + 8) . "\" font-size=\"9\" fill=\"#374151\">{$label} ({$pctText} - {$valText})</text>\n";
         }
 
         $svg .= "</svg>\n";
@@ -279,8 +279,8 @@ class SvgChartHelper
      */
     public static function horizontalBar(array $data, array $labels, string $valUnit = ''): string
     {
-        $w = 680;
-        $h = 280;
+        $w = 510;
+        $h = 220;
         $padLeft = 140; // Rộng hơn để chứa nhãn bên trái
         $padRight = 50;
         $padTop = 20;

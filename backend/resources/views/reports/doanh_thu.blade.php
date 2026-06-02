@@ -22,14 +22,14 @@
         <table>
             <thead>
                 <tr>
-                    <th class="text-center" style="width: 5%;">STT</th>
-                    <th style="width: 12%;">Mã QT</th>
-                    <th style="width: 12%;">Mã Tour TT</th>
-                    <th>Tên Tour thực tế</th>
-                    <th class="text-right" style="width: 15%;">Doanh Thu</th>
-                    <th class="text-right" style="width: 15%;">Chi Phí</th>
-                    <th class="text-right" style="width: 15%;">Lợi Nhuận</th>
-                    <th class="text-center" style="width: 10%;">Trạng Thái</th>
+                    <th class="text-center" style="width: 4%;">STT</th>
+                    <th style="width: 14%;">Mã QT</th>
+                    <th style="width: 14%;">Mã Tour TT</th>
+                    <th style="width: 22%;">Tên Tour thực tế</th>
+                    <th class="text-right" style="width: 11%;">Doanh Thu</th>
+                    <th class="text-right" style="width: 11%;">Chi Phí</th>
+                    <th class="text-right" style="width: 11%;">Lợi Nhuận</th>
+                    <th class="text-center" style="width: 13%;">Trạng Thái</th>
                 </tr>
             </thead>
             <tbody>
@@ -57,10 +57,12 @@
                         <td class="text-center">
                             @if(strtoupper($item['trang_thai']) === 'DA_CHOT' || strtoupper($item['trang_thai']) === 'COMPLETED' || strtoupper($item['trang_thai']) === 'CHOT')
                                 <span class="badge badge-success">Đã chốt</span>
+                            @elseif(strtoupper($item['trang_thai']) === 'DA_QUYET_TOAN')
+                                <span class="badge badge-success">Đã Q.Toán</span>
                             @elseif(strtoupper($item['trang_thai']) === 'YEU_CAU_BO_SUNG')
                                 <span class="badge badge-warning">Cần bổ sung</span>
                             @else
-                                <span class="badge badge-info">{{ $item['trang_thai'] }}</span>
+                                <span class="badge badge-info">{{ str_replace('_', ' ', $item['trang_thai']) }}</span>
                             @endif
                         </td>
                     </tr>
