@@ -214,6 +214,7 @@ const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({ isOpen, onClo
       case 'AN_UONG': return 'Ẩm thực/Ăn uống';
       case 'PHAN_HOI_SAU_TOUR': return 'Phản hồi sau tour';
       case 'THONG_TIN_HANH_KHACH': return 'Sửa thông tin khách';
+      case 'KHIEU_NAI': return 'Khiếu nại';
       case 'KHAC': return 'Khác';
       default: return type || '—';
     }
