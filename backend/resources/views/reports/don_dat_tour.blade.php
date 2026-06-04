@@ -55,7 +55,7 @@
                             @elseif(strtoupper($item['trang_thai']) === 'HUY' || strtoupper($item['trang_thai']) === 'DA_HUY')
                                 <span class="badge badge-danger">Đã hủy</span>
                             @else
-                                <span class="badge badge-info">{{ $item['trang_thai'] }}</span>
+                                <span class="badge badge-info">{{ str_replace('_', ' ', $item['trang_thai']) }}</span>
                             @endif
                         </td>
                     </tr>
