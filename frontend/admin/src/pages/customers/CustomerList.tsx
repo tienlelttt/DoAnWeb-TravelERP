@@ -105,7 +105,7 @@ const CustomerList: React.FC = () => {
   const columns: Column<Customer>[] = [
     {
       key: 'code',
-      title: 'MÝKH',
+      title: 'MãKH',
       render: (record) => <span className="font-bold text-[#00668A]">{record.code}</span>,
     },
     {

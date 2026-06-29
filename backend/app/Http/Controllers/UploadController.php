@@ -22,7 +22,7 @@ class UploadController extends Controller
         $file = $request->file('file');
         
         if (!$file->isValid()) {
-            throw AppException::badRequest("File upload không h?p l? ho?c b? l?i.");
+            throw AppException::badRequest("File upload không hợp lệ hoặc bị lỗi.");
         }
 
         try {
@@ -40,7 +40,7 @@ class UploadController extends Controller
                 'url' => $dataUri
             ]);
         } catch (\Exception $e) {
-            throw new \RuntimeException("Không th? l?u tr? file. Vui lòng th? l?i!", 0, $e);
+            throw new \RuntimeException("Không thể lưu trữ file. Vui lòng thử lại!", 0, $e);
         }
     }
 }
