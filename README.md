@@ -2,8 +2,8 @@
 
 # Digital Travel ERP Backend
 
-**Đề tài:** Hệ thống quản lí vận hành du lịch số  
-**Kiến trúc:** MySQL Database · Laravel PHP Backend · React/Vite Frontend  
+**Đề tài:** Hệ thống quản lí vậ­n hành du lịch số  
+**Kiậ¿n trúc:** MySQL Database Â· Laravel PHP Backend Â· React/Vite Frontend  
 **Repository:** Workspace gồm Backend Laravel và 3 ứng dụng Frontend: `admin`, `hdv`, `kh`
 
 | Thành phần | Repository nguồn | Branch |
@@ -11,6 +11,11 @@
 | Frontend Admin | [ThorBietBay001/Frontend-Digital-Travel-ERP](https://github.com/ThorBietBay001/Frontend-Digital-Travel-ERP) | `main` |
 | Frontend HDV | [ThorBietBay001/Frontend-Digital-Travel-ERP](https://github.com/ThorBietBay001/Frontend-Digital-Travel-ERP) | `ui-ux/hdv` |
 | Frontend Khách hàng | [ThorBietBay001/Frontend-Digital-Travel-ERP](https://github.com/ThorBietBay001/Frontend-Digital-Travel-ERP) | `ui-ux/KH` |
+
+---
+
+## Tài liệu Kỹ thuậ­t
+* [Tổng hợp Công thức Tính toán (Calculation Formulas)](./CALCULATION_FORMULAS.md)
 
 ---
 
@@ -31,17 +36,17 @@
 
 ## Giới thiệu đồ án
 
-Digital Travel ERP là hệ thống hỗ trợ quản lí và vận hành nghiệp vụ du lịch theo nhiều phân hệ:
+Digital Travel ERP là hệ thống hỗ trợ quản lí và vậ­n hành nghiệp vụ du lịch theo nhiều phân hệ:
 
 | Phân hệ | Vai trò chính |
 |---|---|
-| Khách hàng | Tra cứu tour, đặt tour, thanh toán, quản lí hồ sơ số, voucher, khiếu nại |
-| Admin / Quản trị | Quản lí tài khoản, phân quyền, nhân sự, nhật ký hệ thống |
+| Khách hàng | Tra cứu tour, đặt tour, thanh toán, quản lí hồ sơ số, voucher, khiậ¿u nại |
+| Admin / Quản trị | Quản lí tài khoản, phân quyền, nhân sự, nhậ­t ký hệ thống |
 | Sản phẩm | Quản lí tour mẫu, dịch vụ bổ sung, hành động xanh |
-| Điều hành | Khởi tạo tour thực tế, phân công hướng dẫn viên, quản lí lịch công tác |
-| Hướng dẫn viên | Xem tour được phân công, điểm danh, báo cáo sự cố, cập nhật chi phí |
+| Điều hành | Khởi tạo tour thực tậ¿, phân công hướng dẫn viên, quản lí lịch công tác |
+| Hướng dẫn viên | Xem tour được phân công, điểm danh, báo cáo sự cố, cậ­p nhậ­t chi phí |
 | Kinh doanh | Quản lí đơn đặt tour, khách hàng, voucher, yêu cầu hỗ trợ |
-| Kế toán | Duyệt chi phí, xử lí hoàn tiền, quyết toán tour, báo cáo doanh thu |
+| Kậ¿ toán | Duyệt chi phí, xử lí hoàn tiền, quyậ¿t toán tour, báo cáo doanh thu |
 
 Backend cung cấp REST API bảo vệ bằng JWT. Frontend gồm ba giao diện riêng cho nhóm người dùng khác nhau, cùng gọi API qua prefix `/api`.
 
@@ -51,18 +56,18 @@ Backend cung cấp REST API bảo vệ bằng JWT. Frontend gồm ba giao diện
 
 ```text
 Digital-Travel_ERP/
-├── backend/                  # Backend PHP Laravel
-│ ├── app/
-│ ├── config/                 # Tệp cấu hình ứng dụng
-│ ├── database/               # Migrations, Seeders
-│ ├── routes/                 # Cấu hình định tuyến API
-│ ├── tests/                  # Bộ kiểm thử tự động (PHPUnit)
-│ └── artisan                 # Công cụ CLI của Laravel
-├── frontend/                 # Các ứng dụng React
-│ ├── admin/                  # Giao diện quản trị/nhân viên nội bộ
-│ ├── hdv/                    # Giao diện hướng dẫn viên
-│ └── kh/                     # Giao diện khách hàng
-└── docs/                     # Tài liệu dự án (Quy trình, Kiến trúc, API)
+â”œâ”€â”€ backend/                  # Backend PHP Laravel
+â”‚ â”œâ”€â”€ app/
+â”‚ â”œâ”€â”€ config/                 # Tệp cấu hình ứng dụng
+â”‚ â”œâ”€â”€ database/               # Migrations, Seeders
+â”‚ â”œâ”€â”€ routes/                 # Cấu hình định tuyậ¿n API
+â”‚ â”œâ”€â”€ tests/                  # Bộ kiểm thử tự động (PHPUnit)
+â”‚ â””â”€â”€ artisan                 # Công cụ CLI của Laravel
+â”œâ”€â”€ frontend/                 # Các ứng dụng React
+â”‚ â”œâ”€â”€ admin/                  # Giao diện quản trị/nhân viên nội bộ
+â”‚ â”œâ”€â”€ hdv/                    # Giao diện hướng dẫn viên
+â”‚ â””â”€â”€ kh/                     # Giao diện khách hàng
+â””â”€â”€ docs/                     # Tài liệu dự án (Quy trình, Kiậ¿n trúc, API)
 ```
 
 ---
@@ -103,13 +108,13 @@ Digital-Travel_ERP/
 | Thành phần | Phiên bản / ghi chú |
 |---|---|
 | PHP | 8.2 trở lên (Tích hợp sẵn trong Laragon) |
-| Composer | Khuyến nghị bản mới nhất |
-| Node.js | Khuyến nghị Node.js 20 trở lên |
+| Composer | Khuyậ¿n nghị bản mới nhất |
+| Node.js | Khuyậ¿n nghị Node.js 20 trở lên |
 | Database | MySQL 8.x |
 | Port backend | `8000` (php artisan serve) |
-| Port frontend | Vite mặc định `5173`, nếu bận sẽ tự chuyển sang port tiếp theo |
+| Port frontend | Vite mặc định `5173`, nậ¿u bậ­n sậ½ tự chuyển sang port tiậ¿p theo |
 
-Các frontend đã cấu hình Vite proxy:
+Các frontend đÝcấu hình Vite proxy:
 
 ```ts
 '/api' -> 'http://localhost:8000'
@@ -119,7 +124,7 @@ Các frontend đã cấu hình Vite proxy:
 
 ## Hướng dẫn cài đặt và chạy dự án
 
-Khuyến nghị sử dụng **Laragon** để cài đặt trọn gói PHP, MySQL và Composer trên Windows.
+Khuyậ¿n nghị sử dụng **Laragon** để cài đặt trọn gói PHP, MySQL và Composer trên Windows.
 
 ### 1. Khởi tạo Database tự động
 
@@ -139,7 +144,7 @@ Khuyến nghị sử dụng **Laragon** để cài đặt trọn gói PHP, MySQL
   cp .env.example .env
 ```
 
-- Sửa thông tin kết nối database trong .env:
+- Sửa thông tin kậ¿t nối database trong .env:
   ```env
   DB_CONNECTION=mysql
   DB_HOST=127.0.0.1
@@ -163,13 +168,13 @@ Khuyến nghị sử dụng **Laragon** để cài đặt trọn gói PHP, MySQL
   ```bash
   php artisan db:seed
   ```
-
+  
 - Nạp dữ liệu nghiệp vụ gốc (Dành cho Local / Dev / Testing):
   Hệ thống cung cấp một công cụ import dữ liệu chuyên biệt để nạp thẳng các tệp RAW SQL khổng lồ vào DB mà không qua Seeder:
   ```bash
   php artisan db:import-sql
   ```
-  *(Lệnh này sẽ tự động quét thư mục `database/raw-sql/` và import `accounts_seed.sql`, `business_demo_seed.sql`)*
+  *(Lệnh này sậ½ tự động quét thư mục `database/raw-sql/` và import `accounts_seed.sql`, `business_demo_seed.sql`)*
 
 
 ### 2. Chạy Backend
@@ -209,15 +214,15 @@ npm run dev
 
 ## Tài khoản seed
 
-Mật khẩu mặc định cho tất cả các tài khoản: **`password`**
+Mậ­t khẩu mặc định cho tất cả các tài khoản: **`password`**
 
-| Vai trò | Tên đăng nhập (Username) | Phân hệ / Cổng kiểm thử | Cổng mặc định |
+| Vai trò | Tên đăng nhậ­p (Username) | Phân hệ / Cổng kiểm thử | Cổng mặc định |
 |:---|:---|:---|:---|
 | `ADMIN` | `admin` | Phân hệ Admin - Quản trị | `http://localhost:5173` |
 | `SANPHAM` | `sanpham01` | Phân hệ Admin - Quản lý sản phẩm | `http://localhost:5173` |
 | `DIEUHANH` | `manager01` | Phân hệ Admin - Điều phối, điều hành | `http://localhost:5173` |
 | `KINHDOANH` | `sales01` | Phân hệ Admin - Quản lý kinh doanh | `http://localhost:5173` |
-| `KETOAN` | `ketoan01` | Phân hệ Admin - Quản lý kế toán | `http://localhost:5173` |
+| `KETOAN` | `ketoan01` | Phân hệ Admin - Quản lý kậ¿ toán | `http://localhost:5173` |
 | `HDV` | `hdv01` | Phân hệ Hướng dẫn viên (HDV) | `http://localhost:5174` |
 | `KHACHHANG` | `khach01` | Phân hệ Khách hàng (KH) | `http://localhost:5175` |
 
@@ -228,9 +233,9 @@ Mật khẩu mặc định cho tất cả các tài khoản: **`password`**
 | Hiện tượng | Nguyên nhân thường gặp | Cách xử lý |
 |---|---|---|
 | Backend lỗi 500 khi gọi API | Chưa copy `.env` hoặc sai cấu hình DB | Kiểm tra file `.env` và chạy lại `php artisan config:clear` |
-| Lỗi migration báo thiếu bảng | Database chưa tồn tại | Vào HeidiSQL tạo Database `travel_erp` trước khi migrate |
+| Lỗi migration báo thiậ¿u bảng | Database chưa tồn tại | Vào HeidiSQL tạo Database `travel_erp` trước khi migrate |
 | FE gọi API bị `Failed to fetch` | Backend chưa chạy hoặc gọi sai port | Chạy backend lệnh `php artisan serve` ở port `8000` |
-| API trả `401 Unauthorized` | Chưa đăng nhập hoặc token hết hạn | Đăng nhập lại |
+| API trả `401 Unauthorized` | Chưa đăng nhậ­p hoặc token hậ¿t hạn | Đăng nhậ­p lại |
 
 ---
 Tài liệu phát triển
