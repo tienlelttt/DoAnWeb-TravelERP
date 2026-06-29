@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Modal } from '../../../components/ui/Modal';
 import { Button } from '../../../components/ui/Button';
 import { FileText, Ban, CheckCircle, AlertTriangle } from 'lucide-react';
-import type { RefundRequest } from './mockData';
 import { ordersService } from '../../../services/orders';
 import { useNotification } from '../../../context/NotificationContext';
 import { formatDate } from '../../../utils/dateHelpers';
+import type { RefundRequest  } from '../../../types/finance';
 
 export interface RefundProcessingModalProps {
   isOpen: boolean;

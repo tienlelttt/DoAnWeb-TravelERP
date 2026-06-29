@@ -3,12 +3,12 @@ import { Modal } from '../../components/ui/Modal';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { DollarSign, MapPin, Users, CheckCircle, XCircle } from 'lucide-react';
-import type { Order, Passenger } from './mockData';
 import { ordersService } from '../../services/orders';
 import type { ChiTietDatTourResponse, DonDatTourResponse } from '../../services/orders';
 import { formatApiError } from '../../utils/apiHelpers';
 import { useNotification } from '../../context/NotificationContext';
 import { formatDateTime } from '../../utils/dateHelpers';
+import type { Order, Passenger  } from '../../types/booking';
 
 interface OrderDetailModalProps {
   isOpen: boolean;

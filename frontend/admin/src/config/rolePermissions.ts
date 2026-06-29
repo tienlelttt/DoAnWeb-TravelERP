@@ -24,7 +24,6 @@ export const hasAccess = (role: string | undefined, menuKey: string): boolean =>
   // Standardize role by removing potential prefixes like "ROLE_"
   const standardizedRole = role.trim().toUpperCase().replace(/^ROLE_/, '');
 
-  // ADMIN has access to everything
   if (standardizedRole === 'ADMIN') {
     return true;
   }
@@ -34,12 +33,10 @@ export const hasAccess = (role: string | undefined, menuKey: string): boolean =>
     return false;
   }
 
-  // Check for wildcard access
   if (permissions.includes('*')) {
     return true;
   }
 
-  // Check for specific menu key access
   return permissions.includes(menuKey);
 };
 

@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '../../components/ui/Button';
 import { Modal } from '../../components/ui/Modal';
 import { Select } from '../../components/ui/Select';
-import type { TourInstance } from './mockData';
-import type { DaySchedule } from '../tour-template/mockData';
 import { Pencil } from 'lucide-react';
 import TourInstanceGreenActionTab from './TourInstanceGreenActionTab';
 import TourInstanceServiceTab from './TourInstanceServiceTab';
 import { tourTemplateService } from '../../services/tour-template';
 import type { TourMauResponse } from '../../services/tour-template';
 import { tourInstanceService } from '../../services/tour-instance';
+import type { TourInstance  } from '../../types/tour';
+import type { DaySchedule  } from '../../types/tour';
 
 export interface TourInstanceFormProps {
   isOpen: boolean;
@@ -61,7 +61,6 @@ const TourInstanceDetailModal: React.FC<TourInstanceFormProps> = ({
   const [isLoadingDetail, setIsLoadingDetail] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Wizard state
   const [currentStep, setCurrentStep] = useState(1);
   const [createdTourId, setCreatedTourId] = useState<string | null>(null);
 
@@ -425,7 +424,6 @@ const TourInstanceDetailModal: React.FC<TourInstanceFormProps> = ({
             value={formData.startDate || ''}
             onChange={(e) => {
                handleChange('startDate', e.target.value);
-               // Simple auto calculation of end date based on schedule length
                if (e.target.value && formData.schedule?.length) {
                  const start = new Date(e.target.value);
                  start.setDate(start.getDate() + formData.schedule.length - 1);
@@ -605,7 +603,6 @@ const TourInstanceDetailModal: React.FC<TourInstanceFormProps> = ({
         size="3xl"
       >
         {mode === 'create' ? (
-          // WIZARD UI
           <div className="flex flex-col h-[75vh]">
 
 

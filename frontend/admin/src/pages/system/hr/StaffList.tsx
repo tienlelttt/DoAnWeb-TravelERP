@@ -10,13 +10,13 @@ import { Award, Eye, RotateCcw } from 'lucide-react';
 import CompetencyModal from './CompetencyModal';
 import StaffProfileModal from './StaffProfileModal';
 import type { Column } from '../../../components/ui/Table';
-import type { Staff } from './mockData';
 import { roles } from './mockData';
 import { accountsService } from '../../../services/system/accounts';
 import type { NhanVienResponse } from '../../../services/system/accounts';
 import { formatDate } from '../../../utils/dateHelpers';
 import { useAuth } from '../../../context/AuthContext';
 import { hasAccess } from '../../../config/rolePermissions';
+import type { Staff  } from '../../../types/system';
 
 const roleMap: Record<string, string> = {
   'ADMIN': 'admin',
@@ -59,7 +59,6 @@ const StaffList: React.FC = () => {
     fetchStaff();
   }, [user]);
 
-  // We no longer manage competencies locally for all staff, CompetencyModal will fetch it.
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('all');
   const [page, setPage] = useState(1);

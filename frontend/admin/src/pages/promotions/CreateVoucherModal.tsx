@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Save } from 'lucide-react';
 import { Modal } from '../../components/ui/Modal';
 import { Button } from '../../components/ui/Button';
-import type { Voucher } from './mockData';
 import type { VoucherRequest } from '../../services/promotions';
+import type { Voucher  } from '../../types/marketing';
 
 interface CreateVoucherModalProps {
   isOpen: boolean;
@@ -88,7 +88,6 @@ const CreateVoucherModal: React.FC<CreateVoucherModalProps> = ({ isOpen, onClose
       setMinOrderValue('');
       setErrors({});
     } catch {
-      // Error is handled in the parent, or we can handle it here if we pass the service
     }
   };
 

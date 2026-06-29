@@ -8,11 +8,23 @@ import { Table } from '../../components/ui/Table';
 import type { Column } from '../../components/ui/Table';
 import { Modal } from '../../components/ui/Modal';
 import { Plus, MoreVertical, CheckCircle, Calendar, User, Hash, Users, ShieldCheck } from 'lucide-react';
-import type { TourNeedGuide } from './mockData';
+
+export interface TourNeedGuide {
+  id: string;
+  code: string;
+  name: string;
+  startDate: string;
+  endDate: string;
+  duration: string;
+  passengers: number;
+  requiredSkills: string[];
+  status: 'pending' | 'assigned';
+  location: string;
+}
+
 import AssignGuideModal from './AssignGuideModal';
 import { dispatchService } from '../../services/dispatch';
 import type { NhanVienResponse } from '../../services/dispatch';
-import type { TourThucTeResponse } from '../../services/tour-instance';
 import { useAuth } from '../../context/AuthContext';
 import { hasAccess } from '../../config/rolePermissions';
 import { formatApiError, unwrapPageContent } from '../../utils/apiHelpers';
@@ -35,7 +47,7 @@ const mapTourToUI = (t: any): TourNeedGuide => {
   if (!endDateStr && t.ngayKhoiHanh && t.tourMau?.thoiLuong) {
     const s = new Date(t.ngayKhoiHanh);
     if (!Number.isNaN(s.getTime())) {
-      s.setDate(s.getDate() + t.tourMau.thoiLuong - 1);
+      s.setDate(s.getDate() + t.tourMau.thoiLuong);
       endDateStr = s.toISOString();
     }
   }
@@ -77,7 +89,7 @@ const AssignGuide: React.FC = () => {
     setError(null);
     try {
       const res = await dispatchService.tourCanPhanCong();
-      const pending = unwrapPageContent(res).filter((t) => PENDING_STATUSES.has(t.trangThai || ''));
+      const pending = unwrapPageContent(res).filter((t: any) => PENDING_STATUSES.has(t.trangThai || ''));
       setData(pending.map(mapTourToUI));
     } catch (err: unknown) {
       setError(formatApiError(err, 'Lỗi khi tải danh sách tour'));

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '../../components/ui/Button';
 import { Select } from '../../components/ui/Select';
-import type { GreenAction } from './mockData';
+import type { GreenAction  } from '../../types/green-action';
 
 export interface GreenActionFormProps {
   mode: 'create' | 'edit';

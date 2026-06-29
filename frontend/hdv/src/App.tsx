@@ -13,9 +13,7 @@ import {
   Send
 } from 'lucide-react';
 import type { Passenger, Expense, Tour, BaoCaoSuCo as IncidentType } from './types';
-// Removed mockData imports
 
-// Component imports
 import DangNhap from './pages/DangNhap';
 import BangDieuKhien from './pages/BangDieuKhien';
 import LichTrinh from './pages/LichTrinh';
@@ -85,19 +83,16 @@ type SettlementInfoRequest = {
 };
 
 export default function App() {
-  // Authentication States
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => !!localStorage.getItem('token'));
   const [loginCode, setLoginCode] = useState<string>('');
   const [loginPassword, setLoginPassword] = useState<string>('');
   const [loginError, setLoginError] = useState<string | null>(null);
 
-  // Application Data States
   const [passengers, setPassengers] = useState<Passenger[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [incidents, setIncidents] = useState<IncidentType[]>([]);
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
 
-  // UI States
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
   const [notificationOpen, setNotificationOpen] = useState<boolean>(false);
   const [currentTour, setCurrentTour] = useState<Tour | null>(null);
@@ -469,7 +464,6 @@ export default function App() {
     }
   };
 
-  // Compute attendance stats to pass down
   const attendanceStats = useMemo(() => {
     const total = passengers.length;
     const checked = passengers.filter(p => p.status === 'DA_DIEM_DANH').length;
@@ -566,7 +560,6 @@ export default function App() {
       .toUpperCase();
   }, [guideProfile]);
 
-  // If not logged in, show the styled DangNhap component wrapped in a mobile layout
   if (!isLoggedIn) {
     return (
       <div className="min-h-screen bg-slate-100 flex items-center justify-center p-0 sm:p-4">

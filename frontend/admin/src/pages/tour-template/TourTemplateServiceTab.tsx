@@ -3,11 +3,11 @@ import { Button } from '../../components/ui/Button';
 import { SearchInput } from '../../components/ui/SearchInput';
 import { Trash2, Pencil, Plus } from 'lucide-react';
 import { servicesService } from '../../services/services';
-import type { Service } from '../services/mockData';
 import { Modal } from '../../components/ui/Modal';
 import ServiceForm from '../services/ServiceForm';
 import { formatApiError } from '../../utils/apiHelpers';
 import type { DichVuThemRequest } from '../../services/services';
+import type { Service  } from '../../types/tour';
 
 interface TourTemplateServiceTabProps {
   selectedServices: Service[];
@@ -25,7 +25,6 @@ const TourTemplateServiceTab: React.FC<TourTemplateServiceTabProps> = ({ selecte
   const fetchServices = async () => {
     setLoading(true);
     try {
-      // The backend API doesn't actually support 'ten' query, but we fetch all and filter on frontend
       const res = await servicesService.danhSachDichVuThem();
       const mapped: Service[] = res.map((r) => ({
         id: r.maDichVuThem || '',

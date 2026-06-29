@@ -21,7 +21,6 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   // Quản lý state nội bộ nếu component không bị điều khiển (uncontrolled)
   const [internalValue, setInternalValue] = useState<string>(value || '');
 
-  // Cập nhật state nội bộ khi prop thay đổi
   useEffect(() => {
     if (value !== undefined) {
       setInternalValue(value);

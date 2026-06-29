@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Modal } from '../../../components/ui/Modal';
 import { Button } from '../../../components/ui/Button';
 import { Select } from '../../../components/ui/Select';
-import type { Account } from './mockData';
 import { allRoles } from './mockData';
 import { accountsService } from '../../../services/system/accounts';
 import { ROLE_VALUE_MAP } from './AccountList';
+import type { Account  } from '../../../types/system';
 
 interface AccountFormModalProps {
   isOpen: boolean;

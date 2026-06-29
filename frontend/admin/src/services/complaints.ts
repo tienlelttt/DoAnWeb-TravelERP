@@ -1,13 +1,6 @@
 import api from '../services/api';
-import type {
-    XuLyHoTroRequest,
-    ApiResponseYeuCauHoTroResponse,
-    ApiResponsePageYeuCauHoTroResponse,
-    YeuCauHoTroResponse,
-    PageYeuCauHoTroResponse,
-    PageableObject,
-    SortObject
-} from '../pages/complaints/mockData';
+import type { XuLyHoTroRequest, ApiResponseYeuCauHoTroResponse, ApiResponsePageYeuCauHoTroResponse, YeuCauHoTroResponse, PageYeuCauHoTroResponse  } from '../types/complaint';
+import type { PageableObject, SortObject  } from '../types/system';
 
 export type {
     XuLyHoTroRequest,
@@ -41,6 +34,10 @@ export const complaintsService = {
     },
     danhSachYeuCauHoTro: async (params?: Record<string, any>) => {
         const response = await api.get<ApiResponsePageYeuCauHoTroResponse>('/api/kinh-doanh/yeu-cau-ho-tro', { params: { page: 0, size: 1000, ...params } });
+        return response.data.data;
+    },
+    danhSachTongHopKhieuNaiSuCo: async (params?: Record<string, any>) => {
+        const response = await api.get('/api/kinh-doanh/tong-hop-khieu-nai-su-co', { params });
         return response.data.data;
     }
 };

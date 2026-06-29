@@ -79,7 +79,6 @@ export const hdvService = {
     return res.data;
   },
 
-  // Lấy chi tiết tour thực tế, có maTourMau để dùng với lịch trình.
   layChiTietTourThucTe: async (maTourThucTe: string) => {
     const res = await api.get(`/dieu-hanh/tour-thuc-te/${maTourThucTe}`);
     return res.data;

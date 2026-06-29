@@ -9,11 +9,11 @@ import { Table } from '../../../components/ui/Table';
 import CostApprovalModal from './CostApprovalModal';
 import { Eye } from 'lucide-react';
 import type { Column } from '../../../components/ui/Table';
-import type { CostItem } from './mockData';
 import { financeService } from '../../../services/finance';
 import type { ChiPhiThucTeResponse } from '../../../services/finance';
 import { useAuth } from '../../../context/AuthContext';
 import { hasAccess } from '../../../config/rolePermissions';
+import type { CostItem  } from '../../../types/finance';
 
 const CostList: React.FC = () => {
   const [costs, setCosts] = useState<CostItem[]>([]);

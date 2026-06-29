@@ -1,15 +1,5 @@
 import api from '../../services/api';
-import type {
-    GanVaiTroRequest,
-    ApiResponseNhanVienResponse,
-    ApiResponseVoid,
-    DangKyNhanVienRequest,
-    ApiResponsePageNhanVienResponse,
-    NhanVienResponse,
-    PageNhanVienResponse,
-    PageableObject,
-    SortObject
-} from '../../pages/system/accounts/mockData';
+import type { GanVaiTroRequest, ApiResponseNhanVienResponse, ApiResponseVoid, DangKyNhanVienRequest, ApiResponsePageNhanVienResponse, NhanVienResponse, PageNhanVienResponse, PageableObject, SortObject  } from '../../types/system';
 
 export type {
     GanVaiTroRequest,

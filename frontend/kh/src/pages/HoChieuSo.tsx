@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   User, Calendar, Wallet,
   MapPin, Star, Clock, CreditCard,
@@ -110,7 +110,6 @@ export default function HoChieuSo() {
   const [complaints, setComplaints] = useState<ComplaintTicket[]>([]);
   const [allTours, setAllTours] = useState<any[]>([]);
 
-  // Modal control states
   const [showRedeemModal, setShowRedeemModal] = useState(false);
   const [selectedVoucherForUse, setSelectedVoucherForUse] = useState<any>(null);
 
@@ -243,7 +242,6 @@ export default function HoChieuSo() {
     5: 'Tuyệt vời'
   };
 
-  // UC60: Change password flow
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -251,7 +249,6 @@ export default function HoChieuSo() {
   const [passwordError, setPasswordError] = useState('');
   const [passwordSuccess, setPasswordSuccess] = useState(false);
 
-  // Toast notification system
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
   const layThongBaoLoi = (err: any, fallback: string) => {
@@ -268,9 +265,7 @@ export default function HoChieuSo() {
   };
 
 
-  // Sync logic removed because we fetch from API
 
-  // Countdown timer for OTP
   useEffect(() => {
     let timer: any;
     if (showOtpModal && otpCountdown > 0) {
@@ -281,7 +276,6 @@ export default function HoChieuSo() {
     return () => clearInterval(timer);
   }, [showOtpModal, otpCountdown]);
 
-  // Auto-dismiss toast after 4 seconds
   useEffect(() => {
     if (toast) {
       const timer = setTimeout(() => setToast(null), 4000);
@@ -327,7 +321,6 @@ export default function HoChieuSo() {
     }
   };
 
-  // UC23: Triggers OTP verification modal
   const handleSaveProfile = () => {
     if (editedProfile.email) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -346,7 +339,6 @@ export default function HoChieuSo() {
     setToast({ message: `Mã OTP xác thực của bạn là: ${generatedOtp}`, type: 'success' });
   };
 
-  // Verify OTP
   const handleVerifyOtp = async () => {
     const enteredCode = otpValue.join('');
     if (enteredCode === expectedProfileOtp || enteredCode === '123456') {
@@ -527,7 +519,6 @@ export default function HoChieuSo() {
     }
   };
 
-  // UC30: Redeem Green Points for Voucher
   const tinhDiemCanDoiVoucher = (voucher: Voucher) => {
     return voucher.requiredGreenPoints;
   };
@@ -538,7 +529,6 @@ export default function HoChieuSo() {
       return;
     }
 
-    // Deduct points
     try {
       const response = await khService.doiVoucher(voucher.id);
       const newVoucher = mapVoucher(unwrapData<any>(response));
@@ -552,7 +542,6 @@ export default function HoChieuSo() {
     }
   };
 
-  // UC32: Xử lý mở modal hủy tour & tính phí phạt
   const handleOpenCancelModal = (booking: Booking) => {
     setSelectedBookingForCancel(booking);
     setCancellationReason('');
@@ -601,7 +590,6 @@ export default function HoChieuSo() {
           : b
       ));
 
-      // UC48 in SPEC-Status-Flows.md: If booking is cancelled, return voucher to CO_HIEU_LUC
       setToast({ message: `Yêu cầu hủy tour đã được gửi! Trạng thái: Chờ hủy. Số tiền hoàn trả dự kiến: ${formatPrice(cancellationPenalty.refund)}.`, type: 'success' });
       setSelectedBookingForCancel(null);
     } catch (err: any) {
@@ -612,7 +600,6 @@ export default function HoChieuSo() {
   const isComplaintResolved = (status?: string) => ['DA_XU_LY', 'TU_CHOI'].includes(status || '');
   const hasPendingComplaint = (booking: Booking) => Boolean(booking.hasComplaint && !isComplaintResolved(booking.complaintStatus));
 
-  // UC35: Mở modal đánh giá tour
   const handleOpenReviewModal = (booking: Booking) => {
     if (booking.hasReviewed) {
       setToast({ message: 'Bạn đã đánh giá chuyến đi này rồi. Mỗi tour chỉ được đánh giá một lần.', type: 'info' });
@@ -683,7 +670,6 @@ export default function HoChieuSo() {
     );
   };
 
-  // Gửi đánh giá chuyến đi (UC35)
   const handleSubmitReview = async () => {
     if (!selectedBookingForReview) return;
 
@@ -712,7 +698,6 @@ export default function HoChieuSo() {
     }
   };
 
-  // UC36: Mở modal gửi khiếu nại
   const handleOpenComplaintModal = (booking: Booking) => {
     if (booking.hasComplaint) {
       setToast({ message: 'Bạn đã gửi khiếu nại cho chuyến đi này. Màn hình Khiếu nại sẽ cập nhật trạng thái xử lý.', type: 'info' });
@@ -725,7 +710,6 @@ export default function HoChieuSo() {
     setComplaintFileName('');
   };
 
-  // Gửi yêu cầu khiếu nại (UC36)
   const handleSubmitComplaint = async () => {
     if (!selectedBookingForComplaint) return;
 
@@ -773,7 +757,6 @@ export default function HoChieuSo() {
     }
   };
 
-  // Filtered Bookings
   const filteredBookings = bookings.filter(booking => {
     // 1. Status Filter
     const statusMatch = bookingFilter === 'all' || booking.status === bookingFilter;

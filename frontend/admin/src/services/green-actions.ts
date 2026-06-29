@@ -1,11 +1,6 @@
 import api from '../services/api';
-import type {
-    ApiResponseHanhDongXanhResponse,
-    HanhDongXanhRequest,
-    ApiResponseVoid,
-    ApiResponseListHanhDongXanhResponse,
-    HanhDongXanhResponse
-} from '../pages/green-actions/mockData';
+import type { ApiResponseHanhDongXanhResponse, HanhDongXanhRequest, ApiResponseListHanhDongXanhResponse, HanhDongXanhResponse  } from '../types/green-action';
+import type { ApiResponseVoid  } from '../types/system';
 
 export type {
     HanhDongXanhResponse,

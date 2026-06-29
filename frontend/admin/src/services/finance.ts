@@ -1,21 +1,6 @@
 import api from '../services/api';
-import type {
-    ApiResponseQuyetToanResponse,
-    ApiResponseThanhToanResponse,
-    ApiResponseChiPhiThucTeResponse,
-    QuyetToanRequest,
-    ApiResponsePageQuyetToanResponse,
-    ApiResponsePageThanhToanResponse,
-    ApiResponsePageChiPhiThucTeResponse,
-    QuyetToanResponse,
-    ThanhToanResponse,
-    ChiPhiThucTeResponse,
-    PageQuyetToanResponse,
-    PageThanhToanResponse,
-    PageChiPhiThucTeResponse,
-    PageableObject,
-    SortObject
-} from '../pages/finance/mockData';
+import type { ApiResponseQuyetToanResponse, ApiResponseThanhToanResponse, ApiResponseChiPhiThucTeResponse, QuyetToanRequest, ApiResponsePageQuyetToanResponse, ApiResponsePageThanhToanResponse, ApiResponsePageChiPhiThucTeResponse, QuyetToanResponse, ThanhToanResponse, ChiPhiThucTeResponse, PageQuyetToanResponse, PageThanhToanResponse, PageChiPhiThucTeResponse  } from '../types/finance';
+import type { PageableObject, SortObject  } from '../types/system';
 
 export type {
     ApiResponseQuyetToanResponse,

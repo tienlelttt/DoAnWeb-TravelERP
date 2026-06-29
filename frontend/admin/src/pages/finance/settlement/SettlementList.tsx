@@ -9,12 +9,12 @@ import { Table } from '../../../components/ui/Table';
 import SettlementModal from './SettlementModal';
 import { Eye } from 'lucide-react';
 import type { Column } from '../../../components/ui/Table';
-import type { SettlementTour } from './mockData';
 import { financeService } from '../../../services/finance';
 import type { QuyetToanResponse } from '../../../services/finance';
 import { useAuth } from '../../../context/AuthContext';
 import { useNotification } from '../../../context/NotificationContext';
 import { hasAccess } from '../../../config/rolePermissions';
+import type { SettlementTour  } from '../../../types/finance';
 
 const SettlementList: React.FC = () => {
   const [tours, setTours] = useState<SettlementTour[]>([]);
@@ -113,7 +113,6 @@ const SettlementList: React.FC = () => {
         };
       });
 
-      // Avoid duplicates just in case
       const allTours = [...mapped, ...pendingMapped.filter(p => !mapped.some(m => m.code === p.code))];
       setTours(allTours);
     } catch (e: unknown) {

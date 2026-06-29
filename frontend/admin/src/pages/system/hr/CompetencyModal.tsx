@@ -4,10 +4,10 @@ import { Modal } from '../../../components/ui/Modal';
 import { Button } from '../../../components/ui/Button';
 import { Select } from '../../../components/ui/Select';
 import { Plus, Trash2 } from 'lucide-react';
-import type { Competency, Staff } from './mockData';
 import { hrService } from '../../../services/system/hr';
 import type { NangLucResponse, NangLucRequest } from '../../../services/system/hr';
 import { useNotification } from '../../../context/NotificationContext';
+import type { Competency, Staff  } from '../../../types/system';
 
 interface CompetencyModalProps {
   isOpen: boolean;

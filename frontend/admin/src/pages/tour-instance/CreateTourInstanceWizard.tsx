@@ -6,9 +6,9 @@ import { tourTemplateService } from '../../services/tour-template';
 import type { TourMauResponse } from '../../services/tour-template';
 import { tourInstanceService } from '../../services/tour-instance';
 import type { TaoTourThucTeRequest, CapNhatTourThucTeRequest } from '../../services/tour-instance';
-import type { TourInstance } from './mockData';
 import TourInstanceServiceTab from './TourInstanceServiceTab';
 import TourInstanceGreenActionTab from './TourInstanceGreenActionTab';
+import type { TourInstance  } from '../../types/tour';
 
 export interface CreateTourInstanceWizardProps {
   isOpen: boolean;

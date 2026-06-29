@@ -5,11 +5,11 @@ import { Badge } from '../../components/ui/Badge';
 import { Table } from '../../components/ui/Table';
 import type { Column } from '../../components/ui/Table';
 import { Phone, Mail, CreditCard, Leaf, Cake, AlertCircle, MapPinned } from 'lucide-react';
-import type { Customer } from './mockData';
 import { customersService } from '../../services/customers';
 import api from '../../services/api';
 import { mapSupportRequestStatus, mapOrderStatus } from '../../utils/statusMapping';
 import { formatDate } from '../../utils/dateHelpers';
+import type { Customer  } from '../../types/booking';
 
 interface LichSuTourItem {
   maLichSuTour: string;
@@ -70,7 +70,6 @@ const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({ isOpen, onClo
           setLoading(false);
         });
 
-      // Fetch tour history and complaints
       setTourHistoryLoading(true);
       setTourHistoryError(false);
       setComplaintsLoading(true);

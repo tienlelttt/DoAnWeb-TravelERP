@@ -9,7 +9,6 @@ import { CheckCircle, Eye, XCircle } from 'lucide-react';
 import OrderDetailModal from './OrderDetailModal';
 import { Table } from '../../components/ui/Table';
 import type { Column } from '../../components/ui/Table';
-import type { Order } from './mockData';
 import type { DonDatTourResponse } from '../../services/orders';
 import { ordersService } from '../../services/orders';
 import { useAuth } from '../../context/AuthContext';
@@ -17,6 +16,7 @@ import { useNotification } from '../../context/NotificationContext';
 import { hasAccess } from '../../config/rolePermissions';
 import { formatApiError, unwrapPageContent } from '../../utils/apiHelpers';
 import { formatDate } from '../../utils/dateHelpers';
+import type { Order  } from '../../types/booking';
 
 const mapStatus = (s?: string): Order['status'] => {
   switch (s?.trim().toUpperCase()) {
@@ -97,7 +97,7 @@ const OrderList: React.FC = () => {
     setError(null);
     try {
       const res = await ordersService.danhSachTatCa();
-      setData(unwrapPageContent(res).map(mapToUI));
+      setData(unwrapPageContent(res).map((item: any) => mapToUI(item as DonDatTourResponse)));
     } catch (err: unknown) {
       setError(formatApiError(err, 'Lỗi khi tải dữ liệu đơn hàng'));
     } finally {

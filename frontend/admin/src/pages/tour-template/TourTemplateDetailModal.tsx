@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '../../components/ui/Button';
 import { Modal } from '../../components/ui/Modal';
-import type { TourTemplate, DaySchedule } from './mockData';
+import type { TourTemplate, DaySchedule  } from '../../types/tour';
 
 export interface TourTemplateDetailModalProps {
   isOpen: boolean;
@@ -161,7 +161,6 @@ const TourTemplateDetailModal: React.FC<TourTemplateDetailModalProps> = ({
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      // Switch to tab with error
       if (newErrors.title || newErrors.basePrice) {
         setActiveTab('info');
       } else {

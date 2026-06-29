@@ -10,7 +10,6 @@ import { PlusCircle, Pencil, Trash2, Ban, Eye } from 'lucide-react';
 import TourInstanceDetailModal from './TourInstanceDetailModal';
 import { Table } from '../../components/ui/Table';
 import type { Column } from '../../components/ui/Table';
-import type { TourInstance } from './mockData';
 import type { TourThucTeResponse, CapNhatTourThucTeRequest } from '../../services/tour-instance';
 import { tourInstanceService } from '../../services/tour-instance';
 import { ordersService } from '../../services/orders';
@@ -19,6 +18,7 @@ import { useNotification } from '../../context/NotificationContext';
 import { hasAccess } from '../../config/rolePermissions';
 import { mapTourInstanceStatus } from '../../utils/statusMapping';
 import { formatDate, toDateInputValue } from '../../utils/dateHelpers';
+import type { TourInstance } from '../../types/tour';
 
 const TourInstanceList: React.FC = () => {
   const { user } = useAuth();
@@ -144,7 +144,6 @@ const TourInstanceList: React.FC = () => {
     const wasCreate = modalState.mode === 'create';
     try {
       if (wasCreate) {
-        // Wizard handles API creation directly.
         return;
       } else if (modalState.mode === 'edit') {
         const payload: CapNhatTourThucTeRequest = {
@@ -423,7 +422,7 @@ const TourInstanceList: React.FC = () => {
         isOpen={modalState.isOpen && modalState.mode === 'delete'}
         onClose={closeModal}
         title="Xác nhận hủy tour"
-        size="sm"
+        size="xl"
         footer={
           <>
             <Button variant="secondary" onClick={closeModal}>Hủy</Button>
@@ -435,7 +434,7 @@ const TourInstanceList: React.FC = () => {
           <p>Bạn có chắc muốn hủy tour này?</p>
           {modalState.selectedTour?.status === 'MO_BAN' && (
             <div className="mt-4 p-3 bg-red-50 text-red-700 rounded-lg text-sm border border-red-100">
-              <p className="font-bold mb-2">Cảnh báo: Tour đã có {modalState.selectedTour?.bookedSeats || 0} khách đặt.</p>
+              <p className="font-bold mb-2">Cảnh báo: Tour đã có {modalState.selectedTour?.bookedSeats || 0} khách đặt (từ {tourCustomers.length} đơn hàng).</p>
               <label className="block text-xs font-semibold mb-1">Vui lòng nhập lý do hủy:</label>
               <textarea
                 className="w-full px-3 py-2 border border-red-200 rounded focus:outline-none focus:ring-1 focus:ring-red-400"
@@ -445,28 +444,42 @@ const TourInstanceList: React.FC = () => {
                 placeholder="Nhập lý do hủy tour..."
               ></textarea>
               {isLoadingCustomers ? (
-                <div className="mt-3 text-xs opacity-80">Đang tải danh sách khách hàng...</div>
+                <div className="mt-3 text-xs opacity-80">Đang tải danh sách đơn hàng...</div>
               ) : tourCustomers.length > 0 ? (
                 <div className="mt-3">
-                  <p className="font-semibold text-xs mb-1">Danh sách khách hàng bị ảnh hưởng:</p>
+                  <p className="font-semibold text-xs mb-1">Danh sách đơn hàng bị ảnh hưởng:</p>
                   <div className="max-h-40 overflow-y-auto bg-white border border-red-200 rounded text-xs">
                     <table className="w-full">
                       <thead>
-                        <tr className="bg-red-50 text-left">
-                          <th className="px-2 py-1 font-semibold">Mã KH</th>
-                          <th className="px-2 py-1 font-semibold">Khách hàng</th>
-                          <th className="px-2 py-1 font-semibold text-right">SĐT</th>
+                        <tr className="bg-red-50">
+                          <th className="px-2 py-2 font-semibold text-center w-[25%] border-r border-red-100">Mã Đơn</th>
+                          <th className="px-2 py-2 font-semibold text-center w-[20%] border-r border-red-100">Mã KH</th>
+                          <th className="px-2 py-2 font-semibold text-center w-[35%] border-r border-red-100">Khách hàng</th>
+                          <th className="px-2 py-2 font-semibold text-center w-[20%]">SĐT</th>
                         </tr>
                       </thead>
                       <tbody>
                         {tourCustomers.map(c => {
-                          const sdt = c.chiTietKhach?.find((ct: any) => ct.loaiKhach === 'NGUOI_DAT')?.soDienThoai || '';
+                          const nguoiDat = c.chiTietKhach?.find((ct: any) => ct.loaiKhach === 'NGUOI_DAT');
+                          const nguoiDongHanhs = c.chiTietKhach?.filter((ct: any) => ct.loaiKhach === 'NGUOI_DONG_HANH') || [];
+                          const sdt = nguoiDat?.soDienThoai || '';
                           return (
-                            <tr key={c.maDatTour} className="border-b border-gray-100 last:border-0">
-                              <td className="px-2 py-1 font-mono">{c.maKhachHang}</td>
-                              <td className="px-2 py-1 font-medium">{c.tenKhachHang || 'N/A'}</td>
-                              <td className="px-2 py-1 text-right">{sdt}</td>
-                            </tr>
+                            <React.Fragment key={c.maDatTour}>
+                              <tr className="border-b border-gray-200 bg-gray-50">
+                                <td className="px-2 py-2 font-mono font-semibold text-[#00668A] text-center border-r border-gray-200">{c.maDatTour}</td>
+                                <td className="px-2 py-2 font-mono text-gray-700 text-center border-r border-gray-200">{c.maKhachHang}</td>
+                                <td className="px-2 py-2 font-medium text-center border-r border-gray-200">{c.tenKhachHang || 'N/A'}</td>
+                                <td className="px-2 py-2 font-medium text-center">{sdt}</td>
+                              </tr>
+                              {nguoiDongHanhs.length > 0 && nguoiDongHanhs.map((ndh: any, idx: number) => (
+                                <tr key={ndh.maChiTietDat || idx} className="border-b border-gray-100 last:border-0 text-gray-500 bg-white">
+                                  <td className="px-2 py-1 border-r border-gray-100"></td>
+                                  <td className="px-2 py-1 border-r border-gray-100"></td>
+                                  <td className="px-2 py-1 text-center border-r border-gray-100">{ndh.hoTen || 'N/A'}</td>
+                                  <td className="px-2 py-1 text-center">{ndh.soDienThoai || ''}</td>
+                                </tr>
+                              ))}
+                            </React.Fragment>
                           );
                         })}
                       </tbody>

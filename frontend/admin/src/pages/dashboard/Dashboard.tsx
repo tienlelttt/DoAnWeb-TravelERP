@@ -4,19 +4,16 @@ import { LineChart, Line, XAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Ce
 import { Calendar as CalendarIcon, ArrowUpRight, ArrowDownRight, MapPin, Wallet, ShoppingCart, Users, Map as MapIcon, CheckCircle2, XCircle, BarChart3 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 
-// API Services
 import { customersService } from '../../services/customers';
 import { ordersService } from '../../services/orders';
 import { tourInstanceService } from '../../services/tour-instance';
 import { incidentService } from '../../services/incidents';
 import type { NhatKySuCoResponse } from '../../services/incidents';
 import { ChevronLeft, ChevronRight, AlertTriangle, Info } from 'lucide-react';
-import type { TourThucTeResponse } from '../../pages/tour-instance/mockData';
 import PowerBIConnectionModal from './PowerBIConnectionModal';
 import { formatDate } from '../../utils/dateHelpers';
 import { useAuth } from '../../context/AuthContext';
-
-
+import type { TourThucTeResponse  } from '../../types/tour';
 
 const pieData = [
   { name: 'Đã xác nhận', value: 65, color: '#3B82F6' },
@@ -90,7 +87,6 @@ const Dashboard: React.FC = () => {
   const [currentFeaturedIndex, setCurrentFeaturedIndex] = useState(0);
 
   useEffect(() => {
-    // Fetch actual data from backend based on user role permissions
     const fetchStats = async () => {
       try {
         const canViewCustomers = ['KINHDOANH', 'SALES', 'KETOAN', 'ADMIN'].includes(user?.maVaiTro || '');
@@ -113,7 +109,7 @@ const Dashboard: React.FC = () => {
           tours: tours?.totalElements || prev.tours
         }));
 
-        const allOrdersList = allOrdersResp?.content || allOrdersResp?.data;
+        const allOrdersList = allOrdersResp?.content || (allOrdersResp as any)?.data;
         if (allOrdersResp && allOrdersList) {
           const mayRevenue = new Map<number, number>();
           for (let i = 1; i <= 31; i++) mayRevenue.set(i, 0);
@@ -147,7 +143,7 @@ const Dashboard: React.FC = () => {
 
         // Fetch larger batch for featured calculation & top destinations
         const allToursResp = await tourInstanceService.danhSach({ page: 0, size: 1000 }).catch(() => null);
-        const allToursList = allToursResp?.content || allToursResp?.data;
+        const allToursList = allToursResp?.content || (allToursResp as any)?.data;
         if (allToursResp && allToursList) {
           // 1. Gói Tour Nổi Bật (Featured Tours)
           // Lọc các tour đang mở bán và còn chỗ
@@ -476,28 +472,34 @@ const Dashboard: React.FC = () => {
           <div className="col-span-9 grid grid-cols-3 gap-6">
             <div className="bg-white p-6 rounded-[20px] shadow-sm border border-gray-100 col-span-1">
               <h3 className="font-bold text-lg text-gray-800 mb-4 text-center">Tổng quan Đơn hàng</h3>
-              <div className="h-48 relative" style={{ minWidth: 0, minHeight: 0 }}>
-                <ResponsiveContainer width="99%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={pieData}
-                      innerRadius={60}
-                      outerRadius={80}
-                      paddingAngle={5}
-                      dataKey="value"
-                    >
-                      {pieData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                  </PieChart>
-                </ResponsiveContainer>
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-2xl font-bold text-gray-800" title={stats.orders.toString()}>
-                    {stats.orders > 1000 ? (stats.orders / 1000).toFixed(1).replace('.0', '') + 'k' : stats.orders}
-                  </span>
-                  <span className="text-xs text-gray-500">Tổng</span>
-                </div>
+              <div className="h-48 relative w-full" style={{ minWidth: 0, minHeight: 0 }}>
+                {pieData && pieData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={pieData}
+                        innerRadius={60}
+                        outerRadius={80}
+                        paddingAngle={5}
+                        dataKey="value"
+                      >
+                        {pieData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                    </PieChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">Chưa có dữ liệu</div>
+                )}
+                {pieData && pieData.length > 0 && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className="text-2xl font-bold text-gray-800" title={stats.orders.toString()}>
+                      {stats.orders > 1000 ? (stats.orders / 1000).toFixed(1).replace('.0', '') + 'k' : stats.orders}
+                    </span>
+                    <span className="text-xs text-gray-500">Tổng</span>
+                  </div>
+                )}
               </div>
               <div className="flex flex-col gap-2 mt-4 text-sm">
                 {pieData.map((entry, idx) => (
@@ -516,18 +518,24 @@ const Dashboard: React.FC = () => {
               <div className="flex justify-between items-center mb-6">
                 <h3 className="font-bold text-lg text-gray-800 text-center w-full">Doanh thu Tháng 5/2026</h3>
               </div>
-              <div className="flex-1 min-h-[200px]" style={{ minWidth: 0, minHeight: 0 }}>
-                <ResponsiveContainer width="99%" height="100%">
-                  <LineChart data={chartData}>
-                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#9CA3AF', fontSize: 12 }} dy={10} interval="preserveStartEnd" minTickGap={20} />
-                    <Tooltip
-                      contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                      cursor={{ stroke: '#E5E7EB', strokeWidth: 2 }}
-                      formatter={(value) => [formatVietnameseCurrencyShort(Number(value ?? 0)), 'Doanh thu']}
-                    />
-                    <Line type="monotone" dataKey="value" stroke="#3B82F6" strokeWidth={4} dot={false} activeDot={{ r: 8, fill: '#3B82F6', stroke: '#fff', strokeWidth: 2 }} />
-                  </LineChart>
-                </ResponsiveContainer>
+              <div className="flex-1 min-h-[200px] w-full" style={{ minWidth: 0, minHeight: 0 }}>
+                {chartData && chartData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={chartData}>
+                      <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#9CA3AF', fontSize: 12 }} dy={10} interval="preserveStartEnd" minTickGap={20} />
+                      <Tooltip
+                        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                        cursor={{ stroke: '#E5E7EB', strokeWidth: 2 }}
+                        formatter={(value) => [formatVietnameseCurrencyShort(Number(value ?? 0)), 'Doanh thu']}
+                      />
+                      <Line type="monotone" dataKey="value" stroke="#3B82F6" strokeWidth={4} dot={false} activeDot={{ r: 8, fill: '#3B82F6', stroke: '#fff', strokeWidth: 2 }} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="w-full h-full flex flex-col items-center justify-center text-gray-400">
+                    <p className="text-sm">Chưa có dữ liệu</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>

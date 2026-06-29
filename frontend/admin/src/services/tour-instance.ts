@@ -1,16 +1,7 @@
 import api from './api';
 import { unwrapApiData, type PageQueryParams } from '../utils/apiHelpers';
-import type {
-  ApiResponseTourThucTeResponse,
-  CapNhatTourThucTeRequest,
-  ApiResponseVoid,
-  ApiResponsePageTourThucTeResponse,
-  TaoTourThucTeRequest,
-  TourThucTeResponse,
-  PageTourThucTeResponse,
-  PageableObject,
-  SortObject,
-} from '../pages/tour-instance/mockData';
+import type { ApiResponseTourThucTeResponse, CapNhatTourThucTeRequest, ApiResponsePageTourThucTeResponse, TaoTourThucTeRequest, TourThucTeResponse, PageTourThucTeResponse  } from '../types/tour';
+import type { ApiResponseVoid, PageableObject, SortObject  } from '../types/system';
 
 export type {
   TourThucTeResponse,

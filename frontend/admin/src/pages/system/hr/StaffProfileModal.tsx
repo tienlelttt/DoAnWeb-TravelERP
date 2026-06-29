@@ -3,12 +3,12 @@ import { Modal } from '../../../components/ui/Modal';
 import { Button } from '../../../components/ui/Button';
 import { Badge } from '../../../components/ui/Badge';
 import { Briefcase, Cake, Mail, Phone, Star, User } from 'lucide-react';
-import type { Competency, Staff, TourHistory } from './mockData';
 import { mockStaff } from './mockData';
 import { hrService } from '../../../services/system/hr';
 import type { NangLucResponse } from '../../../services/system/hr';
 import { accountsService } from '../../../services/system/accounts';
 import { formatDate } from '../../../utils/dateHelpers';
+import type { Competency, Staff, TourHistory  } from '../../../types/system';
 
 interface StaffProfileModalProps {
   isOpen: boolean;

@@ -1,17 +1,7 @@
 import api from './api';
 import { type PageQueryParams } from '../utils/apiHelpers';
-import type {
-    ApiResponseVoucherResponse,
-    VoucherRequest,
-    ApiResponsePageVoucherResponse,
-    PhatHanhVoucherRequest,
-    ApiResponseKhuyenMaiKhResponse,
-    VoucherResponse,
-    PageVoucherResponse,
-    KhuyenMaiKhResponse,
-    PageableObject,
-    SortObject
-} from '../pages/promotions/mockData';
+import type { ApiResponseVoucherResponse, VoucherRequest, ApiResponsePageVoucherResponse, PhatHanhVoucherRequest, ApiResponseKhuyenMaiKhResponse, VoucherResponse, PageVoucherResponse, KhuyenMaiKhResponse  } from '../types/marketing';
+import type { PageableObject, SortObject  } from '../types/system';
 
 export type {
     VoucherResponse,

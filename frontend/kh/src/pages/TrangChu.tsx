@@ -56,7 +56,6 @@ export default function TrangChu() {
     'https://images.unsplash.com/photo-1583417319070-4a69db38a482?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1920'
   ];
 
-  // Auto-rotate hero background every 4s
   useEffect(() => {
     const timer = setInterval(() => {
       setHeroIndex(prev => (prev + 1) % heroImages.length);
@@ -101,14 +100,12 @@ export default function TrangChu() {
     setSelectedDestination(null);
     setSelectedCategory(null);
 
-    // Update URL to reflect search so header label shows correctly
     if (destination) {
       setSearchParams({ search: destination });
     } else {
       setSearchParams({});
     }
 
-    // Scroll to results after short delay to allow render
     setTimeout(() => cuonDenDanhSachTour(), 100);
   };
 
@@ -273,7 +270,6 @@ export default function TrangChu() {
     }
   }, [tourPage, totalTourPages]);
 
-  // Handle filters from URL after tours and filter handlers are ready.
   useEffect(() => {
     const destParam = searchParams.get('destination');
     const categoryParam = searchParams.get('category');
@@ -659,7 +655,6 @@ const dinhDangKhoangNgay = (startDate?: string, endDate?: string) => {
   return start || end;
 };
 
-// Tour Card Component
 function TourCard({ tour, dinhDangGia }: { tour: any; dinhDangGia: (price: number) => string }) {
   const dateRange = dinhDangKhoangNgay(tour.departureDate, tour.endDate);
 

@@ -1,15 +1,7 @@
 import api from './api';
 import { unwrapApiData } from '../utils/apiHelpers';
-import type {
-  LoaiPhongRequest,
-  ApiResponseLoaiPhongResponse,
-  ApiResponseVoid,
-  ApiResponseDichVuThemResponse,
-  ApiResponseListLoaiPhongResponse,
-  ApiResponseListDichVuThemResponse,
-  LoaiPhongResponse,
-  DichVuThemResponse,
-} from '../pages/services/mockData';
+import type { LoaiPhongRequest, ApiResponseLoaiPhongResponse, ApiResponseDichVuThemResponse, ApiResponseListLoaiPhongResponse, ApiResponseListDichVuThemResponse, LoaiPhongResponse, DichVuThemResponse  } from '../types/tour';
+import type { ApiResponseVoid  } from '../types/system';
 
 export interface DichVuThemRequest {
   ten: string;

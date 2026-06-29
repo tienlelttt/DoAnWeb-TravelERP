@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// Base API instance
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || '',
   headers: {
@@ -8,7 +7,6 @@ const api = axios.create({
   },
 });
 
-// Request interceptor to add the auth token
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -22,7 +20,6 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor to handle auth errors
 api.interceptors.response.use(
   (response) => response,
   (error) => {

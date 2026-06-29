@@ -4,8 +4,8 @@ import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { UserCheck, MapPin, Calendar, Users, Target, ShieldCheck, AlertCircle, Star } from 'lucide-react';
 import { dispatchService, type NhanVienResponse } from '../../services/dispatch';
-import type { TourNeedGuide } from './mockData';
 import { useNotification } from '../../context/NotificationContext';
+import type { TourNeedGuide  } from '../../types/dispatch';
 
 interface AssignGuideModalProps {
   isOpen: boolean;
@@ -60,7 +60,6 @@ const AssignGuideModal: React.FC<AssignGuideModalProps> = ({
     const maNhanVien = g.maNhanVien || (g as any).ma_nhan_vien || '';
     const cap = guideCaps[maNhanVien] || {};
     
-    // Parse language and specializations into an array of skills
     let realSkills: string[] = [];
     if (cap.ngonNgu) realSkills = realSkills.concat(cap.ngonNgu.split(',').map((s: string) => s.trim()));
     if (cap.chuyenMon) realSkills = realSkills.concat(cap.chuyenMon.split(',').map((s: string) => s.trim()));

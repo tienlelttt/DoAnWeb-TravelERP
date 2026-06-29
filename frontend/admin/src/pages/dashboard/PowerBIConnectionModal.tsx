@@ -16,18 +16,15 @@ interface PowerBIConnectionModalProps {
 const PowerBIConnectionModal: React.FC<PowerBIConnectionModalProps> = ({ isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState<'connect' | 'download'>('connect');
   
-  // Data stores
   const [khoDuLieuList, setKhoDuLieuList] = useState<PowerBiKhoDuLieuResponse[]>([]);
   const [selectedKho, setSelectedKho] = useState<string>('');
   
-  // Connect Tab State
   const [connectionInfo, setConnectionInfo] = useState<PowerBiKetNoiResponse | null>(null);
   const [loadingConnection, setLoadingConnection] = useState(false);
   const [errorConnection, setErrorConnection] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [copied, setCopied] = useState(false);
   
-  // Download Tab State
   const [downloadReq, setDownloadReq] = useState<XuatDuLieuRequest>({
     maKho: '',
     dinhDang: 'EXCEL'
@@ -96,7 +93,6 @@ const PowerBIConnectionModal: React.FC<PowerBIConnectionModalProps> = ({ isOpen,
       
       const response = await powerBiService.xuatDuLieu(req);
       
-      // Handle file download
       const contentDisposition = response.headers['content-disposition'];
       let filename = `PowerBI_Data_${Date.now()}`;
       if (contentDisposition) {
@@ -142,7 +138,6 @@ const PowerBIConnectionModal: React.FC<PowerBIConnectionModalProps> = ({ isOpen,
       
       const response = await powerBiService.xuatPdf(selectedKho, req);
       
-      // Handle file download
       const contentDisposition = response.headers['content-disposition'];
       let filename = `${selectedKho}_Report_${Date.now()}.pdf`;
       if (contentDisposition) {

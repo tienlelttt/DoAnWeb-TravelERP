@@ -3,18 +3,18 @@ import MainLayout from '../../../components/layouts/MainLayout';
 import { Table } from '../../../components/ui/Table';
 import type { Column } from '../../../components/ui/Table';
 import { Pagination } from '../../../components/ui/Pagination';
-import { Badge } from '../../../components/ui/Badge';
+// Import Badge removed
 import { Button } from '../../../components/ui/Button';
 import { SearchInput } from '../../../components/ui/SearchInput';
 import { Select } from '../../../components/ui/Select';
 import { logsService } from '../../../services/system/logs';
-import { Eye, RotateCcw, Plus, Edit2, Trash2, Download } from 'lucide-react';
+import { RotateCcw, Plus, Edit2, Trash2, Download } from 'lucide-react';
 
 const SystemLogList: React.FC = () => {
   const [logs, setLogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  // const [totalPages, setTotalPages] = useState(1);
   const [totalElements, setTotalElements] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [actionFilter, setActionFilter] = useState('all');
@@ -31,7 +31,6 @@ const SystemLogList: React.FC = () => {
       });
       const content = response?.content || (response as any)?.data || [];
       setLogs(content);
-      setTotalPages(response?.totalPages || 1);
       setTotalElements(response?.totalElements || 0);
     } catch (error) {
       console.error('Failed to fetch logs', error);
@@ -109,7 +108,6 @@ const SystemLogList: React.FC = () => {
       title: 'HÀNH ĐỘNG',
       render: (record) => {
         const actionInfo = parseAction(record.hanhDong || record.hanh_dong);
-        // We use a custom badge rendering to include icon matching the image
         let badgeClass = '';
         if (actionInfo.variant === 'success') badgeClass = 'bg-emerald-50 text-emerald-600 border border-emerald-200';
         else if (actionInfo.variant === 'warning') badgeClass = 'bg-purple-50 text-purple-600 border border-purple-200';

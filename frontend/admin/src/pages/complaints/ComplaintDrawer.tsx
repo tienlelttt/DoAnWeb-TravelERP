@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { X, MessageSquare, AlertCircle, XCircle, Check } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
-import type { Complaint } from './mockData';
 import { ordersService } from '../../services/orders';
 import { tourInstanceService } from '../../services/tour-instance';
 import { formatDate, formatDateTime } from '../../utils/dateHelpers';
+import type { Complaint  } from '../../types/complaint';
 
 interface ComplaintDrawerProps {
   isOpen: boolean;
@@ -65,7 +65,6 @@ const ComplaintDrawer: React.FC<ComplaintDrawerProps> = ({ isOpen, onClose, comp
           if (res) {
             setTourName(res.tieuDeTour || '');
             setDepartureDate(res.ngayKhoiHanh ? formatDate(res.ngayKhoiHanh) : '');
-            // For incidents, the customer and guide are usually directly attached to the complaint itself from the list API
           }
         }).catch(e => console.error(e));
       }
@@ -116,7 +115,7 @@ const ComplaintDrawer: React.FC<ComplaintDrawerProps> = ({ isOpen, onClose, comp
       setActiveAction(null);
       setNoteContent('');
     } else {
-      alert("Vui lòng nhập nội dung chi tiết.");
+      alert('Vui lòng nhập nội dung chi tiết.');
     }
   };
 
@@ -137,7 +136,7 @@ const ComplaintDrawer: React.FC<ComplaintDrawerProps> = ({ isOpen, onClose, comp
       onUpdate(updatedComplaint);
       onClose();
     } else {
-      alert("Vui lòng nhập ghi chú xử lý (bắt buộc) trước khi hoàn tất.");
+      alert('Vui lòng nhập ghi chú xử lý (bắt buộc) trước khi hoàn tất.');
     }
   };
 

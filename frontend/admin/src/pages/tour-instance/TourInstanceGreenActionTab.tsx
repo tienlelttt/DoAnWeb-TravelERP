@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '../../components/ui/Button';
 import { Trash2, Leaf } from 'lucide-react';
 import { greenActionsService } from '../../services/green-actions';
-import type { GreenAction } from '../green-actions/mockData';
+import type { GreenAction  } from '../../types/green-action';
 
 interface TourInstanceGreenActionTabProps {
   selectedActions: GreenAction[];

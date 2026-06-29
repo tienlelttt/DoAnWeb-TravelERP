@@ -184,7 +184,6 @@ export default function Header() {
     };
   }, [taiThongBao]);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (categoryRef.current && !categoryRef.current.contains(event.target as Node)) {

@@ -18,14 +18,12 @@ export default function DiemDanh({ currentTour, passengers, setPassengers }: Att
   // --- MODALS STATE ---
   const [selectedPassenger, setSelectedPassenger] = useState<Passenger | null>(null);
 
-  // DiemDanh Warnings
   const [healthAcknowledgeModal, setHealthAcknowledgeModal] = useState<{ show: boolean; passenger: Passenger | null; targetStatus: 'DA_DIEM_DANH' | 'VANG' }>({
     show: false,
     passenger: null,
     targetStatus: 'DA_DIEM_DANH'
   });
 
-  // Absent Reason Modal
   const [absentReasonModal, setAbsentReasonModal] = useState<{ show: boolean; passenger: Passenger | null }>({
     show: false,
     passenger: null
@@ -33,7 +31,6 @@ export default function DiemDanh({ currentTour, passengers, setPassengers }: Att
   const [absentReasonText, setAbsentReasonText] = useState('Trễ giờ tập trung (Không thể liên lạc)');
   const [customAbsentReason, setCustomAbsentReason] = useState('');
 
-  // Computed stats
   const attendanceStats = useMemo(() => {
     const total = passengers.length;
     const checked = passengers.filter(p => p.status === 'DA_DIEM_DANH').length;
@@ -81,7 +78,6 @@ export default function DiemDanh({ currentTour, passengers, setPassengers }: Att
     setHealthAcknowledgeModal({ show: false, passenger: null, targetStatus: 'DA_DIEM_DANH' });
   };
 
-  // Change attendance status
   const thayDoiTrangThaiDiemDanh = async (code: string, newStatus: 'DA_DIEM_DANH' | 'VANG' | 'CHUA_DIEM_DANH') => {
     const guest = passengers.find(p => p.code === code);
     if (!guest || !currentTour) return;
@@ -132,7 +128,6 @@ export default function DiemDanh({ currentTour, passengers, setPassengers }: Att
     }
   };
 
-  // Save absent reason
   const guiLyDoVangMat = async () => {
     if (absentReasonText === 'Lý do khác' && !customAbsentReason.trim()) {
       return; // Enforce strict validation

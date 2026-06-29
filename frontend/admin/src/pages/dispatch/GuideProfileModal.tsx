@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Modal } from '../../components/ui/Modal';
 import { Badge } from '../../components/ui/Badge';
-import type { Guide } from './mockData';
 import { Star, Mail, Phone, Cake, Calendar, User } from 'lucide-react';
 import { hrService } from '../../services/system/hr';
 import { accountsService } from '../../services/system/accounts';
 import { dispatchService } from '../../services/dispatch';
 import type { NhanVienResponse } from '../../services/system/accounts';
 import type { NangLucResponse } from '../../services/system/hr';
-import type { PhanCongResponse } from './mockData';
 import { formatApiError } from '../../utils/apiHelpers';
 import { formatDate } from '../../utils/dateHelpers';
+import type { Guide  } from '../../types/dispatch';
+import type { PhanCongResponse  } from '../../types/dispatch';
 
 interface GuideProfileModalProps {
   isOpen: boolean;

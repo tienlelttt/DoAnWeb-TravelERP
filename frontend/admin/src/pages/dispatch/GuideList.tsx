@@ -8,7 +8,6 @@ import { Pagination } from '../../components/ui/Pagination';
 import { Table } from '../../components/ui/Table';
 import type { Column } from '../../components/ui/Table';
 import { Search, RotateCcw, Eye, UserPlus, Star } from 'lucide-react';
-import type { Guide } from './mockData';
 import { useNavigate } from 'react-router-dom';
 import GuideProfileModal from './GuideProfileModal';
 import { accountsService } from '../../services/system/accounts';
@@ -18,6 +17,7 @@ import { formatApiError, unwrapPageContent } from '../../utils/apiHelpers';
 import { hrService } from '../../services/system/hr';
 import type { NangLucResponse } from '../../services/system/hr';
 import { mapEmployeeStatus } from '../../utils/statusMapping';
+import type { Guide  } from '../../types/dispatch';
 
 const parseCommaList = (value?: string): string[] => {
   if (!value) return [];
@@ -57,8 +57,8 @@ const GuideList: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await accountsService.danhSachNhanVien({ vaiTro: 'HDV', page: 0, size: 1000 });
-      const guides = unwrapPageContent<any>(res);
+      const res = await accountsService.danhSachNhanVien({ vaiTro: 'HDV', maVaiTro: 'HDV', page: 0, size: 1000 });
+      const guides = unwrapPageContent<any>(res).filter((nv: any) => nv.maVaiTro === 'HDV' || nv.maVaiTro === 'ROLE_HDV' || nv.vaiTro === 'HDV' || nv.vaiTro === 'ROLE_HDV');
 
       const mappedGuides = await Promise.all(
         guides.map(async (g: any) => {

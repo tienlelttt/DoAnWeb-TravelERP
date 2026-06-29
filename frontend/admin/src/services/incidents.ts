@@ -3,6 +3,7 @@ import api from './api';
 export interface NhatKySuCoResponse {
   maNhatKySuCo?: string;
   maTour?: string;
+  tenTour?: string;
   moTa?: string;
   giaiPhap?: string;
   mucDo?: string;

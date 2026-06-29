@@ -28,13 +28,11 @@ export default function ChiTietTour() {
     setShowCuaSoXacThuc(true);
   }, []);
 
-  // Reviews filters and likes state
   const [activeReviewFilter, setActiveReviewFilter] = useState<'all' | 'images' | '5star' | '4star' | '3star' | '2star' | '1star'>('all');
   const [reviewPage, setReviewPage] = useState(1);
   const [helpfulCounts, setHelpfulCounts] = useState<Record<number, number>>({});
   const [pendingHelpfulIndex, setPendingHelpfulIndex] = useState<number | null>(null);
 
-  // Scroll to top on mount
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [tourId]);
@@ -79,7 +77,6 @@ export default function ChiTietTour() {
     fetchTour();
   }, [tourId]);
 
-  // Smooth scroll to selected day in itinerary detail modal
   useEffect(() => {
     if (showItineraryModal && selectedItineraryDay !== null) {
       const timer = setTimeout(() => {
@@ -150,7 +147,6 @@ export default function ChiTietTour() {
     return tourImgs[(day - 1) % tourImgs.length];
   };
 
-  // Scenery Galleries database
   const tourGalleries: Record<string, string[]> = {
     '1': [
       'https://images.unsplash.com/photo-1528127269322-539801943592?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
@@ -188,7 +184,6 @@ export default function ChiTietTour() {
   ];
   const gallery = tour ? (tourGalleries[tour.id] || defaultSceneries) : [];
 
-  // Automatically cycle scenery images every 5 seconds
   useEffect(() => {
     if (!gallery.length) return;
     const timer = setInterval(() => {
@@ -210,7 +205,6 @@ export default function ChiTietTour() {
     return date.toLocaleDateString('vi-VN');
   };
 
-  // Authentic Customer Reviews List is now fetched from the API
 
   const toggleHelpful = (idx: number) => {
     setHelpfulCounts(prev => {

@@ -3,9 +3,9 @@ import { Modal } from '../../../components/ui/Modal';
 import { Button } from '../../../components/ui/Button';
 import { Badge } from '../../../components/ui/Badge';
 import { MapPin, Calendar, Phone, AlertTriangle, Ban, CheckCircle } from 'lucide-react';
-import type { CostItem } from './mockData';
 import { tourInstanceService } from '../../../services/tour-instance';
 import { accountsService } from '../../../services/system/accounts';
+import type { CostItem  } from '../../../types/finance';
 
 export interface CostApprovalModalProps {
   isOpen: boolean;

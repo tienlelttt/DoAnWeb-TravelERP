@@ -50,7 +50,6 @@ const formatExpenseDateTime = (value?: string) => {
 };
 
 export default function QuanLyChiPhi({ maTour, currentTour, pastTours = [], expenses, setExpenses }: ExpenseTrackerProps) {
-  // Expense State
   const [expenseForm, setExpenseForm] = useState({
     category: 'Ăn uống',
     amount: '',
@@ -96,7 +95,6 @@ export default function QuanLyChiPhi({ maTour, currentTour, pastTours = [], expe
     }
   }, [maTour, reportableTours]);
 
-  // Simulated capture function
   const handleCaptureReceipt = () => {
     setIsCapturing(true);
     setTimeout(() => {
@@ -110,7 +108,6 @@ export default function QuanLyChiPhi({ maTour, currentTour, pastTours = [], expe
     return val.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
   };
 
-  // Expense Submit
   const handleExpenseSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
@@ -163,7 +160,6 @@ export default function QuanLyChiPhi({ maTour, currentTour, pastTours = [], expe
         setExpenseToast(`Đã lưu chi phí thành công!`);
         setExpenseModalOpen(false);
 
-        // Reset form
         setExpenseForm({
           category: 'Ăn uống',
           amount: '',
@@ -182,7 +178,6 @@ export default function QuanLyChiPhi({ maTour, currentTour, pastTours = [], expe
     }
   };
 
-  // Delete Expense
   const handleDeleteExpense = async (id: string) => {
     try {
       await hdvService.huyChiPhi(id);

@@ -41,7 +41,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (token) {
       try {
         const decoded = jwtDecode<any>(token);
-        // Assuming payload has these fields, adjust if necessary based on your actual JWT structure
         const rawRole = decoded.maVaiTro || decoded.role || '';
         const user: User = {
           hoTen: decoded.hoTen || decoded.name || 'User',

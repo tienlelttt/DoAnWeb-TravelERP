@@ -10,7 +10,6 @@ import { Plus, Pencil, Trash2 } from 'lucide-react';
 import ServiceForm from './ServiceForm';
 import { Table } from '../../components/ui/Table';
 import type { Column } from '../../components/ui/Table';
-import type { Service } from './mockData';
 import type {
   DichVuThemResponse,
   DichVuThemRequest,
@@ -19,6 +18,7 @@ import { servicesService } from '../../services/services';
 import { useAuth } from '../../context/AuthContext';
 import { hasAccess } from '../../config/rolePermissions';
 import { formatApiError } from '../../utils/apiHelpers';
+import type { Service  } from '../../types/tour';
 
 const ServiceList: React.FC = () => {
   const [data, setData] = useState<Service[]>([]);

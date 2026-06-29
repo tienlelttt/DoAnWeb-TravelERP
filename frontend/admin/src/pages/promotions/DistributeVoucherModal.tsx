@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Send, AlertCircle } from 'lucide-react';
 import { Modal } from '../../components/ui/Modal';
 import { Button } from '../../components/ui/Button';
-import type { Voucher, CustomerTarget } from './mockData';
 import { Table } from '../../components/ui/Table';
 import type { Column } from '../../components/ui/Table';
 import { customersService } from '../../services/customers';
 import { promotionsService } from '../../services/promotions';
 import { formatApiError } from '../../utils/apiHelpers';
 import { Select } from '../../components/ui/Select';
-
+import type { Voucher, CustomerTarget  } from '../../types/marketing';
 
 interface DistributeVoucherModalProps {
   isOpen: boolean;

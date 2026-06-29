@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '../../components/ui/Button';
 import { Select } from '../../components/ui/Select';
-import type { Service } from './mockData';
+import type { Service  } from '../../types/tour';
 
 export interface ServiceFormProps {
   mode: 'create' | 'edit';

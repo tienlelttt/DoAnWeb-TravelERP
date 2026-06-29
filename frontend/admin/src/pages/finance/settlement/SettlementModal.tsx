@@ -3,12 +3,12 @@ import { Modal } from '../../../components/ui/Modal';
 import { Button } from '../../../components/ui/Button';
 import { Badge } from '../../../components/ui/Badge';
 import { AlertTriangle, RefreshCw, FileText, CheckCircle, Eye, DollarSign } from 'lucide-react';
-import type { SettlementTour } from './mockData';
 import { tourInstanceService } from '../../../services/tour-instance';
 import { financeService } from '../../../services/finance';
 import type { ChiPhiThucTeResponse } from '../../../services/finance';
 import { formatDate, formatDateTime } from '../../../utils/dateHelpers';
 import { useNotification } from '../../../context/NotificationContext';
+import type { SettlementTour  } from '../../../types/finance';
 
 interface ExpenseItem {
   maChiPhi: string;

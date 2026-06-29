@@ -9,12 +9,12 @@ import { Eye, User } from 'lucide-react';
 import CustomerDetailModal from './CustomerDetailModal';
 import { Table } from '../../components/ui/Table';
 import type { Column } from '../../components/ui/Table';
-import type { Customer } from './mockData';
 import type { HoChieuSoResponse } from '../../services/customers';
 import { customersService } from '../../services/customers';
 import { useAuth } from '../../context/AuthContext';
 import { hasAccess } from '../../config/rolePermissions';
 import { formatDate } from '../../utils/dateHelpers';
+import type { Customer  } from '../../types/booking';
 
 const mapTier = (s?: string): Customer['membershipTier'] => {
   switch (s?.toUpperCase()) {
@@ -105,7 +105,7 @@ const CustomerList: React.FC = () => {
   const columns: Column<Customer>[] = [
     {
       key: 'code',
-      title: 'MÃ KH',
+      title: 'MÝKH',
       render: (record) => <span className="font-bold text-[#00668A]">{record.code}</span>,
     },
     {

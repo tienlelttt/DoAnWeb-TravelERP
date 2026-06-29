@@ -41,7 +41,6 @@ const layHuyHieuHangThanhVien = (rank: string) => {
   }
 };
 
-// Helper function removed because it is unused
 
 interface PaginationTabsProps {
   currentPage: number;

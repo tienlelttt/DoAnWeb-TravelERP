@@ -10,11 +10,11 @@ import { Plus, Pencil, Trash2, Leaf } from 'lucide-react';
 import GreenActionForm from './GreenActionForm';
 import { Table } from '../../components/ui/Table';
 import type { Column } from '../../components/ui/Table';
-import type { GreenAction } from './mockData';
 import type { HanhDongXanhResponse, HanhDongXanhRequest } from '../../services/green-actions';
 import { greenActionsService } from '../../services/green-actions';
 import { useAuth } from '../../context/AuthContext';
 import { hasAccess } from '../../config/rolePermissions';
+import type { GreenAction  } from '../../types/green-action';
 
 const GreenActionList: React.FC = () => {
   const [data, setData] = useState<GreenAction[]>([]);

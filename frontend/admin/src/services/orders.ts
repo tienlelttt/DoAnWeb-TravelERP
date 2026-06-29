@@ -1,15 +1,7 @@
 import api from './api';
 import { unwrapApiData, type PageQueryParams } from '../utils/apiHelpers';
-import type {
-  ApiResponseDonDatTourResponse,
-  ApiResponsePageDonDatTourResponse,
-  DonDatTourResponse,
-  PageDonDatTourResponse,
-  ChiTietDatTourResponse,
-  ChiTietDichVuResponse,
-  PageableObject,
-  SortObject,
-} from '../pages/orders/mockData';
+import type { ApiResponseDonDatTourResponse, ApiResponsePageDonDatTourResponse, DonDatTourResponse, PageDonDatTourResponse, ChiTietDatTourResponse, ChiTietDichVuResponse  } from '../types/booking';
+import type { PageableObject, SortObject  } from '../types/system';
 
 export type {
   DonDatTourResponse,
@@ -43,14 +35,11 @@ export const ordersService = {
     return unwrapApiData(response);
   },
 
-  /** Backend chưa có GET /api/kinh-doanh/dat-tour/{id} — lấy từ danh sách theo mã đơn */
   chiTietDatTour: async (maDatTour: string): Promise<DonDatTourResponse> => {
-    const page = await ordersService.danhSachTatCa({ page: 0, size: 1000 });
-    const found = page?.content?.find((d) => d.maDatTour === maDatTour);
-    if (!found) {
-      throw new Error(`Không tìm thấy đơn đặt tour: ${maDatTour}`);
-    }
-    return found;
+    const response = await api.get<ApiResponseDonDatTourResponse>(`/api/kinh-doanh/dat-tour/${maDatTour}`);
+    const data = unwrapApiData(response);
+    if (!data) throw new Error(`Không tìm thấy đơn đặt tour: ${maDatTour}`);
+    return data;
   },
 
   xacNhanDon: async (maDatTour: string): Promise<DonDatTourResponse | undefined> => {

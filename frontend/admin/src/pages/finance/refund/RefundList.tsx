@@ -9,7 +9,6 @@ import { Table } from '../../../components/ui/Table';
 import RefundProcessingModal from './RefundProcessingModal';
 import { Eye } from 'lucide-react';
 import type { Column } from '../../../components/ui/Table';
-import type { RefundRequest } from './mockData';
 import type { RefundData } from './RefundProcessingModal';
 import { financeService } from '../../../services/finance';
 import { ordersService } from '../../../services/orders';
@@ -17,6 +16,7 @@ import type { ThanhToanResponse } from '../../../services/finance';
 import { useAuth } from '../../../context/AuthContext';
 import { hasAccess } from '../../../config/rolePermissions';
 import { mapTransactionStatus } from '../../../utils/statusMapping';
+import type { RefundRequest  } from '../../../types/finance';
 
 const RefundList: React.FC = () => {
   const [refunds, setRefunds] = useState<RefundRequest[]>([]);

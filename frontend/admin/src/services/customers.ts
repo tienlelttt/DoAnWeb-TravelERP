@@ -1,12 +1,6 @@
 import api from '../services/api';
-import type {
-    ApiResponsePageHoChieuSoResponse,
-    ApiResponseHoChieuSoResponse,
-    PageHoChieuSoResponse,
-    HoChieuSoResponse,
-    PageableObject,
-    SortObject
-} from '../pages/customers/mockData';
+import type { ApiResponsePageHoChieuSoResponse, ApiResponseHoChieuSoResponse, PageHoChieuSoResponse, HoChieuSoResponse  } from '../types/booking';
+import type { PageableObject, SortObject  } from '../types/system';
 
 export type {
     HoChieuSoResponse,

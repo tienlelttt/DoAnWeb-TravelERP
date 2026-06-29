@@ -1,10 +1,6 @@
 import api from '../api';
 import { unwrapApiData } from '../../utils/apiHelpers';
-import type {
-  ApiResponseNangLucResponse,
-  NangLucRequest,
-  NangLucResponse,
-} from '../../pages/system/hr/mockData';
+import type { ApiResponseNangLucResponse, NangLucRequest, NangLucResponse  } from '../../types/system';
 
 export type {
   ApiResponseNangLucResponse,

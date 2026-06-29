@@ -1,14 +1,8 @@
 import api from './api';
 import { unwrapApiData } from '../utils/apiHelpers';
-import type {
-  PhanCongHdvRequest,
-  ApiResponsePhanCongResponse,
-  ApiResponseListNhanVienResponse,
-  ApiResponseVoid,
-  PhanCongResponse,
-  NhanVienResponse,
-} from '../pages/dispatch/mockData';
-import type { ApiResponsePageTourThucTeResponse, PageTourThucTeResponse } from '../pages/tour-instance/mockData';
+import type { PhanCongHdvRequest, ApiResponsePhanCongResponse, ApiResponseListNhanVienResponse, PhanCongResponse  } from '../types/dispatch';
+import type { ApiResponseVoid, NhanVienResponse  } from '../types/system';
+import type { ApiResponsePageTourThucTeResponse, PageTourThucTeResponse  } from '../types/tour';
 
 export type {
   PhanCongHdvRequest,

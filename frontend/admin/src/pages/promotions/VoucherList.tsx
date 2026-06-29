@@ -10,8 +10,7 @@ import CreateVoucherModal from './CreateVoucherModal';
 import DistributeVoucherModal from './DistributeVoucherModal';
 import { Table } from '../../components/ui/Table';
 import type { Column } from '../../components/ui/Table';
-import type { Voucher } from './mockData';
-import type { VoucherResponse, VoucherRequest } from '../../services/promotions';
+import type { VoucherRequest } from '../../services/promotions';
 import { promotionsService } from '../../services/promotions';
 import { useAuth } from '../../context/AuthContext';
 import { hasAccess } from '../../config/rolePermissions';
@@ -19,6 +18,7 @@ import { formatApiError } from '../../utils/apiHelpers';
 import { mapVoucherStatus } from '../../utils/statusMapping';
 import { useNotification } from '../../context/NotificationContext';
 import { formatDate } from '../../utils/dateHelpers';
+import type { Voucher  } from '../../types/marketing';
 
 const statusOptions = [
   { value: 'all', label: 'Tất cả trạng thái' },

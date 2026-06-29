@@ -8,12 +8,12 @@ import { SearchInput } from '../../components/ui/SearchInput';
 import { Select } from '../../components/ui/Select';
 import { Pagination } from '../../components/ui/Pagination';
 import { PlusCircle, Pencil, Copy, Trash2 } from 'lucide-react';
-import type { TourTemplate } from './mockData';
 import type { TourMauResponse, TaoTourMauRequest, CapNhatTourMauRequest, LichTrinhRequest } from '../../services/tour-template';
 import TourTemplateDetailModal from './TourTemplateDetailModal';
 import { tourTemplateService } from '../../services/tour-template';
 import { useAuth } from '../../context/AuthContext';
 import { hasAccess } from '../../config/rolePermissions';
+import type { TourTemplate  } from '../../types/tour';
 
 const TourTemplateList: React.FC = () => {
   const [data, setData] = useState<TourTemplate[]>([]);
@@ -63,7 +63,6 @@ const TourTemplateList: React.FC = () => {
         allTours.push(...(res?.data || res?.content || []));
       }
 
-      // Need to load without schedule first, schedule will be loaded on demand
       setData(allTours.map(mapToUI));
       setPage(1);
     } catch (err: any) {
@@ -102,7 +101,6 @@ const TourTemplateList: React.FC = () => {
     }
   };
 
-  // Xử lý đóng/mở Modal
   const openModal = async (mode: typeof modalState.mode, tour?: TourTemplate) => {
     if ((mode === 'edit' || mode === 'copy') && tour?.id) {
       setLoading(true);
@@ -213,7 +211,6 @@ const TourTemplateList: React.FC = () => {
     }
   };
 
-  // Xóa tour
   const handleDelete = async () => {
     if (modalState.selectedTour) {
       try {

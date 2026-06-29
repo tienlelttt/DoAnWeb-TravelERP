@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import type { Service } from '../services/mockData';
 import { servicesService } from '../../services/services';
 import type { DichVuThemRequest } from '../../services/services';
 import { Search, Plus, Pencil, Trash2 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Modal } from '../../components/ui/Modal';
+import type { Service  } from '../../types/tour';
 
 interface TourInstanceServiceTabProps {
   services: Service[];
@@ -20,7 +20,6 @@ const TourInstanceServiceTab: React.FC<TourInstanceServiceTabProps> = ({ service
   const [searchQuery, setSearchQuery] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
 
-  // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingService, setEditingService] = useState<Service | null>(null);
   const [formData, setFormData] = useState<DichVuThemRequest>({ ten: '', donGia: 0, donViTinh: '', trangThai: 'HOAT_DONG' });

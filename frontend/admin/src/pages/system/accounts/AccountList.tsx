@@ -8,7 +8,6 @@ import { Select } from '../../../components/ui/Select';
 import { Pagination } from '../../../components/ui/Pagination';
 import { Lock, LockOpen, Pencil, RotateCcw, ShieldCheck, Trash2, UserPlus } from 'lucide-react';
 import type { Column } from '../../../components/ui/Table';
-import type { Account } from './mockData';
 import { allRoles } from './mockData';
 import AccountFormModal from './AccountFormModal';
 import PermissionModal from './PermissionModal';
@@ -19,6 +18,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { hasAccess } from '../../../config/rolePermissions';
 import { mapAccountStatus } from '../../../utils/statusMapping';
 import { useNotification } from '../../../context/NotificationContext';
+import type { Account  } from '../../../types/system';
 
 export const ROLE_MAP: Record<string, string> = {
   'ADMIN': 'Quản trị viên',

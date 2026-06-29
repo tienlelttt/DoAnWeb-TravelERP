@@ -9,16 +9,15 @@ import { ArrowRight, Eye } from 'lucide-react';
 import ComplaintDrawer from './ComplaintDrawer';
 import { Table } from '../../components/ui/Table';
 import type { Column } from '../../components/ui/Table';
-import type { Complaint } from './mockData';
 import type { YeuCauHoTroResponse, XuLyHoTroRequest } from '../../services/complaints';
 import { complaintsService } from '../../services/complaints';
-import { incidentService } from '../../services/incidents';
 import type { NhatKySuCoResponse } from '../../services/incidents';
 import { formatDate } from '../../utils/dateHelpers';
 import { useAuth } from '../../context/AuthContext';
 import { hasAccess } from '../../config/rolePermissions';
+import type { Complaint  } from '../../types/complaint';
 
-const mapStatus = (s?: string, noiDung?: string): Complaint['status'] => {
+const mapStatus = (s?: string): Complaint['status'] => {
   switch (s?.toUpperCase()) {
     case 'DA_XU_LY': return 'resolved';
     case 'TU_CHOI': return 'rejected';
@@ -29,7 +28,6 @@ const mapStatus = (s?: string, noiDung?: string): Complaint['status'] => {
   }
 };
 
-const FINANCE_REQUEST_TYPES = new Set(['HUY_TOUR', 'HOAN_TIEN']);
 
 const ComplaintList: React.FC = () => {
   const itemsPerPage = 5;
@@ -40,6 +38,7 @@ const ComplaintList: React.FC = () => {
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [selectedSeverity, setSelectedSeverity] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedComplaint, setSelectedComplaint] = useState<Complaint | null>(null);
@@ -47,13 +46,7 @@ const ComplaintList: React.FC = () => {
 
   const mapToUI = (api: YeuCauHoTroResponse): Complaint => {
     const savedResolution = localStorage.getItem(`complaint_res_${api.maYeuCau}`);
-    const savedTimelineStr = localStorage.getItem(`complaint_timeline_${api.maYeuCau}`);
-    let savedTimeline: any[] = [];
-    try {
-      if (savedTimelineStr) savedTimeline = JSON.parse(savedTimelineStr);
-    } catch (e) {}
-
-    // Extract dynamic timeline from noiDung
+    
     const dynamicTimeline: { action: string, timestamp: string }[] = [];
     const contentStr = api.noiDung || '';
     
@@ -82,26 +75,24 @@ const ComplaintList: React.FC = () => {
          action = header + ': ' + text;
       }
       
-      // Only include specific known actions in timeline to avoid matching random brackets
       if (/Yêu cầu KH bổ sung|Yêu cầu HDV giải trình|KHÁCH HÀNG BỔ SUNG|HDV giải trình/i.test(header)) {
         dynamicTimeline.push({ action, timestamp });
       }
     }
 
-    // Only use dynamic timeline to avoid duplication
     const combinedTimeline = dynamicTimeline;
 
     return {
       id: api.maYeuCau || '',
       code: api.maYeuCau || '',
       maDatTour: api.maDatTour || '',
-      customerName: api.maDatTour || '',
-      customerPhone: '',
-      tourName: api.loaiYeuCau || '',
-      guideName: api.maNhanVienXuLy,
+      customerName: api.tenKhachHang || '',
+      customerPhone: api.soDienThoai || '',
+      tourName: api.tenTour || '',
+      guideName: api.maNhanVienXuLy || '',
       sentDate: api.thoiDiemTao ? formatDate(api.thoiDiemTao) : '',
       severity: 'THAP',
-      status: mapStatus(api.trangThai, api.noiDung),
+      status: mapStatus(api.trangThai),
       description: contentStr
         .replace(/\[(Yêu cầu KH bổ sung.*?|Yêu cầu HDV giải trình.*?|KHÁCH HÀNG BỔ SUNG.*?|HDV giải trình.*?)\]:?\s*(.*?)(?=(?:\n)?\[(?:Yêu cầu KH bổ sung|Yêu cầu HDV giải trình|KHÁCH HÀNG BỔ SUNG|HDV giải trình)|$)/gs, '')
         .trim(),
@@ -116,12 +107,12 @@ const ComplaintList: React.FC = () => {
     code: api.maNhatKySuCo || '',
     maDatTour: '',
     maTourThucTe: api.maTour || '',
-    customerName: api.hoTenKhachHang || api.maKhachHang || '',
+    customerName: api.hoTenKhachHang || '',
     customerPhone: '',
-    tourName: api.loaiSuCo || '',
+    tourName: api.tenTour || '',
     guideName: api.maHdvBaoCao,
     sentDate: api.thoiGianBaoCao ? formatDate(api.thoiGianBaoCao) : '',
-    severity: api.mucDo === 'SOS' ? 'SOS' : 'THAP',
+    severity: (api.mucDo as any) || 'THAP',
     status: 'pending',
     description: api.moTa || '',
     timeline: [],
@@ -135,28 +126,23 @@ const ComplaintList: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const [complaintsRes, incidents] = await Promise.all([
-        (async () => {
-          const pageSize = 1000;
-          const firstPage = await complaintsService.danhSachYeuCauHoTro({ page: 0, size: pageSize });
-          const totalPages = firstPage?.totalPages ?? 1;
-          if (totalPages <= 1) return firstPage?.content ?? [];
-          const remainingPages = await Promise.all(
-            Array.from({ length: totalPages - 1 }, (_, index) =>
-              complaintsService.danhSachYeuCauHoTro({ page: index + 1, size: pageSize })
-            )
-          );
-          return [firstPage, ...remainingPages].flatMap(page => page?.content ?? []);
-        })(),
-        incidentService.lichSuSuCoCuaHdv().catch(() => [] as NhatKySuCoResponse[]),
-      ]);
-      const mapped = [
-        ...complaintsRes
-          .filter(item => !FINANCE_REQUEST_TYPES.has((item.loaiYeuCau || '').toUpperCase()))
-          .map(mapToUI),
-        ...incidents.map(mapIncidentToUI),
-      ];
+      const res = await complaintsService.danhSachTongHopKhieuNaiSuCo({
+        page: currentPage - 1,
+        size: itemsPerPage,
+        search,
+        trangThai: selectedStatus,
+        mucDo: selectedSeverity
+      });
+
+      const mapped = (res?.content || []).map((item: any) => {
+        if (item.sourceType === 'complaint' || item.source_type === 'complaint') {
+          return mapToUI(item as YeuCauHoTroResponse);
+        } else {
+          return mapIncidentToUI(item as NhatKySuCoResponse);
+        }
+      });
       setComplaints(mapped);
+      setTotalItems(res?.totalElements || 0);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Lỗi khi tải dữ liệu';
       setError(msg);
@@ -165,31 +151,18 @@ const ComplaintList: React.FC = () => {
     }
   };
 
-  React.useEffect(() => { getAll(); }, [user]);
+  React.useEffect(() => { 
+    // Debounce search
+    const timer = setTimeout(() => {
+      getAll(); 
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [user, currentPage, search, selectedStatus, selectedSeverity]);
 
-  const filteredComplaints = complaints.filter(c => {
-    const matchesSearch = c.code.toLowerCase().includes(search.toLowerCase()) ||
-                          c.customerName.toLowerCase().includes(search.toLowerCase());
-    const matchesStatus = selectedStatus === 'all' || c.status === selectedStatus;
-    const matchesSeverity = selectedSeverity === 'all' || c.severity === selectedSeverity;
-    return matchesSearch && matchesStatus && matchesSeverity;
-  });
-
-  const totalPages = Math.ceil(filteredComplaints.length / itemsPerPage);
-  const paginatedComplaints = filteredComplaints.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
+  // Reset page to 1 when filters change
   React.useEffect(() => {
     setCurrentPage(1);
   }, [search, selectedStatus, selectedSeverity]);
-
-  React.useEffect(() => {
-    if (totalPages > 0 && currentPage > totalPages) {
-      setCurrentPage(totalPages);
-    }
-  }, [currentPage, totalPages]);
 
   const columns: Column<Complaint>[] = [
     {
@@ -326,7 +299,6 @@ const ComplaintList: React.FC = () => {
         await complaintsService.xuLyYeuCauHoTro(updatedComplaint.id, payload);
       }
 
-      // Save local state to persist across API reloads since Backend doesn't support these fields yet
       if (updatedComplaint.resolution) {
         localStorage.setItem(`complaint_res_${updatedComplaint.id}`, updatedComplaint.resolution);
       }
@@ -384,12 +356,12 @@ const ComplaintList: React.FC = () => {
         ) : error ? (
           <div className="flex items-center justify-center h-full text-red-500 p-8">{error}</div>
         ) : (
-          <Table<Complaint> dataSource={paginatedComplaints} columns={columns} />
+          <Table<Complaint> dataSource={complaints} columns={columns} />
         )}
         <div className="p-4 border-t border-[#E1F1FF]">
           <Pagination
             current={currentPage}
-            total={filteredComplaints.length}
+            total={totalItems}
             pageSize={itemsPerPage}
             onChange={setCurrentPage}
           />

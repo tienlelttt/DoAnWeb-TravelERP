@@ -139,7 +139,7 @@ const cleanListItem = (value: string): string => {
 
 const splitTourNotes = (value: string): string[] => {
   return value
-    .split(/\s*(?:[-–—•]\s+|,\s*|;\s*)/)
+    .split(/\r?\n|<br\s*\/?>/)
     .map(cleanListItem)
     .filter(Boolean);
 };
@@ -300,10 +300,10 @@ export const mapCustomerBookingStatus = (b: ApiRecord): Booking['status'] => {
     return 'KET_THUC';
   }
 
-  let finalStatus = (orderStatus || tourStatus || 'DA_XAC_NHAN') as Booking['status'];
+  let finalStatus = (orderStatus || tourStatus || 'DA_XAC_NHAN') as string;
   if (finalStatus === 'HOAN_THANH') finalStatus = 'KET_THUC';
   if (finalStatus === 'DA_THANH_TOAN') finalStatus = 'DA_XAC_NHAN';
-  return finalStatus;
+  return finalStatus as Booking['status'];
 };
 
 export const mapBooking = (b: ApiRecord): Booking => {

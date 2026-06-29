@@ -1,22 +1,7 @@
 import api from '../services/api';
-import type {
-    ApiResponseTourMauChiTietResponse,
-    CapNhatTourMauRequest,
-    ApiResponseTourMauResponse,
-    ApiResponseVoid,
-    LichTrinhRequest,
-    ApiResponseLichTrinhResponse,
-    ApiResponsePageTourMauResponse,
-    TaoTourMauRequest,
-    TourMauChiTietResponse,
-    TourMauResponse,
-    LichTrinhResponse,
-    PageTourMauResponse,
-    PageableObject,
-    SortObject
-} from '../pages/tour-template/mockData';
+import type { ApiResponseTourMauChiTietResponse, CapNhatTourMauRequest, ApiResponseTourMauResponse, LichTrinhRequest, ApiResponseLichTrinhResponse, ApiResponsePageTourMauResponse, TaoTourMauRequest, TourMauChiTietResponse, TourMauResponse, LichTrinhResponse, PageTourMauResponse  } from '../types/tour';
+import type { ApiResponseVoid, PageableObject, SortObject  } from '../types/system';
 
-// Re-export types for use in components
 export type {
     TourMauResponse,
     TaoTourMauRequest,
