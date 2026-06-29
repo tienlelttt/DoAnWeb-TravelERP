@@ -8,6 +8,7 @@ use App\Http\Resources\ContractPaginationResource;
 use App\Services\QuyetToanService;
 use Illuminate\Http\Request;
 
+// Module quản lý quyết toán tour.
 class QuyetToanController extends Controller
 {
     public function __construct(
@@ -95,6 +96,7 @@ class QuyetToanController extends Controller
     /**
      * Xem danh sách các quyết toán (UC51)
      */
+    // UC48 | Nhân viên kế toán | Lấy danh sách quyết toán tour.
     public function danhSach(Request $request)
     {
         $trangThai = $request->query('trangThai');
@@ -116,6 +118,7 @@ class QuyetToanController extends Controller
     /**
      * Xem chi tiết một quyết toán
      */
+    // UC48 | Nhân viên kế toán | Xem chi tiết quyết toán tour.
     public function chiTiet($maQuyetToan)
     {
         $data = $this->quyetToanService->chiTiet($maQuyetToan);

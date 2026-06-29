@@ -4,6 +4,7 @@ namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+// Model lưu thông tin voucher.
 class VoucherAdminRequest extends FormRequest
 {
     public function authorize(): bool

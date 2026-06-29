@@ -17,6 +17,7 @@ class DichVuThemService
         $this->maTuDongService = $maTuDongService;
     }
 
+    // UC15 | Nhân viên sản phẩm, NV kế toán | Lấy danh sách dịch vụ bổ sung.
     public function danhSach($maTourThucTe)
     {
         $query = DichVuThem::query();
@@ -30,6 +31,7 @@ class DichVuThemService
         return DichVuThemResource::collection($query->get());
     }
 
+    // UC15 | Nhân viên sản phẩm, NV kế toán | Xem chi tiết dịch vụ bổ sung.
     public function chiTiet($id)
     {
         $dv = DichVuThem::find($id);
@@ -39,6 +41,7 @@ class DichVuThemService
         return new DichVuThemResource($dv);
     }
 
+    // UC15 | Nhân viên sản phẩm, NV kế toán | Thêm mới dịch vụ bổ sung.
     public function taoMoi(array $data)
     {
         return DB::transaction(function () use ($data) {
@@ -53,6 +56,7 @@ class DichVuThemService
         });
     }
 
+    // UC15 | Nhân viên sản phẩm, NV kế toán | Cập nhật dịch vụ bổ sung.
     public function capNhat($id, array $data)
     {
         return DB::transaction(function () use ($id, $data) {
@@ -76,6 +80,7 @@ class DichVuThemService
         });
     }
 
+    // UC15 | Nhân viên sản phẩm, NV kế toán | Xóa dịch vụ bổ sung.
     public function xoa($id)
     {
         return DB::transaction(function () use ($id) {

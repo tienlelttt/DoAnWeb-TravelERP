@@ -9,12 +9,14 @@ use App\Http\Resources\TaiKhoanResource;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 
+// Module quản lý tài khoản người dùng.
 class UserController extends Controller
 {
     public function __construct(
         private UserService $userService
     ) {}
 
+    // UC61 | Quản trị viên | Lấy danh sách tài khoản người dùng.
     public function index(Request $request)
     {
         $filters = $request->only(['search', 'vaiTro']);
@@ -34,6 +36,7 @@ class UserController extends Controller
         ]);
     }
 
+    // UC61 | Quản trị viên | Thêm mới tài khoản người dùng.
     public function store(UserRequest $request)
     {
         $user = $this->userService->create($request->validated());
@@ -46,6 +49,7 @@ class UserController extends Controller
         ], 201);
     }
 
+    // UC61 | Quản trị viên | Xem chi tiết tài khoản người dùng.
     public function show($id)
     {
         $user = \App\Models\TaiKhoan::findOrFail($id);
@@ -58,6 +62,7 @@ class UserController extends Controller
         ]);
     }
 
+    // UC61 | Quản trị viên | Cập nhật tài khoản người dùng.
     public function update(UserRequest $request, $id)
     {
         $user = $this->userService->update($id, $request->validated());
@@ -70,6 +75,7 @@ class UserController extends Controller
         ]);
     }
 
+    // UC61 | Quản trị viên | Xóa tài khoản người dùng.
     public function destroy($id)
     {
         $this->userService->delete($id);

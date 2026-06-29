@@ -48,6 +48,7 @@ class KhachHangService
         ];
     }
 
+    // UC24 | Nhân viên | Cập nhật khách hàng.
     public function capNhatHoSo(string $maTaiKhoan, array $data)
     {
         $hcs = $this->getHoChieuSo($maTaiKhoan);
@@ -104,6 +105,7 @@ class KhachHangService
             ->paginate($size);
     }
 
+    // UC24 | Nhân viên | Lấy danh sách khách hàng.
     public function danhSachDatTour(string $maTaiKhoan, int $size = 15)
     {
         $hcs = $this->getHoChieuSo($maTaiKhoan);
@@ -113,6 +115,7 @@ class KhachHangService
             ->paginate($size);
     }
 
+    // UC24 | Nhân viên | Lấy danh sách khách hàng (layDanhSachYeuCauHoTro).
     public function layDanhSachYeuCauHoTro(string $maTaiKhoan, array $filters = [])
     {
         $hcs = $this->getHoChieuSo($maTaiKhoan);
@@ -150,6 +153,7 @@ class KhachHangService
         return $yeuCau;
     }
 
+    // UC24 | Nhân viên | Hủy khách hàng.
     public function yeuCauHuyTour(string $maTaiKhoan, string $maDatTour, array $data)
     {
         $lyDo = $data['lyDoHuy'] ?? "Khách hàng yêu cầu hủy tour";

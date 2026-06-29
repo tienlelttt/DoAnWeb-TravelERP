@@ -13,6 +13,7 @@ use App\Services\VnpayService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
+// Module quản lý thanh toán đơn hàng.
 class ThanhToanController extends Controller
 {
     protected ThanhToanService $thanhToanService;
@@ -30,6 +31,7 @@ class ThanhToanController extends Controller
      * @param ThanhToanMockRequest $request
      * @return JsonResponse
      */
+    // UC29 | Khách hàng, Cổng thanh toán | Thanh toán thanh toán đơn hàng.
     public function thanhToanMock(ThanhToanMockRequest $request): JsonResponse
     {
         $this->damBaoDuocPhepThanhToanMock();
@@ -49,6 +51,7 @@ class ThanhToanController extends Controller
      * @param BaoChuyenKhoanRequest $request
      * @return JsonResponse
      */
+    // UC29 | Khách hàng, Cổng thanh toán | Thanh toán thanh toán đơn hàng (khoiTaoThanhToan).
     public function khoiTaoThanhToan(KhoiTaoThanhToanRequest $request): JsonResponse
     {
         $user = auth()->user();
@@ -83,6 +86,7 @@ class ThanhToanController extends Controller
         );
     }
 
+    // UC29 | Khách hàng, Cổng thanh toán | Hủy thanh toán đơn hàng.
     public function baoChuyenKhoan(BaoChuyenKhoanRequest $request): JsonResponse
     {
         $user = auth()->user();
@@ -94,6 +98,7 @@ class ThanhToanController extends Controller
     /**
      * Tạo URL thanh toán VNPAY
      */
+    // UC29 | Khách hàng, Cổng thanh toán | Hủy thanh toán đơn hàng (xacNhanDaChuyenKhoan).
     public function xacNhanDaChuyenKhoan(string $maDatTour): JsonResponse
     {
         $user = auth()->user();
@@ -105,6 +110,7 @@ class ThanhToanController extends Controller
         );
     }
 
+    // UC29 | Khách hàng, Cổng thanh toán | Thanh toán thanh toán đơn hàng (hetHanThanhToanQr).
     public function hetHanThanhToanQr(string $maDatTour): JsonResponse
     {
         $giaoDich = GiaoDich::where('ma_dat_tour', $maDatTour)
@@ -132,6 +138,7 @@ class ThanhToanController extends Controller
         );
     }
 
+    // UC29 | Khách hàng, Cổng thanh toán | Thanh toán thanh toán đơn hàng (taoThanhToanVnpay).
     public function taoThanhToanVnpay(Request $request): \Illuminate\Http\JsonResponse
     {
         $request->validate([
@@ -186,6 +193,7 @@ class ThanhToanController extends Controller
             ]);
         }
     }
+    // Thanh toán thanh toán đơn hàng.
     private function thanhToanResponse(?GiaoDich $giaoDich, ?string $payUrl, string $thongBao): array
     {
         return [
@@ -200,6 +208,7 @@ class ThanhToanController extends Controller
         ];
     }
 
+    // Thanh toán thanh toán đơn hàng (damBaoDuocPhepThanhToanMock).
     private function damBaoDuocPhepThanhToanMock(): void
     {
         if (app()->environment(['local', 'testing']) || filter_var(env('PAYMENT_MOCK_ENABLED', false), FILTER_VALIDATE_BOOLEAN)) {

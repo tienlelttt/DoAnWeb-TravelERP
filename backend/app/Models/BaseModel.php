@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use DateTimeInterface;
 
+// Model lưu thông tin dữ liệu.
 abstract class BaseModel extends Model
 {
     /**
@@ -14,6 +15,7 @@ abstract class BaseModel extends Model
      * @param  \DateTimeInterface  $date
      * @return string
      */
+
     protected function serializeDate(DateTimeInterface $date)
     {
         // VD: 2023-10-15T14:30:00+07:00
@@ -24,6 +26,7 @@ abstract class BaseModel extends Model
      * Tự động chuyển đổi tất cả các cột sang camelCase khi serialize sang JSON
      * để phù hợp với chuẩn giao tiếp của Frontend React.
      */
+
     public function toArray()
     {
         $array = parent::toArray();

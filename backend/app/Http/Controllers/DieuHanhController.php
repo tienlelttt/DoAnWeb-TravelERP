@@ -7,6 +7,7 @@ use App\Services\PhanCongTourService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+// Module quản lý điều phối HDV.
 class DieuHanhController extends Controller
 {
     protected PhanCongTourService $phanCongService;
@@ -19,6 +20,7 @@ class DieuHanhController extends Controller
     /**
      * API Phân công HDV (Dành cho Điều Hành)
      */
+    // UC37 | Nhân viên điều hành | Phân công điều phối HDV.
     public function phanCongTour(PhanCongTourRequest $request): JsonResponse
     {
         $data = $request->validated();
@@ -30,6 +32,7 @@ class DieuHanhController extends Controller
     /**
      * API Lấy danh sách tour cần phân công
      */
+    // UC37 | Nhân viên điều hành | Phân công điều phối HDV (tourCanPhanCong).
     public function tourCanPhanCong(Request $request): JsonResponse
     {
         $size = (int) $request->query('size', 10);
@@ -50,6 +53,7 @@ class DieuHanhController extends Controller
     /**
      * API Huỷ phân công
      */
+    // UC37 | Nhân viên điều hành | Hủy điều phối HDV.
     public function huyPhanCong(string $maPhanCong): JsonResponse
     {
         $this->phanCongService->huyPhanCong($maPhanCong);
@@ -84,6 +88,7 @@ class DieuHanhController extends Controller
     /**
      * API Cập nhật năng lực của một nhân viên cụ thể (Dành cho Điều Hành)
      */
+    // UC37 | Nhân viên điều hành | Cập nhật điều phối HDV.
     public function capNhatNangLucNhanVien(Request $request, string $maNhanVien): JsonResponse
     {
         $request->validate([

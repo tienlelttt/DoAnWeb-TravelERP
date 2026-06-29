@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+// Model lưu thông tin sự cố.
 class NhatKySuCo extends BaseModel
 {
     protected $table = 'nhat_ky_su_cos';

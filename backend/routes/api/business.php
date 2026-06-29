@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\VoucherAdminController;
 use App\Http\Controllers\DanhGiaController;
 use App\Http\Controllers\KinhDoanhCompatController;
 use App\Http\Controllers\KinhDoanhController;
+use App\Http\Controllers\KinhDoanhTongHopController;
 use App\Http\Controllers\XuLyHuyController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +16,7 @@ Route::group(['prefix' => 'kinh-doanh', 'middleware' => ['auth:api', 'role:KINHD
     Route::get('khach-hang', [KinhDoanhCompatController::class, 'timKiemKhachHang']);
     Route::get('khach-hang/{maKhachHang}', [KinhDoanhCompatController::class, 'chiTietKhachHang']);
     Route::get('yeu-cau-ho-tro', [KinhDoanhCompatController::class, 'danhSachYeuCauHoTro']);
+    Route::get('tong-hop-khieu-nai-su-co', [KinhDoanhTongHopController::class, 'danhSachTongHop']);
 });
 
 Route::group(['prefix' => 'kinh-doanh', 'middleware' => ['auth:api', 'role:KINHDOANH,ADMIN']], function () {

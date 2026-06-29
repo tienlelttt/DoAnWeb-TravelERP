@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+// Model lưu thông tin điều phối HDV.
 class PhanCongTour extends BaseModel
 {
     protected $table = 'phan_cong_tours';

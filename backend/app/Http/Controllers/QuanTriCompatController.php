@@ -12,12 +12,14 @@ use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+// Module quản lý dữ liệu.
 class QuanTriCompatController extends Controller
 {
     public function __construct(
         private UserService $userService
     ) {}
 
+    // Đăng ký dữ liệu.
     public function dangKyNhanVien(DangKyNhanVienRequest $request)
     {
         $taiKhoan = $this->userService->taoNhanVienQuanTri($request->validated());
@@ -30,6 +32,7 @@ class QuanTriCompatController extends Controller
         ], 201, [], JSON_UNESCAPED_UNICODE);
     }
 
+    // Lấy danh sách dữ liệu.
     public function danhSachNhanVien(Request $request)
     {
         $query = NhanVien::with('taiKhoan');
@@ -76,6 +79,7 @@ class QuanTriCompatController extends Controller
         ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
+    // Xem chi tiết dữ liệu.
     public function chiTietNhanVien(NhanVien $nhanVien)
     {
         $nhanVien->load('taiKhoan');

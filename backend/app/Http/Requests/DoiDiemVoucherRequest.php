@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+// Model lưu thông tin voucher.
 class DoiDiemVoucherRequest extends FormRequest
 {
     public function authorize(): bool

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+// Model lưu thông tin lịch trình tour.
 class LichTrinhTour extends BaseModel
 {
     protected $table = 'lich_trinh_tours';

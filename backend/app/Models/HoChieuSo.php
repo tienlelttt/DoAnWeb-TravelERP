@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+// Model lưu thông tin hồ sơ số.
 class HoChieuSo extends BaseModel
 {
     protected $table = 'ho_chieu_sos';

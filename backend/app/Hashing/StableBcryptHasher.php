@@ -4,6 +4,7 @@ namespace App\Hashing;
 
 use Illuminate\Hashing\BcryptHasher;
 
+// Model lưu thông tin dữ liệu.
 class StableBcryptHasher extends BcryptHasher
 {
     /**

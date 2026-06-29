@@ -20,6 +20,7 @@ class TourMauService
         $this->maTuDongService = $maTuDongService;
     }
 
+    // UC01 | Nhân viên sản phẩm | Lấy danh sách tour mẫu.
     public function danhSach($tieuDe, $thoiLuongMin, $thoiLuongMax, $perPage)
     {
         $query = TourMau::query();
@@ -40,6 +41,7 @@ class TourMauService
         return TourMauResource::collection($tours)->response()->getData(true);
     }
 
+    // UC01 | Nhân viên sản phẩm | Xem chi tiết tour mẫu.
     public function chiTiet($id)
     {
         $tour = TourMau::with('lichTrinhTours')->find($id);
@@ -49,6 +51,7 @@ class TourMauService
         return new TourMauChiTietResource($tour);
     }
 
+    // UC01 | Nhân viên sản phẩm | Thêm mới tour mẫu.
     public function taoMoi(array $data)
     {
         return DB::transaction(function () use ($data) {
@@ -81,6 +84,7 @@ class TourMauService
         });
     }
 
+    // UC01 | Nhân viên sản phẩm | Cập nhật tour mẫu.
     public function capNhat($id, array $data)
     {
         return DB::transaction(function () use ($id, $data) {
@@ -99,6 +103,7 @@ class TourMauService
         });
     }
 
+    // UC01 | Nhân viên sản phẩm | Xóa tour mẫu.
     public function xoaMem($id)
     {
         return DB::transaction(function () use ($id) {
@@ -212,6 +217,7 @@ class TourMauService
         });
     }
 
+    // UC01 | Nhân viên sản phẩm | Xóa tour mẫu (xoaLichTrinh).
     public function xoaLichTrinh($maTourMau, $maLichTrinh)
     {
         return DB::transaction(function () use ($maTourMau, $maLichTrinh) {

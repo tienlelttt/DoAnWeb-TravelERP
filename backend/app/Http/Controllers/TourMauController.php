@@ -11,6 +11,7 @@ use App\Http\Requests\LichTrinhRequest;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 
+// Module quản lý tour mẫu.
 class TourMauController extends Controller implements HasMiddleware
 {
     use ApiResponse;
@@ -29,6 +30,7 @@ class TourMauController extends Controller implements HasMiddleware
         ];
     }
 
+    // UC01 | Quản trị viên, Nhân viên sản phẩm | Lấy danh sách tour mẫu.
     public function danhSach(Request $request)
     {
         $this->checkRole(['ADMIN', 'SANPHAM', 'KINHDOANH', 'DIEUHANH', 'KETOAN', 'HDV']);
@@ -43,6 +45,7 @@ class TourMauController extends Controller implements HasMiddleware
         );
     }
 
+    // UC01 | Quản trị viên, Nhân viên sản phẩm | Xem chi tiết tour mẫu.
     public function chiTiet($id)
     {
         $this->checkRole(['ADMIN', 'SANPHAM', 'KINHDOANH', 'DIEUHANH', 'KETOAN', 'HDV']);
@@ -52,6 +55,7 @@ class TourMauController extends Controller implements HasMiddleware
         );
     }
 
+    // UC01 | Nhân viên sản phẩm, Quản trị viên | Thêm mới tour mẫu.
     public function taoMoi(TaoTourMauRequest $request)
     {
         $this->checkRole(['SANPHAM', 'ADMIN']);
@@ -61,6 +65,7 @@ class TourMauController extends Controller implements HasMiddleware
         );
     }
 
+    // UC01 | Nhân viên sản phẩm, Quản trị viên | Cập nhật tour mẫu.
     public function capNhat(CapNhatTourMauRequest $request, $id)
     {
         $this->checkRole(['SANPHAM', 'ADMIN']);
@@ -70,6 +75,7 @@ class TourMauController extends Controller implements HasMiddleware
         );
     }
 
+    // UC01 | Nhân viên sản phẩm, Quản trị viên | Xóa tour mẫu.
     public function xoa($id)
     {
         $this->checkRole(['SANPHAM', 'ADMIN']);
@@ -105,6 +111,7 @@ class TourMauController extends Controller implements HasMiddleware
         );
     }
 
+    // UC01 | Nhân viên sản phẩm, Quản trị viên | Xóa tour mẫu (xoaLichTrinh).
     public function xoaLichTrinh($id, $maLichTrinh)
     {
         $this->checkRole(['SANPHAM', 'ADMIN']);

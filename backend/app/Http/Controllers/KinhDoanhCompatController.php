@@ -11,6 +11,7 @@ use App\Http\Resources\DonDatTourResource;
 use App\Services\ThanhToanService;
 use App\Exceptions\AppException;
 
+// Module quản lý dữ liệu.
 class KinhDoanhCompatController extends Controller
 {
     protected $thanhToanService;
@@ -25,21 +26,17 @@ class KinhDoanhCompatController extends Controller
      * GET /api/kinh-doanh/dat-tour
      * GET /api/kinh-doanh/don-dat-tour
      */
+    // Lấy danh sách dữ liệu.
     public function danhSachDonDatTour(Request $request)
     {
         $query = DonDatTour::with([
             'tourThucTe.tourMau',
-            'khachHang.taiKhoan',
-            'chiTietDatTours.khachHang.taiKhoan',
-            'chiTietDatTours.nguoiDongHanh',
-            'chiTietDichVus.dichVuThem',
-            'datTourUuDai.voucher'
+            'khachHang.taiKhoan'
         ]);
 
         if ($request->query('trangThai')) {
             $query->where('trang_thai', $request->query('trangThai'));
         }
-
         if ($request->query('maTourThucTe')) {
             $query->where('ma_tour_thuc_te', $request->query('maTourThucTe'));
         }
@@ -69,6 +66,7 @@ class KinhDoanhCompatController extends Controller
      * GET /api/kinh-doanh/dat-tour/{maDatTour}
      * GET /api/kinh-doanh/don-dat-tour/{maDatTour}
      */
+    // Xem chi tiết dữ liệu.
     public function chiTietDonDatTour(string $maDatTour)
     {
         $donDatTour = DonDatTour::with([
@@ -96,6 +94,7 @@ class KinhDoanhCompatController extends Controller
      * Xác nhận đơn đặt tour
      * PUT /api/kinh-doanh/dat-tour/{maDatTour}/xac-nhan
      */
+
     public function xacNhanDon(string $maDatTour, Request $request)
     {
         $donDatTour = $this->thanhToanService->xacNhanThanhToan($maDatTour, 'DONG_Y');
@@ -121,6 +120,7 @@ class KinhDoanhCompatController extends Controller
      * Từ chối xác nhận thanh toán
      * PUT /api/kinh-doanh/dat-tour/{maDatTour}/tu-choi-thanh-toan
      */
+    // Thanh toán dữ liệu.
     public function tuChoiThanhToan(string $maDatTour, Request $request)
     {
         $donDatTour = $this->thanhToanService->xacNhanThanhToan($maDatTour, 'TU_CHOI');
@@ -146,6 +146,7 @@ class KinhDoanhCompatController extends Controller
      * Tìm kiếm hồ sơ khách hàng
      * GET /api/kinh-doanh/khach-hang
      */
+    // Tìm kiếm dữ liệu.
     public function timKiemKhachHang(Request $request)
     {
         $query = HoChieuSo::with('taiKhoan');
@@ -207,6 +208,7 @@ class KinhDoanhCompatController extends Controller
      * Xem hồ sơ chi tiết khách hàng
      * GET /api/kinh-doanh/khach-hang/{maKhachHang}
      */
+    // Xem chi tiết dữ liệu (chiTietKhachHang).
     public function chiTietKhachHang(string $maKhachHang)
     {
         $hcs = HoChieuSo::with('taiKhoan')->where('ma_khach_hang', $maKhachHang)->first();
@@ -238,6 +240,7 @@ class KinhDoanhCompatController extends Controller
      * Xem toàn bộ sự cố của hướng dẫn viên
      * GET /api/huong-dan-vien/su-co
      */
+
     public function suCoCuaHdv(Request $request)
     {
         $user = auth()->user();
@@ -287,6 +290,7 @@ class KinhDoanhCompatController extends Controller
      * Lấy danh sách toàn bộ yêu cầu hỗ trợ (Dành cho Sales/Kinh doanh)
      * GET /api/kinh-doanh/yeu-cau-ho-tro
      */
+    // Lấy danh sách dữ liệu (danhSachYeuCauHoTro).
     public function danhSachYeuCauHoTro(Request $request)
     {
         $query = \App\Models\YeuCauHoTro::query();
@@ -337,6 +341,7 @@ class KinhDoanhCompatController extends Controller
      * Cập nhật / xử lý yêu cầu hỗ trợ
      * PUT /api/kinh-doanh/yeu-cau-ho-tro/{maYeuCau}
      */
+    // Cập nhật dữ liệu.
     public function capNhatYeuCauHoTro(string $maYeuCau, Request $request)
     {
         $yc = \App\Models\YeuCauHoTro::where('ma_yeu_cau_ho_tro', $maYeuCau)->first();
@@ -368,6 +373,7 @@ class KinhDoanhCompatController extends Controller
      * Yêu cầu HDV giải trình sự cố liên quan đến yêu cầu hỗ trợ
      * POST /api/kinh-doanh/yeu-cau-ho-tro/{maYeuCau}/yeu-cau-hdv-giai-trinh
      */
+
     public function yeuCauHdvGiaiTrinh(string $maYeuCau, Request $request)
     {
         $yc = \App\Models\YeuCauHoTro::where('ma_yeu_cau_ho_tro', $maYeuCau)->first();
@@ -401,6 +407,7 @@ class KinhDoanhCompatController extends Controller
      * Yêu cầu khách hàng bổ sung thông tin
      * POST /api/kinh-doanh/yeu-cau-ho-tro/{maYeuCau}/yeu-cau-khach-hang-bo-sung
      */
+
     public function yeuCauKhachHangBoSung(string $maYeuCau, Request $request)
     {
         $yc = \App\Models\YeuCauHoTro::where('ma_yeu_cau_ho_tro', $maYeuCau)->first();

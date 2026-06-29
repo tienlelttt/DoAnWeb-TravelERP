@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\YeuCauHoTro;
 
+// Repository truy xuất dữ liệu yêu cầu hỗ trợ.
 class YeuCauHoTroRepository
 {
     /**
@@ -23,6 +24,7 @@ class YeuCauHoTroRepository
      * @param string $maDatTour
      * @return YeuCauHoTro|null
      */
+    // UC36 | Khách hàng | Hủy yêu cầu hỗ trợ.
     public function timTicketHuyTourChoDuyet(string $maDatTour): ?YeuCauHoTro
     {
         return YeuCauHoTro::where('ma_dat_tour', $maDatTour)
@@ -37,6 +39,7 @@ class YeuCauHoTroRepository
      * @param string $maDatTour
      * @return YeuCauHoTro|null
      */
+    // UC36 | Khách hàng | Hủy yêu cầu hỗ trợ (timTicketHuyTourDaDuyet).
     public function timTicketHuyTourDaDuyet(string $maDatTour): ?YeuCauHoTro
     {
         return YeuCauHoTro::where('ma_dat_tour', $maDatTour)

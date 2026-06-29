@@ -155,6 +155,7 @@ class QuyetToanService
         return $qt;
     }
 
+    // UC48 | Nhân viên kế toán | Lấy danh sách quyết toán tour.
     public function danhSach($trangThai = null, $perPage = 10)
     {
         $query = QuyetToan::query()->with(['tourThucTe', 'nhanVien.taiKhoan']);
@@ -164,6 +165,7 @@ class QuyetToanService
         return $query->paginate($perPage);
     }
 
+    // UC48 | Nhân viên kế toán | Xem chi tiết quyết toán tour.
     public function chiTiet($maQuyetToan)
     {
         $qt = QuyetToan::with(['tourThucTe', 'nhanVien.taiKhoan'])->find($maQuyetToan);
@@ -173,6 +175,7 @@ class QuyetToanService
 
     // --- HOAN TIEN LOGIC ---
 
+    // UC48 | Nhân viên kế toán | Lấy danh sách quyết toán tour (danhSachChoHoanTien).
     public function danhSachChoHoanTien($perPage = 10)
     {
         return GiaoDich::where('loai_giao_dich', 'HOAN_TIEN')
@@ -180,6 +183,7 @@ class QuyetToanService
             ->paginate($perPage);
     }
 
+    // UC48 | Nhân viên kế toán | Hoàn tiền quyết toán tour.
     public function xacNhanHoanTien($maGiaoDich)
     {
         return DB::transaction(function() use ($maGiaoDich) {
@@ -213,6 +217,7 @@ class QuyetToanService
         });
     }
 
+    // UC48 | Nhân viên kế toán | Hoàn tiền quyết toán tour (tuChoiHoanTien).
     public function tuChoiHoanTien($maGiaoDich)
     {
         return DB::transaction(function() use ($maGiaoDich) {
@@ -239,6 +244,7 @@ class QuyetToanService
 
     // --- HELPERS ---
 
+    // Cập nhật quyết toán tour.
     private function capNhatQT(QuyetToan $qt, $maTour, array $req, $maTaiKhoan)
     {
         $doanhThu = $this->tinhDoanhThu($maTour);

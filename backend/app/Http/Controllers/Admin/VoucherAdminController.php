@@ -9,6 +9,7 @@ use App\Http\Resources\ContractPaginationResource;
 use App\Services\VoucherService;
 use Illuminate\Http\Request;
 
+// Module quản lý voucher.
 class VoucherAdminController extends Controller
 {
     public function __construct(
@@ -18,6 +19,7 @@ class VoucherAdminController extends Controller
     /**
      * Lấy danh sách toàn bộ voucher (Dành cho Admin/Kinh doanh)
      */
+    // UC52 | Nhân viên kinh doanh | Lấy danh sách voucher.
     public function danhSach(Request $request)
     {
         $perPage = $request->query('size', 10);
@@ -53,6 +55,7 @@ class VoucherAdminController extends Controller
     /**
      * Cập nhật thông tin Voucher
      */
+    // UC52 | Nhân viên kinh doanh | Cập nhật voucher.
     public function capNhatVoucher(VoucherAdminRequest $request, $maVoucher)
     {
         $voucher = $this->voucherService->capNhatVoucher($maVoucher, $request->validated());

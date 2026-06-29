@@ -10,6 +10,7 @@ use App\Http\Requests\CapNhatTourThucTeRequest;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 
+// Module quản lý tour thực tế.
 class TourThucTeController extends Controller implements HasMiddleware
 {
     use ApiResponse;
@@ -28,6 +29,7 @@ class TourThucTeController extends Controller implements HasMiddleware
         ];
     }
 
+    // UC10 | Quản trị viên, Nhân viên sản phẩm | Lấy danh sách tour thực tế.
     public function danhSach(Request $request)
     {
         $this->checkRole(['ADMIN', 'SANPHAM', 'KINHDOANH', 'DIEUHANH', 'KETOAN', 'HDV']);
@@ -52,6 +54,7 @@ class TourThucTeController extends Controller implements HasMiddleware
         }
     }
 
+    // UC10 | Quản trị viên, Nhân viên sản phẩm | Xem chi tiết tour thực tế.
     public function chiTiet($id)
     {
         $this->checkRole(['ADMIN', 'SANPHAM', 'KINHDOANH', 'DIEUHANH', 'KETOAN', 'HDV']);
@@ -61,6 +64,7 @@ class TourThucTeController extends Controller implements HasMiddleware
         );
     }
 
+    // UC10 | Nhân viên sản phẩm, Nhân viên điều hành | Thêm mới tour thực tế.
     public function taoMoi(TaoTourThucTeRequest $request)
     {
         $this->checkRole(['SANPHAM', 'DIEUHANH', 'ADMIN']);
@@ -70,6 +74,7 @@ class TourThucTeController extends Controller implements HasMiddleware
         );
     }
 
+    // UC10 | Nhân viên sản phẩm, Nhân viên điều hành | Cập nhật tour thực tế.
     public function capNhat(CapNhatTourThucTeRequest $request, $id)
     {
         $this->checkRole(['SANPHAM', 'DIEUHANH', 'ADMIN']);
@@ -79,6 +84,7 @@ class TourThucTeController extends Controller implements HasMiddleware
         );
     }
 
+    // UC10 | Nhân viên sản phẩm, Nhân viên điều hành | Xóa tour thực tế.
     public function xoa($id, Request $request)
     {
         $this->checkRole(['SANPHAM', 'DIEUHANH', 'ADMIN']);

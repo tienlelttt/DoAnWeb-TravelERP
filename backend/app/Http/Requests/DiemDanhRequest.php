@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+// Model lưu thông tin điểm danh khách hàng.
 class DiemDanhRequest extends FormRequest
 {
     public function authorize()

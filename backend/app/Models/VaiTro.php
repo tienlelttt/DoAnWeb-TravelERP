@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+// Model lưu thông tin phân quyền.
 class VaiTro extends BaseModel
 {
     protected $table = 'vai_tros';

@@ -8,6 +8,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+// Model lưu thông tin dữ liệu.
 class AuditLogMiddleware
 {
     public function __construct(

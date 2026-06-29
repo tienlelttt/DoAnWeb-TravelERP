@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+// Model lưu thông tin điểm danh khách hàng.
 class DiemDanh extends BaseModel
 {
     protected $table = 'diem_danhs';

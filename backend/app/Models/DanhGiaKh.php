@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+// Model lưu thông tin đánh giá.
 class DanhGiaKh extends BaseModel
 {
     protected $table = 'danh_gia_khs';

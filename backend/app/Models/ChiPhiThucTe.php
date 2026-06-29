@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+// Model lưu thông tin chi phí thực tế.
 class ChiPhiThucTe extends BaseModel
 {
     protected $table = 'chi_phi_thuc_tes';

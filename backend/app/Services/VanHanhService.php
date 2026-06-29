@@ -28,6 +28,7 @@ class VanHanhService
     /**
      * Kiểm tra xem HDV có quyền tác nghiệp trên Tour thực tế này không
      */
+
     private function checkQuyenHDV(string $maTourThucTe, string $maNhanVien, bool $allowPending = false): TourThucTe
     {
         $query = PhanCongTour::where('ma_tour_thuc_te', $maTourThucTe)
@@ -71,6 +72,7 @@ class VanHanhService
             ->get();
     }
 
+    // Lấy danh sách dữ liệu.
     public function layDanhSachKhach(string $maTourThucTe, string $maNhanVien)
     {
         $this->checkQuyenHDV($maTourThucTe, $maNhanVien);
@@ -78,12 +80,14 @@ class VanHanhService
         return $this->layDanhSachKhachTheoTour($maTourThucTe);
     }
 
+    // Lấy danh sách dữ liệu (layDanhSachKhachDieuHanh).
     public function layDanhSachKhachDieuHanh(string $maTourThucTe)
     {
         $this->kiemTraTourTonTai($maTourThucTe);
         return $this->layDanhSachKhachTheoTour($maTourThucTe);
     }
 
+    // Lấy danh sách dữ liệu (layDanhSachKhachTheoTour).
     private function layDanhSachKhachTheoTour(string $maTourThucTe): array
     {
         $donDatTours = DonDatTour::where('ma_tour_thuc_te', $maTourThucTe)
@@ -197,6 +201,7 @@ class VanHanhService
         return $hanhDong;
     }
 
+    // Lấy danh sách dữ liệu (layDanhSachSuCo).
     public function layDanhSachSuCo(string $maTourThucTe, string $maNhanVien, int $perPage = 15)
     {
         $this->checkQuyenHDV($maTourThucTe, $maNhanVien);
@@ -206,6 +211,7 @@ class VanHanhService
             ->paginate($perPage);
     }
 
+    // Lấy danh sách dữ liệu (layDanhSachSuCoDieuHanh).
     public function layDanhSachSuCoDieuHanh(string $maTourThucTe, int $perPage = 15)
     {
         $this->kiemTraTourTonTai($maTourThucTe);
@@ -236,6 +242,7 @@ class VanHanhService
         return $suCo;
     }
 
+    // Cập nhật dữ liệu.
     public function capNhatSuCo(string $maSuCo, string $maNhanVien, array $data)
     {
         $suCo = NhatKySuCo::where('ma_nhat_ky_su_co', $maSuCo)->where('ma_nhan_vien_bao_cao', $maNhanVien)->first();
@@ -249,6 +256,7 @@ class VanHanhService
         return $suCo;
     }
 
+    // Lấy danh sách dữ liệu (layDanhSachChiPhi).
     public function layDanhSachChiPhi(string $maTourThucTe, string $maNhanVien, int $perPage = 15)
     {
         $this->checkQuyenHDV($maTourThucTe, $maNhanVien);
@@ -258,6 +266,7 @@ class VanHanhService
             ->paginate($perPage);
     }
 
+    // Lấy danh sách dữ liệu (layDanhSachChiPhiDieuHanh).
     public function layDanhSachChiPhiDieuHanh(string $maTourThucTe, int $perPage = 15)
     {
         $this->kiemTraTourTonTai($maTourThucTe);
@@ -306,6 +315,7 @@ class VanHanhService
         return $chiPhi;
     }
 
+    // Hủy dữ liệu.
     public function huyChiPhi(string $maChiPhi, string $maHdv)
     {
         $chiPhi = ChiPhiThucTe::where('ma_chi_phi_thuc_te', $maChiPhi)

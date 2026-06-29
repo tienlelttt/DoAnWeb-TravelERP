@@ -7,6 +7,7 @@ use App\Exceptions\AppException;
 
 class KeToanChiPhiService
 {
+    // UC44 | HDV | Lấy danh sách chi phí thực tế.
     public function danhSachChiPhi(array $filters = [])
     {
         $query = ChiPhiThucTe::with(["tourThucTe.tourMau", "nhanVien.taiKhoan"]);
@@ -52,6 +53,7 @@ class KeToanChiPhiService
         return $chiPhi;
     }
 
+    // UC44 | HDV | Phê duyệt chi phí thực tế.
     public function duyetChiPhi(string $maChiPhi, ?string $ghiChu = null)
     {
         return $this->setTrangThaiChiPhi($maChiPhi, "DA_DUYET", $ghiChu);

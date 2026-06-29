@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 
+// Module quản lý nhật ký hệ thống.
 class NhatKyHeThongController extends Controller
 {
     use ApiResponse;
@@ -15,6 +16,7 @@ class NhatKyHeThongController extends Controller
     /**
      * API Lấy danh sách nhật ký hệ thống (Audit logs) dành cho ADMIN
      */
+    // UC68 | Quản trị viên | Lấy danh sách nhật ký hệ thống.
     public function danhSach(Request $request): JsonResponse
     {
         $query = NhatKyHeThong::with('taiKhoan');

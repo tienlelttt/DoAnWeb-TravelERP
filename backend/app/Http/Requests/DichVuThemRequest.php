@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+// Model lưu thông tin dịch vụ bổ sung.
 class DichVuThemRequest extends FormRequest
 {
     public function authorize(): bool

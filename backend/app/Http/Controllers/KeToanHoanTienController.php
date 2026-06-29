@@ -6,6 +6,7 @@ use App\Http\Resources\ContractPaginationResource;
 use App\Services\QuyetToanService;
 use Illuminate\Http\Request;
 
+// Module quản lý kế toán.
 class KeToanHoanTienController extends Controller
 {
     public function __construct(
@@ -15,6 +16,7 @@ class KeToanHoanTienController extends Controller
     /**
      * Lấy danh sách giao dịch đang chờ kế toán hoàn tiền (UC52)
      */
+    // UC45 | Nhân viên kế toán | Lấy danh sách kế toán.
     public function danhSachChoHoanTien(Request $request)
     {
         $perPage = $request->query('size', 10);
@@ -49,6 +51,7 @@ class KeToanHoanTienController extends Controller
     /**
      * Xác nhận đã chuyển khoản hoàn tiền cho khách thành công
      */
+    // UC45 | Nhân viên kế toán | Hoàn tiền kế toán.
     public function xacNhanHoanTien($maGiaoDich)
     {
         $gd = $this->quyetToanService->xacNhanHoanTien($maGiaoDich);
@@ -71,6 +74,7 @@ class KeToanHoanTienController extends Controller
     /**
      * Từ chối hoàn tiền, đẩy đơn về trạng thái tranh chấp (TU_CHOI_HOAN_TIEN)
      */
+    // UC45 | Nhân viên kế toán | Hoàn tiền kế toán (tuChoiHoanTien).
     public function tuChoiHoanTien($maGiaoDich)
     {
         $gd = $this->quyetToanService->tuChoiHoanTien($maGiaoDich);

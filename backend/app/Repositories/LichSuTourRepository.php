@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\LichSuTour;
 
+// Repository truy xuất dữ liệu dữ liệu.
 class LichSuTourRepository
 {
     /**
@@ -12,6 +13,7 @@ class LichSuTourRepository
      * @param array $data
      * @return LichSuTour
      */
+
     public function taoLichSu(array $data): LichSuTour
     {
         return LichSuTour::create($data);

@@ -4,6 +4,7 @@ namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+// Model lưu thông tin quyết toán tour.
 class QuyetToanRequest extends FormRequest
 {
     public function authorize(): bool

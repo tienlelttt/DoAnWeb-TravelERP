@@ -7,6 +7,7 @@ use App\Services\HuyDonService;
 use App\Http\Resources\DonDatTourResource;
 use Illuminate\Http\JsonResponse;
 
+// Module quản lý dữ liệu.
 class HuyDonController extends Controller
 {
     protected $huyDonService;
@@ -22,6 +23,7 @@ class HuyDonController extends Controller
      * @param HuyDonRequest $request
      * @return JsonResponse
      */
+    // Hủy dữ liệu.
     public function yeuCauHuyDon(HuyDonRequest $request): JsonResponse
     {
         $user = auth()->user();

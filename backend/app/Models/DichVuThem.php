@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+// Model lưu thông tin dịch vụ bổ sung.
 class DichVuThem extends BaseModel
 {
     protected $table = 'dich_vu_thems';

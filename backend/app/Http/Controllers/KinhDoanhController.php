@@ -7,6 +7,7 @@ use App\Services\ThanhToanService;
 use App\Http\Resources\DonDatTourResource;
 use Illuminate\Http\JsonResponse;
 
+// Module quản lý dữ liệu.
 class KinhDoanhController extends Controller
 {
     protected $thanhToanService;
@@ -22,6 +23,7 @@ class KinhDoanhController extends Controller
      * @param XacNhanThanhToanRequest $request
      * @return JsonResponse
      */
+    // Thanh toán dữ liệu.
     public function xacNhanThanhToan(XacNhanThanhToanRequest $request): JsonResponse
     {
         $data = $request->validated();

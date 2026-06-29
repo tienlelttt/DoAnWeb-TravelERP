@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 
 class HanhDongXanhService
 {
+    // UC20 | Nhân viên sản phẩm | Lấy danh sách hành động xanh.
     public function danhSach($maTourThucTe)
     {
         $query = HanhDongXanh::with('tourThucTes'); // Load sẵn quan hệ để DTO lấy maTourThucTe
@@ -24,6 +25,7 @@ class HanhDongXanhService
         return HanhDongXanhResource::collection($query->get());
     }
 
+    // UC20 | Nhân viên sản phẩm | Xem chi tiết hành động xanh.
     public function chiTiet($id)
     {
         $hdx = HanhDongXanh::with('tourThucTes')->find($id);
@@ -33,11 +35,11 @@ class HanhDongXanhService
         return new HanhDongXanhResource($hdx);
     }
 
+    // UC20 | Nhân viên sản phẩm | Thêm mới hành động xanh.
     public function taoMoi(array $data)
     {
         return DB::transaction(function () use ($data) {
             $hdx = new HanhDongXanh();
-            // Tao ma hanh dong xanh ngan gon tu UUID.
             $hdx->ma_hanh_dong_xanh = 'HDX_' . strtoupper(substr(Str::uuid()->toString(), 0, 8));
             $hdx->ten_hanh_dong = $data['tenHanhDong'];
             $hdx->diem_cong = $data['diemCong'];
@@ -50,6 +52,7 @@ class HanhDongXanhService
         });
     }
 
+    // UC20 | Nhân viên sản phẩm | Cập nhật hành động xanh.
     public function capNhat($id, array $data)
     {
         return DB::transaction(function () use ($id, $data) {
@@ -75,6 +78,7 @@ class HanhDongXanhService
         });
     }
 
+    // UC20 | Nhân viên sản phẩm | Xóa hành động xanh.
     public function xoa($id)
     {
         return DB::transaction(function () use ($id) {
@@ -82,7 +86,6 @@ class HanhDongXanhService
             if (!$hdx) {
                 throw AppException::notFound("Không tìm thấy hành động xanh: {$id}");
             }
-            // Xóa quan hệ trước
             $hdx->tourThucTes()->detach();
             $hdx->delete();
         });
@@ -90,7 +93,6 @@ class HanhDongXanhService
 
     private function ganTourThucTe(HanhDongXanh $hdx, $maTourThucTe)
     {
-        // Xóa hết quan hệ cũ
         $hdx->tourThucTes()->detach();
         
         if (empty($maTourThucTe)) {

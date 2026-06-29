@@ -7,6 +7,7 @@ use App\Services\KeToanChiPhiService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+// Module quản lý chi phí thực tế.
 class KeToanChiPhiController extends Controller
 {
     protected KeToanChiPhiService $keToanChiPhiService;
@@ -22,6 +23,7 @@ class KeToanChiPhiController extends Controller
     /**
      * Lấy danh sách chi phí thực tế theo bộ lọc kế toán.
      */
+    // UC44 | HDV | Lấy danh sách chi phí thực tế.
     public function danhSachChiPhi(Request $request): JsonResponse
     {
         $filters = [
@@ -102,6 +104,7 @@ class KeToanChiPhiController extends Controller
     /**
      * Duyệt một khoản chi phí thực tế.
      */
+    // UC44 | HDV | Phê duyệt chi phí thực tế.
     public function duyetChiPhi(Request $request, string $maChiPhi): JsonResponse
     {
         $chiPhi = $this->keToanChiPhiService->duyetChiPhi($maChiPhi, $request->input('ghiChu'));

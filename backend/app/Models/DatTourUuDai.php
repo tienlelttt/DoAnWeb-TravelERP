@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+// Model lưu thông tin đơn đặt tour.
 class DatTourUuDai extends BaseModel
 {
     protected $table = 'dat_tour_uu_dais';

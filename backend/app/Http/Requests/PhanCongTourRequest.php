@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+// Model lưu thông tin điều phối HDV.
 class PhanCongTourRequest extends FormRequest
 {
     public function authorize()

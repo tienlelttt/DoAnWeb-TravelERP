@@ -14,6 +14,7 @@ class UserService
         private MaTuDongService $maTuDongService
     ) {}
 
+    // UC61 | Quản trị viên | Lấy danh sách tài khoản người dùng.
     public function getList($filters = [], $perPage = 10)
     {
         $query = TaiKhoan::query();
@@ -34,12 +35,12 @@ class UserService
         return $query->orderBy('created_at', 'desc')->paginate($perPage);
     }
 
+    // UC61 | Quản trị viên | Thêm mới tài khoản người dùng.
     public function create(array $data)
     {
         $data['ma_tai_khoan'] = $this->maTuDongService->taoMaTaiKhoanTheoVaiTro($data['vaiTro']);
         $data['mat_khau'] = Hash::make($data['matKhau']);
         
-        // Map keys
         $taiKhoanData = [
             'ma_tai_khoan' => $data['ma_tai_khoan'],
             'ten_dang_nhap' => $data['tenDangNhap'],
@@ -89,6 +90,7 @@ class UserService
         });
     }
 
+    // UC61 | Quản trị viên | Cập nhật tài khoản người dùng.
     public function update($id, array $data)
     {
         $taiKhoan = TaiKhoan::findOrFail($id);
@@ -113,6 +115,7 @@ class UserService
         return $taiKhoan;
     }
 
+    // UC61 | Quản trị viên | Xóa tài khoản người dùng.
     public function delete($id)
     {
         $taiKhoan = TaiKhoan::findOrFail($id);

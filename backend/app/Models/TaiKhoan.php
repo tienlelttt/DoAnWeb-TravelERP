@@ -6,6 +6,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Auth\Authenticatable;
 
+// Model lưu thông tin tài khoản người dùng.
 class TaiKhoan extends BaseModel implements AuthenticatableContract, JWTSubject
 {
     use Authenticatable;

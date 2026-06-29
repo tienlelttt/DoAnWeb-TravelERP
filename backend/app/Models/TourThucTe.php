@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+// Model lưu thông tin tour thực tế.
 class TourThucTe extends BaseModel
 {
     protected $table = 'tour_thuc_tes';

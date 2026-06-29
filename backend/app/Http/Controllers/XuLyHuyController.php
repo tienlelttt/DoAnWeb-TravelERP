@@ -7,6 +7,7 @@ use App\Services\HuyDonService;
 use App\Http\Resources\DonDatTourResource;
 use Illuminate\Http\JsonResponse;
 
+// Module quản lý dữ liệu.
 class XuLyHuyController extends Controller
 {
     protected $huyDonService;
@@ -22,6 +23,7 @@ class XuLyHuyController extends Controller
      * @param XuLyHuyRequest $request
      * @return JsonResponse
      */
+    // Hủy dữ liệu.
     public function xuLyHuy(XuLyHuyRequest $request): JsonResponse
     {
         $user = auth()->user();
@@ -44,6 +46,7 @@ class XuLyHuyController extends Controller
      * @param string $maDon
      * @return JsonResponse
      */
+    // Phê duyệt dữ liệu.
     public function duyetDonVip(string $maDon): JsonResponse
     {
         $donDatTour = $this->huyDonService->duyetDonVip($maDon);

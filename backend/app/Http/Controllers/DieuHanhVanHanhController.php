@@ -6,12 +6,14 @@ use App\Services\VanHanhService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+// Module quản lý điều phối HDV.
 class DieuHanhVanHanhController extends Controller
 {
     public function __construct(
         private VanHanhService $vanHanhService
     ) {}
 
+    // UC37 | Nhân viên điều hành | Lấy danh sách điều phối HDV.
     public function danhSachDoan(string $maTour): JsonResponse
     {
         return $this->successResponse(
@@ -20,6 +22,7 @@ class DieuHanhVanHanhController extends Controller
         );
     }
 
+    // UC37 | Nhân viên điều hành | Lấy danh sách điều phối HDV (danhSachSuCo).
     public function danhSachSuCo(string $maTour, Request $request): JsonResponse
     {
         $perPage = $this->normalizePerPage($request->query('size', $request->query('perPage')));

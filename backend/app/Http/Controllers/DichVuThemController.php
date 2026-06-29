@@ -9,6 +9,7 @@ use App\Http\Requests\DichVuThemRequest;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 
+// Module quản lý dịch vụ bổ sung.
 class DichVuThemController extends Controller implements HasMiddleware
 {
     use ApiResponse;
@@ -27,29 +28,34 @@ class DichVuThemController extends Controller implements HasMiddleware
         ];
     }
 
+    // UC15 | Nhân viên sản phẩm, NV kế toán | Lấy danh sách dịch vụ bổ sung.
     public function danhSach(Request $request)
     {
         $maTourThucTe = $request->query('maTourThucTe');
         return $this->ok("Thành công", $this->dichVuThemService->danhSach($maTourThucTe));
     }
 
+    // UC15 | Nhân viên sản phẩm, NV kế toán | Xem chi tiết dịch vụ bổ sung.
     public function chiTiet($id)
     {
         return $this->ok("Thành công", $this->dichVuThemService->chiTiet($id));
     }
 
+    // UC15 | Nhân viên sản phẩm, Quản trị viên | Thêm mới dịch vụ bổ sung.
     public function taoMoi(DichVuThemRequest $request)
     {
         $this->checkRole(['SANPHAM', 'ADMIN']);
         return $this->created($this->dichVuThemService->taoMoi($request->validated()));
     }
 
+    // UC15 | Nhân viên sản phẩm, Quản trị viên | Cập nhật dịch vụ bổ sung.
     public function capNhat(DichVuThemRequest $request, $id)
     {
         $this->checkRole(['SANPHAM', 'ADMIN']);
         return $this->ok("Cập nhật dịch vụ thành công", $this->dichVuThemService->capNhat($id, $request->validated()));
     }
 
+    // UC15 | Nhân viên sản phẩm, Quản trị viên | Xóa dịch vụ bổ sung.
     public function xoa($id)
     {
         $this->checkRole(['SANPHAM', 'ADMIN']);

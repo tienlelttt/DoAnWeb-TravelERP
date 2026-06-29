@@ -11,6 +11,7 @@ use App\Models\DanhGiaKh;
 use App\Models\YeuCauHoTro;
 use App\Models\GiaoDich;
 
+// Model lưu thông tin đơn đặt tour.
 class DonDatTourResource extends JsonResource
 {
     public function toArray(Request $request): array

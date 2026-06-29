@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Middleware bảo vệ cuối cùng chuyển đổi đệ quy các key của JSON Response
  * từ snake_case sang camelCase trước khi gửi cho React Frontend.
  */
+// Model lưu thông tin dữ liệu.
 class CamelCaseJsonResponse
 {
     public function handle(Request $request, Closure $next): Response

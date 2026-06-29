@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+// Model lưu thông tin quyết toán tour.
 class QuyetToan extends BaseModel
 {
     protected $table = 'quyet_toans';

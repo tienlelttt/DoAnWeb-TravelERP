@@ -6,6 +6,7 @@ use App\Http\Requests\DatTourRequest;
 use App\Services\DatTourService;
 use Illuminate\Http\Request;
 
+// Module quản lý đơn đặt tour.
 class DatTourController extends Controller
 {
     protected $datTourService;
@@ -22,6 +23,7 @@ class DatTourController extends Controller
         return $this->successResponse($result, 'Đặt tour thành công', 201);
     }
 
+    // UC34 | Nhân viên | Lấy danh sách đơn đặt tour.
     public function danhSachCuaToi(Request $request)
     {
         $user = auth()->user();
@@ -30,6 +32,7 @@ class DatTourController extends Controller
         return $this->successResponse($result, 'Lấy danh sách đơn đặt tour thành công');
     }
 
+    // UC34 | Nhân viên | Xem chi tiết đơn đặt tour.
     public function chiTietCuaToi($maDatTour)
     {
         $user = auth()->user();
@@ -37,6 +40,7 @@ class DatTourController extends Controller
         return $this->successResponse($result, 'Lấy chi tiết đơn đặt tour thành công');
     }
 
+    // UC34 | Nhân viên | Hủy đơn đặt tour.
     public function huyDatTour($maDatTour)
     {
         $user = auth()->user();

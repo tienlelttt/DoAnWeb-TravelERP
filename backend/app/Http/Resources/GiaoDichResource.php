@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Carbon\Carbon;
 
+// Model lưu thông tin dữ liệu.
 class GiaoDichResource extends JsonResource
 {
+
     public function toArray(Request $request): array
     {
         return [

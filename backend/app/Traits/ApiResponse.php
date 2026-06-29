@@ -9,6 +9,7 @@ trait ApiResponse
     /**
      * Trả về định dạng JSON chuẩn của hệ thống.
      */
+
     protected function formatResponse(int $status, bool $success, string $message, $data = null, $error = null, $errors = null, array $meta = []): JsonResponse
     {
         return response()->json([
@@ -27,6 +28,7 @@ trait ApiResponse
         return $this->formatResponse(200, true, $message, $data);
     }
 
+    // Thêm mới dữ liệu.
     public function created($data = null, string $message = "Tạo mới thành công"): JsonResponse
     {
         return $this->formatResponse(201, true, $message, $data);

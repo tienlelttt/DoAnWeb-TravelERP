@@ -24,6 +24,7 @@ class PhanCongTourService
     /**
      * Nhân viên điều hành phân công HDV cho Tour
      */
+    // UC37 | Nhân viên điều hành | Phân công điều phối HDV.
     public function phanCongHDV(string $maTourThucTe, string $maNhanVien)
     {
         return DB::transaction(function () use ($maTourThucTe, $maNhanVien) {
@@ -76,6 +77,7 @@ class PhanCongTourService
     /**
      * HDV phản hồi phân công (Đồng ý hoặc Từ chối)
      */
+    // UC37 | Nhân viên điều hành | Phân công điều phối HDV (hdvTraLoiPhanCong).
     public function hdvTraLoiPhanCong(string $maPhanCongTour, string $trangThaiTraLoi, string $maNhanVienYeuCau)
     {
         return DB::transaction(function () use ($maPhanCongTour, $trangThaiTraLoi, $maNhanVienYeuCau) {
@@ -127,10 +129,12 @@ class PhanCongTourService
     /**
      * Lấy danh sách tour cần phân công
      */
+    // UC37 | Nhân viên điều hành | Lấy danh sách điều phối HDV.
     public function danhSachTourCanPhanCong(int $size = 10)
     {
         // Các tour chuẩn bị khởi hành và số lượng HDV < yêu cầu (nếu có logic đếm HDV)
         // Hiện tại chỉ lấy các tour trạng thái CHO_KICH_HOAT hoặc MO_BAN và chưa khởi hành
+
         return TourThucTe::with('tourMau')
             ->whereIn('trang_thai', ['CHO_KICH_HOAT', 'MO_BAN'])
             ->where('ngay_khoi_hanh', '>', now())
@@ -144,6 +148,7 @@ class PhanCongTourService
     /**
      * Lấy danh sách HDV khả dụng cho một tour (không trùng lịch)
      */
+    // UC37 | Nhân viên điều hành | Lấy danh sách điều phối HDV (danhSachHdvKhaDung).
     public function danhSachHdvKhaDung(string $maTourThucTe)
     {
         $tourThucTe = TourThucTe::with('tourMau')->where('ma_tour_thuc_te', $maTourThucTe)->first();
@@ -155,22 +160,28 @@ class PhanCongTourService
         $ngayKhoiHanh = Carbon::parse($tourThucTe->ngay_khoi_hanh);
         $ngayKetThuc = $ngayKhoiHanh->copy()->addDays($thoiLuong);
 
-        // Lấy tất cả nhân viên có vai trò HDV và đang HOAT_DONG, kèm thông tin tài khoản (để lấy họ tên)
-        $tatCaHdv = NhanVien::with('taiKhoan')->whereHas('taiKhoan', function($q) {
-            $q->where('vai_tro', 'HDV');
-        })->where('trang_thai_lam_viec', 'HOAT_DONG')->get();
+        // Thêm 12h vào ngày kết thúc mới
+        $ngayKetThucMoiCong12h = $ngayKetThuc->copy()->addHours(12);
 
-        $hdvKhaDung = collect();
-
-        foreach ($tatCaHdv as $hdv) {
-            try {
-                // Tận dụng hàm kiểm tra trùng lịch có sẵn
-                $this->phanCongTourRepo->kiemTraTrungLichHDV($hdv->ma_nhan_vien, $ngayKhoiHanh, $ngayKetThuc);
-                $hdvKhaDung->push($hdv);
-            } catch (\Exception $e) {
-                // Trùng lịch, bỏ qua
-            }
-        }
+        // Lấy danh sách HDV đang hoạt động, không trùng lịch
+        $hdvKhaDung = NhanVien::with('taiKhoan')
+            ->whereHas('taiKhoan', function ($q) {
+                $q->where('vai_tro', 'HDV');
+            })
+            ->where('trang_thai_lam_viec', 'HOAT_DONG')
+            ->whereNotIn('ma_nhan_vien', function ($query) use ($ngayKhoiHanh, $ngayKetThucMoiCong12h) {
+                $query->select('phan_cong_tours.ma_nhan_vien')
+                    ->from('phan_cong_tours')
+                    ->join('tour_thuc_tes', 'phan_cong_tours.ma_tour_thuc_te', '=', 'tour_thuc_tes.ma_tour_thuc_te')
+                    ->join('tour_maus', 'tour_thuc_tes.ma_tour_mau', '=', 'tour_maus.ma_tour_mau')
+                    ->where('phan_cong_tours.trang_thai_chap_nhan', '!=', 'TU_CHOI')
+                    ->where(function ($q) use ($ngayKhoiHanh, $ngayKetThucMoiCong12h) {
+                        // (Bắt đầu mới < Kết thúc cũ + 12h) VÀ (Kết thúc mới + 12h > Bắt đầu cũ)
+                        $q->whereRaw('? < DATE_ADD(DATE_ADD(tour_thuc_tes.ngay_khoi_hanh, INTERVAL tour_maus.thoi_luong DAY), INTERVAL 12 HOUR)', [$ngayKhoiHanh->toDateTimeString()])
+                          ->where('tour_thuc_tes.ngay_khoi_hanh', '<', $ngayKetThucMoiCong12h->toDateTimeString());
+                    });
+            })
+            ->get();
 
         return $hdvKhaDung;
     }
@@ -178,6 +189,7 @@ class PhanCongTourService
     /**
      * Hủy phân công
      */
+    // UC37 | Nhân viên điều hành | Hủy điều phối HDV.
     public function huyPhanCong(string $maPhanCong)
     {
         return DB::transaction(function () use ($maPhanCong) {
@@ -186,7 +198,6 @@ class PhanCongTourService
                 throw AppException::notFound("Không tìm thấy thông tin phân công");
             }
             
-            // Xoa phan cong de giu du lieu van hanh gon gang.
             $phanCong->delete();
             return true;
         });

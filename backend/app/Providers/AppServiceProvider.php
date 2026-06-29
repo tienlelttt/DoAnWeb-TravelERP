@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
+// Model lưu thông tin dữ liệu.
 class AppServiceProvider extends ServiceProvider
 {
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+// Model lưu thông tin voucher.
 class Voucher extends BaseModel
 {
     protected $table = 'vouchers';

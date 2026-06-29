@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+// Model lưu thông tin dữ liệu.
 class ChiTietDichVu extends BaseModel
 {
     protected $table = 'chi_tiet_dich_vus';

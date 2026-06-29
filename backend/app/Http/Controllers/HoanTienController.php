@@ -7,6 +7,7 @@ use App\Services\HuyDonService;
 use App\Http\Resources\DonDatTourResource;
 use Illuminate\Http\JsonResponse;
 
+// Module quản lý hoàn tiền.
 class HoanTienController extends Controller
 {
     protected $huyDonService;
@@ -22,6 +23,7 @@ class HoanTienController extends Controller
      * @param HoanTienRequest $request
      * @return JsonResponse
      */
+    // UC50 | Nhân viên kế toán | Hoàn tiền hoàn tiền.
     public function hoanTien(HoanTienRequest $request): JsonResponse
     {
         $data = $request->validated();

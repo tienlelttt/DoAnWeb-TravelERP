@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\DashboardService;
 use Illuminate\Http\Request;
 
+// Module quản lý dữ liệu.
 class DashboardController extends Controller
 {
     public function __construct(

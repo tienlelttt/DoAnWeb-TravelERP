@@ -5,6 +5,7 @@ namespace App\Helpers;
 /**
  * Lớp trợ giúp vẽ biểu đồ vector SVG thuần PHP, chất lượng cao, hiển thị tiếng Việt hoàn hảo.
  */
+// Model lưu thông tin dữ liệu.
 class SvgChartHelper
 {
     private static $colors = [
@@ -16,6 +17,7 @@ class SvgChartHelper
      * Biểu đồ Cột Nhóm (Grouped Bar Chart)
      * Thích hợp so sánh Doanh thu - Chi phí - Lợi nhuận của từng tour.
      */
+
     public static function groupedBar(array $data, array $labels, array $legend = ['Doanh thu', 'Chi phí', 'Lợi nhuận']): string
     {
         $w = 510;
@@ -116,6 +118,7 @@ class SvgChartHelper
      * Biểu đồ Đường (Line Chart)
      * Thích hợp vẽ xu hướng doanh thu/số lượng theo thời gian.
      */
+
     public static function line(array $data, array $labels, string $lineLabel = 'Số lượng'): string
     {
         $w = 510;
@@ -201,6 +204,7 @@ class SvgChartHelper
      * Biểu đồ Tròn (Pie Chart)
      * Thích hợp vẽ tỷ lệ phần trăm (Chi phí danh mục, phương thức thanh toán).
      */
+
     public static function pie(array $data, array $labels): string
     {
         $w = 510;
@@ -238,7 +242,6 @@ class SvgChartHelper
             // Large Arc Flag: nếu góc > 180 độ thì bằng 1, ngược lại bằng 0
             $largeArcFlag = $angleDegrees > 180 ? 1 : 0;
 
-            // Xử lý đặc biệt nếu chỉ có 1 phần tử duy nhất lấp đầy 100%
             if ($angleDegrees >= 360) {
                 $svg .= "  <circle cx=\"{$cx}\" cy=\"{$cy}\" r=\"{$r}\" fill=\"{$color}\" />\n";
             } else {
@@ -277,6 +280,7 @@ class SvgChartHelper
      * Biểu đồ Thanh Ngang (Horizontal Bar Chart)
      * Thích hợp so sánh tỷ lệ hoàn thành, lấp đầy tour hoặc top sản phẩm bán chạy.
      */
+
     public static function horizontalBar(array $data, array $labels, string $valUnit = ''): string
     {
         $w = 510;
@@ -354,6 +358,7 @@ class SvgChartHelper
     /**
      * Định dạng số thành viết tắt (ví dụ: 1,500,000 -> 1.5M, 20,000 -> 20K)
      */
+
     private static function formatShortNumber(float $val): string
     {
         if ($val >= 1000000000) {

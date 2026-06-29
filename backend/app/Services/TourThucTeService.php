@@ -75,7 +75,7 @@ class TourThucTeService
     {
         $tour = TourThucTe::with(['tourMau', 'dichVuThems', 'hanhDongXanhs'])->find($id);
         if (!$tour) {
-            throw AppException::notFound("Kh�ng t�m th?y tour th?c t?: {$id}");
+            throw AppException::notFound("Không tìm thấy tour thực tế: {$id}");
         }
         return new TourThucTeResource($tour);
     }
@@ -84,7 +84,7 @@ class TourThucTeService
     {
         $tour = TourThucTe::with(['tourMau.lichTrinhTours', 'dichVuThems', 'hanhDongXanhs'])->find($id);
         if (!$tour) {
-            throw AppException::notFound("Kh�ng t�m th?y tour: {$id}");
+            throw AppException::notFound("Không tìm thấy tour: {$id}");
         }
         return new TourCongKhaiResource($tour);
     }
@@ -94,23 +94,23 @@ class TourThucTeService
         return DB::transaction(function () use ($data) {
             $tourMau = TourMau::find($data['maTourMau']);
             if (!$tourMau) {
-                throw AppException::notFound("Kh�ng t�m th?y tour m?u: {$data['maTourMau']}");
+                throw AppException::notFound("Không tìm thấy tour mẫu: {$data['maTourMau']}");
             }
 
             $soKhachToiThieu = $data['soKhachToiThieu'] ?? 1;
 
             if ($soKhachToiThieu > $data['soKhachToiDa']) {
-                throw AppException::badRequest("S? kh�ch t?i thi?u kh�ng du?c l?n hon s? kh�ch t?i da");
+                throw AppException::badRequest("Số khách tối thiểu không được lớn hơn số khách tối đa");
             }
 
             if ($data['giaHienHanh'] < $tourMau->gia_san) {
-                throw AppException::badRequest("Gi� hi?n h�nh kh�ng du?c th?p hon gi� s�n c?a tour m?u ({$tourMau->gia_san})");
+                throw AppException::badRequest("Giá hiện hành không được thấp hơn giá sàn của tour mẫu ({$tourMau->gia_san})");
             }
 
             $trangThai = !empty($data['trangThai']) ? $data['trangThai'] : 'CHO_KICH_HOAT';
             $this->validateTrangThaiTourThucTe($trangThai);
             if ($trangThai === 'MO_BAN') {
-                throw AppException::badRequest("Tour m?i ph?i ? tr?ng th�i CHO_KICH_HOAT d? ph�n c�ng v� x�c nh?n HDV tru?c khi m? b�n.");
+                throw AppException::badRequest("Tour mới phải ở trạng thái CHO_KICH_HOAT để phân công và xác nhận HDV trước khi mở bán.");
             }
 
             $ttt = new TourThucTe();
@@ -124,7 +124,7 @@ class TourThucTeService
             $ttt->trang_thai = $trangThai;
             $ttt->save();
 
-            // B? qua D?ch v? th�m & H�nh d?ng xanh trong giai do?n 3.1
+            // Bỏ qua Dịch vụ thêm & Hành động xanh trong giai đoạn 3.1
             
             $ttt->dichVuThems()->sync($data['maDichVuThem'] ?? []);
             $ttt->hanhDongXanhs()->sync($data['maHanhDongXanh'] ?? []);
@@ -139,7 +139,7 @@ class TourThucTeService
         return DB::transaction(function () use ($id, $data) {
             $ttt = TourThucTe::find($id);
             if (!$ttt) {
-                throw AppException::notFound("Kh�ng t�m th?y tour th?c t?: {$id}");
+                throw AppException::notFound("Không tìm thấy tour thực tế: {$id}");
             }
 
             if (isset($data['giaHienHanh'])) {
@@ -147,19 +147,19 @@ class TourThucTeService
             }
             if (isset($data['soKhachToiDa'])) {
                 if ($data['soKhachToiDa'] < $ttt->so_khach_toi_thieu) {
-                    throw AppException::badRequest("S? kh�ch t?i da kh�ng du?c nh? hon s? kh�ch t?i thi?u");
+                    throw AppException::badRequest("Số khách tối đa không được nhỏ hơn số khách tối thiểu");
                 }
                 $ttt->so_khach_toi_da = $data['soKhachToiDa'];
             }
             if (isset($data['soKhachToiThieu'])) {
                 if ($data['soKhachToiThieu'] > $ttt->so_khach_toi_da) {
-                    throw AppException::badRequest("S? kh�ch t?i thi?u kh�ng du?c l?n hon s? kh�ch t?i da");
+                    throw AppException::badRequest("Số khách tối thiểu không được lớn hơn số khách tối đa");
                 }
                 $ttt->so_khach_toi_thieu = $data['soKhachToiThieu'];
             }
             if (isset($data['trangThai'])) {
                 $this->validateTrangThaiTourThucTe($data['trangThai']);
-                // B? qua ki?m tra ph�n c�ng HDV trong giai do?n n�y
+                // Bỏ qua kiểm tra phân công HDV trong giai đoạn này
                 $ttt->trang_thai = $data['trangThai'];
             }
 
@@ -229,7 +229,7 @@ class TourThucTeService
     {
         $validStatuses = ['CHO_KICH_HOAT', 'MO_BAN', 'DANG_DIEN_RA', 'KET_THUC', 'HUY', 'DA_QUYET_TOAN'];
         if (!in_array($trangThai, $validStatuses)) {
-            throw AppException::badRequest("Tr?ng th�i kh�ng h?p l?: {$trangThai}");
+            throw AppException::badRequest("Trạng thái không hợp lệ: {$trangThai}");
         }
     }
 public function layDanhGia(string $maTourThucTe)
@@ -244,7 +244,7 @@ public function layDanhGia(string $maTourThucTe)
     {
         $tour = TourThucTe::find($maTourThucTe);
         if (!$tour) {
-            throw AppException::notFound("Kh?ng t?m th?y tour");
+            throw AppException::notFound("Không tìm thấy tour");
         }
         return $tour->hanhDongXanhs()->get();
     }
@@ -253,7 +253,7 @@ public function layDanhGia(string $maTourThucTe)
     {
         $tour = TourThucTe::find($maTourThucTe);
         if (!$tour) {
-            throw AppException::notFound("Kh?ng t?m th?y tour");
+            throw AppException::notFound("Không tìm thấy tour");
         }
         return $tour->dichVuThems()->get();
     }

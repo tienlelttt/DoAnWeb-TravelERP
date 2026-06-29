@@ -11,6 +11,7 @@ use Carbon\Carbon;
 /**
  * Controller xử lý yêu cầu xuất báo cáo PDF kèm biểu đồ
  */
+// Module quản lý dữ liệu.
 class ReportPdfController extends Controller
 {
     private const MAX_REPORT_DAYS = 366;
@@ -22,6 +23,7 @@ class ReportPdfController extends Controller
     /**
      * Xuất báo cáo dạng PDF kèm biểu đồ dựa trên bộ lọc
      */
+
     public function exportPDF(Request $request, $type)
     {
         // 1. Kiểm tra quyền hạn vai trò (ADMIN hoặc KETOAN)
@@ -96,6 +98,7 @@ class ReportPdfController extends Controller
     /**
      * Map tên loại báo cáo sang tiền tố tên file viết liền không dấu phù hợp
      */
+
     private function getFileNamePrefix(string $type): string
     {
         switch (strtoupper($type)) {

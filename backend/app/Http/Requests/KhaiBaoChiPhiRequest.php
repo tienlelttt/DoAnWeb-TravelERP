@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+// Model lưu thông tin chi phí thực tế.
 class KhaiBaoChiPhiRequest extends FormRequest
 {
     public function authorize()

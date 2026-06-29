@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+// Model lưu thông tin tour mẫu.
 class TourMauChiTietResource extends JsonResource
 {
     public function toArray(Request $request): array

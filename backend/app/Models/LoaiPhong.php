@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+// Model lưu thông tin dữ liệu.
 class LoaiPhong extends BaseModel
 {
     protected $table = 'loai_phongs';

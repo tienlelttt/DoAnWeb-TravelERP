@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\DonDatTour;
 
+// Repository truy xuất dữ liệu dữ liệu.
 class HuyDonRepository
 {
     /**
@@ -13,6 +14,7 @@ class HuyDonRepository
      * @param string $trangThai
      * @return void
      */
+    // Cập nhật dữ liệu.
     public function capNhatTrangThai(DonDatTour $don, string $trangThai): void
     {
         $don->trang_thai = $trangThai;

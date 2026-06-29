@@ -27,6 +27,7 @@ class RoleMiddleware
         }
 
         // $user->vai_tro là chuỗi FK như 'KHACHHANG', 'ADMIN', ...
+        \Log::info('ROLE_CHECK', ['user' => $user->vai_tro, 'roles' => $roles]);
         if (!empty($roles) && !in_array($user->vai_tro, $roles, true)) {
             return response()->json([
                 'status'  => 403,

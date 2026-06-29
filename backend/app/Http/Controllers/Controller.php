@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+// Module quản lý dữ liệu.
 abstract class Controller
 {
+
     protected function normalizePerPage($value, int $default = 15, int $max = 100): int
     {
         $perPage = (int) ($value ?: $default);

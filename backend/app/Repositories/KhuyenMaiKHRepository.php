@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\KhuyenMaiKh;
 
+// Repository truy xuất dữ liệu khuyến mãi.
 class KhuyenMaiKHRepository
 {
     /**
@@ -28,6 +29,7 @@ class KhuyenMaiKHRepository
      * @param string $maVoucher
      * @return void
      */
+    // UC52 | Nhân viên kinh doanh | Cập nhật khuyến mãi.
     public function capNhatTrangThaiDaSuDung(string $maKhachHang, string $maVoucher): void
     {
         // Sử dụng query builder với composite key thay vì gọi save() trên model instance để tránh lỗi không có primary key
@@ -46,6 +48,7 @@ class KhuyenMaiKHRepository
      * @param int $perPage
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
+    // UC52 | Nhân viên kinh doanh | Lấy danh sách khuyến mãi.
     public function danhSachVoucherCuaKhach(string $maKhachHang, int $perPage = 10)
     {
         return KhuyenMaiKh::with(['voucher', 'khachHang.taiKhoan'])

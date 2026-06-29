@@ -32,6 +32,7 @@ class VnpayService
     /**
      * Tạo URL thanh toán VNPAY
      */
+    // Thanh toán dữ liệu.
     public function taoUrlThanhToan(string $maDatTour, string $maTaiKhoan, string $ipAddress): string
     {
         $don = DonDatTour::where('ma_dat_tour', $maDatTour)->first();
@@ -100,7 +101,6 @@ class VnpayService
             "vnp_ExpireDate" => $expireTime
         );
 
-        // Sort data by key
         ksort($inputData);
         $query = "";
         $i = 0;
@@ -127,6 +127,7 @@ class VnpayService
     /**
      * Xác thực và xử lý Return/IPN từ VNPAY
      */
+
     public function xacThucGiaoDich(Request $request): array
     {
         $vnp_HashSecret = config('vnpay.hash_secret');
@@ -184,17 +185,14 @@ class VnpayService
                 $don = DonDatTour::where('ma_dat_tour', $giaoDich->ma_dat_tour)->first();
                 $tour = TourThucTe::lockForUpdate()->find($don->ma_tour_thuc_te);
 
-                // Cập nhật giao dịch
                 $giaoDich->trang_thai = 'THANH_CONG';
                 $giaoDich->ma_gdnh = $vnp_TransactionNo; // Lưu mã GD VNPAY
                 $giaoDich->ngay_thanh_toan = Carbon::now();
                 $giaoDich->save();
 
-                // Cập nhật đơn hàng
                 $don->trang_thai = 'DA_XAC_NHAN';
                 $don->save();
 
-                // Cập nhật số chỗ
                 $soKhach = ChiTietDatTour::where('ma_dat_tour', $don->ma_dat_tour)->count();
                 if ($tour->cho_con_lai >= $soKhach) {
                     $tour->cho_con_lai -= $soKhach;

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+// Model lưu thông tin yêu cầu hỗ trợ.
 class YeuCauHoTro extends BaseModel
 {
     protected $table = 'yeu_cau_ho_tros';

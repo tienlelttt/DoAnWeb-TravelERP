@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 
+// Model lưu thông tin dữ liệu.
 class AppException extends Exception
 {
     protected int $httpStatus;

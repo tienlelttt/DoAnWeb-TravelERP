@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Carbon\Carbon;
 
+// Model lưu thông tin nhân viên.
 class NhanVienResponseResource extends JsonResource
 {
     /**

@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\GiaoDich;
 
+// Repository truy xuất dữ liệu dữ liệu.
 class GiaoDichRepository
 {
     /**
@@ -12,6 +13,7 @@ class GiaoDichRepository
      * @param array $data
      * @return GiaoDich
      */
+
     public function taoGiaoDich(array $data): GiaoDich
     {
         return GiaoDich::create($data);
@@ -23,6 +25,7 @@ class GiaoDichRepository
      * @param string $maDatTour
      * @return GiaoDich|null
      */
+    // Phê duyệt dữ liệu.
     public function timGiaoDichChoDuyet(string $maDatTour): ?GiaoDich
     {
         return GiaoDich::where('ma_dat_tour', $maDatTour)

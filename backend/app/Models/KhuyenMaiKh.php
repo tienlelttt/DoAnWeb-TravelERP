@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+// Model lưu thông tin khuyến mãi.
 class KhuyenMaiKh extends BaseModel
 {
     protected $table = 'khuyen_mai_khs';

@@ -7,6 +7,7 @@ use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
+// Module quản lý tour công khai.
 class TourCongKhaiController extends Controller
 {
     use ApiResponse;
@@ -18,6 +19,7 @@ class TourCongKhaiController extends Controller
         $this->tourThucTeService = $tourThucTeService;
     }
 
+    // UC25 | Khách hàng | Lấy danh sách tour công khai.
     public function danhSachTour(Request $request)
     {
         $giaTu = $request->query("giaTu");
@@ -31,6 +33,7 @@ class TourCongKhaiController extends Controller
         );
     }
 
+    // UC25 | Khách hàng | Xem chi tiết tour công khai.
     public function chiTietTour($maTourThucTe)
     {
         return $this->ok("Thành công", 

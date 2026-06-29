@@ -11,12 +11,14 @@ use App\Http\Resources\VoucherAdminResource;
 use App\Services\VoucherService;
 use Illuminate\Http\Request;
 
+// Module quản lý voucher.
 class VoucherController extends Controller
 {
     public function __construct(
         protected VoucherService $voucherService
     ) {}
 
+    // UC52 | Nhân viên kinh doanh | Áp dụng voucher.
     public function apDungVoucher(ApDungVoucherRequest $request)
     {
         $donDatTour = $this->voucherService->apDungVoucherChoDon(
@@ -37,6 +39,7 @@ class VoucherController extends Controller
         return $this->successResponse(new VoucherAdminResource($voucher), 'Áp dụng voucher thành công');
     }
 
+    // UC52 | Nhân viên kinh doanh | Lấy danh sách voucher.
     public function danhSachVoucher(Request $request)
     {
         $perPage = (int) $request->query('per_page', $request->query('size', 10));
@@ -70,6 +73,7 @@ class VoucherController extends Controller
         ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
+    // UC52 | Nhân viên kinh doanh | Quy đổi voucher.
     public function doiDiem(DoiDiemVoucherRequest $request)
     {
         $khuyenMaiKh = $this->voucherService->doiDiem(

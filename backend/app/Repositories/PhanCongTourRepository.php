@@ -7,6 +7,7 @@ use App\Models\TourThucTe;
 use App\Exceptions\AppException;
 use Carbon\Carbon;
 
+// Repository truy xuất dữ liệu điều phối HDV.
 class PhanCongTourRepository
 {
     /**
@@ -14,7 +15,6 @@ class PhanCongTourRepository
      */
     public function kiemTraTrungLichHDV(string $maNhanVien, Carbon $ngayKhoiHanhMoi, Carbon $ngayKetThucMoi): void
     {
-        // Lấy danh sách các tour đã phân công cho HDV mà chưa bị từ chối
         $danhSachPhanCong = PhanCongTour::with(['tourThucTe.tourMau'])
             ->where('ma_nhan_vien', $maNhanVien)
             ->where('trang_thai_chap_nhan', '!=', 'TU_CHOI')

@@ -164,7 +164,7 @@ class HdvController extends Controller
                 'trangThaiChapNhan' => $item->trang_thai_chap_nhan,
                 'tenTour' => $tourMau ? $tourMau->tieu_de : ($tourThucTe ? $tourThucTe->ma_tour_thuc_te : 'Tour không tên'),
                 'ngayKhoiHanh' => $tourThucTe ? $tourThucTe->ngay_khoi_hanh : null,
-                'ngayKetThuc' => $tourThucTe && $tourMau ? \Carbon\Carbon::parse($tourThucTe->ngay_khoi_hanh)->addDays(max((int) $tourMau->thoi_luong - 1, 0))->toDateString() : null,
+                'ngayKetThuc' => $tourThucTe && $tourMau ? \Carbon\Carbon::parse($tourThucTe->ngay_khoi_hanh)->addDays((int) $tourMau->thoi_luong)->toDateString() : null,
                 'soKhachDaXacNhan' => $guestsCount,
                 'trangThaiTour' => $tourThucTe ? $tourThucTe->trang_thai : 'CHO_KICH_HOAT',
                 'danhSachHanhKhach' => [] // Sẽ được tải lazy qua layDanhSachDoan

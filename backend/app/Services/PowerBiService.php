@@ -27,6 +27,7 @@ class PowerBiService
     /**
      * Danh sách các kho dữ liệu hiện có cho phân tích
      */
+    // UC51 | Nhân viên | Lấy danh sách báo cáo Power BI.
     public function danhSachKhoDuLieu()
     {
         return [
@@ -61,6 +62,7 @@ class PowerBiService
     /**
      * Lấy thông tin tài khoản kết nối cho Power BI Desktop
      */
+    // UC51 | Nhân viên | Xử lý nghiệp vụ báo cáo Power BI.
     public function layThongTinKetNoi($maKho, $user)
     {
         $this->validateMaKho($maKho);
@@ -90,6 +92,7 @@ class PowerBiService
     /**
      * Lấy dữ liệu mộc xuất thành định dạng CSV
      */
+    // UC51 | Nhân viên | Xử lý nghiệp vụ báo cáo Power BI (xuatDuLieu).
     public function xuatDuLieu(array $request, $user)
     {
         $maKho = $request['maKho'];
@@ -117,7 +120,7 @@ class PowerBiService
                 if ($denNgay) $query->where('ngay_quyet_toan', '<=', $denNgay);
                 
                 $this->guardExportSize($query);
-                foreach ($query->get() as $qt) {
+                foreach ($query->cursor() as $qt) {
                     $dataRows[] = [
                         $qt->ma_quyet_toan,
                         $qt->ma_tour_thuc_te,
@@ -138,7 +141,7 @@ class PowerBiService
                 if ($denNgay) $query->where('ngay_dat', '<=', $denNgay);
                 
                 $this->guardExportSize($query);
-                foreach ($query->get() as $d) {
+                foreach ($query->cursor() as $d) {
                     $dataRows[] = [
                         $d->ma_dat_tour,
                         $d->ma_tour_thuc_te,
@@ -157,7 +160,7 @@ class PowerBiService
                 if ($denNgay) $query->where('ngay_khai', '<=', $denNgay);
                 
                 $this->guardExportSize($query);
-                foreach ($query->get() as $c) {
+                foreach ($query->cursor() as $c) {
                     $dataRows[] = [
                         $c->ma_chi_phi_thuc_te,
                         $c->ma_tour_thuc_te,
@@ -176,7 +179,7 @@ class PowerBiService
                 if ($denNgay) $query->where('ngay_khoi_hanh', '<=', $denNgay);
                 
                 $this->guardExportSize($query);
-                foreach ($query->get() as $t) {
+                foreach ($query->cursor() as $t) {
                     $dataRows[] = [
                         $t->ma_tour_thuc_te,
                         $t->tourMau?->tieu_de ?? '',
@@ -196,7 +199,7 @@ class PowerBiService
                 if ($denNgay) $query->where('ngay_thanh_toan', '<=', $denNgay);
                 
                 $this->guardExportSize($query);
-                foreach ($query->get() as $g) {
+                foreach ($query->cursor() as $g) {
                     $dataRows[] = [
                         $g->ma_giao_dich,
                         $g->ma_dat_tour,

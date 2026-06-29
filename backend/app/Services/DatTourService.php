@@ -202,7 +202,7 @@ class DatTourService
             throw AppException::notFound("Không tìm thấy hồ sơ khách hàng");
         }
 
-        $query = DonDatTour::with(['tourThucTe.tourMau', 'khachHang.taiKhoan', 'chiTietDatTours.khachHang.taiKhoan', 'chiTietDatTours.nguoiDongHanh', 'chiTietDichVus.dichVuThem'])
+        $query = DonDatTour::with(['tourThucTe.tourMau', 'khachHang.taiKhoan'])
             ->where('ma_khach_hang', $khachHang->ma_khach_hang)
             ->orderBy('ngay_dat', 'desc');
 

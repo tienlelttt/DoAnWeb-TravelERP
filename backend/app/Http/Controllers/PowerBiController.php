@@ -9,6 +9,7 @@ use App\Services\PowerBiService;
  * Controller trích xuất dữ liệu phân tích (Power BI).
  * Cho phép Kế toán kết nối dữ liệu mộc và xuất ra CSV/Excel
  */
+// Module quản lý báo cáo Power BI.
 class PowerBiController extends Controller
 {
     public function __construct(
@@ -18,6 +19,7 @@ class PowerBiController extends Controller
     /**
      * Danh sách các kho dữ liệu khả dụng (Doanh thu, Đơn đặt tour, Chi phí,...)
      */
+    // UC51 | Nhân viên | Lấy danh sách báo cáo Power BI.
     public function danhSachKhoDuLieu()
     {
         $data = $this->powerBiService->danhSachKhoDuLieu();

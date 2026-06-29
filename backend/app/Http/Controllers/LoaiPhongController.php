@@ -8,11 +8,13 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
+// Module quản lý dữ liệu.
 class LoaiPhongController extends Controller
 {
     /**
      * Lấy danh sách loại phòng để frontend quản trị sản phẩm hiển thị.
      */
+    // Lấy danh sách dữ liệu.
     public function danhSach(): JsonResponse
     {
         $data = LoaiPhong::orderBy('ten_loai')
@@ -25,6 +27,7 @@ class LoaiPhongController extends Controller
     /**
      * Tạo mới loại phòng và ánh xạ payload camelCase từ frontend sang cột snake_case.
      */
+    // Thêm mới dữ liệu.
     public function taoMoi(Request $request): JsonResponse
     {
         $data = $request->validate([
@@ -46,6 +49,7 @@ class LoaiPhongController extends Controller
     /**
      * Cập nhật thông tin loại phòng theo mã loại phòng hiện có.
      */
+    // Cập nhật dữ liệu.
     public function capNhat(Request $request, string $id): JsonResponse
     {
         $loaiPhong = $this->findLoaiPhong($id);
@@ -67,6 +71,7 @@ class LoaiPhongController extends Controller
     /**
      * Xóa loại phòng theo contract DELETE hiện tại của frontend.
      */
+    // Xóa dữ liệu.
     public function xoa(string $id): JsonResponse
     {
         $loaiPhong = $this->findLoaiPhong($id);
@@ -78,6 +83,7 @@ class LoaiPhongController extends Controller
     /**
      * Tìm loại phòng hoặc trả lỗi 404 thống nhất theo AppException.
      */
+
     private function findLoaiPhong(string $id): LoaiPhong
     {
         $loaiPhong = LoaiPhong::find($id);
@@ -91,6 +97,7 @@ class LoaiPhongController extends Controller
     /**
      * Chuyển dữ liệu model snake_case sang response camelCase mà frontend đang dùng.
      */
+
     private function toResponse(LoaiPhong $loaiPhong): array
     {
         return [

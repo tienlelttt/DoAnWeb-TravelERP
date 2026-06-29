@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Voucher;
 
+// Repository truy xuất dữ liệu voucher.
 class VoucherRepository
 {
     /**

@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+// Model lưu thông tin dữ liệu.
 class BaoChuyenKhoanRequest extends FormRequest
 {
     public function authorize(): bool

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+// Model lưu thông tin dữ liệu.
 class DsNguoiDongHanh extends BaseModel
 {
     protected $table = 'ds_nguoi_dong_hanhs';

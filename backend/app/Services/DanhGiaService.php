@@ -129,6 +129,14 @@ class DanhGiaService
     {
         $tour = TourThucTe::find($maTourThucTe);
         if (!$tour) {
+            $tm = \App\Models\TourMau::find($maTourThucTe);
+            if ($tm) {
+                $query = DanhGiaKh::with(['tourThucTe.tourMau', 'khachHang.taiKhoan'])
+                    ->whereHas('tourThucTe', function($q) use ($maTourThucTe) {
+                        $q->where('ma_tour_mau', $maTourThucTe);
+                    })->orderBy('ngay_danh_gia', 'desc');
+                return DanhGiaResource::collection($query->paginate($perPage))->response()->getData(true);
+            }
             throw AppException::notFound("Không tìm thấy tour: " . $maTourThucTe);
         }
 

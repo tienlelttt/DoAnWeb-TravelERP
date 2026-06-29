@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+// Model lưu thông tin đơn đặt tour.
 class ChiTietDatTour extends BaseModel
 {
     protected $table = 'chi_tiet_dat_tours';

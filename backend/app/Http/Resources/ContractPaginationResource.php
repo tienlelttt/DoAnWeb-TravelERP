@@ -4,11 +4,13 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
+// Model lưu thông tin dữ liệu.
 class ContractPaginationResource extends ResourceCollection
 {
     /**
      * Chuẩn hóa định dạng phân trang theo hợp đồng API đang dùng.
      */
+
     public function toArray($request)
     {
         return [

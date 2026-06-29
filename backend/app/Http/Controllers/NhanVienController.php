@@ -6,6 +6,7 @@ use App\Http\Resources\NhanVienResource;
 use App\Services\NhanVienService;
 use Illuminate\Http\JsonResponse;
 
+// Module quản lý nhân viên.
 class NhanVienController extends Controller
 {
     protected NhanVienService $nhanVienService;

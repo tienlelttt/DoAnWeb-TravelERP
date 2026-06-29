@@ -47,6 +47,7 @@ class HuyDonService
      * @param string $maDatTour
      * @return DonDatTour
      */
+    // Phê duyệt dữ liệu.
     public function duyetDonVip(string $maDatTour): DonDatTour
     {
         return DB::transaction(function () use ($maDatTour) {
@@ -107,6 +108,7 @@ class HuyDonService
      * @param string $maTaiKhoan
      * @return DonDatTour
      */
+    // Hủy dữ liệu.
     public function yeuCauHuyDon(string $maDatTour, string $lyDo, string $maTaiKhoan): DonDatTour
     {
         return DB::transaction(function () use ($maDatTour, $lyDo, $maTaiKhoan) {
@@ -184,6 +186,7 @@ class HuyDonService
      * @param string $maTaiKhoan
      * @return DonDatTour
      */
+    // Hủy dữ liệu (xuLyHuyDon).
     public function xuLyHuyDon(string $maDatTour, string $trangThaiXacNhan, string $maTaiKhoan): DonDatTour
     {
         return DB::transaction(function () use ($maDatTour, $trangThaiXacNhan, $maTaiKhoan) {
@@ -212,7 +215,6 @@ class HuyDonService
                 $ticket->ma_nhan_vien_xu_ly = $maNhanVien;
                 $ticket->save();
 
-                // Hủy bỏ bản ghi lịch sử tham gia tour vì khách hàng không còn đi nữa
                 $maChiTietDats = ChiTietDatTour::where('ma_dat_tour', $don->ma_dat_tour)->pluck('ma_chi_tiet_dat')->toArray();
                 LichSuTour::whereIn('ma_chi_tiet_dat', $maChiTietDats)->delete();
             } else {
@@ -229,7 +231,6 @@ class HuyDonService
                 $ticket->ma_nhan_vien_xu_ly = $maNhanVien;
                 $ticket->save();
 
-                // Hủy giao dịch HOAN_TIEN
                 GiaoDich::where('ma_dat_tour', $don->ma_dat_tour)
                     ->where('loai_giao_dich', 'HOAN_TIEN')
                     ->where('trang_thai', 'CHO_THANH_TOAN')
@@ -247,6 +248,7 @@ class HuyDonService
      * @param string $trangThaiXacNhan
      * @return DonDatTour
      */
+    // Hoàn tiền dữ liệu.
     public function hoanTienThucTe(string $maDatTour, string $trangThaiXacNhan): DonDatTour
     {
         return DB::transaction(function () use ($maDatTour, $trangThaiXacNhan) {
@@ -316,21 +318,18 @@ class HuyDonService
      * @param int $soNgayConLai
      * @return float
      */
+    // Hủy dữ liệu (tinhPhiHuyTour).
     private function tinhPhiHuyTour(DonDatTour $don, int $soNgayConLai): float
     {
         $tongTien = (float) $don->tong_tien;
 
         if ($soNgayConLai > 15) {
-            // Hủy > 15 ngày trước ngày khởi hành: Phí hủy là 10%
             return $tongTien * 0.1;
         } elseif ($soNgayConLai >= 7) {
-            // Hủy từ 7 đến 15 ngày: Phí hủy là 30%
             return $tongTien * 0.3;
         } elseif ($soNgayConLai >= 3) {
-            // Hủy từ 3 đến 6 ngày: Phí hủy là 50%
             return $tongTien * 0.5;
         } else {
-            // Hủy dưới 3 ngày: Phí hủy là 100%
             return $tongTien;
         }
     }

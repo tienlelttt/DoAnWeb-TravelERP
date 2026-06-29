@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+// Model lưu thông tin tour mẫu.
 class TourMau extends BaseModel
 {
     protected $table = 'tour_maus';

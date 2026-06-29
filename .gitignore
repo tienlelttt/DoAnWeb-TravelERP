@@ -47,3 +47,5 @@ frontend/kh/.env.production.local
 *.swp
 .DS_Store
 Thumbs.db
+
+node_modules/

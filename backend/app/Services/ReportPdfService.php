@@ -25,6 +25,7 @@ class ReportPdfService
     /**
      * Tạo tài liệu PDF từ dữ liệu báo cáo
      */
+
     public function generatePdf(string $type, array $filters): string
     {
         $type = strtoupper($type);
@@ -178,6 +179,7 @@ class ReportPdfService
     /**
      * Tiêu đề báo cáo hiển thị trên PDF
      */
+
     private function getReportTitle(string $type): string
     {
         switch ($type) {
@@ -193,6 +195,7 @@ class ReportPdfService
     /**
      * Lấy dữ liệu mộc từ DB giống cấu trúc của PowerBiService
      */
+
     private function getDataForReport(string $type, $tuNgay, $denNgay): array
     {
         $dataRows = [];
@@ -203,7 +206,7 @@ class ReportPdfService
                 if ($tuNgay) $query->where('ngay_quyet_toan', '>=', $tuNgay);
                 if ($denNgay) $query->where('ngay_quyet_toan', '<=', $denNgay);
                 
-                foreach ($query->get() as $qt) {
+                foreach ($query->cursor() as $qt) {
                     $dataRows[] = [
                         'ma_quyet_toan' => $qt->ma_quyet_toan,
                         'ma_tour_thuc_te' => $qt->ma_tour_thuc_te,
@@ -222,7 +225,7 @@ class ReportPdfService
                 if ($tuNgay) $query->where('ngay_dat', '>=', $tuNgay);
                 if ($denNgay) $query->where('ngay_dat', '<=', $denNgay);
                 
-                foreach ($query->get() as $d) {
+                foreach ($query->cursor() as $d) {
                     $dataRows[] = [
                         'ma_dat_tour' => $d->ma_dat_tour,
                         'ma_tour_thuc_te' => $d->ma_tour_thuc_te,
@@ -239,7 +242,7 @@ class ReportPdfService
                 if ($tuNgay) $query->where('ngay_khai', '>=', $tuNgay);
                 if ($denNgay) $query->where('ngay_khai', '<=', $denNgay);
                 
-                foreach ($query->get() as $c) {
+                foreach ($query->cursor() as $c) {
                     $dataRows[] = [
                         'ma_chi_phi_thuc_te' => $c->ma_chi_phi_thuc_te,
                         'ma_tour_thuc_te' => $c->ma_tour_thuc_te,
@@ -256,7 +259,7 @@ class ReportPdfService
                 if ($tuNgay) $query->where('ngay_khoi_hanh', '>=', $tuNgay);
                 if ($denNgay) $query->where('ngay_khoi_hanh', '<=', $denNgay);
                 
-                foreach ($query->get() as $t) {
+                foreach ($query->cursor() as $t) {
                     $dataRows[] = [
                         'ma_tour_thuc_te' => $t->ma_tour_thuc_te,
                         'tieu_de' => $t->tourMau?->tieu_de ?? '',
@@ -274,7 +277,7 @@ class ReportPdfService
                 if ($tuNgay) $query->where('ngay_thanh_toan', '>=', $tuNgay);
                 if ($denNgay) $query->where('ngay_thanh_toan', '<=', $denNgay);
                 
-                foreach ($query->get() as $g) {
+                foreach ($query->cursor() as $g) {
                     $dataRows[] = [
                         'ma_giao_dich' => $g->ma_giao_dich,
                         'ma_dat_tour' => $g->ma_dat_tour,

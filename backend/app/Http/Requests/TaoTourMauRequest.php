@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+// Model lưu thông tin tour mẫu.
 class TaoTourMauRequest extends FormRequest
 {
     public function authorize(): bool
@@ -19,7 +20,6 @@ class TaoTourMauRequest extends FormRequest
             'thoiLuong' => 'required|integer|min:1',
             'giaSan' => 'required|numeric|min:0.01',
             
-            // Nested array validation for lichTrinh
             'lichTrinh' => 'nullable|array',
             'lichTrinh.*.ngayThu' => 'required|integer|min:1',
             'lichTrinh.*.hoatDong' => ['required', 'string', 'max:1000', 'regex:/\\s*(?:[01]\\d|2[0-3]):[0-5]\\d\\s*[-–—]\\s*[^\\r\\n]+(?:\\R\\s*(?:[01]\\d|2[0-3]):[0-5]\\d\\s*[-–—]\\s*[^\\r\\n]+)+\\s*/'],

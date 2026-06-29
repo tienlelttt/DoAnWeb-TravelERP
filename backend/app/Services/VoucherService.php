@@ -63,6 +63,7 @@ class VoucherService
      * @param float $tongTien
      * @return float
      */
+    // UC52 | Nhân viên kinh doanh | Áp dụng voucher.
     public function apDungVoucher(string $maVoucher, DonDatTour $donDatTour, float $tongTien): float
     {
         // 1. Kiểm tra đơn hàng phải ở trạng thái CHO_XAC_NHAN
@@ -147,6 +148,7 @@ class VoucherService
         });
     }
 
+    // UC52 | Nhân viên kinh doanh | Áp dụng voucher (apDungVoucherChoDon).
     public function apDungVoucherChoDon(string $maTaiKhoan, array $data): DonDatTour
     {
         $donDatTour = DB::transaction(function () use ($maTaiKhoan, $data) {
@@ -191,6 +193,7 @@ class VoucherService
      * @param int $perPage
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
+    // UC52 | Nhân viên kinh doanh | Lấy danh sách voucher.
     public function layDanhSachVoucherCuaKhach(string $maTaiKhoan, int $perPage = 10)
     {
         $khachHang = HoChieuSo::where('ma_tai_khoan', $maTaiKhoan)->first();
@@ -201,6 +204,7 @@ class VoucherService
         return $this->khuyenMaiKHRepository->danhSachVoucherCuaKhach($khachHang->ma_khach_hang, $perPage);
     }
 
+    // UC52 | Nhân viên kinh doanh | Lấy danh sách voucher (danhSachCoTheDoi).
     public function danhSachCoTheDoi(int $perPage = 20)
     {
         $now = Carbon::now();
@@ -212,6 +216,7 @@ class VoucherService
             ->paginate($perPage);
     }
 
+    // UC52 | Nhân viên kinh doanh | Quy đổi voucher.
     public function doiDiem(string $maTaiKhoan, string $maVoucher): KhuyenMaiKh
     {
         return DB::transaction(function () use ($maTaiKhoan, $maVoucher) {
@@ -292,6 +297,7 @@ class VoucherService
         return (int) ceil((float) $voucher->gia_tri_giam * 50);
     }
 
+    // UC52 | Nhân viên kinh doanh | Lấy danh sách voucher (danhSachAdmin).
     public function danhSachAdmin($perPage = 10)
     {
         return Voucher::orderBy('ngay_hieu_luc', 'desc')->paginate($perPage);
@@ -317,6 +323,7 @@ class VoucherService
         return $voucher;
     }
 
+    // UC52 | Nhân viên kinh doanh | Cập nhật voucher.
     public function capNhatVoucher($maVoucher, array $data)
     {
         $voucher = Voucher::find($maVoucher);

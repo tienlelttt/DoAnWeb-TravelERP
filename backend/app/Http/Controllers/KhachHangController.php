@@ -8,6 +8,7 @@ use App\Http\Requests\TaoYeuCauHoTroRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
+// Module quản lý khách hàng.
 class KhachHangController extends Controller
 {
     protected KhachHangService $khachHangService;
@@ -28,12 +29,14 @@ class KhachHangController extends Controller
         return $this->successResponse($data, "Lấy hồ sơ thành công");
     }
 
+    // UC24 | Nhân viên | Cập nhật khách hàng.
     public function capNhatHoSo(CapNhatHoSoRequest $request): JsonResponse
     {
         $data = $this->khachHangService->capNhatHoSo($this->getMaTaiKhoan(), $request->validated());
         return $this->successResponse($data, "Cập nhật hồ sơ thành công");
     }
 
+    // UC24 | Nhân viên | Lấy danh sách khách hàng.
     public function danhSachDatTour(Request $request): JsonResponse
     {
         $size = (int) $request->query('size', 15);
@@ -48,6 +51,7 @@ class KhachHangController extends Controller
         return $this->successResponse($data, "Thành công");
     }
 
+    // UC24 | Nhân viên | Lấy danh sách khách hàng (layDanhSachYeuCauHoTro).
     public function layDanhSachYeuCauHoTro(Request $request): JsonResponse
     {
         $filters = $request->only(['loaiYeuCau', 'trangThai', 'page', 'size']);
@@ -61,6 +65,7 @@ class KhachHangController extends Controller
         return $this->successResponse($data, "Tạo yêu cầu hỗ trợ thành công");
     }
 
+    // UC24 | Nhân viên | Hủy khách hàng.
     public function yeuCauHuyTour(string $maDatTour, Request $request): JsonResponse
     {
         $data = $request->validate([
@@ -87,6 +92,7 @@ class KhachHangController extends Controller
         return $this->successResponse($res, "Bổ sung thông tin thành công");
     }
 
+    // UC24 | Nhân viên | Lấy danh sách khách hàng (danhSachDichVuThem).
     public function danhSachDichVuThem(Request $request, \App\Services\DichVuThemService $dichVuThemService): JsonResponse
     {
         $maTourThucTe = $request->query('maTourThucTe');

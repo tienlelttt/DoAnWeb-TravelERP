@@ -14,6 +14,7 @@ use App\Http\Requests\DangNhapRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
@@ -233,8 +234,11 @@ class AuthController extends Controller
         // Ở thực tế, bạn có thể gửi email có chứa link reset kèm theo resetToken.
         $resetToken = JWTAuth::customClaims(['is_reset_token' => true])->fromUser($taiKhoan);
         
-        // TODO: Gửi email chứa resetToken cho người dùng
-        return $this->ok("Đã gửi hướng dẫn đặt lại mật khẩu vào email của bạn", null);
+        // Gửi email chứa resetToken cho người dùng
+        Mail::to($taiKhoan->email)->send(new \App\Mail\ResetPasswordMail($resetToken));
+        // Trả về resetToken để frontend dùng cho bước đặt lại mật khẩu
+        return $this->ok("Đã gửi hướng dẫn đặt lại mật khẩu vào email của bạn", $resetToken);
+
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+// Model lưu thông tin nhân viên.
 class DangKyNhanVienRequest extends FormRequest
 {
     public function authorize(): bool

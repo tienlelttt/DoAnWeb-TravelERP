@@ -14,6 +14,7 @@ class MaTuDongService
     /**
      * Tạo mã tài khoản theo vai trò
      */
+
     public function taoMaTaiKhoanTheoVaiTro(string $maVaiTro): string
     {
         $prefix = match ($maVaiTro) {
@@ -33,6 +34,7 @@ class MaTuDongService
     /**
      * Tạo mã hồ sơ khách hàng
      */
+
     public function taoMaHoChieuSo(): string
     {
         return $this->taoMa('ho_chieu_sos', 'ma_khach_hang', 'KH');
@@ -41,6 +43,7 @@ class MaTuDongService
     /**
      * Tạo mã nhân viên
      */
+
     public function taoMaNhanVien(): string
     {
         return $this->taoMa('nhan_viens', 'ma_nhan_vien', 'NV');
@@ -49,6 +52,7 @@ class MaTuDongService
     /**
      * Tạo mã dịch vụ thêm
      */
+
     public function taoMaDichVuThem(): string
     {
         return $this->taoMa('dich_vu_thems', 'ma_dich_vu_them', 'DV');
@@ -121,6 +125,7 @@ class MaTuDongService
     /**
      * Tạo mã giao dịch
      */
+
     public function taoMaGiaoDich(): string
     {
         return $this->taoMa('giao_diches', 'ma_giao_dich', 'GD');
@@ -129,6 +134,7 @@ class MaTuDongService
     /**
      * Tạo mã lịch sử tour
      */
+
     public function taoMaLichSuTour(): string
     {
         return $this->taoMa('lich_su_tours', 'ma_lich_su_tour', 'LST');
@@ -137,6 +143,7 @@ class MaTuDongService
     /**
      * Tạo mã yêu cầu hỗ trợ
      */
+
     public function taoMaYeuCauHoTro(): string
     {
         return $this->taoMa('yeu_cau_ho_tros', 'ma_yeu_cau_ho_tro', 'YCHT');
@@ -145,6 +152,7 @@ class MaTuDongService
     /**
      * Tạo mã phân công tour
      */
+    // Phân công dữ liệu.
     public function taoMaPhanCongTour(): string
     {
         return $this->taoMa('phan_cong_tours', 'ma_phan_cong_tour', 'PCT');
@@ -153,6 +161,7 @@ class MaTuDongService
     /**
      * Tạo mã điểm danh
      */
+
     public function taoMaDiemDanh(): string
     {
         return $this->taoMa('diem_danhs', 'ma_diem_danh', 'DD');
@@ -161,6 +170,7 @@ class MaTuDongService
     /**
      * Tạo mã ghi nhận hành động xanh
      */
+
     public function taoMaGhiNhanHanhDong(): string
     {
         return $this->taoMa('hanh_dongs', 'ma_ghi_nhan_hanh_dong', 'HDX');
@@ -169,6 +179,7 @@ class MaTuDongService
     /**
      * Tạo mã nhật ký sự cố
      */
+
     public function taoMaNhatKySuCo(): string
     {
         return $this->taoMa('nhat_ky_su_cos', 'ma_nhat_ky_su_co', 'SC');
@@ -177,6 +188,7 @@ class MaTuDongService
     /**
      * Tạo mã chi phí thực tế
      */
+
     public function taoMaChiPhiThucTe(): string
     {
         return $this->taoMa('chi_phi_thuc_tes', 'ma_chi_phi_thuc_te', 'CP');
@@ -185,6 +197,7 @@ class MaTuDongService
     /**
      * Tạo mã nhật ký hệ thống
      */
+
     public function taoMaNhatKyHeThong(): string
     {
         return $this->taoMa('nhat_ky_he_thongs', 'ma_nhat_ky_he_thong', 'NK');
@@ -193,6 +206,7 @@ class MaTuDongService
     /**
      * Tạo mã quyết toán
      */
+
     public function taoMaQuyetToan(): string
     {
         return $this->taoMa('quyet_toans', 'ma_quyet_toan', 'QT');
@@ -201,6 +215,7 @@ class MaTuDongService
     /**
      * Tạo mã voucher
      */
+
     public function taoMaVoucher(): string
     {
         return $this->taoMa('vouchers', 'ma_voucher', 'VC');
@@ -213,6 +228,7 @@ class MaTuDongService
     /**
      * Tạo 1 mã duy nhất (wrapper của taoNhieuMa)
      */
+
     private function taoMa(string $tenBang, string $tenCot, string $tienTo): string
     {
         $danhSach = $this->taoNhieuMa($tenBang, $tenCot, $tienTo, 1);
@@ -228,6 +244,7 @@ class MaTuDongService
      * @param  int    $soLuong  Số lượng mã cần tạo
      * @return array            Danh sách mã mới
      */
+
     private function taoNhieuMa(string $tenBang, string $tenCot, string $tienTo, int $soLuong): array
     {
         if ($soLuong < 1) {

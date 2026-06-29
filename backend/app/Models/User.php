@@ -12,6 +12,7 @@ use Illuminate\Notifications\Notifiable;
 
 #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
+// Model lưu thông tin tài khoản người dùng.
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */

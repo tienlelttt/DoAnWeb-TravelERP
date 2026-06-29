@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+// Model lưu thông tin yêu cầu hỗ trợ.
 class TaoYeuCauHoTroRequest extends FormRequest
 {
     public function authorize()

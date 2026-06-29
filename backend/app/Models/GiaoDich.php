@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+// Model lưu thông tin dữ liệu.
 class GiaoDich extends BaseModel
 {
     protected $table = 'giao_diches';

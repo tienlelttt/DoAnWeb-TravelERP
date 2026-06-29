@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+// Model lưu thông tin nhân viên.
 class NhanVienResource extends JsonResource
 {
     public function toArray($request)

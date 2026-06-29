@@ -37,6 +37,7 @@ class ThanhToanService
      * @param string $maTaiKhoan
      * @return DonDatTour
      */
+    // UC29 | Khách hàng, Cổng thanh toán | Thanh toán thanh toán đơn hàng.
     public function thanhToanMock(string $maDatTour, string $maTaiKhoan): DonDatTour
     {
         return DB::transaction(function () use ($maDatTour, $maTaiKhoan) {
@@ -105,6 +106,7 @@ class ThanhToanService
      * @param string $maTaiKhoan
      * @return GiaoDich
      */
+    // UC29 | Khách hàng, Cổng thanh toán | Hủy thanh toán đơn hàng.
     public function baoChuyenKhoan(string $maDatTour, string $maGDNH, string $maTaiKhoan): GiaoDich
     {
         return DB::transaction(function () use ($maDatTour, $maGDNH, $maTaiKhoan) {
@@ -155,6 +157,7 @@ class ThanhToanService
      * @param string $trangThaiXacNhan
      * @return DonDatTour
      */
+    // UC29 | Khách hàng, Cổng thanh toán | Thanh toán thanh toán đơn hàng (xacNhanThanhToan).
     public function xacNhanThanhToan(string $maDatTour, string $trangThaiXacNhan): DonDatTour
     {
         return DB::transaction(function () use ($maDatTour, $trangThaiXacNhan) {
@@ -182,14 +185,12 @@ class ThanhToanService
 
             if (strtoupper($trangThaiXacNhan) === 'DONG_Y' || strtoupper($trangThaiXacNhan) === 'TC') {
                 // Đồng ý xác nhận thanh toán thành công
-                // Cập nhật trạng thái giao dịch
                 $giaoDich->trang_thai = 'THANH_CONG';
                 $giaoDich->ngay_thanh_toan = Carbon::now();
                 // Loại bỏ tiền tố KHXN: để lưu lại mã giao dịch ngân hàng chính thức
                 $giaoDich->ma_gdnh = str_replace('KHXN:', '', $giaoDich->ma_gdnh);
                 $giaoDich->save();
 
-                // Cập nhật trạng thái đơn hàng sang DA_XAC_NHAN nếu đang ở trạng thái CHO_XAC_NHAN
                 if ($don->trang_thai === 'CHO_XAC_NHAN') {
                     $don->trang_thai = 'DA_XAC_NHAN';
                     $don->save();
@@ -209,7 +210,6 @@ class ThanhToanService
                 ]);
             } else {
                 // Từ chối xác nhận thanh toán (ví dụ: khách báo chuyển khoản giả mạo)
-                // Cập nhật trạng thái giao dịch thành THAT_BAI
                 $giaoDich->trang_thai = 'THAT_BAI';
                 $giaoDich->save();
             }

@@ -5,6 +5,7 @@ namespace App\Http\Requests\Admin;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+// Model lưu thông tin tài khoản người dùng.
 class UserRequest extends FormRequest
 {
     /**
@@ -49,7 +50,6 @@ class UserRequest extends FormRequest
             $rules['tenDangNhap'] = 'required|string|max:100|unique:tai_khoans,ten_dang_nhap';
             $rules['matKhau'] = 'required|string|min:6';
         } else {
-            // Cập nhật, tenDangNhap có thể không đổi
             $rules['tenDangNhap'] = [
                 'required',
                 'string',
