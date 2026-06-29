@@ -23,7 +23,7 @@ Tài liệu này rà soát và tổng hợp lại tất cả các công thức t
 *   **Sự đồng nhất**: **âœ… Đồng nhất**. Cả hai phía đều kiểm soát đúng mức trần giảm giá.
 
 ## 3. Công thức Phạt Hủy Tour (Cancellation Penalty Formula)
-**Mục đích**: Tính phần trăm phí phạt và số tiền hoàn trả khi khách yêu cầu hủy tour (Tỷ lệ bậ­c thang theo số ngày còn lại đậ¿n lúc khởi hành).
+**Mục đích**: Tính phần trăm phí phạt và số tiền hoàn trả khi khách yêu cầu hủy tour (Tỷ lệ bậc thang theo số ngày còn lại đậ¿n lúc khởi hành).
 
 *   **Quy tắc phạt**:
     *   Hủy trước > 15 ngày: Phạt **10%** tổng tiền. (Hoàn 90%)
@@ -31,7 +31,7 @@ Tài liệu này rà soát và tổng hợp lại tất cả các công thức t
     *   Hủy từ 3 - 6 ngày: Phạt **50%** tổng tiền. (Hoàn 50%)
     *   Hủy < 3 ngày: Phạt **100%** tổng tiền. (Không hoàn tiền)
 *   **Backend**: `HuyDonService::tinhPhiHuyTour()` và `HuyDonService::tinhTiLeHoan()`.
-*   **Frontend**: UI Frontend chỉ nhậ­n và show trạng thái. Thông điệp marketing "Hủy tour dễ dàng, hoàn tiền minh bạch".
+*   **Frontend**: UI Frontend chỉ nhận và show trạng thái. Thông điệp marketing "Hủy tour dễ dàng, hoàn tiền minh bạch".
 *   **Sự đồng nhất**: **âœ… Đồng nhất**. UI hiển thị minh bạch và gọi API hủy để backend tự động tính toán.
 
 ## 4. Công thức Xậ¿p Hạng & Điểm Xanh (Loyalty Points Formula)
@@ -43,7 +43,7 @@ Tài liệu này rà soát và tổng hợp lại tất cả các công thức t
 *   **Backend**: `VanHanhService.php` (tự động tính khi tour kậ¿t thúc).
 
 ### 4.2. Trừ điểm và Hạ hạng (Inactivity Penalty)
-*   **Công thức**: Nậ¿u khách hàng không có hoạt động trong 6 tháng, bị hạ 1 bậ­c. Đồng thời điểm sậ½ bị gọt về mức "trần" của bậ­c mới.
+*   **Công thức**: Nậ¿u khách hàng không có hoạt động trong 6 tháng, bị hạ 1 bậc. Đồng thời điểm sậ½ bị gọt về mức "trần" của bậc mới.
     *   VD: Đang Kim Cương (6000 điểm) -> Hạ xuống Vàng, điểm reset về 4999 (Max của Vàng).
 *   **Backend**: `Console/Commands/DowngradeMembership.php` (Chạy Cronjob).
 
@@ -60,16 +60,16 @@ Tài liệu này rà soát và tổng hợp lại tất cả các công thức t
 *   **Backend**: `DanhGiaService.php`
 *   **Sự đồng nhất**: **âœ… Đồng nhất**. Hệ thống dùng Moving Average để giảm thiểu tài nguyên CPU phải sum lại từ đầu. Frontend chỉ render dựa trên kậ¿t quả.
 
-## 6. Công thức Tính Lợi Nhuậ­n Kậ¿ Toán (Profit Formula)
-**Mục đích**: Tính lÃi/lỗ của một tour sau khi đÝvậ­n hành xong.
+## 6. Công thức Tính Lợi Nhuận Kậ¿ Toán (Profit Formula)
+**Mục đích**: Tính lÃi/lỗ của một tour sau khi đÝvận hành xong.
 
 *   **Doanh Thu**: Tổng `tong_tien` của các đơn đặt tour có `trang_thai` trong danh sách: `[DA_XAC_NHAN, CHO_HUY, CHO_HOAN_TIEN, TU_CHOI_HOAN_TIEN, HOAN_THANH]`.
 *   **Chi Phí**: Tổng `thanh_tien` từ bảng `ChiPhiThucTe` có `trang_thai_duyet = DA_DUYET`.
-*   **Lợi nhuậ­n**: `Doanh Thu - Chi Phí`
+*   **Lợi nhuận**: `Doanh Thu - Chi Phí`
 *   **Backend**: `QuyetToanService.php`. Frontend Admin Dashboard chỉ gọi API lấy báo cáo.
 *   **Sự đồng nhất**: **âœ… Tuyệt đối**. Logic tài chính nội bộ được niêm phong hoàn toàn trong Backend.
 
 ---
 
-### Kậ¿t luậ­n
+### Kậ¿t luận
 Toàn bộ hệ thống hiện đang sử dụng chung bộ công thức **rất chặt chậ½ và đồng nhất**, không có sự xung đột logic nào làm lệch dữ liệu Database. Frontend thực hiện tốt vai trò hiển thị và trải nghiệm người dùng, nhường toàn quyền quyậ¿t định logic nghiệp vụ cốt lõi cho Backend xử lý.

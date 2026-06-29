@@ -2,7 +2,7 @@
 
 # Digital Travel ERP Backend
 
-**Đề tài:** Hệ thống quản lí vậ­n hành du lịch số  
+**Đề tài:** Hệ thống quản lí vận hành du lịch số  
 **Kiậ¿n trúc:** MySQL Database Â· Laravel PHP Backend Â· React/Vite Frontend  
 **Repository:** Workspace gồm Backend Laravel và 3 ứng dụng Frontend: `admin`, `hdv`, `kh`
 
@@ -14,7 +14,7 @@
 
 ---
 
-## Tài liệu Kỹ thuậ­t
+## Tài liệu Kỹ thuật
 * [Tổng hợp Công thức Tính toán (Calculation Formulas)](./CALCULATION_FORMULAS.md)
 
 ---
@@ -36,15 +36,15 @@
 
 ## Giới thiệu đồ án
 
-Digital Travel ERP là hệ thống hỗ trợ quản lí và vậ­n hành nghiệp vụ du lịch theo nhiều phân hệ:
+Digital Travel ERP là hệ thống hỗ trợ quản lí và vận hành nghiệp vụ du lịch theo nhiều phân hệ:
 
 | Phân hệ | Vai trò chính |
 |---|---|
 | Khách hàng | Tra cứu tour, đặt tour, thanh toán, quản lí hồ sơ số, voucher, khiậ¿u nại |
-| Admin / Quản trị | Quản lí tài khoản, phân quyền, nhân sự, nhậ­t ký hệ thống |
+| Admin / Quản trị | Quản lí tài khoản, phân quyền, nhân sự, nhật ký hệ thống |
 | Sản phẩm | Quản lí tour mẫu, dịch vụ bổ sung, hành động xanh |
 | Điều hành | Khởi tạo tour thực tậ¿, phân công hướng dẫn viên, quản lí lịch công tác |
-| Hướng dẫn viên | Xem tour được phân công, điểm danh, báo cáo sự cố, cậ­p nhậ­t chi phí |
+| Hướng dẫn viên | Xem tour được phân công, điểm danh, báo cáo sự cố, cập nhật chi phí |
 | Kinh doanh | Quản lí đơn đặt tour, khách hàng, voucher, yêu cầu hỗ trợ |
 | Kậ¿ toán | Duyệt chi phí, xử lí hoàn tiền, quyậ¿t toán tour, báo cáo doanh thu |
 
@@ -112,7 +112,7 @@ Digital-Travel_ERP/
 | Node.js | Khuyậ¿n nghị Node.js 20 trở lên |
 | Database | MySQL 8.x |
 | Port backend | `8000` (php artisan serve) |
-| Port frontend | Vite mặc định `5173`, nậ¿u bậ­n sậ½ tự chuyển sang port tiậ¿p theo |
+| Port frontend | Vite mặc định `5173`, nậ¿u bận sậ½ tự chuyển sang port tiậ¿p theo |
 
 Các frontend đÝcấu hình Vite proxy:
 
@@ -214,9 +214,9 @@ npm run dev
 
 ## Tài khoản seed
 
-Mậ­t khẩu mặc định cho tất cả các tài khoản: **`password`**
+Mật khẩu mặc định cho tất cả các tài khoản: **`password`**
 
-| Vai trò | Tên đăng nhậ­p (Username) | Phân hệ / Cổng kiểm thử | Cổng mặc định |
+| Vai trò | Tên đăng nhập (Username) | Phân hệ / Cổng kiểm thử | Cổng mặc định |
 |:---|:---|:---|:---|
 | `ADMIN` | `admin` | Phân hệ Admin - Quản trị | `http://localhost:5173` |
 | `SANPHAM` | `sanpham01` | Phân hệ Admin - Quản lý sản phẩm | `http://localhost:5173` |
@@ -235,7 +235,7 @@ Mậ­t khẩu mặc định cho tất cả các tài khoản: **`password`**
 | Backend lỗi 500 khi gọi API | Chưa copy `.env` hoặc sai cấu hình DB | Kiểm tra file `.env` và chạy lại `php artisan config:clear` |
 | Lỗi migration báo thiậ¿u bảng | Database chưa tồn tại | Vào HeidiSQL tạo Database `travel_erp` trước khi migrate |
 | FE gọi API bị `Failed to fetch` | Backend chưa chạy hoặc gọi sai port | Chạy backend lệnh `php artisan serve` ở port `8000` |
-| API trả `401 Unauthorized` | Chưa đăng nhậ­p hoặc token hậ¿t hạn | Đăng nhậ­p lại |
+| API trả `401 Unauthorized` | Chưa đăng nhập hoặc token hậ¿t hạn | Đăng nhập lại |
 
 ---
 Tài liệu phát triển

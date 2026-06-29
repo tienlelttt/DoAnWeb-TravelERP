@@ -1,6 +1,6 @@
 # Baseline API Contract
 
-Tài liệu này là mốc đối chiậ¿u để bảo đảm backend Laravel phục vụ đúng các giao diện hiện tại mà không yêu cầu frontend đổi URL, payload hoặc cấu trúc JSON response.
+Tài liệu này là mốc đối chiếu để bảo đảm backend Laravel phục vụ đúng các giao diện hiện tại mà không yêu cầu frontend đổi URL, payload hoặc cấu trúc JSON response.
 
 ## Nguyên tắc
 
@@ -24,7 +24,7 @@ Tài liệu này là mốc đối chiậ¿u để bảo đảm backend Laravel p
 | Quản trị | `GET /api/quan-tri/nhat-ky-he-thong` | Có `GET /api/admin/nhat-ky-he-thong` | Thêm alias `/quan-tri` |
 | Quản trị | `POST /api/quan-tri/dang-ky-nhan-vien` | Có `POST /api/admin/users` nhưng chưa tạo `NHANVIEN` | Thêm endpoint tạo cả tài khoản và nhân viên |
 
-## Endpoint đÝghi nhậ­n
+## Endpoint đÝghi nhận
 
 ### Auth
 

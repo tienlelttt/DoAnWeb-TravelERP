@@ -10,13 +10,13 @@ use Illuminate\Http\JsonResponse;
 class UploadController extends Controller
 {
     /**
-     * Upload file và tr? v? Base64 Data URI
+     * Upload file và trả về Base64 Data URI
      */
 
     public function uploadFile(Request $request): JsonResponse
     {
         if (!$request->hasFile('file')) {
-            throw AppException::badRequest("Không tìm th?y file ?? upload.");
+            throw AppException::badRequest("Không tìm thấy file để upload.");
         }
 
         $file = $request->file('file');
