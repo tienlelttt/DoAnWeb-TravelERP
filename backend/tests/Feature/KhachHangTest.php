@@ -23,7 +23,7 @@ class KhachHangTest extends TestCase
     {
         parent::setUp();
 
-        VaiTro::create(["ma_vai_tro" => "KHACHHANG", "ten_hien_thi" => "Khách hàng"]);
+        VaiTro::firstOrCreate(['ma_vai_tro' => "KHACHHANG"], ['ten_hien_thi' => "Khách hàng"]);
 
         $this->khachHangTK = TaiKhoan::create([
             "ma_tai_khoan" => "TK_KH_001",
@@ -64,7 +64,7 @@ class KhachHangTest extends TestCase
             "ma_tour_thuc_te" => "TTT_004",
             "ma_khach_hang" => "KH_001",
             "ngay_dat" => Carbon::now(),
-            "trang_thai" => "DA_THANH_TOAN",
+            "trang_thai" => "DA_XAC_NHAN",
             "tong_tien" => 1200000
         ]);
     }
@@ -133,8 +133,7 @@ class KhachHangTest extends TestCase
             "ma_dat_tour" => "DAT_001",
             "ma_khach_hang" => "KH_001",
             "loai_yeu_cau" => "HUY_TOUR",
-            "noi_dung" => "Tôi bận việc gia đình",
-            "trang_thai" => "CHO_XU_LY"
+            "trang_thai" => "CHUA_XU_LY"
         ]);
     }
 

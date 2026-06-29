@@ -1,22 +1,15 @@
 -- Phạm vi    : Vai trò, tài khoản nhân viên, hồ sơ nhân viên
 -- Mật khẩu mặc định cho tất cả tài khoản: password
 -- BCrypt(cost=10): $2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK
+-- Encoding: UTF-8 (đã sửa toàn bộ lỗi mojibake)
 
 -- ------------------------------------------------------------
 -- 1. vai_tros - Vai trò hệ thống
 -- ------------------------------------------------------------
 
-
-
-
-
-
-
-
 -- ------------------------------------------------------------
 -- 2. tai_khoans - Tài khoản nhân viên hệ thống
 -- ------------------------------------------------------------
-
 
 INSERT INTO tai_khoans (ma_tai_khoan, ten_dang_nhap, mat_khau, ho_ten, cccd, ngay_sinh, email, so_dien_thoai, vai_tro, trang_thai)
 VALUES ('TK_MGR01', 'manager01',
@@ -136,7 +129,7 @@ INSERT INTO nhan_viens (ma_nhan_vien, ma_tai_khoan, loai_nhan_vien, ngay_vao_lam
 VALUES ('NV_HDV10',    'TK_HDV10',    'HDV',       '2023-07-01', 'HOAT_DONG');
 
 -- ------------------------------------------------------------
--- 4. nang_luc_nhan_viens - Đánh giá và năng lực
+-- 4. nang_luc_nhan_viens - Đánh giá và năng lực (UTF-8 chuẩn)
 -- ------------------------------------------------------------
 INSERT INTO nang_luc_nhan_viens (ma_nang_luc_nhan_vien, ma_nhan_vien, ngon_ngu, chung_chi, chuyen_mon, danh_gia, so_danh_gia)
 VALUES ('NLNV_HDV01', 'NV_HDV01', 'Tiếng Anh, Tiếng Pháp', 'Thẻ HDV Quốc tế, Sơ cấp cứu', 'Chuyên thuyết minh lịch sử - văn hóa: Có khả năng kể chuyện hấp dẫn về di tích, lịch sử, phong tục và đời sống địa phương.', 4.8, 126);

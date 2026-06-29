@@ -36,9 +36,9 @@ class ReportPdfTest extends TestCase
         parent::setUp();
 
         // Khởi tạo các vai trò
-        VaiTro::create(['ma_vai_tro' => 'ADMIN', 'ten_hien_thi' => 'Quản Trị Viên']);
-        VaiTro::create(['ma_vai_tro' => 'KETOAN', 'ten_hien_thi' => 'Kế Toán']);
-        VaiTro::create(['ma_vai_tro' => 'KHACHHANG', 'ten_hien_thi' => 'Khách Hàng']);
+        VaiTro::firstOrCreate(['ma_vai_tro' => 'ADMIN'], ['ten_hien_thi' => 'Quản Trị Viên']);
+        VaiTro::firstOrCreate(['ma_vai_tro' => 'KETOAN'], ['ten_hien_thi' => 'Kế Toán']);
+        VaiTro::firstOrCreate(['ma_vai_tro' => 'KHACHHANG'], ['ten_hien_thi' => 'Khách Hàng']);
 
         // Tạo tài khoản admin
         $this->adminUser = TaiKhoan::create([

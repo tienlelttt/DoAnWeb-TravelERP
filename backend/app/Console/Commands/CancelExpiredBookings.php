@@ -8,6 +8,7 @@ use App\Models\TourThucTe;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
+// Model lưu thông tin dữ liệu.
 class CancelExpiredBookings extends Command
 {
     /**

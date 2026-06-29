@@ -27,14 +27,15 @@ class RealDataSeeder extends Seeder
         $taiKhoanPath = $resolveSeedPath(env('SEED_SQL_TAI_KHOAN_PATH', 'database/raw-sql/accounts_seed.sql'));
         $khoiTaoPath = $resolveSeedPath(env('SEED_SQL_KHOI_TAO_PATH', 'database/raw-sql/business_demo_seed.sql'));
 
-        if (!file_exists($taiKhoanPath) || !file_exists($khoiTaoPath)) {
+
+        if (!file_exists($taiKhoanPath)) {
             $this->command?->info("Bỏ qua RealDataSeeder vì không tìm thấy file SQL tại thư mục database/raw-sql.");
             return;
         }
 
         $this->command->info("Đang nạp dữ liệu từ các file SQL thuần...");
         $taiKhoanSql = file_get_contents($taiKhoanPath);
-        $khoiTaoSql = file_get_contents($khoiTaoPath);
+        $khoiTaoSql = file_get_contents(database_path('raw-sql/business_full_seed_generated.sql'));
 
         // Bỏ BOM nếu có
         $taiKhoanSql = preg_replace('/^\xEF\xBB\xBF/', '', $taiKhoanSql);
@@ -95,10 +96,10 @@ class RealDataSeeder extends Seeder
 
     private function seedNativeTmnewOrders(): void
     {
-        $this->themDonTmnew('PN10', 'TTT_TMNEW_PN_OPEN', 'KH_03', 5450000, 10, 'DVT_TMNEW_CAVE', 10, 220000, 'VC_TMNEW_1M', 1000000, 'NOW() - INTERVAL 3 DAY', 'CHUYEN_KHOAN', 'Đoàn mười khách đặt tour Phong Nha.', 'HDX_TMNEW_WATER:10', 501);
-        $this->themDonTmnew('CM06', 'TTT_TMNEW_CM_DONE', 'KH_04', 7100000, 6, 'DVT_TMNEW_BOAT', 1, 1800000, null, 0, 'NOW() - INTERVAL 120 DAY', 'THE_QUOC_TE', 'Đoàn sáu khách hoàn thành tour Cà Mau.', 'HDX_TMNEW_LOCAL:6', 502);
-        $this->themDonTmnew('BB04', 'TTT_TMNEW_BB_ACTIVE', 'KH_08', 3600000, 4, 'DVT_TMNEW_HOMESTAY', 2, 420000, null, 0, 'NOW() - INTERVAL 5 DAY', 'VI_DIEN_TU', 'Bốn khách đang tham gia tour Ba Bể.', 'HDX_TMNEW_WATER:4', 503);
-        $this->themDonTmnew('PN05', 'TTT_TMNEW_PN_QT', 'KH_02', 5400000, 5, 'DVT_TMNEW_CAVE', 5, 220000, null, 0, 'NOW() - INTERVAL 145 DAY', 'CHUYEN_KHOAN', 'Năm khách đã đi tour Phong Nha.', 'HDX_TMNEW_LOCAL:5', 504);
+        $this->themDonTmnew('PN10', 'TTT_PHONGNHA_01', 'KH_03', 5450000, 10, 'DVT_TMNEW_CAVE', 10, 220000, 'VC_TMNEW_1M', 1000000, 'NOW() - INTERVAL 3 DAY', 'CHUYEN_KHOAN', 'Đoàn mười khách đặt tour Phong Nha.', 'HDX_TMNEW_WATER:10', 501);
+        $this->themDonTmnew('CM06', 'TTT_CAMAU_02', 'KH_04', 7100000, 6, 'DVT_TMNEW_BOAT', 1, 1800000, null, 0, 'NOW() - INTERVAL 120 DAY', 'THE_QUOC_TE', 'Đoàn sáu khách hoàn thành tour Cà Mau.', 'HDX_TMNEW_LOCAL:6', 502);
+        $this->themDonTmnew('BB04', 'TTT_BABE_02', 'KH_08', 3600000, 4, 'DVT_TMNEW_HOMESTAY', 2, 420000, null, 0, 'NOW() - INTERVAL 5 DAY', 'VI_DIEN_TU', 'Bốn khách đang tham gia tour Ba Bể.', 'HDX_TMNEW_WATER:4', 503);
+        $this->themDonTmnew('PN05', 'TTT_PHONGNHA_02', 'KH_02', 5400000, 5, 'DVT_TMNEW_CAVE', 5, 220000, null, 0, 'NOW() - INTERVAL 145 DAY', 'CHUYEN_KHOAN', 'Năm khách đã đi tour Phong Nha.', 'HDX_TMNEW_LOCAL:5', 504);
     }
 
     private function themDonTmnew(string $p_MaGon, string $p_MaTour, string $p_MaKhachHang, float $p_GiaTour, int $p_SoKhach, string $p_MaDichVu, int $p_SoLuongDV, float $p_DonGiaDV, ?string $p_MaVoucher, float $p_TienUuDai, string $p_NgayDat, string $p_PhuongThuc, string $p_GhiChu, string $p_HanhDong, int $p_Seed): void 

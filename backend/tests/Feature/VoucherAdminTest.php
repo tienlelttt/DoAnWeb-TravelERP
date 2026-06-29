@@ -18,7 +18,7 @@ class VoucherAdminTest extends TestCase
     {
         parent::setUp();
 
-        VaiTro::create(['ma_vai_tro' => 'KINHDOANH', 'ten_hien_thi' => 'Kinh Doanh']);
+        VaiTro::firstOrCreate(['ma_vai_tro' => 'KINHDOANH'], ['ten_hien_thi' => 'Kinh Doanh']);
 
         $this->kinhDoanhUser = TaiKhoan::create([
             'ma_tai_khoan' => 'TK_KINHDOANH',

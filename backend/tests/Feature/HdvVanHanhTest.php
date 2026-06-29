@@ -28,7 +28,7 @@ class HdvVanHanhTest extends TestCase
     {
         parent::setUp();
 
-        VaiTro::create(["ma_vai_tro" => "HDV", "ten_hien_thi" => "Hướng Dẫn Viên"]);
+        VaiTro::firstOrCreate(['ma_vai_tro' => "HDV"], ['ten_hien_thi' => "Hướng Dẫn Viên"]);
 
         $this->hdvTK = TaiKhoan::create([
             "ma_tai_khoan" => "TK_HDV_002",

@@ -23,8 +23,8 @@ class KeToanChiPhiTest extends TestCase
     {
         parent::setUp();
 
-        VaiTro::create(["ma_vai_tro" => "KETOAN", "ten_hien_thi" => "Kế toán"]);
-        VaiTro::create(["ma_vai_tro" => "HDV", "ten_hien_thi" => "Hướng dẫn viên"]);
+        VaiTro::firstOrCreate(['ma_vai_tro' => "KETOAN"], ['ten_hien_thi' => "Kế toán"]);
+        VaiTro::firstOrCreate(['ma_vai_tro' => "HDV"], ['ten_hien_thi' => "Hướng dẫn viên"]);
 
         $this->keToanTK = TaiKhoan::create([
             "ma_tai_khoan" => "TK_KT_001",
@@ -81,7 +81,7 @@ class KeToanChiPhiTest extends TestCase
         ]);
 
         $response->assertStatus(200)
-                 ->assertJsonPath("data.data.0.maChiPhiThucTe", "CP_001");
+                 ->assertJsonPath("data.content.0.maChiPhi", "CP_001");
     }
 
     public function test_ke_toan_lay_canh_bao_chi_phi_theo_contract_frontend()

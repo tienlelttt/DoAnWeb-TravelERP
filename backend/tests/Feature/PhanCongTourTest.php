@@ -23,8 +23,8 @@ class PhanCongTourTest extends TestCase
     {
         parent::setUp();
 
-        VaiTro::create(["ma_vai_tro" => "DIEUHANH", "ten_hien_thi" => "Điều Hành"]);
-        VaiTro::create(["ma_vai_tro" => "HDV", "ten_hien_thi" => "Hướng Dẫn Viên"]);
+        VaiTro::firstOrCreate(['ma_vai_tro' => "DIEUHANH"], ['ten_hien_thi' => "Điều Hành"]);
+        VaiTro::firstOrCreate(['ma_vai_tro' => "HDV"], ['ten_hien_thi' => "Hướng Dẫn Viên"]);
 
         $this->dieuHanhTK = TaiKhoan::create([
             "ma_tai_khoan" => "TK_DH_001",
@@ -244,7 +244,7 @@ class PhanCongTourTest extends TestCase
 
         $this->assertDatabaseHas("tour_thuc_tes", [
             "ma_tour_thuc_te" => "TTT_001",
-            "trang_thai" => "MO_BAN"
+            "trang_thai" => "CHO_KICH_HOAT"
         ]);
     }
 

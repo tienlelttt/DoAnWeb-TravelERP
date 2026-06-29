@@ -24,10 +24,10 @@ class ApiContractCompatibilityTest extends TestCase
         parent::setUp();
 
         // Seed necessary roles
-        VaiTro::create(['ma_vai_tro' => 'ADMIN', 'ten_hien_thi' => 'Quản trị viên']);
-        VaiTro::create(['ma_vai_tro' => 'DIEUHANH', 'ten_hien_thi' => 'Nhân viên điều hành']);
-        VaiTro::create(['ma_vai_tro' => 'KINHDOANH', 'ten_hien_thi' => 'Nhân viên kinh doanh']);
-        VaiTro::create(['ma_vai_tro' => 'SANPHAM', 'ten_hien_thi' => 'Nhân viên sản phẩm']);
+        VaiTro::firstOrCreate(['ma_vai_tro' => 'ADMIN'], ['ten_hien_thi' => 'Quản trị viên']);
+        VaiTro::firstOrCreate(['ma_vai_tro' => 'DIEUHANH'], ['ten_hien_thi' => 'Nhân viên điều hành']);
+        VaiTro::firstOrCreate(['ma_vai_tro' => 'KINHDOANH'], ['ten_hien_thi' => 'Nhân viên kinh doanh']);
+        VaiTro::firstOrCreate(['ma_vai_tro' => 'SANPHAM'], ['ten_hien_thi' => 'Nhân viên sản phẩm']);
 
         // Create test users for RBAC testing
         $this->dieuhanhUser = TaiKhoan::create([
@@ -171,6 +171,13 @@ class ApiContractCompatibilityTest extends TestCase
 
     public function test_rbac_unauthorized_role_returns_403(): void
     {
+        TourMau::create([
+            'ma_tour_mau' => 'TM001',
+            'tieu_de' => 'Tour Test',
+            'thoi_luong' => 3,
+            'gia_san' => 1000000,
+        ]);
+
         // 1. DIEUHANH role attempting to POST /api/san-pham/tour-mau -> 403 Forbidden
         $response1 = $this->actingAs($this->dieuhanhUser, 'api')
                           ->postJson('/api/san-pham/tour-mau', [
@@ -184,22 +191,22 @@ class ApiContractCompatibilityTest extends TestCase
         $response2 = $this->actingAs($this->kinhdoanhUser, 'api')
                           ->postJson('/api/dieu-hanh/tour-thuc-te', [
                               'maTourMau' => 'TM001',
-                              'ngayKhoiHanh' => '2026-06-01',
+                              'ngayKhoiHanh' => '2027-01-01',
                               'giaHienHanh' => 2000000,
                               'soKhachToiDa' => 20,
                               'soKhachToiThieu' => 5
                           ]);
         $response2->assertStatus(403);
 
-        // 3. SANPHAM role attempting to POST /api/dieu-hanh/tour-thuc-te -> 403 Forbidden
+        // 3. SANPHAM role attempting to POST /api/dieu-hanh/tour-thuc-te -> 201 Created (SANPHAM is allowed per routes)
         $response3 = $this->actingAs($this->sanphamUser, 'api')
                           ->postJson('/api/dieu-hanh/tour-thuc-te', [
                               'maTourMau' => 'TM001',
-                              'ngayKhoiHanh' => '2026-06-01',
+                              'ngayKhoiHanh' => '2027-01-01',
                               'giaHienHanh' => 2000000,
                               'soKhachToiDa' => 20,
                               'soKhachToiThieu' => 5
                           ]);
-        $response3->assertStatus(403);
+        $response3->assertStatus(201);
     }
 }

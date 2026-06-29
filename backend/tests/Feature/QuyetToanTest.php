@@ -21,7 +21,7 @@ class QuyetToanTest extends TestCase
     {
         parent::setUp();
 
-        VaiTro::create(['ma_vai_tro' => 'KETOAN', 'ten_hien_thi' => 'Kế Toán']);
+        VaiTro::firstOrCreate(['ma_vai_tro' => 'KETOAN'], ['ten_hien_thi' => 'Kế Toán']);
 
         $this->keToanUser = TaiKhoan::create([
             'ma_tai_khoan' => 'TK_KETOAN',
