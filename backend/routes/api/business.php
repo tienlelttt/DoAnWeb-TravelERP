@@ -19,7 +19,7 @@ Route::group(['prefix' => 'kinh-doanh', 'middleware' => ['auth:api', 'role:KINHD
     Route::get('tong-hop-khieu-nai-su-co', [KinhDoanhTongHopController::class, 'danhSachTongHop']);
 });
 
-Route::group(['prefix' => 'kinh-doanh', 'middleware' => ['auth:api', 'role:KINHDOANH,ADMIN']], function () {
+Route::group(['prefix' => 'kinh-doanh', 'middleware' => ['auth:api', 'role:KINHDOANH,ADMIN,KETOAN']], function () {
     Route::get('danh-gia', [DanhGiaController::class, 'tatCaDanhGia']);
     Route::post('xac-nhan-thanh-toan', [KinhDoanhController::class, 'xacNhanThanhToan']);
     Route::post('duyet-don/{maDon}', [XuLyHuyController::class, 'duyetDonVip']);

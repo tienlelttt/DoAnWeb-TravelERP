@@ -249,12 +249,12 @@ const OrderList: React.FC = () => {
             aria-label="Duyệt thanh toán"
           />
           <Button
-            variant="ghost"
+            variant="danger"
             size="sm"
             icon={<XCircle size={16} />}
             onClick={() => handleRejectPayment(record)}
             disabled={!canApprovePayment(record) || approvingId === record.id}
-            className="p-2 text-red-600"
+            className="p-2"
             aria-label="Từ chối thanh toán"
           />
           <Button
