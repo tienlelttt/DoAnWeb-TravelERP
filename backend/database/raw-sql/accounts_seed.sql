@@ -1,6 +1,6 @@
 -- Phạm vi    : Vai trò, tài khoản nhân viên, hồ sơ nhân viên
 -- Mật khẩu mặc định cho tất cả tài khoản: password
--- BCrypt(cost=10): $2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK
+-- BCrypt(cost=10): $2y$10$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkKgoq7NsqwVDpICR7qmN41umhWrjjAWUA9k.Nc5vIYzYFxnOE.zMS6
 -- Encoding: UTF-8 (đã sửa toàn bộ lỗi mojibake)
 
 -- ------------------------------------------------------------
@@ -12,86 +12,92 @@
 -- ------------------------------------------------------------
 
 INSERT INTO tai_khoans (ma_tai_khoan, ten_dang_nhap, mat_khau, ho_ten, cccd, ngay_sinh, email, so_dien_thoai, vai_tro, trang_thai)
+VALUES ('TK_ADMIN01', 'admin01',
+        '$2y$10$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkKgoq7NsqwVDpICR7qmN41umhWrjjAWUA9k.Nc5vIYzYFxnOE.zMS6',
+        'Quản Trị Viên', '079099000001', '1985-01-01', 'admin01@digitaltravel.vn', '0900000001',
+        'ADMIN', 'HOAT_DONG');
+
+INSERT INTO tai_khoans (ma_tai_khoan, ten_dang_nhap, mat_khau, ho_ten, cccd, ngay_sinh, email, so_dien_thoai, vai_tro, trang_thai)
 VALUES ('TK_MGR01', 'manager01',
-        '$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        '$2y$10$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkKgoq7NsqwVDpICR7qmN41umhWrjjAWUA9k.Nc5vIYzYFxnOE.zMS6',
         'Lê Hoàng Phú', '079099000002', '1990-03-08', 'dieuhanh01@digitaltravel.vn', '0900000002',
         'DIEUHANH', 'HOAT_DONG');
 
 INSERT INTO tai_khoans (ma_tai_khoan, ten_dang_nhap, mat_khau, ho_ten, cccd, ngay_sinh, email, so_dien_thoai, vai_tro, trang_thai)
 VALUES ('TK_SP01', 'sanpham01',
-        '$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        '$2y$10$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkKgoq7NsqwVDpICR7qmN41umhWrjjAWUA9k.Nc5vIYzYFxnOE.zMS6',
         'Nguyễn Tuấn Anh', '079099000099', '1992-06-18', 'sanpham01@digitaltravel.vn', '0900000099',
         'SANPHAM', 'HOAT_DONG');
 
 INSERT INTO tai_khoans (ma_tai_khoan, ten_dang_nhap, mat_khau, ho_ten, cccd, ngay_sinh, email, so_dien_thoai, vai_tro, trang_thai)
 VALUES ('TK_SALES01', 'sales01',
-        '$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        '$2y$10$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkKgoq7NsqwVDpICR7qmN41umhWrjjAWUA9k.Nc5vIYzYFxnOE.zMS6',
         'Nguyễn Hoàng An', '079099000003', '1989-09-21', 'kinhdoanh01@digitaltravel.vn', '0900000003',
         'KINHDOANH', 'HOAT_DONG');
 
 INSERT INTO tai_khoans (ma_tai_khoan, ten_dang_nhap, mat_khau, ho_ten, cccd, ngay_sinh, email, so_dien_thoai, vai_tro, trang_thai)
 VALUES ('TK_KT01', 'ketoan01',
-        '$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        '$2y$10$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkKgoq7NsqwVDpICR7qmN41umhWrjjAWUA9k.Nc5vIYzYFxnOE.zMS6',
         'Lê Thị Minh Châu', '079099000004', '1991-12-02', 'ketoan01@digitaltravel.vn', '0900000004',
         'KETOAN', 'HOAT_DONG');
 
 INSERT INTO tai_khoans (ma_tai_khoan, ten_dang_nhap, mat_khau, ho_ten, cccd, ngay_sinh, email, so_dien_thoai, vai_tro, trang_thai)
 VALUES ('TK_HDV01', 'hdv01',
-        '$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        '$2y$10$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkKgoq7NsqwVDpICR7qmN41umhWrjjAWUA9k.Nc5vIYzYFxnOE.zMS6',
         'Nguyễn Hoàng Bình', '079099000005', '1987-04-15', 'hdv01@digitaltravel.vn', '0900000005',
         'HDV', 'HOAT_DONG');
 
 INSERT INTO tai_khoans (ma_tai_khoan, ten_dang_nhap, mat_khau, ho_ten, cccd, ngay_sinh, email, so_dien_thoai, vai_tro, trang_thai)
 VALUES ('TK_HDV02', 'hdv02',
-        '$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        '$2y$10$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkKgoq7NsqwVDpICR7qmN41umhWrjjAWUA9k.Nc5vIYzYFxnOE.zMS6',
         'Nguyễn Thị Hương', '079099000006', '1993-07-27', 'hdv02@digitaltravel.vn', '0900000006',
         'HDV', 'HOAT_DONG');
 
 INSERT INTO tai_khoans (ma_tai_khoan, ten_dang_nhap, mat_khau, ho_ten, cccd, ngay_sinh, email, so_dien_thoai, vai_tro, trang_thai)
 VALUES ('TK_HDV03', 'hdv03',
-        '$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        '$2y$10$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkKgoq7NsqwVDpICR7qmN41umhWrjjAWUA9k.Nc5vIYzYFxnOE.zMS6',
         'Trần Minh Khang', '079099000007', '1991-11-09', 'hdv03@digitaltravel.vn', '0900000007',
         'HDV', 'HOAT_DONG');
 
 INSERT INTO tai_khoans (ma_tai_khoan, ten_dang_nhap, mat_khau, ho_ten, cccd, ngay_sinh, email, so_dien_thoai, vai_tro, trang_thai)
 VALUES ('TK_HDV04', 'hdv04',
-        '$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        '$2y$10$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkKgoq7NsqwVDpICR7qmN41umhWrjjAWUA9k.Nc5vIYzYFxnOE.zMS6',
         'Phạm Thu Hà', '079099000008', '1994-02-22', 'hdv04@digitaltravel.vn', '0900000008',
         'HDV', 'HOAT_DONG');
 
 INSERT INTO tai_khoans (ma_tai_khoan, ten_dang_nhap, mat_khau, ho_ten, cccd, ngay_sinh, email, so_dien_thoai, vai_tro, trang_thai)
 VALUES ('TK_HDV05', 'hdv05',
-        '$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        '$2y$10$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkKgoq7NsqwVDpICR7qmN41umhWrjjAWUA9k.Nc5vIYzYFxnOE.zMS6',
         'Lê Quốc Bảo', '079099000009', '1989-08-30', 'hdv05@digitaltravel.vn', '0900000009',
         'HDV', 'HOAT_DONG');
 
 INSERT INTO tai_khoans (ma_tai_khoan, ten_dang_nhap, mat_khau, ho_ten, cccd, ngay_sinh, email, so_dien_thoai, vai_tro, trang_thai)
 VALUES ('TK_HDV06', 'hdv06',
-        '$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        '$2y$10$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkKgoq7NsqwVDpICR7qmN41umhWrjjAWUA9k.Nc5vIYzYFxnOE.zMS6',
         'Vũ Ngọc Mai', '079099000010', '1995-05-14', 'hdv06@digitaltravel.vn', '0900000010',
         'HDV', 'HOAT_DONG');
 
 INSERT INTO tai_khoans (ma_tai_khoan, ten_dang_nhap, mat_khau, ho_ten, cccd, ngay_sinh, email, so_dien_thoai, vai_tro, trang_thai)
 VALUES ('TK_HDV07', 'hdv07',
-        '$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        '$2y$10$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkKgoq7NsqwVDpICR7qmN41umhWrjjAWUA9k.Nc5vIYzYFxnOE.zMS6',
         'Đỗ Hải Nam', '079099000011', '1988-12-05', 'hdv07@digitaltravel.vn', '0900000011',
         'HDV', 'HOAT_DONG');
 
 INSERT INTO tai_khoans (ma_tai_khoan, ten_dang_nhap, mat_khau, ho_ten, cccd, ngay_sinh, email, so_dien_thoai, vai_tro, trang_thai)
 VALUES ('TK_HDV08', 'hdv08',
-        '$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        '$2y$10$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkKgoq7NsqwVDpICR7qmN41umhWrjjAWUA9k.Nc5vIYzYFxnOE.zMS6',
         'Bùi Lan Anh', '079099000012', '1992-10-18', 'hdv08@digitaltravel.vn', '0900000012',
         'HDV', 'HOAT_DONG');
 
 INSERT INTO tai_khoans (ma_tai_khoan, ten_dang_nhap, mat_khau, ho_ten, cccd, ngay_sinh, email, so_dien_thoai, vai_tro, trang_thai)
 VALUES ('TK_HDV09', 'hdv09',
-        '$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        '$2y$10$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkKgoq7NsqwVDpICR7qmN41umhWrjjAWUA9k.Nc5vIYzYFxnOE.zMS6',
         'Hoàng Đức Tân', '079099000013', '1990-04-26', 'hdv09@digitaltravel.vn', '0900000013',
         'HDV', 'HOAT_DONG');
 
 INSERT INTO tai_khoans (ma_tai_khoan, ten_dang_nhap, mat_khau, ho_ten, cccd, ngay_sinh, email, so_dien_thoai, vai_tro, trang_thai)
 VALUES ('TK_HDV10', 'hdv10',
-        '$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        '$2y$10$2y$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkKgoq7NsqwVDpICR7qmN41umhWrjjAWUA9k.Nc5vIYzYFxnOE.zMS6',
         'Ngô Thanh Vy', '079099000014', '1996-01-19', 'hdv10@digitaltravel.vn', '0900000014',
         'HDV', 'HOAT_DONG');
 
@@ -99,6 +105,8 @@ VALUES ('TK_HDV10', 'hdv10',
 -- 3. nhan_viens - Hồ sơ nhân viên nội bộ
 -- ------------------------------------------------------------
 
+INSERT INTO nhan_viens (ma_nhan_vien, ma_tai_khoan, loai_nhan_vien, ngay_vao_lam, trang_thai_lam_viec)
+VALUES ('NV_ADMIN01',  'TK_ADMIN01',  'ADMIN',     '2022-01-01', 'HOAT_DONG');
 INSERT INTO nhan_viens (ma_nhan_vien, ma_tai_khoan, loai_nhan_vien, ngay_vao_lam, trang_thai_lam_viec)
 VALUES ('NV_MGR01',    'TK_MGR01',    'DIEUHANH',  '2022-01-15', 'HOAT_DONG');
 INSERT INTO nhan_viens (ma_nhan_vien, ma_tai_khoan, loai_nhan_vien, ngay_vao_lam, trang_thai_lam_viec)
