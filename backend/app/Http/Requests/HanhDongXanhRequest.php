@@ -15,9 +15,9 @@ class HanhDongXanhRequest extends FormRequest
     public function rules()
     {
         return [
-            "maKhachHang" => "required|string",
-            "maHanhDongXanh" => "required|string",
-            "minhChung" => "nullable|string"
+            "tenHanhDong" => "required|string|max:255",
+            "diemCong" => "required|integer|min:0",
+            "maTourThucTe" => "nullable|string"
         ];
     }
 }

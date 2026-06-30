@@ -34,7 +34,9 @@ Route::prefix('san-pham')->group(function () {
         Route::post('dich-vu-them', [DichVuThemController::class, 'taoMoi']);
         Route::put('dich-vu-them/{id}', [DichVuThemController::class, 'capNhat']);
         Route::delete('dich-vu-them/{id}', [DichVuThemController::class, 'xoa']);
+    });
 
+    Route::group(['middleware' => ['auth:api', 'role:SANPHAM,DIEUHANH,ADMIN']], function () {
         Route::post('hanh-dong-xanh', [HanhDongXanhController::class, 'taoMoi']);
         Route::put('hanh-dong-xanh/{id}', [HanhDongXanhController::class, 'capNhat']);
         Route::delete('hanh-dong-xanh/{id}', [HanhDongXanhController::class, 'xoa']);
