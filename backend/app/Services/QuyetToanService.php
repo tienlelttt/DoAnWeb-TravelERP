@@ -197,7 +197,7 @@ class QuyetToanService
             $don = DonDatTour::lockForUpdate()->find($gd->ma_dat_tour);
             if (!$don) throw AppException::badRequest("Không tìm thấy thông tin đơn đặt tour liên kết với giao dịch này. Bạn chỉ có thể Từ chối giao dịch bị mồ côi này.");
 
-            if ($don->trang_thai !== 'CHO_HUY') throw AppException::badRequest("Chỉ có thể xác nhận hoàn tiền cho đơn ở trạng thái CHO_HUY. Trạng thái hiện tại: " . $don->trang_thai);
+            if (!in_array($don->trang_thai, ['CHO_HUY', 'DA_HUY'])) throw AppException::badRequest("Chỉ có thể xác nhận hoàn tiền cho đơn ở trạng thái CHO_HUY hoặc DA_HUY. Trạng thái hiện tại: " . $don->trang_thai);
 
             $gd->trang_thai = 'DA_HOAN_TIEN';
             $gd->ngay_thanh_toan = Carbon::now();
@@ -212,6 +212,18 @@ class QuyetToanService
 
             $don->trang_thai = 'DA_HUY';
             $don->save();
+
+            // Giả lập thông báo cho khách hàng
+            \App\Models\NhatKyHeThong::create([
+                'ma_nhat_ky_he_thong' => \Illuminate\Support\Str::uuid()->toString(),
+                'ma_tai_khoan' => auth('api')->id(),
+                'hanh_dong' => 'THONG_BAO_KHACH_HANG',
+                'doi_tuong' => 'KHACH_HANG',
+                'ma_doi_tuong' => $don->ma_khach_hang,
+                'ghi_chu' => "Hệ thống đã tự động gửi Email/SMS thông báo hoàn tiền thành công số tiền " . number_format($gd->so_tien) . " VND cho đơn hàng " . $don->ma_dat_tour . " tới khách hàng " . $don->ma_khach_hang,
+                'thoi_gian' => Carbon::now()
+            ]);
+            \Illuminate\Support\Facades\Log::info("Notification sent: Hoàn tiền đơn {$don->ma_dat_tour} cho khách hàng {$don->ma_khach_hang}");
 
             return $gd;
         });

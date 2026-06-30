@@ -69,9 +69,14 @@ class KhachHangController extends Controller
     public function yeuCauHuyTour(string $maDatTour, Request $request): JsonResponse
     {
         $data = $request->validate([
-            "lyDoHuy" => "nullable|string"
+            "lyDoHuy" => "nullable|string",
+            "lyDo" => "nullable|string"
         ]);
-        $res = $this->khachHangService->yeuCauHuyTour($this->getMaTaiKhoan(), $maDatTour, $data);
+        
+        $lyDoRaw = $data['lyDo'] ?? $data['lyDoHuy'] ?? null;
+        $mappedData = ['lyDoHuy' => $lyDoRaw];
+        
+        $res = $this->khachHangService->yeuCauHuyTour($this->getMaTaiKhoan(), $maDatTour, $mappedData);
         return $this->successResponse($res, "Gửi yêu cầu hủy tour thành công");
     }
 
