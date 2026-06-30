@@ -132,8 +132,11 @@ class VoucherAdminController extends Controller
             throw \App\Exceptions\AppException::badRequest('Không thể thu hồi voucher đã sử dụng');
         }
 
-        $khuyenMai->trang_thai = 'THU_HOI';
-        $khuyenMai->save();
+        \App\Models\KhuyenMaiKh::where('ma_voucher', $maVoucher)
+            ->where('ma_khach_hang', $maKhachHang)
+            ->update(['trang_thai' => 'THU_HOI']);
+
+        $khuyenMai = $khuyenMai->fresh(['voucher', 'khachHang.taiKhoan']);
 
         return response()->json([
             'status' => 200,

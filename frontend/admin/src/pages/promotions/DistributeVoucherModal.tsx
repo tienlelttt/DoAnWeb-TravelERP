@@ -156,12 +156,14 @@ const DistributeVoucherModal: React.FC<DistributeVoucherModalProps> = ({ isOpen,
           type="checkbox"
           onChange={(e) => {
             if (e.target.checked) {
-              setSelectedCustomers(checkboxCustomers.map(c => c.id));
+              const newIds = checkboxCustomers.map(c => c.id);
+              setSelectedCustomers(Array.from(new Set([...selectedCustomers, ...newIds])));
             } else {
-              setSelectedCustomers([]);
+              const visibleIds = new Set(checkboxCustomers.map(c => c.id));
+              setSelectedCustomers(selectedCustomers.filter(id => !visibleIds.has(id)));
             }
           }}
-          checked={selectedCustomers.length === checkboxCustomers.length && checkboxCustomers.length > 0}
+          checked={checkboxCustomers.length > 0 && checkboxCustomers.every(c => selectedCustomers.includes(c.id))}
         />
       ),
       render: (record) => (
