@@ -11,7 +11,7 @@ class VoucherAdminResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $soLuotDaPhanBo = \App\Models\KhuyenMaiKh::where('ma_voucher', $this->ma_voucher)->count();
+        $soLuotDaPhanBo = \App\Models\KhuyenMaiKh::where('ma_voucher', $this->ma_voucher)->where('trang_thai', '!=', 'THU_HOI')->count();
         
         $trangThai = 'HIEU_LUC';
         if ($this->ngay_het_han && Carbon::parse($this->ngay_het_han)->isBefore(Carbon::now())) {

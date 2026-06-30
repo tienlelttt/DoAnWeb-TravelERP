@@ -360,7 +360,7 @@ class VoucherService
             throw AppException::badRequest("Voucher không sẵn sàng để phát hành");
         }
 
-        $daPhatHanh = \App\Models\KhuyenMaiKh::where('ma_voucher', $maVoucher)->count();
+        $daPhatHanh = \App\Models\KhuyenMaiKh::where('ma_voucher', $maVoucher)->where('trang_thai', '!=', 'THU_HOI')->count();
         if ($daPhatHanh >= $voucher->so_luot_phat_hanh) {
             throw AppException::badRequest("Đã đạt giới hạn phát hành của voucher này");
         }
@@ -369,6 +369,17 @@ class VoucherService
             ->where('ma_khach_hang', $maKhachHang)->first();
         
         if ($tonTai) {
+            if ($tonTai->trang_thai === 'THU_HOI') {
+                $tonTai->trang_thai = 'CO_HIEU_LUC';
+                $tonTai->ngay_nhan = Carbon::now();
+                \App\Models\KhuyenMaiKh::where('ma_voucher', $maVoucher)
+                    ->where('ma_khach_hang', $maKhachHang)
+                    ->update([
+                        'trang_thai' => 'CO_HIEU_LUC',
+                        'ngay_nhan' => Carbon::now()
+                    ]);
+                return $tonTai;
+            }
             throw AppException::badRequest("Khách hàng này đã nhận voucher này rồi");
         }
 

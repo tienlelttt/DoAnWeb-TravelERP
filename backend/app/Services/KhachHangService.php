@@ -145,7 +145,7 @@ class KhachHangService
         $yeuCau->ma_yeu_cau_ho_tro = $maYeuCau;
         $yeuCau->ma_dat_tour = $data["maDatTour"] ?? null;
         $yeuCau->ma_khach_hang = $hcs->ma_khach_hang;
-        $yeuCau->loai_yeu_cau = $data["loaiYeuCau"]; // TU_VAN, KIEU_NAI, HUY_TOUR, KHAC
+        $yeuCau->loai_yeu_cau = $data["loaiYeuCau"];
         $yeuCau->noi_dung = $data["noiDung"];
         $yeuCau->trang_thai = "CHO_XU_LY";
         $yeuCau->save();

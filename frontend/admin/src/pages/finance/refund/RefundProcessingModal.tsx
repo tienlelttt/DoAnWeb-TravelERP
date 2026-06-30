@@ -142,8 +142,8 @@ const RefundProcessingModal: React.FC<RefundProcessingModalProps> = ({
               className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50"
               icon={<CheckCircle size={16} />}
               onClick={handleConfirmRefund}
-              disabled={processing || (orderInfo && orderInfo.trangThai !== 'CHO_HUY')}
-              title={orderInfo && orderInfo.trangThai !== 'CHO_HUY' ? 'Đơn hàng không ở trạng thái Chờ Hủy' : ''}
+              disabled={processing || (orderInfo && !['CHO_HUY', 'DA_HUY'].includes(orderInfo.trangThai))}
+              title={orderInfo && !['CHO_HUY', 'DA_HUY'].includes(orderInfo.trangThai) ? 'Đơn hàng không ở trạng thái hợp lệ để hoàn tiền' : ''}
             >
               {processing ? 'Đang kiểm tra...' : 'Xác nhận Hoàn Tiền'}
             </Button>
@@ -155,41 +155,41 @@ const RefundProcessingModal: React.FC<RefundProcessingModalProps> = ({
         <div className="flex flex-col gap-4">
           <div className="bg-white rounded-[16px] shadow-[0px_4px_20px_rgba(137,212,255,0.08)] p-6 flex-1">
             <h3 className="text-sm font-semibold text-[#00668A] mb-4 uppercase tracking-wider">Thông tin tour</h3>
-            <div className="space-y-3">
-              <div>
-                <div className="text-xs text-gray-500">Đơn hàng</div>
-                <div className="text-sm font-semibold text-[#00668A]">{refund.orderCode}</div>
+            <div className="space-y-0 text-sm">
+              <div className="flex justify-between items-start gap-4 py-2.5 border-b border-gray-100 last:border-0">
+                <span className="text-gray-500 shrink-0">Đơn hàng</span>
+                <span className="text-right font-semibold text-[#00668A]">{refund.orderCode}</span>
               </div>
-              <div>
-                <div className="text-xs text-gray-500">Mã tour thực tế</div>
-                <div className="text-sm font-medium text-[#121C2C]">{orderInfo?.maTourThucTe || 'Đang tải...'}</div>
+              <div className="flex justify-between items-start gap-4 py-2.5 border-b border-gray-100 last:border-0">
+                <span className="text-gray-500 shrink-0">Mã tour thực tế</span>
+                <span className="text-right font-medium text-[#121C2C]">{orderInfo?.maTourThucTe || 'Đang tải...'}</span>
               </div>
-              <div>
-                <div className="text-xs text-gray-500">Tên tour</div>
-                <div className="text-sm font-medium text-[#121C2C] line-clamp-2">{orderInfo?.tieuDeTour || 'Đang tải...'}</div>
+              <div className="flex justify-between items-start gap-4 py-2.5 border-b border-gray-100 last:border-0">
+                <span className="text-gray-500 shrink-0">Tên tour</span>
+                <span className="text-right font-medium text-[#121C2C] line-clamp-2 max-w-[200px] sm:max-w-none">{orderInfo?.tieuDeTour || 'Đang tải...'}</span>
               </div>
-              <div>
-                <div className="text-xs text-gray-500">Ngày khởi hành</div>
-                <div className="text-sm font-medium text-[#121C2C]">{formatDate(orderInfo?.ngayKhoiHanh)}</div>
+              <div className="flex justify-between items-start gap-4 py-2.5 border-b border-gray-100 last:border-0">
+                <span className="text-gray-500 shrink-0">Ngày khởi hành</span>
+                <span className="text-right font-medium text-[#121C2C]">{formatDate(orderInfo?.ngayKhoiHanh)}</span>
               </div>
             </div>
           </div>
 
           <div className="bg-white rounded-[16px] shadow-[0px_4px_20px_rgba(137,212,255,0.08)] p-6 flex-1">
             <h3 className="text-sm font-semibold text-[#00668A] mb-4 uppercase tracking-wider">Thông tin khách hàng</h3>
-            <div className="space-y-3">
-              <div>
-                <div className="text-xs text-gray-500">Mã khách hàng</div>
-                <div className="text-sm font-medium text-[#121C2C]">{orderInfo?.maKhachHang || 'Đang tải...'}</div>
+            <div className="space-y-0 text-sm">
+              <div className="flex justify-between items-start gap-4 py-2.5 border-b border-gray-100 last:border-0">
+                <span className="text-gray-500 shrink-0">Mã khách hàng</span>
+                <span className="text-right font-medium text-[#121C2C]">{orderInfo?.maKhachHang || 'Đang tải...'}</span>
               </div>
-              <div>
-                <div className="text-xs text-gray-500">Họ và tên</div>
-                <div className="text-sm font-medium text-[#121C2C]">{orderInfo?.tenKhachHang || refund.customerName}</div>
+              <div className="flex justify-between items-start gap-4 py-2.5 border-b border-gray-100 last:border-0">
+                <span className="text-gray-500 shrink-0">Họ và tên</span>
+                <span className="text-right font-medium text-[#121C2C]">{orderInfo?.tenKhachHang || refund.customerName}</span>
               </div>
               {orderInfo?.soDienThoai && (
-                <div>
-                  <div className="text-xs text-gray-500">Số điện thoại</div>
-                  <div className="text-sm font-medium text-[#121C2C]">{orderInfo.soDienThoai}</div>
+                <div className="flex justify-between items-start gap-4 py-2.5 border-b border-gray-100 last:border-0">
+                  <span className="text-gray-500 shrink-0">Số điện thoại</span>
+                  <span className="text-right font-medium text-[#121C2C]">{orderInfo.soDienThoai}</span>
                 </div>
               )}
             </div>
@@ -199,11 +199,11 @@ const RefundProcessingModal: React.FC<RefundProcessingModalProps> = ({
         </div>
 
         <div className="flex flex-col gap-4">
-          {orderInfo && orderInfo.trangThai !== 'CHO_HUY' && !readonly && (
+          {orderInfo && !['CHO_HUY', 'DA_HUY'].includes(orderInfo.trangThai) && !readonly && (
             <div className="bg-amber-50 border border-amber-200 rounded-[16px] p-4 text-sm text-amber-700 flex gap-2">
               <AlertTriangle size={18} className="mt-0.5 flex-shrink-0" />
               <div>
-                <strong>Chú ý:</strong> Đơn hàng này đang ở trạng thái <strong>{orderInfo.trangThai}</strong>. Bạn chỉ có thể xác nhận hoàn tiền cho đơn hàng <strong>CHO_HUY</strong>. Nút xác nhận đã bị khóa để đảm bảo an toàn. Bạn vẫn có thể <strong>Từ chối</strong> yêu cầu này để dọn dẹp giao dịch lỗi.
+                <strong>Chú ý:</strong> Đơn hàng này đang ở trạng thái <strong>{orderInfo.trangThai}</strong>. Bạn chỉ có thể xác nhận hoàn tiền cho đơn hàng <strong>CHO_HUY</strong> hoặc <strong>DA_HUY</strong>. Nút xác nhận đã bị khóa để đảm bảo an toàn. Bạn vẫn có thể <strong>Từ chối</strong> yêu cầu này để dọn dẹp giao dịch lỗi.
               </div>
             </div>
           )}
@@ -218,15 +218,31 @@ const RefundProcessingModal: React.FC<RefundProcessingModalProps> = ({
           <div className="bg-white rounded-[16px] shadow-[0px_4px_20px_rgba(137,212,255,0.08)] p-6">
             <h3 className="text-sm font-semibold text-[#00668A] mb-4 uppercase tracking-wider">Thông tin hủy tour</h3>
             <div className="space-y-3">
-              <div>
-                <div className="text-xs text-gray-500">Mã giao dịch hoàn</div>
-                <div className="text-sm font-medium text-[#121C2C]">{refund.code}</div>
+              <div className="flex justify-between items-start gap-4 pb-3 mb-3 border-b border-gray-100">
+                <span className="text-sm text-gray-500 shrink-0 mt-0.5">Mã giao dịch hoàn</span>
+                <span className="text-base font-semibold text-[#121C2C]">{refund.code}</span>
               </div>
 
               {refund.reason && (
-                <div>
-                  <div className="text-xs text-gray-500">Lý do hủy (Nội dung)</div>
-                  <div className="text-sm font-medium text-[#121C2C]">{refund.reason}</div>
+                <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
+                  <div className="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wide">Chi tiết yêu cầu hủy</div>
+                  <div className="text-sm text-[#121C2C] space-y-2">
+                    {refund.reason.split(' | ').map((line, i) => {
+                      if (line.includes(':')) {
+                        const [label, ...valueParts] = line.split(':');
+                        const isMoney = label.toLowerCase().includes('tiền') || label.toLowerCase().includes('phí');
+                        return (
+                          <div key={i} className="flex justify-between items-start gap-4 py-1 border-b border-gray-200/50 last:border-0 last:pb-0">
+                            <span className="text-gray-500 shrink-0">{label.trim()}</span>
+                            <span className={`text-right font-semibold ${isMoney ? 'text-amber-600' : ''}`}>
+                              {valueParts.join(':').trim()}
+                            </span>
+                          </div>
+                        );
+                      }
+                      return <div key={i} className="font-medium">{line}</div>;
+                    })}
+                  </div>
                 </div>
               )}
 

@@ -31,7 +31,8 @@ class ImportSql extends Command
         // Thứ tự các file cần import để không bị lỗi khóa ngoại (Foreign Key)
         $files = [
             'accounts_seed.sql',
-            'business_full_seed.sql',
+            'missing_accounts.sql',
+            // 'business_full_seed.sql', // Bỏ qua file này để tránh lỗi trùng lặp khóa chính
             'business_full_seed_generated.sql'
         ];
 

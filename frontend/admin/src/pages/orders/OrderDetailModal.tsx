@@ -267,7 +267,6 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ isOpen, onClose, ma
         notify(`Đơn ${order.orderCode} đã được thanh toán thành công từ trước.`, { type: 'info' });
         setError(null);
       } else {
-        setError(message);
         notify(message, { type: 'error' });
       }
     } finally {
@@ -289,7 +288,6 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ isOpen, onClose, ma
       notify(`Đã từ chối thanh toán đơn ${order.orderCode}.`, { type: 'success' });
     } catch (err: unknown) {
       const message = formatApiError(err, 'Lỗi khi từ chối thanh toán');
-      setError(message);
       notify(message, { type: 'error' });
     } finally {
       setApproving(false);
@@ -306,7 +304,7 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ isOpen, onClose, ma
         <div className="flex items-center justify-end gap-3">
           {canApprovePayment && (
             <>
-              <Button icon={<XCircle size={16} />} onClick={handleRejectPayment} disabled={approving}>
+              <Button variant="danger" icon={<XCircle size={16} />} onClick={handleRejectPayment} disabled={approving}>
                 Từ chối thanh toán
               </Button>
               <Button icon={<CheckCircle size={16} />} onClick={handleApprovePayment} disabled={approving}>

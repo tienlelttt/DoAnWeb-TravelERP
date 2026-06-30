@@ -123,9 +123,9 @@ class HuyDonService
                 throw AppException::forbidden("Bạn không có quyền yêu cầu hủy đơn hàng này");
             }
 
-            // Chỉ cho hủy đơn đã xác nhận hoặc chờ xác nhận
-            if (!in_array($don->trang_thai, ['DA_XAC_NHAN', 'CHO_XAC_NHAN'])) {
-                throw AppException::badRequest("Chỉ có thể yêu cầu hủy đơn ở trạng thái 'Đã xác nhận' hoặc 'Chờ xác nhận'");
+            // Chỉ cho hủy đơn đã xác nhận, chờ xác nhận hoặc đã thanh toán
+            if (!in_array($don->trang_thai, ['DA_XAC_NHAN', 'CHO_XAC_NHAN', 'DA_THANH_TOAN'])) {
+                throw AppException::badRequest("Chỉ có thể yêu cầu hủy đơn ở trạng thái 'Đã xác nhận', 'Đã thanh toán' hoặc 'Chờ xác nhận'");
             }
 
             // 2. Tính số ngày còn lại trước khởi hành
